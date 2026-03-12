@@ -1,4 +1,11 @@
 // @ts-nocheck
+import UsersPage from './UsersPage.jsx'
+
+function UsersPageWrapper({ session, profile }) {
+  if (!session || !profile) return null;
+  return <UsersPage currentUser={session.user} profile={profile}/>;
+}
+
 import React, { useState, useEffect, useRef, useMemo } from "react";
 
 // ─── SVG Icon System ───────────────────────────────────────────────────────────
@@ -21,6 +28,26 @@ const ICONS = {
   prices:     "M3 17l4-8 4 4 4-6 4 10M3 21h18",
 };
 
+
+const Ic = {
+  Edit:    ({size=14,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>,
+  Delete:  ({size=14,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>,
+  Close:   ({size=14,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" style={style}><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
+  Check:   ({size=14,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={style}><polyline points="20 6 9 17 4 12"/></svg>,
+  Plus:    ({size=14,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" style={style}><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>,
+  File:    ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>,
+  Image:   ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>,
+  Attach:  ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>,
+  Bot:     ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>,
+  Folder:  ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>,
+  Plan:    ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>,
+  Phone:   ({size=14,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>,
+  Email:   ({size=14,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>,
+  Warning: ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>,
+  Receipt: ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><line x1="16" y1="8" x2="8" y2="8"/><line x1="16" y1="12" x2="8" y2="12"/><line x1="11" y1="16" x2="8" y2="16"/></svg>,
+  Photo:   ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>,
+  Note:    ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>,
+};
 
 // ─── Storage wrapper ───────────────────────────────────────────────────────────
 const storage = {
@@ -915,185 +942,271 @@ function AddInvoiceFormModal({ project, onConfirm, onCancel, allInvoices=[] }){
 }
 
 // ─── Module Panels ─────────────────────────────────────────────────────────────
-function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobalInvoice, allInvoices=[] }){
-  const { files,ready,remove,update }=useFiles(`inv:${project.id}`);
-  const [preview,setPreview]=useState(null);
-  const [showAdd,setShowAdd]=useState(false);
-  const [confirmDelete,setConfirmDelete]=useState(null);
-  const [saving,setSaving]=useState(false);
-  // inline form state
-  const [supplier,setSupplier]=useState(""); const [invNum,setInvNum]=useState("");
-  const [invDate,setInvDate]=useState(""); const [dueDate,setDueDate]=useState("");
-  const [amount,setAmount]=useState(""); const [currency,setCurrency]=useState("AED");
-  const [desc,setDesc]=useState(""); const [status,setStatus]=useState("pending");
-  const [docFile,setDocFile]=useState(null); const [aiRunning,setAiRunning]=useState(false);
-  const [aiNote,setAiNote]=useState(""); const [formErr,setFormErr]=useState("");
-  const invFileRef=useRef();
+function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobalInvoice, onUpdateGlobalInvoice, allInvoices=[] }){
+  // ─── SINGLE SOURCE OF TRUTH: global store only (no useFiles for invoices) ───
+  const [preview,setPreview]     = useState(null);
+  const [mode,setMode]           = useState("list"); // "list" | "add" | "edit"
+  const [editTarget,setEditTarget] = useState(null); // invoice being edited
+  const [confirmDel,setConfirmDel] = useState(null);
+  const [saving,setSaving]       = useState(false);
+  const [formErr,setFormErr]     = useState("");
+  // shared form fields (used for both add and edit)
+  const [supplier,setSupplier]   = useState("");
+  const [invNum,setInvNum]       = useState("");
+  const [invDate,setInvDate]     = useState("");
+  const [dueDate,setDueDate]     = useState("");
+  const [amount,setAmount]       = useState("");
+  const [currency,setCurrency]   = useState("AED");
+  const [desc,setDesc]           = useState("");
+  const [status,setStatus]       = useState("pending");
+  const [docFile,setDocFile]     = useState(null);
+  const [aiRunning,setAiRunning] = useState(false);
+  const [aiNote,setAiNote]       = useState("");
+  const fileRef = useRef();
 
-  // Always derive the next invoice ID from the live global list
-  const getNextId=()=>nextInvId(allInvoices);
+  // ─── All invoices for this project — global store is the single source ────
+  const rows = useMemo(()=>
+    allInvoices
+      .filter(i => i.projId===project.id || i.project===project.name)
+      .map(i => ({
+        ...i,
+        st:  i.status||i.invoiceStatus||"pending",
+        dd:  i.dueFmt||i.dueDate||"—",
+        iid: i.invId||i.id,
+      })),
+    [allInvoices, project.id, project.name]
+  );
 
-  const openAdd=()=>{ setSupplier("");setInvNum("");setInvDate("");setDueDate("");setAmount("");setCurrency("AED");setDesc("");setStatus("pending");setDocFile(null);setAiRunning(false);setAiNote("");setFormErr("");setSaving(false);setShowAdd(true); };
-
-  const handleInvDoc=async(raw)=>{
-    if(!raw)return;
-    const du=raw.size<5*1024*1024?await new Promise(r=>{const rd=new FileReader();rd.onload=e=>r(e.target.result);rd.readAsDataURL(raw);}):null;
-    setDocFile({name:raw.name,size:raw.size,dataUrl:du});
-    if(du){ setAiRunning(true);setAiNote("🤖 Reading with AI…");
-      const res=await aiExtractInvoice({name:raw.name,size:raw.size,dataUrl:du});
-      if(res){ if(res.supplierName&&!supplier)setSupplier(res.supplierName); if(res.invoiceNumber&&!invNum)setInvNum(res.invoiceNumber); if(res.invoiceDate&&!invDate)setInvDate(res.invoiceDate); if(res.dueDate&&!dueDate)setDueDate(res.dueDate); if(res.amount&&!amount)setAmount(String(res.amount)); if(res.currency)setCurrency(res.currency); if(res.description&&!desc)setDesc(res.description); setAiNote("OK AI extracted — review below"); } else setAiNote("Could not extract — fill manually");
-      setAiRunning(false); }
+  const resetForm = () => {
+    setSupplier(""); setInvNum(""); setInvDate(""); setDueDate("");
+    setAmount(""); setCurrency("AED"); setDesc(""); setStatus("pending");
+    setDocFile(null); setAiRunning(false); setAiNote(""); setFormErr(""); setSaving(false);
   };
 
-  const submitInv=async()=>{
-    if(saving) return; // prevent double-submit
-    if(!amount||isNaN(parseFloat(amount))){setFormErr("Invoice amount is required");return;}
+  const openAdd = () => { resetForm(); setEditTarget(null); setMode("add"); };
+
+  const openEdit = (row) => {
+    resetForm();
+    setEditTarget(row);
+    setSupplier(row.supplier||"");
+    setInvNum(row.invId||row.id||"");
+    setInvDate(row.invDate||row.invoiceDate||"");
+    setDueDate(row.due||row.dueDateISO||"");
+    setAmount(String(row.amount||""));
+    setCurrency(row.currency||"AED");
+    setDesc(row.desc||"");
+    setStatus(row.st||"pending");
+    setDocFile(row.dataUrl ? {name:row.name||"document",size:row.size||0,dataUrl:row.dataUrl} : null);
+    setMode("edit");
+  };
+
+  // ─── AI document extraction ────────────────────────────────────────────────
+  const handleDoc = async (raw) => {
+    if(!raw) return;
+    const du = raw.size<5*1024*1024 ? await new Promise(r=>{const rd=new FileReader();rd.onload=e=>r(e.target.result);rd.readAsDataURL(raw);}) : null;
+    setDocFile({name:raw.name,size:raw.size,dataUrl:du});
+    if(du){
+      setAiRunning(true); setAiNote("Reading with AI…");
+      const res = await aiExtractInvoice({name:raw.name,size:raw.size,dataUrl:du});
+      if(res){
+        if(res.supplierName  && !supplier) setSupplier(res.supplierName);
+        if(res.invoiceNumber && !invNum)   setInvNum(res.invoiceNumber);
+        if(res.invoiceDate   && !invDate)  setInvDate(res.invoiceDate);
+        if(res.dueDate       && !dueDate)  setDueDate(res.dueDate);
+        if(res.amount        && !amount)   setAmount(String(res.amount));
+        if(res.currency)                   setCurrency(res.currency);
+        if(res.description   && !desc)     setDesc(res.description);
+        setAiNote("AI extracted — review below");
+      } else setAiNote("Couldn't extract — fill manually");
+      setAiRunning(false);
+    }
+  };
+
+  // ─── Add submit ────────────────────────────────────────────────────────────
+  const submitAdd = async () => {
+    if(saving) return;
+    if(!amount||isNaN(parseFloat(amount))){ setFormErr("Invoice amount is required"); return; }
     setSaving(true);
     try{
-      const fmt=dueDate?new Date(dueDate+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):"—";
-      // Use one consistent id for both the global store key and the invoice display number
-      const invId=invNum.trim()||getNextId();
-      const recId=String(Date.now()); // unique record id in the global array
-      const invObj={
-        id:recId, invId,
-        name:docFile?.name||`${invId}.pdf`, size:docFile?.size||0,
-        dataUrl:docFile?.dataUrl||null, icon:"🧾",
+      const fmt = dueDate ? new Date(dueDate+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}) : "—";
+      const invId = invNum.trim() || nextInvId(allInvoices);
+      const invObj = {
+        id: String(Date.now()), invId,
+        name: docFile?.name||`${invId}.pdf`, size: docFile?.size||0,
+        dataUrl: docFile?.dataUrl||null, icon: "receipt",
         invoiceStatus:status, status,
-        desc:desc||invId,
-        amount:parseFloat(amount), dueDate:fmt, dueDateISO:dueDate,
-        due:dueDate, dueFmt:fmt,
-        uploadedAt:new Date().toLocaleDateString(),
-        supplier:supplier.trim()||"—", invDate:invDate||"—", currency,
-        project:project.name,
-        client:project.client?.company||project.client?.name||"",
-        projId:project.id
+        desc: desc||invId,
+        amount: parseFloat(amount), dueDate:fmt, dueDateISO:dueDate,
+        due: dueDate, dueFmt:fmt,
+        uploadedAt: new Date().toLocaleDateString(),
+        supplier: supplier.trim()||"—", invDate: invDate||"—", currency,
+        project: project.name,
+        client: project.client?.company||project.client?.name||"",
+        projId: project.id,
       };
-      // Save to global store — this is the single source of truth.
-      // allInvoices re-renders from global state so the row appears immediately.
       if(onAddGlobalInvoice) await onAddGlobalInvoice(invObj);
-      else console.error("InvoicesPanel: onAddGlobalInvoice prop is missing!");
-      if(onActivity) onActivity("Invoice "+invId+" added","🧾");
-      setShowAdd(false);
-    } catch(e){
-      setFormErr("Save failed: "+e.message);
-    } finally {
-      setSaving(false);
-    }
+      if(onActivity) onActivity("Invoice "+invId+" added","inv");
+      setMode("list");
+    } catch(e){ setFormErr("Save failed: "+e.message); }
+    finally{ setSaving(false); }
   };
 
-  const cycle=async(f)=>{
-    if(f._origin==="local"){
-      const idx=INV_ST.findIndex(s=>s.v===f.invoiceStatus);
-      await update(f.id,{invoiceStatus:INV_ST[(idx+1)%INV_ST.length].v});
-    } else {
-      // global row — cycle status in global store
-      const idx=INV_ST.findIndex(s=>s.v===(f.status||f.invoiceStatus));
-      if(onRemoveGlobalInvoice) {} // just for reference; we update via onAddGlobalInvoice path
-      // We don't have onUpdateGlobalInvoice here, so pass a no-op for now
-      // (status cycling on global rows is handled in InvoicingPage)
-    }
+  // ─── Edit submit ───────────────────────────────────────────────────────────
+  const submitEdit = async () => {
+    if(saving) return;
+    if(!amount||isNaN(parseFloat(amount))){ setFormErr("Amount is required"); return; }
+    setSaving(true);
+    try{
+      const fmt = dueDate ? new Date(dueDate+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}) : "—";
+      const displayId = invNum.trim()||editTarget.invId||editTarget.id;
+      const patch = {
+        invId: displayId,
+        supplier: supplier.trim()||"—",
+        invDate: invDate||"—",
+        due: dueDate, dueFmt:fmt, dueDate:fmt, dueDateISO:dueDate,
+        amount: parseFloat(amount), currency,
+        desc, status, invoiceStatus:status,
+        ...(docFile ? {dataUrl:docFile.dataUrl,name:docFile.name,size:docFile.size} : {}),
+      };
+      if(onUpdateGlobalInvoice) await onUpdateGlobalInvoice(editTarget.id, patch);
+      if(onActivity) onActivity("Invoice "+displayId+" updated","edit");
+      setMode("list"); setEditTarget(null);
+    } catch(e){ setFormErr("Save failed: "+e.message); }
+    finally{ setSaving(false); }
   };
-  // All project invoices now come from the global store (allInvoices).
-  // PROJ_INV is no longer a separate static layer — those rows were seeded
-  // into the dynamic store on first load by useGlobalInvoices.
-  const globalProjInv=allInvoices.filter(i=>i.projId===project.id||i.project===project.name);
-  const localFileIds=new Set(files.map(f=>f.id));
-  // Deduplicate: if a local file has the same id as a global row, show local version
-  const globalRows=globalProjInv.filter(i=>!localFileIds.has(i.id));
-  const rows=[
-    ...files.map(f=>    ({...f, _origin:"local",  st:f.invoiceStatus,            dd:f.dueDate,           iid:f.invId||f.id})),
-    ...globalRows.map(i=>({...i,_origin:"global", st:i.status||i.invoiceStatus,  dd:i.dueFmt||i.dueDate, iid:i.invId||i.id})),
-  ];
-  if(!ready)return <div style={{ color:C.muted,fontFamily:F,fontSize:12,padding:"16px 0",textAlign:"center" }}>Loading…</div>;
+
+  // ─── Status cycle — always via global update ───────────────────────────────
+  const cycle = async (row) => {
+    const idx = INV_ST.findIndex(s=>s.v===row.st);
+    const nextSt = INV_ST[(idx+1)%INV_ST.length].v;
+    if(onUpdateGlobalInvoice) await onUpdateGlobalInvoice(row.id, {status:nextSt,invoiceStatus:nextSt});
+  };
+
+  // ─── Shared doc attachment widget ──────────────────────────────────────────
+  const DocZone = () => docFile
+    ? <div style={{ background:C.surface,border:`1px solid ${C.green}44`,borderRadius:9,padding:"12px 14px" }}>
+        {aiRunning&&<div style={{ color:C.purple,fontFamily:F,fontSize:11,marginBottom:8,display:"flex",alignItems:"center",gap:7 }}><div style={{ width:10,height:10,border:"2px solid",borderColor:C.purple,borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Extracting…</div>}
+        {aiNote&&!aiRunning&&<div style={{ color:aiNote.startsWith("AI")?C.green:C.muted,fontFamily:F,fontSize:11,marginBottom:8,padding:"6px 9px",background:aiNote.startsWith("AI")?C.greenDim:"transparent",borderRadius:5 }}>{aiNote}</div>}
+        <div style={{ display:"flex",alignItems:"center",gap:10 }}>
+          <div style={{ width:34,height:34,background:C.card,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
+            {docFile.dataUrl?.startsWith("data:image")?<Ic.Image size={18} color={C.muted}/>:<Ic.File size={18} color={C.muted}/>}
+          </div>
+          <div style={{ flex:1,minWidth:0 }}><div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:12,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{docFile.name}</div><div style={{ color:C.muted,fontFamily:F,fontSize:10 }}>{docFile.size?(docFile.size/1024).toFixed(1)+" KB":""}</div></div>
+          <button onClick={()=>{setDocFile(null);setAiNote("");}} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,borderRadius:5,padding:"3px 8px",fontFamily:F,fontSize:11,cursor:"pointer" }}>Remove</button>
+        </div>
+        {docFile.dataUrl?.startsWith("data:image")&&<img src={docFile.dataUrl} alt="" style={{ maxWidth:"100%",maxHeight:120,objectFit:"contain",borderRadius:7,marginTop:8,border:`1px solid ${C.border}` }}/>}
+      </div>
+    : <div onClick={()=>fileRef.current?.click()}
+        onDragOver={e=>{e.preventDefault();e.currentTarget.style.borderColor=C.accent;e.currentTarget.style.background=C.accentDim;}}
+        onDragLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}}
+        onDrop={e=>{e.preventDefault();e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";const f=e.dataTransfer.files[0];if(f)handleDoc(f);}}
+        style={{ border:`2px dashed ${C.border}`,borderRadius:9,padding:"16px",textAlign:"center",cursor:"pointer",transition:"all .2s" }}
+        onMouseEnter={e=>{e.currentTarget.style.borderColor=C.accent+"88";e.currentTarget.style.background=C.accentDim;}}
+        onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}}>
+        <div style={{ marginBottom:5 }}><Ic.Attach size={22} color={C.muted}/></div>
+        <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:12,marginBottom:2 }}>Drop file or click to browse</div>
+        <div style={{ color:C.purple,fontFamily:F,fontSize:11,display:"flex",alignItems:"center",justifyContent:"center",gap:4 }}><Ic.Bot size={12} color={C.purple}/> AI will auto-extract invoice data</div>
+      </div>;
+
+  // ─── Shared form body ──────────────────────────────────────────────────────
+  const FormBody = () => (<>
+    <div style={{ display:"flex",gap:12 }}>
+      <div style={{ flex:2 }}><label style={LBL}>Supplier / Company</label><input style={INP} value={supplier} onChange={e=>setSupplier(e.target.value)} placeholder="e.g. Gulf Steel Co."/></div>
+      <div style={{ flex:1 }}><label style={LBL}>Invoice #</label><input style={INP} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="INV-001"/></div>
+    </div>
+    <div style={{ display:"flex",gap:12 }}>
+      <div style={{ flex:1 }}><label style={LBL}>Invoice Date</label><input style={{...INP,colorScheme:"dark"}} type="date" value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
+      <div style={{ flex:1 }}><label style={LBL}>Due Date</label><input style={{...INP,colorScheme:"dark"}} type="date" value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
+    </div>
+    <div style={{ display:"flex",gap:12 }}>
+      <div style={{ flex:2 }}><label style={LBL}>Amount *</label><input style={INP} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setFormErr("");}} placeholder="0.00"/></div>
+      <div style={{ flex:1 }}><label style={LBL}>Currency</label><select value={currency} onChange={e=>setCurrency(e.target.value)} style={{...INP,cursor:"pointer"}}>{["AED","USD","SAR","EUR","GBP","QAR","KWD"].map(c=><option key={c}>{c}</option>)}</select></div>
+    </div>
+    <div><label style={LBL}>Description / Notes</label><textarea style={{...INP,resize:"none"}} rows={2} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="Scope or summary"/></div>
+    <div><label style={LBL}>Status</label>
+      <div style={{ display:"flex",gap:7 }}>{INV_ST.map(s=><button key={s.v} onClick={()=>setStatus(s.v)} style={{ flex:1,padding:"8px 0",borderRadius:7,cursor:"pointer",fontFamily:F,fontSize:12,fontWeight:700,border:status===s.v?`2px solid ${s.c}`:`1px solid ${C.border}`,background:status===s.v?s.c+"22":"transparent",color:status===s.v?s.c:C.muted }}>{s.l}</button>)}</div>
+    </div>
+    <div>
+      <label style={LBL}>Document <span style={{color:C.muted,fontWeight:400}}>(optional — AI auto-extracts)</span></label>
+      <DocZone/>
+      <input ref={fileRef} type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.doc,.docx,.xls,.xlsx" style={{ display:"none" }} onChange={e=>{const f=e.target.files[0];if(f)handleDoc(f);e.target.value="";}}/>
+    </div>
+  </>);
+
   return(
     <div>
       {preview&&<FilePreviewModal file={preview} onClose={()=>setPreview(null)}/>}
-      {confirmDelete&&(
-        <ConfirmDialog
-          title="Delete Invoice?"
-          message={`Are you sure you want to delete invoice "${confirmDelete.iid}"? This action cannot be undone.`}
+
+      {confirmDel&&(
+        <ConfirmDialog title="Delete Invoice?"
+          message={`Delete invoice "${confirmDel.iid}"? This cannot be undone.`}
           confirmLabel="Yes, Delete" variant="delete"
           onConfirm={async()=>{
-            if(confirmDelete._origin==="local"){
-              remove(confirmDelete.id); // remove from useFiles
-              if(onRemoveGlobalInvoice) await onRemoveGlobalInvoice(confirmDelete.id); // also purge global copy
-            } else if(confirmDelete._origin==="global"){
-              if(onRemoveGlobalInvoice) await onRemoveGlobalInvoice(confirmDelete.id);
-            }
-            setConfirmDelete(null);
-            onActivity("Invoice deleted","🗑️");
+            if(onRemoveGlobalInvoice) await onRemoveGlobalInvoice(confirmDel.id);
+            if(onActivity) onActivity("Invoice "+confirmDel.iid+" deleted","del");
+            setConfirmDel(null);
           }}
-          onCancel={()=>setConfirmDelete(null)}>
+          onCancel={()=>setConfirmDel(null)}>
           <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:"12px 16px",display:"flex",justifyContent:"space-between",alignItems:"center" }}>
-            <span style={{ color:C.accent,fontFamily:F,fontWeight:700,fontSize:13 }}>{confirmDelete.iid}</span>
-            <span style={{ color:C.text,fontFamily:F,fontWeight:700 }}>{confirmDelete.amount?`$${Number(confirmDelete.amount).toLocaleString()}`:"—"}</span>
+            <span style={{ color:C.accent,fontFamily:F,fontWeight:700,fontSize:13 }}>{confirmDel.iid}</span>
+            <span style={{ color:C.text,fontFamily:F,fontWeight:700 }}>{confirmDel.amount?`$${Number(confirmDel.amount).toLocaleString()}`:"—"}</span>
           </div>
         </ConfirmDialog>
       )}
-      {!showAdd&&rows.length>0&&(
+
+      {/* Invoice table */}
+      {mode==="list"&&rows.length>0&&(
         <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,overflow:"hidden",marginBottom:14 }}>
           <table style={{ width:"100%",borderCollapse:"collapse",fontFamily:F,fontSize:12 }}>
-            <thead><tr style={{ background:C.bg,borderBottom:`1px solid ${C.border}` }}>{["#","Description","Amount","Due","Status",""].map(h=><th key={h} style={{ color:C.muted,fontWeight:700,padding:"8px 12px",textAlign:"left",fontSize:11 }}>{h}</th>)}</tr></thead>
+            <thead><tr style={{ background:C.bg,borderBottom:`1px solid ${C.border}` }}>
+              {["#","Supplier","Amount","Due","Status","Actions"].map(h=><th key={h} style={{ color:C.muted,fontWeight:700,padding:"8px 12px",textAlign:"left",fontSize:11 }}>{h}</th>)}
+            </tr></thead>
             <tbody>{rows.map((row,i)=>{ const st=INV_ST.find(s=>s.v===row.st)||INV_ST[0]; return(
-              <tr key={row.id||row.iid} style={{ borderBottom:i<rows.length-1?`1px solid ${C.border}22`:"none" }}>
-                <td style={{ color:C.accent,padding:"9px 12px",fontWeight:700,fontSize:11 }}>{row.iid}</td>
-                <td style={{ color:C.text,padding:"9px 12px",maxWidth:110,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{row.desc}</td>
-                <td style={{ color:C.text,padding:"9px 12px",fontWeight:700 }}>{row.amount?`$${Number(row.amount).toLocaleString()}`:"—"}</td>
-                <td style={{ color:row.st==="overdue"?C.red:C.muted,padding:"9px 12px" }}>{row.dd||"—"}</td>
-                <td style={{ padding:"9px 12px" }}><button onClick={()=>cycle(row)} style={{ background:st.c+"22",color:st.c,border:`1px solid ${st.c}55`,padding:"2px 8px",borderRadius:4,fontFamily:F,fontSize:11,fontWeight:700,cursor:"pointer" }}>{st.l}</button></td>
-                <td style={{ padding:"9px 12px" }}><div style={{ display:"flex",gap:4 }}>{row.dataUrl&&<button onClick={()=>setPreview(row)} style={{ background:"transparent",color:C.blue,border:`1px solid ${C.blue}33`,padding:"2px 7px",borderRadius:4,fontFamily:F,fontSize:11,cursor:"pointer" }}>View</button>}<button onClick={()=>setConfirmDelete(row)} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,padding:"2px 7px",borderRadius:4,fontFamily:F,fontSize:11,cursor:"pointer" }}>Del</button></div></td>
+              <tr key={row.id} style={{ borderBottom:i<rows.length-1?`1px solid ${C.border}22`:"none" }}>
+                <td style={{ color:C.accent,padding:"9px 12px",fontWeight:700,fontSize:11,whiteSpace:"nowrap" }}>{row.iid}</td>
+                <td style={{ color:C.text,padding:"9px 12px",maxWidth:100,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontSize:11 }}>{row.supplier||row.desc||"—"}</td>
+                <td style={{ color:C.text,padding:"9px 12px",fontWeight:700,whiteSpace:"nowrap" }}>{row.amount?`$${Number(row.amount).toLocaleString()}`:"—"}</td>
+                <td style={{ color:row.st==="overdue"?C.red:C.muted,padding:"9px 12px",fontSize:11,whiteSpace:"nowrap" }}>{row.dd||"—"}</td>
+                <td style={{ padding:"9px 12px" }}><button onClick={()=>cycle(row)} style={{ background:st.c+"22",color:st.c,border:`1px solid ${st.c}55`,padding:"2px 8px",borderRadius:4,fontFamily:F,fontSize:11,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap" }}>{st.l}</button></td>
+                <td style={{ padding:"9px 12px" }}>
+                  <div style={{ display:"flex",gap:4,alignItems:"center" }}>
+                    {row.dataUrl&&<button onClick={()=>setPreview(row)} style={{ background:"transparent",color:C.blue,border:`1px solid ${C.blue}33`,padding:"3px 8px",borderRadius:4,fontFamily:F,fontSize:11,cursor:"pointer",display:"flex",alignItems:"center",gap:3 }}><Ic.File size={11} color="currentColor"/> View</button>}
+                    <button onClick={()=>openEdit(row)} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}44`,padding:"3px 8px",borderRadius:4,fontFamily:F,fontSize:11,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:3 }}><Ic.Edit size={11} color="currentColor"/> Edit</button>
+                    <button onClick={()=>setConfirmDel(row)} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,padding:"3px 6px",borderRadius:4,fontFamily:F,fontSize:11,cursor:"pointer" }}><Ic.Delete size={12} color="currentColor"/></button>
+                  </div>
+                </td>
               </tr>);})}
             </tbody>
           </table>
         </div>
       )}
-      {!showAdd&&rows.length===0&&<div style={{ color:C.muted,fontFamily:F,fontSize:12,padding:"10px 0",marginBottom:12 }}>No invoices yet — add your first one</div>}
-      {showAdd
-        ?<InlineFormShell header="New Invoice" accent={C.accent} saveLabel="Save Invoice" onSave={submitInv} onCancel={()=>setShowAdd(false)} err={formErr} saving={saving}>
-            <div style={{ display:"flex",gap:12 }}>
-              <div style={{ flex:2 }}><label style={LBL}>Supplier / Company</label><input style={INP} value={supplier} onChange={e=>setSupplier(e.target.value)} placeholder="e.g. Gulf Steel Co."/></div>
-              <div style={{ flex:1 }}><label style={LBL}>Invoice #</label><input style={INP} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="INV-001"/></div>
-            </div>
-            <div style={{ display:"flex",gap:12 }}>
-              <div style={{ flex:1 }}><label style={LBL}>Invoice Date</label><input style={{ ...INP,colorScheme:"dark" }} type="date" value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
-              <div style={{ flex:1 }}><label style={LBL}>Due Date</label><input style={{ ...INP,colorScheme:"dark" }} type="date" value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
-            </div>
-            <div style={{ display:"flex",gap:12 }}>
-              <div style={{ flex:2 }}><label style={LBL}>Amount *</label><input style={INP} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setFormErr("");}} placeholder="0.00"/></div>
-              <div style={{ flex:1 }}><label style={LBL}>Currency</label><select value={currency} onChange={e=>setCurrency(e.target.value)} style={{ ...INP,cursor:"pointer" }}>{["AED","USD","SAR","EUR","GBP","QAR","KWD"].map(c=><option key={c}>{c}</option>)}</select></div>
-            </div>
-            <div><label style={LBL}>Description</label><textarea style={{ ...INP,resize:"none" }} rows={2} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="Scope or summary"/></div>
-            <div><label style={LBL}>Status</label>
-              <div style={{ display:"flex",gap:7 }}>{INV_ST.map(s=><button key={s.v} onClick={()=>setStatus(s.v)} style={{ flex:1,padding:"8px 0",borderRadius:7,cursor:"pointer",fontFamily:F,fontSize:12,fontWeight:700,border:status===s.v?`2px solid ${s.c}`:`1px solid ${C.border}`,background:status===s.v?s.c+"22":"transparent",color:status===s.v?s.c:C.muted }}>{s.l}</button>)}</div>
-            </div>
-            <div>
-              <label style={LBL}>Attach Document <span style={{color:C.muted,fontWeight:400}}>(optional — AI auto-extracts)</span></label>
-              {docFile
-                ?<div style={{ background:C.surface,border:`1px solid ${C.green}44`,borderRadius:9,padding:"12px 14px" }}>
-                    {aiRunning&&<div style={{ color:C.purple,fontFamily:F,fontSize:11,marginBottom:8,display:"flex",alignItems:"center",gap:7 }}><div style={{ width:10,height:10,border:"2px solid",borderColor:C.purple,borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Extracting…</div>}
-                    {aiNote&&!aiRunning&&<div style={{ color:aiNote.startsWith("OK")?C.green:C.muted,fontFamily:F,fontSize:11,marginBottom:8,padding:"6px 9px",background:aiNote.startsWith("OK")?C.greenDim:"transparent",borderRadius:5 }}>{aiNote}</div>}
-                    <div style={{ display:"flex",alignItems:"center",gap:10 }}>
-                      <div style={{ width:34,height:34,background:C.card,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,flexShrink:0 }}>{docFile.dataUrl?.startsWith("data:image")?"🖼️":"📄"}</div>
-                      <div style={{ flex:1,minWidth:0 }}><div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:12,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{docFile.name}</div><div style={{ color:C.muted,fontFamily:F,fontSize:10 }}>{docFile.size?(docFile.size/1024).toFixed(1)+" KB":""}</div></div>
-                      <button onClick={()=>{setDocFile(null);setAiNote("");}} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,borderRadius:5,padding:"3px 8px",fontFamily:F,fontSize:11,cursor:"pointer" }}>Remove</button>
-                    </div>
-                  </div>
-                :<div onClick={()=>invFileRef.current.click()} onDragOver={e=>{e.preventDefault();e.currentTarget.style.borderColor=C.accent;e.currentTarget.style.background=C.accentDim;}} onDragLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}} onDrop={e=>{e.preventDefault();e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";const f=e.dataTransfer.files[0];if(f)handleInvDoc(f);}} style={{ border:`2px dashed ${C.border}`,borderRadius:9,padding:"18px",textAlign:"center",cursor:"pointer",transition:"all .2s" }} onMouseEnter={e=>{e.currentTarget.style.borderColor=C.accent+"88";e.currentTarget.style.background=C.accentDim;}} onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}}>
-                    <div style={{ fontSize:22,marginBottom:5 }}>📎</div>
-                    <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:12,marginBottom:2 }}>Drop file or click to browse</div>
-                    <div style={{ color:C.purple,fontFamily:F,fontSize:11 }}>🤖 AI will auto-extract invoice data</div>
-                  </div>
-              }
-              <input ref={invFileRef} type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.doc,.docx,.xls,.xlsx" style={{ display:"none" }} onChange={e=>{const f=e.target.files[0];if(f)handleInvDoc(f);e.target.value="";}}/>
-            </div>
-          </InlineFormShell>
-        :<button onClick={openAdd} style={{ background:C.accent,color:"#000",border:"none",padding:"10px 22px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:7 }}>🧾 + Add Invoice</button>
-      }
+      {mode==="list"&&rows.length===0&&<div style={{ color:C.muted,fontFamily:F,fontSize:12,padding:"10px 0",marginBottom:12 }}>No invoices yet — add your first one below.</div>}
+
+      {/* Add form */}
+      {mode==="add"&&(
+        <InlineFormShell header="New Invoice" accent={C.accent} saveLabel="Save Invoice" onSave={submitAdd} onCancel={()=>{setMode("list");resetForm();}} err={formErr} saving={saving}>
+          <FormBody/>
+        </InlineFormShell>
+      )}
+
+      {/* Edit form */}
+      {mode==="edit"&&(
+        <InlineFormShell header={`Edit Invoice — ${editTarget?.invId||editTarget?.id||""}`} accent={C.blue} saveLabel="Save Changes" onSave={submitEdit} onCancel={()=>{setMode("list");setEditTarget(null);resetForm();}} err={formErr} saving={saving}>
+          <FormBody/>
+        </InlineFormShell>
+      )}
+
+      {/* Add button */}
+      {mode==="list"&&(
+        <button onClick={openAdd} style={{ background:C.accent,color:"#000",border:"none",padding:"10px 22px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:7 }}>
+          <Ic.Plus size={14} color="#000"/> Add Invoice
+        </button>
+      )}
     </div>
   );
 }
 
-// ─── Add Plan Form Modal ──────────────────────────────────────────────────────
+
 function AddPlanFormModal({ project, onConfirm, onCancel }){
   const [title,setTitle]   = useState("");
   const [cat,setCat]       = useState("drawing");
@@ -3098,7 +3211,7 @@ function PhotoCard({ photo, comments, onOpen, onDelete }){
 }
 
 // ─── Project Detail Page ───────────────────────────────────────────────────────
-function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPayment,updatePayment,removePayment,allProjects=[],allInvoices=[],addInvoice,removeGlobalInvoice,onUpdateProject,onLog }){ 
+function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPayment,updatePayment,removePayment,allProjects=[],allInvoices=[],addInvoice,removeGlobalInvoice,updateGlobalInvoice,onUpdateProject,onLog }){ 
   const [contactOpen,setContactOpen] = useState(false);
   const [editingProject,setEditingProject] = useState(false);
   const [confirmProjectPatch,setConfirmProjectPatch] = useState(null);
@@ -3116,12 +3229,12 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
   const [dragOverId,setDragOverId] = useState(null);
 
   const pushLog  = (action,icon,proj)=>{
-    const entry={ id:Date.now(),action,detail:proj||project.name,user:"Jordan Blake",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon };
+    const entry={ id:Date.now(),action,detail:proj||project.name,user:profile?.full_name||"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon };
     setLog(prev=>[entry,...prev]);
     if(onLog) onLog(entry);
   };
   const mergedLog= useMemo(()=>[...extraLog.filter(e=>!log.find(l=>l.id===e.id)),...log].sort((a,b)=>(b.id||0)-(a.id||0)),[extraLog,log]);
-  const saveNote = ()=>{ if(!noteText.trim())return; const n={id:Date.now(),text:noteText.trim(),author:"Jordan Blake",time:new Date().toLocaleDateString()}; setNotes(p=>[n,...p]); pushLog("Note added","📝"); setNoteText(""); };
+  const saveNote = ()=>{ if(!noteText.trim())return; const n={id:Date.now(),text:noteText.trim(),author:profile?.full_name||"User",time:new Date().toLocaleDateString()}; setNotes(p=>[n,...p]); pushLog("Note added","📝"); setNoteText(""); };
   const uploadPhotos = files=>Array.from(files).forEach(f=>{ const rd=new FileReader(); rd.onload=async e=>{ await addPhoto({id:`${Date.now()}-${Math.random().toString(36).slice(2)}`,name:f.name,size:f.size,dataUrl:e.target.result,uploadedAt:new Date().toLocaleDateString()}); pushLog("Photo uploaded","📷"); }; rd.readAsDataURL(f); });
   const projectPayments = useMemo(()=>payments.filter(p=>p.projId===project.id||p.project===project.name),[payments,project]);
   const handleAddPayment= async(p)=>{ addPayment&&addPayment(p); pushLog(`Payment $${p.amount.toLocaleString()} recorded`,"PAY"); };
@@ -3155,7 +3268,7 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
 
   // Module definitions — rendered in persisted order
   const MODULE_DEFS = {
-    invoices: { icon:"🧾", title:"Invoices",  color:C.accent, dim:C.accentDim, sub:`${invCount} invoice${invCount!==1?"s":""}`, content:<InvoicesPanel project={project} onActivity={pushLog} onAddGlobalInvoice={addInvoice} onRemoveGlobalInvoice={removeGlobalInvoice} allInvoices={allInvoices}/> },
+    invoices: { icon:<Ic.Receipt size={22} color={C.accent}/>, title:"Invoices",  color:C.accent, dim:C.accentDim, sub:`${invCount} invoice${invCount!==1?"s":""}`, content:<InvoicesPanel project={project} onActivity={pushLog} onAddGlobalInvoice={addInvoice} onUpdateGlobalInvoice={updateGlobalInvoice} onRemoveGlobalInvoice={removeGlobalInvoice} allInvoices={allInvoices}/> },
     payments: { icon:"💰", title:"Payments",  color:C.green,  dim:C.greenDim,  sub:`${payCount} payment${payCount!==1?"s":""}`, content:<PaymentsPanel project={project} payments={projectPayments} addPayment={handleAddPayment} updatePayment={updatePayment} removePayment={removePayment} allProjects={allProjects} allInvoices={allInvoices} onActivity={pushLog}/> },
     plans:    { icon:"📐", title:"Plans",     color:C.blue,   dim:C.blueDim,   sub:`${planCount} document${planCount!==1?"s":""}`, content:<PlansPanel project={project} onActivity={pushLog}/> },
     team:     { icon:"👷", title:"Team",      color:C.green,  dim:C.greenDim,  sub:`${teamCount} member${teamCount!==1?"s":""}`, content:<TeamPanel  project={project} onOpenTeamPage={onOpenTeam}/> },
@@ -4505,21 +4618,21 @@ function TeamGlobal({ allProjects=[], onLog }){
   const handleAddMember=async(m)=>{
     if(!m.projId){ alert("Please select a project for this member."); return; }
     await saveToProject(m.projId,cur=>[...cur,{...m,id:`${Date.now()}-${Math.random().toString(36).slice(2)}`}]);
-    if(onLog) onLog({ id:Date.now(),action:`${m.name} added to team`,detail:m.projectName||"",user:"Jordan Blake",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"👷" });
+    if(onLog) onLog({ id:Date.now(),action:`${m.name} added to team`,detail:m.projectName||"",user:profile?.full_name||"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"👷" });
     refresh(); setShowAddModal(false);
   };
 
   const handleEditMember=async(patch)=>{
     const {projId,id}=editingMember;
     await saveToProject(projId,cur=>cur.map(m=>m.id===id?{...m,...patch,init:patch.name?patch.name.trim().split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase():m.init}:m));
-    if(onLog) onLog({ id:Date.now(),action:`${editingMember.name} updated`,detail:editingMember.projectName||"",user:"Jordan Blake",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"✏️" });
+    if(onLog) onLog({ id:Date.now(),action:`${editingMember.name} updated`,detail:editingMember.projectName||"",user:profile?.full_name||"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"✏️" });
     refresh(); setEditingMember(null); setConfirmEditMember(null);
   };
 
   const handleDeleteMember=async()=>{
     const {projId,id,name,projectName}=confirmDelMember;
     await saveToProject(projId,cur=>cur.filter(m=>m.id!==id));
-    if(onLog) onLog({ id:Date.now(),action:`${name} removed from team`,detail:projectName||"",user:"Jordan Blake",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"🗑️" });
+    if(onLog) onLog({ id:Date.now(),action:`${name} removed from team`,detail:projectName||"",user:profile?.full_name||"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"🗑️" });
     refresh(); setConfirmDelMember(null);
   };
 
@@ -5738,11 +5851,11 @@ const NAV=[
   { id:"accountant",  label:"Accountant",         icon:"🧾" },
 ];
 
-export default function App(){
-  return <CurrencyProvider><ThemeProvider><AppInner/></ThemeProvider></CurrencyProvider>;
+export default function App({ session, profile, onLogout }){
+  return <CurrencyProvider><ThemeProvider><AppInner session={session} profile={profile} onLogout={onLogout}/></ThemeProvider></CurrencyProvider>;
 }
 
-function AppInner(){
+function AppInner({ session, profile, onLogout }){
   const { theme, isDark, toggleTheme } = useTheme();
   ThemeRef.current = theme;
   const [tab,setTab]=useState("projects");
@@ -5762,7 +5875,7 @@ function AppInner(){
   const detailBack =()=>{ setSubView("list"); setProject(null); };
   const switchTab  =id=>{ setTab(id); if(id!=="projects"){setProject(null);setSubView("list");} };
   const handleTeamLog=(action,icon,projName)=>{
-    const entry={ id:Date.now(),action,detail:projName||action,user:"Jordan Blake",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon };
+    const entry={ id:Date.now(),action,detail:projName||action,user:profile?.full_name||"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon };
     setTeamLog(prev=>[entry,...prev]);
     pushGlobal(entry);
   };
@@ -5770,39 +5883,39 @@ function AppInner(){
   // Wrapped addPayment that also logs to global log
   const handleAddPayment=async(p)=>{
     addPayment(p);
-    await pushGlobal({ id:Date.now(),action:`Payment $${Number(p.amount).toLocaleString()} recorded`,detail:p.project,user:"Jordan Blake",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"💰" });
+    await pushGlobal({ id:Date.now(),action:`Payment $${Number(p.amount).toLocaleString()} recorded`,detail:p.project,user:profile?.full_name||"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"💰" });
   };
   const handleUpdatePayment=async(id,patch)=>{
     updatePayment(id,patch);
-    await pushGlobal({ id:Date.now(),action:`Payment $${Number(patch.amount||0).toLocaleString()} updated`,detail:patch.project||"",user:"Jordan Blake",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"✏️" });
+    await pushGlobal({ id:Date.now(),action:`Payment $${Number(patch.amount||0).toLocaleString()} updated`,detail:patch.project||"",user:profile?.full_name||"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"✏️" });
   };
   const handleRemovePayment=async(id)=>{
     const p=payments.find(x=>x.id===id);
     removePayment(id);
-    if(p) await pushGlobal({ id:Date.now(),action:`Payment $${Number(p.amount||0).toLocaleString()} deleted`,detail:p.project||"",user:"Jordan Blake",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"🗑️" });
+    if(p) await pushGlobal({ id:Date.now(),action:`Payment $${Number(p.amount||0).toLocaleString()} deleted`,detail:p.project||"",user:profile?.full_name||"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"🗑️" });
   };
   // Wrapped addInvoice that also logs to global log
   const handleAddInvoice=async(inv)=>{
     await addInvoice(inv);
-    await pushGlobal({ id:Date.now(),action:`Invoice ${inv.invId||inv.id} added`,detail:`${inv.project||""} · $${Number(inv.amount||0).toLocaleString()}`,user:"Jordan Blake",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"🧾" });
+    await pushGlobal({ id:Date.now(),action:`Invoice ${inv.invId||inv.id} added`,detail:`${inv.project||""} · $${Number(inv.amount||0).toLocaleString()}`,user:profile?.full_name||"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"🧾" });
   };
   const handleUpdateInvoice=async(id,patch)=>{
     await updateInvoice(id,patch);
-    await pushGlobal({ id:Date.now(),action:`Invoice ${id} edited`,detail:patch.project||"",user:"Jordan Blake",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"✏️" });
+    await pushGlobal({ id:Date.now(),action:`Invoice ${id} edited`,detail:patch.project||"",user:profile?.full_name||"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"✏️" });
   };
   const handleRemoveInvoice=async(id)=>{
     await removeInvoice(id);
-    await pushGlobal({ id:Date.now(),action:`Invoice ${id} deleted`,detail:"",user:"Jordan Blake",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"🗑️" });
+    await pushGlobal({ id:Date.now(),action:`Invoice ${id} deleted`,detail:"",user:profile?.full_name||"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"🗑️" });
   };
 
   const handleAddProject=async(proj)=>{
     addProject(proj);
-    await pushGlobal({ id:Date.now(), action:`Project "${proj.name}" created`, detail:proj.name, user:"Jordan Blake", time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}), icon:"🏗" });
+    await pushGlobal({ id:Date.now(), action:`Project "${proj.name}" created`, detail:proj.name, user:profile?.full_name||"User", time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}), icon:"🏗" });
   };
   const handleUpdateProject=async(id,patch)=>{
     await updateProject(id,patch);
     const p=allProjects.find(x=>x.id===id);
-    await pushGlobal({ id:Date.now(), action:`Project "${p?.name||id}" updated`, detail:p?.name||"", user:"Jordan Blake", time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}), icon:"✏️" });
+    await pushGlobal({ id:Date.now(), action:`Project "${p?.name||id}" updated`, detail:p?.name||"", user:profile?.full_name||"User", time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}), icon:"✏️" });
   };
 
   const handleDeleteProject=async(proj)=>{
@@ -5821,7 +5934,7 @@ function AppInner(){
     // 5. If we're currently viewing this project, go back to list
     if(project&&project.id===proj.id){ setProject(null); setSubView("list"); }
     // 6. Log the deletion
-    await pushGlobal({ id:Date.now(), action:`Project "${proj.name}" deleted`, detail:proj.name, user:"Jordan Blake", time:ts, icon:"🗑️" });
+    await pushGlobal({ id:Date.now(), action:`Project "${proj.name}" deleted`, detail:proj.name, user:profile?.full_name||"User", time:ts, icon:"🗑️" });
   };
 
   const projectMilestoneEvents = useMemo(()=>{
@@ -5836,7 +5949,7 @@ function AppInner(){
   const screen=()=>{
     if(tab==="projects"){
       if(subView==="team"&&project)   return <TeamPage project={project} onBack={teamBack} onAddToLog={handleTeamLog} tasks={tasks} updateTask={updateTask}/>;
-      if(subView==="detail"&&project) return <ProjectPage project={project} onBack={detailBack} onOpenTeam={goToTeam} extraLog={[...teamLog,...globalLog.filter(e=>e.detail===project.name)]} payments={payments} addPayment={handleAddPayment} updatePayment={handleUpdatePayment} removePayment={handleRemovePayment} allProjects={allProjects} allInvoices={allInvoices} addInvoice={handleAddInvoice} removeGlobalInvoice={handleRemoveInvoice} onUpdateProject={async(id,patch)=>{ await handleUpdateProject(id,patch); setProject(p=>({...p,...patch})); }} onLog={pushGlobal}/>;
+      if(subView==="detail"&&project) return <ProjectPage project={project} onBack={detailBack} onOpenTeam={goToTeam} extraLog={[...teamLog,...globalLog.filter(e=>e.detail===project.name)]} payments={payments} addPayment={handleAddPayment} updatePayment={handleUpdatePayment} removePayment={handleRemovePayment} allProjects={allProjects} allInvoices={allInvoices} addInvoice={handleAddInvoice} removeGlobalInvoice={handleRemoveInvoice} updateGlobalInvoice={handleUpdateInvoice} onUpdateProject={async(id,patch)=>{ await handleUpdateProject(id,patch); setProject(p=>({...p,...patch})); }} onLog={pushGlobal}/>;
       return <ProjectsList onSelect={goToDetail} allProjects={allProjects} onAddProject={handleAddProject} onUpdateProject={handleUpdateProject} onDeleteProject={handleDeleteProject}/>;
     }
     if(tab==="dashboard") return <Dashboard onSelect={goToDetail} allProjects={allProjects} allInvoices={allInvoices} payments={payments} tasks={tasks} globalLog={globalLog}/>;
@@ -5849,7 +5962,8 @@ function AppInner(){
     if(tab==="reports")    return <ReportPage tasks={tasks} allProjects={allProjects}/>;
     if(tab==="prices")     return <PriceTrackingPage/>;
     if(tab==="accountant") return <AccountantPage allProjects={allProjects} allInvoices={allInvoices} payments={payments}/>;
-    return <div style={{ color:C.muted,fontFamily:F,fontSize:14,padding:"40px 0",textAlign:"center" }}>🚧 Coming soon…</div>;
+    if(tab==="users")      return session&&profile ? <UsersPage currentUser={session.user} profile={profile}/> : null;
+    return <div style={{ color:C.muted,fontFamily:F,fontSize:14,padding:"40px 0",textAlign:"center" }}>Coming soon…</div>;
   };
 
   return(
@@ -5875,7 +5989,9 @@ function AppInner(){
           </div>
         </div>
         <nav style={{ flex:1,padding:"14px 10px",overflowY:"auto" }}>
-          {NAV.map(n=>(
+          {[...NAV.filter(n=>!profile||!profile.permissions||profile.permissions[n.id]!==false),
+            ...(profile&&(profile.role==="superadmin"||profile.role==="admin")?[{id:"users",label:"Users",iconKey:"team"}]:[])
+          ].map(n=>(
             <button key={n.id} onClick={()=>switchTab(n.id)} style={{ display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 12px",borderRadius:8,marginBottom:3,background:tab===n.id?C.accentDim:"transparent",border:tab===n.id?`1px solid ${C.accentMid}`:"1px solid transparent",color:tab===n.id?C.accent:C.muted,fontFamily:F,fontSize:13,fontWeight:tab===n.id?700:500,cursor:"pointer",textAlign:"left",transition:"all .15s" }}>
               <Icon d={ICONS[n.iconKey]} size={15} stroke={tab===n.id?C.accent:C.muted}/>{n.label}
             </button>
@@ -5888,10 +6004,22 @@ function AppInner(){
             <span style={{ color:C.accent,fontFamily:F,fontSize:12,fontWeight:700 }}>{isDark?"Light Mode":"Dark Mode"}</span>
           </button>
           {/* User */}
-          <div style={{ display:"flex",alignItems:"center",gap:10 }}>
-            <div style={{ width:30,height:30,borderRadius:"50%",background:C.blueDim,display:"flex",alignItems:"center",justifyContent:"center",color:C.blue,fontFamily:F,fontWeight:700,fontSize:12,flexShrink:0 }}>JB</div>
-            <div><div style={{ color:C.text,fontFamily:F,fontSize:13,fontWeight:600 }}>Jordan Blake</div><div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>Owner</div></div>
+          <div style={{ display:"flex",alignItems:"center",gap:10,marginBottom:10 }}>
+            <div style={{ width:30,height:30,borderRadius:"50%",background:C.blueDim,display:"flex",alignItems:"center",justifyContent:"center",color:C.blue,fontFamily:F,fontWeight:700,fontSize:12,flexShrink:0 }}>
+              {profile?.full_name?.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase()||"?"}
+            </div>
+            <div style={{ flex:1,minWidth:0 }}>
+              <div style={{ color:C.text,fontFamily:F,fontSize:13,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{profile?.full_name||profile?.email||"User"}</div>
+              <div style={{ color:C.muted,fontFamily:F,fontSize:11,textTransform:"capitalize" }}>{profile?.role||"user"}</div>
+            </div>
           </div>
+          {/* Logout */}
+          {onLogout&&<button onClick={onLogout} style={{ display:"flex",alignItems:"center",gap:6,width:"100%",padding:"7px 10px",borderRadius:7,background:"transparent",border:`1px solid ${C.border}`,color:C.muted,fontFamily:F,fontSize:12,cursor:"pointer",transition:"all .15s" }}
+            onMouseEnter={e=>{e.currentTarget.style.borderColor=C.red+"66";e.currentTarget.style.color=C.red;}}
+            onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.color=C.muted;}}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+            Sign Out
+          </button>}
         </div>
       </div>
 
