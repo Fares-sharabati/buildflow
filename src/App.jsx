@@ -249,6 +249,10 @@ const calcProgress = (project) => {
   return map[project?.status] ?? 0;
 };
 
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const DAYS_LONG  = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
 
 // ─── Context ──────────────────────────────────────────────────────────────────
 const CompanyCtx = React.createContext(null);
@@ -4616,10 +4620,16 @@ function TeamGlobal({ allProjects=[], onLog }){
     refresh(); setEditingMember(null); setConfirmEditMember(null);
   };
 
+  const handleAddMember=async(m)=>{
+    await dbTeam.add(m, m.projId);
+    if(onLog) onLog({ id:Date.now(),action:`${m.name} added to team`,detail:m.projectName||"",user:"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"👷" });
+    setShowAddModal(false); refresh();
+  };
+
   const handleDeleteMember=async()=>{
     const {id,name,projectName}=confirmDelMember;
     await dbTeam.delete(id);
-    if(onLog) onLog({ id:Date.now(),action:`${name} removed from team`,detail:projectName||"",user:profile?.full_name||"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"🗑️" });
+    if(onLog) onLog({ id:Date.now(),action:`${name} removed from team`,detail:projectName||"",user:"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"🗑️" });
     refresh(); setConfirmDelMember(null);
   };
 
