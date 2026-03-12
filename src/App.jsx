@@ -1,12 +1,14 @@
 // @ts-nocheck
+import { useState, useEffect, useContext, useRef, useMemo, useCallback } from 'react'
 import UsersPage from './UsersPage.jsx'
+import { initDb, dbProjects, dbInvoices, dbPayments, dbTasks, dbTeam, dbTenders, dbLog, dbProfiles, dbNotes, mapInvoice, mapPayment, mapTask, mapProject, mapMember, mapTender, mapLog } from './db.js'
 
 function UsersPageWrapper({ session, profile }) {
   if (!session || !profile) return null;
   return <UsersPage currentUser={session.user} profile={profile}/>;
 }
 
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React from 'react';
 
 // ─── SVG Icon System ───────────────────────────────────────────────────────────
 const Icon = ({ d, size=16, stroke="#7a849e" }) => (
@@ -47,6 +49,18 @@ const Ic = {
   Receipt: ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><line x1="16" y1="8" x2="8" y2="8"/><line x1="16" y1="12" x2="8" y2="12"/><line x1="11" y1="16" x2="8" y2="16"/></svg>,
   Photo:   ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>,
   Note:    ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>,
+  // ── Nav icons ─────────────────────────────────────────────────────────────────
+  Dashboard: ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>,
+  Projects:  ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M2 20h20M6 20V10l6-7 6 7v10M10 20v-5h4v5"/></svg>,
+  Invoices:  ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>,
+  Payments:  ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>,
+  Team:      ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
+  Calendar:  ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>,
+  Tasks:     ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>,
+  Tenders:   ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>,
+  Reports:   ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
+  Prices:    ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>,
+  Accountant:({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><line x1="16" y1="8" x2="8" y2="8"/><line x1="16" y1="12" x2="8" y2="12"/><line x1="11" y1="16" x2="8" y2="16"/></svg>,
 };
 
 // ─── Storage wrapper ───────────────────────────────────────────────────────────
@@ -83,6 +97,44 @@ const LIGHT_THEME = {
 const ThemeRef = { current: DARK_THEME };
 // C is a proxy that always reads from ThemeRef — works everywhere
 const C = new Proxy({}, { get:(_,k)=>ThemeRef.current[k] });
+
+// ─── Shared input / label style helpers ───────────────────────────────────────
+// These are functions so they always read the live C proxy value at render time.
+// Usage: style={INP()} or style={{ ...INP(), extraProp:val }}
+const INP = () => ({
+  background: C.surface,
+  border: `1px solid ${C.border}`,
+  borderRadius: 7,
+  padding: "9px 12px",
+  color: C.text,
+  fontFamily: F,
+  fontSize: 13,
+  outline: "none",
+  width: "100%",
+  boxSizing: "border-box",
+});
+const LBL = () => ({
+  color: C.muted,
+  fontFamily: F,
+  fontSize: 11,
+  fontWeight: 700,
+  display: "block",
+  marginBottom: 5,
+  textTransform: "uppercase",
+  letterSpacing: "0.06em",
+});
+const SM = {
+  "on-site":  { color:"#22c55e", bg:"#22c55e1a", label:"On Site"   },
+  "remote":   { color:"#3b82f6", bg:"#3b82f61a", label:"Remote"    },
+  "off":      { color:"#7a849e", bg:"#7a849e1a", label:"Off"        },
+  "pending":  { color:"#f59e0b", bg:"#f59e0b1a", label:"Pending"   },
+  "done":     { color:"#22c55e", bg:"#22c55e1a", label:"Done"       },
+  "active":   { color:"#22c55e", bg:"#22c55e1a", label:"Active"     },
+  "quoting":  { color:"#3b82f6", bg:"#3b82f61a", label:"Quoting"   },
+  "completed":{ color:"#7a849e", bg:"#7a849e1a", label:"Completed" },
+  "paid":     { color:"#22c55e", bg:"#22c55e1a", label:"Paid"       },
+  "overdue":  { color:"#ef4444", bg:"#ef44441a", label:"Overdue"   },
+};
 
 const ThemeCtx = React.createContext({ theme:DARK_THEME, toggleTheme:()=>{} });
 function useTheme(){ return React.useContext(ThemeCtx); }
@@ -130,361 +182,166 @@ function nextInvId(allInvoices=[]){
 }
 
 const F = `'Inter','Segoe UI',sans-serif`;
+const ROLES = ["Site Manager","Project Manager","Engineer","Architect","Foreman","Electrician","Plumber","Carpenter","Mason","Welder","Surveyor","Safety Officer","Supervisor","Quantity Surveyor","Laborer","Driver","Other"];
+
+// ─── SLabel: section label component used in report & tender panels ───────────
+const SLabel = ({ children }) => (
+  <div style={{ color:C.muted, fontFamily:F, fontSize:11, fontWeight:700, textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:10 }}>
+    {children}
+  </div>
+);
 
 // ─── Static Data ───────────────────────────────────────────────────────────────
-const PROJECTS = [
-  { id:1, name:"Riverside Townhomes",  address:"14 Harbour Gate St, Dubai Marina, Dubai, UAE",      client:{ name:"Ahmed Al-Rashidi", company:"Apex Realty Group",  phone:"+971 50 234 5678", email:"ahmed@apexrealty.ae",  initials:"AR" }, value:480000, status:"active",    progress:62,  due:"2025-06-15", dueFmt:"Jun 15, 2025",  phase:"Framing",    location:"Dubai Marina",  startDate:"Jan 12, 2025" },
-  { id:2, name:"Summit Office Fitout", address:"Business Bay Tower, Floor 12, Business Bay, Dubai", client:{ name:"Sara Al-Mansouri",  company:"TechCorp LLC",       phone:"+971 55 876 4321", email:"sarah@techcorp.ae",    initials:"SM" }, value:120000, status:"active",    progress:34,  due:"2025-05-30", dueFmt:"May 30, 2025",  phase:"Electrical", location:"Business Bay",  startDate:"Feb 3, 2025" },
-  { id:3, name:"Harbour View Terrace", address:"The Walk, JBR, Dubai, UAE",                        client:{ name:"Jay Morris",         company:"Independent",        phone:"+971 52 111 9999", email:"jay.morris@gmail.com", initials:"JM" }, value:28500,  status:"quoting",  progress:0,   due:null,         dueFmt:"—",             phase:"Quoting",    location:"JBR",           startDate:"—" },
-  { id:4, name:"Eastside Warehouse",   address:"Al Quoz Industrial Area, Building 7, Dubai, UAE",  client:{ name:"Khalid Al-Naimy",   company:"Logistics Corp",     phone:"+971 4 333 7777",  email:"k.naimy@logistics.ae", initials:"KN" }, value:310000, status:"completed", progress:100, due:"2025-03-01", dueFmt:"Mar 1, 2025",   phase:"Completed",  location:"Al Quoz",       startDate:"Sep 10, 2024" },
-];
+const PROJECTS = [];
+const PROJ_INV = {};
+const ALL_INV_STATIC = [];
+const PROJ_CREW_SEED = {};
+const PROJ_LOGS_SEED = {};
+const PROJ_NOTES_SEED = {};
+const TASKS_SEED = [];
+const TENDERS_SEED = [];
 
-const PROJ_INV = {
-  1:[{ id:"INV-041", amount:96000,  status:"paid",    due:"2025-02-01", dueFmt:"Feb 1, 2025",  desc:"Foundation & Structure" },
-     { id:"INV-044", amount:144000, status:"pending", due:"2025-03-28", dueFmt:"Mar 28, 2025", desc:"Framing Milestone" }],
-  2:[{ id:"INV-042", amount:40800,  status:"overdue", due:"2025-02-20", dueFmt:"Feb 20, 2025", desc:"Initial Electrical Work" }],
-  3:[],
-  4:[{ id:"INV-038", amount:120000, status:"paid", due:"2024-11-10", dueFmt:"Nov 10, 2024", desc:"Phase 1 – Civil Works" },
-     { id:"INV-039", amount:95000,  status:"paid", due:"2024-12-15", dueFmt:"Dec 15, 2024", desc:"Phase 2 – Structure" },
-     { id:"INV-040", amount:95000,  status:"paid", due:"2025-01-20", dueFmt:"Jan 20, 2025", desc:"Phase 3 – Completion" }],
-};
-
-const ALL_INV_STATIC = [
-  { id:"INV-041", project:"Riverside Townhomes",  client:"Apex Realty Group", amount:96000,  status:"paid",    due:"2025-02-01", dueFmt:"Feb 1, 2025",  desc:"Foundation & Structure" },
-  { id:"INV-042", project:"Summit Office Fitout", client:"TechCorp LLC",      amount:40800,  status:"overdue", due:"2025-02-20", dueFmt:"Feb 20, 2025", desc:"Initial Electrical Work" },
-  { id:"INV-043", project:"Maple Street Ext.",    client:"City Works",        amount:57600,  status:"pending", due:"2025-03-15", dueFmt:"Mar 15, 2025", desc:"Road Extension Phase 1" },
-  { id:"INV-044", project:"Riverside Townhomes",  client:"Apex Realty Group", amount:144000, status:"pending", due:"2025-03-28", dueFmt:"Mar 28, 2025", desc:"Framing Milestone" },
-];
-
-const PROJ_CREW_SEED = {
-  1:[{ id:1, name:"Marcus Webb",       role:"Site Foreman",    type:"employee",     status:"on-site",  init:"MW", color:"#3b82f6", projId:1 },
-     { id:2, name:"Delta Electric",    role:"Electrician",     type:"subcontractor",status:"on-site",init:"DE", color:"#a78bfa", projId:1 },
-     { id:3, name:"Jenna Torres",      role:"Project Manager", type:"employee",     status:"remote",   init:"JT", color:"#22c55e", projId:1 },
-     { id:4, name:"ClearView Plumbing",role:"Plumber",         type:"subcontractor",status:"on-site",  init:"CP", color:"#f59e0b", projId:1 }],
-  2:[{ id:1, name:"Ray O'Konko",       role:"Carpenter",       type:"employee",     status:"on-site",  init:"RO", color:"#3b82f6", projId:2 },
-     { id:2, name:"Delta Electric",    role:"Electrician",     type:"subcontractor",status:"on-site",  init:"DE", color:"#a78bfa", projId:2 }],
-  3:[],
-  4:[{ id:1, name:"Marcus Webb",       role:"Site Foreman",    type:"employee",     status:"on-site",  init:"MW", color:"#3b82f6", projId:4 }],
-};
-
-const PROJ_LOGS_SEED = {
-  1:[{ id:101, action:"Photo uploaded",    detail:"Progress_site_week9.jpg",       user:"Marcus Webb",  time:"10 min ago", icon:"📷" },
-     { id:102, action:"Invoice sent",      detail:"INV-044 · $144,000",            user:"Jordan Blake", time:"2 hrs ago",  icon:"🧾" },
-     { id:103, action:"Note added",        detail:"Client wall insulation request", user:"Jordan Blake", time:"Mar 5",      icon:"📝" },
-     { id:104, action:"Plan uploaded",     detail:"Foundation_Layout_v3.dwg",      user:"Marcus Webb",  time:"Feb 28",     icon:"📐" }],
-  2:[{ id:201, action:"Overdue invoice",   detail:"INV-042 · $40,800",             user:"System",       time:"2 days ago", icon:"⚠️" }],
-  3:[{ id:301, action:"Project created",   detail:"Harbour View Terrace",          user:"Jordan Blake", time:"Mar 1",      icon:"🏗" }],
-  4:[{ id:401, action:"Project completed", detail:"All phases complete",           user:"System",       time:"Mar 1",      icon:"🏆" }],
-};
-
-const PROJ_NOTES_SEED = {
-  1:[{ id:1, text:"Client requested extra insulation on north-facing walls. Confirmed with Marcus.", author:"Jordan Blake", time:"Mar 5" },
-     { id:2, text:"Structural engineer sign-off received for foundation phase.", author:"Jenna Torres", time:"Feb 28" }],
-  2:[{ id:1, text:"Invoice INV-042 is overdue. Need to follow up with client.", author:"Jordan Blake", time:"Mar 2" }],
-  3:[], 4:[{ id:1, text:"Project complete. All final inspections passed.", author:"Marcus Webb", time:"Mar 1" }],
-};
-
-const TASKS_SEED = [
-  { id:"t1", title:"Site Inspection",          desc:"Weekly walkthrough of all active zones",    member:"Marcus Webb",        project:"Riverside Townhomes",  projId:1, date:"2025-03-10", status:"pending" },
-  { id:"t2", title:"Electrical Rough-in",      desc:"Complete rough-in wiring for floors 1–3",  member:"Delta Electric",     project:"Riverside Townhomes",  projId:1, date:"2025-03-12", status:"pending" },
-  { id:"t3", title:"PM Progress Review",       desc:"Review milestones and update client",       member:"Jenna Torres",       project:"Riverside Townhomes",  projId:1, date:"2025-03-14", status:"done"    },
-  { id:"t4", title:"Plumbing Fit-off",         desc:"Install all plumbing fixtures",             member:"ClearView Plumbing", project:"Riverside Townhomes",  projId:1, date:"2025-03-18", status:"pending" },
-  { id:"t5", title:"Electrical Panel Install", desc:"Mount and wire main distribution panel",    member:"Delta Electric",     project:"Summit Office Fitout", projId:2, date:"2025-03-11", status:"pending" },
-  { id:"t6", title:"Carpentry Work",           desc:"Install all custom cabinetry",              member:"Ray O'Konko",        project:"Summit Office Fitout", projId:2, date:"2025-03-13", status:"pending" },
-  { id:"t7", title:"Final Walkthrough",        desc:"Final sign-off inspection with client",     member:"Marcus Webb",        project:"Eastside Warehouse",   projId:4, date:"2025-03-05", status:"done"    },
-];
-
-const TENDERS_SEED = [
-  { id:"ten1", name:"Structural Steel Beams", projId:1, project:"Riverside Townhomes", desc:"I-beams and hollow sections for floors 2–4 framing",
-    offers:[
-      { id:"o1", supplier:"Gulf Steel Co.",    price:42000, quality:"High – ISO certified",        delivery:"10 days", notes:"Includes delivery to site" },
-      { id:"o2", supplier:"AlMadar Metals",    price:38500, quality:"Medium – standard grade",     delivery:"14 days", notes:"Discount for full payment upfront" },
-      { id:"o3", supplier:"Emirates Iron LLC", price:44800, quality:"Premium – EN-10025 certified",delivery:"7 days",  notes:"Fastest delivery, premium grade" },
-    ]},
-  { id:"ten2", name:"Ready-Mix Concrete", projId:1, project:"Riverside Townhomes", desc:"C30 concrete mix for slab pours",
-    offers:[
-      { id:"o4", supplier:"Dubai Ready Mix", price:18000, quality:"High – BS 8500 compliant",    delivery:"3 days", notes:"Batching plant 2km from site" },
-      { id:"o5", supplier:"Concrete Plus",   price:16200, quality:"Standard – basic mix design", delivery:"5 days", notes:"Cheaper but longer lead time" },
-    ]},
-];
-
-// ─── Status styles ─────────────────────────────────────────────────────────────
-const SM = {
-  active:       { bg:C.greenDim,   color:C.green,  label:"Active" },
-  completed:    { bg:C.blueDim,    color:C.blue,   label:"Completed" },
-  quoting:      { bg:C.accentDim,  color:C.accent, label:"Quoting" },
-  paid:         { bg:C.greenDim,   color:C.green,  label:"Paid" },
-  overdue:      { bg:C.redDim,     color:C.red,    label:"Overdue" },
-  pending:      { bg:C.accentDim,  color:C.accent, label:"Pending" },
-  done:         { bg:C.greenDim,   color:C.green,  label:"Done" },
-  "on-site":    { bg:C.greenDim,   color:C.green,  label:"On Site" },
-  remote:       { bg:C.purpleDim,  color:C.purple, label:"Remote" },
-  employee:     { bg:C.blueDim,    color:C.blue,   label:"Employee" },
-  subcontractor:{ bg:C.accentDim,  color:C.accent, label:"Sub" },
-  cad:          { bg:C.blueDim,    color:C.blue,   label:"CAD" },
-  drawing:      { bg:C.purpleDim,  color:C.purple, label:"Drawing" },
-};
-
-// ─── Helpers ───────────────────────────────────────────────────────────────────
-function fmtBytes(b){ if(!b||b<1024)return(b||0)+" B"; if(b<1048576)return(b/1024).toFixed(1)+" KB"; return(b/1048576).toFixed(1)+" MB"; }
-function planCat(n){ const l=n.toLowerCase(); if([".dwg",".dxf",".rvt",".ifc",".skp"].some(e=>l.endsWith(e)))return"cad"; return"drawing"; }
-function planIcon(c){ return c==="cad"?"CAD":"DWG"; }
-function daysInMonth(y,m){ return new Date(y,m+1,0).getDate(); }
-function firstDayOfMonth(y,m){ return new Date(y,m,1).getDay(); }
-function inRange(dateStr,from,to){
-  if(!from&&!to) return true;
-  const d=new Date(dateStr+"T00:00:00");
-  if(from&&d<new Date(from+"T00:00:00")) return false;
-  if(to  &&d>new Date(to  +"T23:59:59")) return false;
-  return true;
-}
-
-// ── Progress calculator: uses project dates to compute timeline-based progress ──
-function calcProgress(project){
-  // If project is completed always 100
-  if(project.status==="completed") return 100;
-  // If quoting or no dates, return stored value (0 for quoting)
-  const startISO = project.startDateISO || project.start;
-  const endISO   = project.due;
-  if(!startISO||!endISO) return project.progress||0;
-  const start = new Date(startISO+"T00:00:00").getTime();
-  const end   = new Date(endISO+"T00:00:00").getTime();
-  const now   = Date.now();
-  if(now<=start) return 0;
-  if(now>=end)   return project.status==="completed"?100:Math.min(project.progress||99,99);
-  const pct = ((now-start)/(end-start))*100;
-  return Math.round(Math.min(Math.max(pct,0),100));
-}
-function daysRemaining(project){
-  const endISO=project.due; if(!endISO)return null;
-  const diff=new Date(endISO+"T00:00:00").getTime()-Date.now();
-  return Math.ceil(diff/(1000*60*60*24));
-}
-const MONTHS     = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-const DAYS_SHORT = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-const MCOLORS    = [C.blue,C.purple,C.green,C.accent,"#f43f5e","#06b6d4","#84cc16"];
-const ROLES      = ["Architect","Structural Engineer","Electrician","Plumber","Carpenter","Site Foreman","Project Manager","Draftsman","General Contractor","Laborers","Other"];
-
-// ─── Shared UI ─────────────────────────────────────────────────────────────────
-const INP = { background:C.surface, border:`1px solid ${C.border}`, borderRadius:7, padding:"9px 12px", color:C.text, fontFamily:F, fontSize:13, outline:"none", width:"100%", boxSizing:"border-box" };
-const LBL = { color:C.muted, fontFamily:F, fontSize:11, fontWeight:700, display:"block", marginBottom:5 };
-
-function Badge({ status }){
-  const s=SM[status]||{ bg:"#fff1",color:"#aaa",label:status };
-  return <span style={{ background:s.bg,color:s.color,padding:"3px 10px",borderRadius:4,fontSize:11,fontFamily:F,fontWeight:700,display:"inline-block",whiteSpace:"nowrap" }}>{s.label}</span>;
-}
-function Bar({ pct,color }){
-  return <div style={{ background:C.border,borderRadius:4,height:6,overflow:"hidden" }}><div style={{ width:`${pct}%`,background:color||C.accent,height:"100%",borderRadius:4,transition:"width .6s ease" }}/></div>;
-}
-function Overlay({ children,onClose }){
-  return <div onClick={onClose} style={{ position:"fixed",inset:0,background:C.overlay,zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center" }}><div onClick={e=>e.stopPropagation()}>{children}</div></div>;
-}
-function SLabel({ children }){
-  return <div style={{ color:C.muted,fontFamily:F,fontSize:11,fontWeight:700,letterSpacing:1,textTransform:"uppercase",marginBottom:12 }}>{children}</div>;
-}
-
-// ─── InlineFormShell ──────────────────────────────────────────────────────────
-// Renders a form INSIDE the module card — no overlay, no fixed positioning.
-// • header: title string or node
-// • accent: colour for the save button
-// • saveLabel / onSave / onCancel: actions
-// • children: the form fields
-function InlineFormShell({ header, accent=C.accent, saveLabel="Save", onSave, onCancel, children, err, saving=false }){
-  return(
-    <div style={{ border:`1px solid ${C.border}`,borderRadius:12,background:C.surface,overflow:"hidden",marginTop:4 }}>
-      {/* Header */}
-      <div style={{ padding:"14px 18px",borderBottom:`1px solid ${C.border}`,display:"flex",justifyContent:"space-between",alignItems:"center",background:C.card }}>
-        <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:15 }}>{header}</span>
-        <button onClick={onCancel} disabled={saving} style={{ background:"transparent",border:"none",color:C.muted,fontSize:20,lineHeight:1,cursor:saving?"default":"pointer",padding:"0 2px" }}>✕</button>
-      </div>
-      {/* Scrollable body */}
-      <div style={{ overflowY:"auto",maxHeight:480,padding:"18px 18px 0" }}>
-        {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"9px 12px",color:C.red,fontFamily:F,fontSize:12,marginBottom:14 }}>⚠ {err}</div>}
-        <div style={{ display:"flex",flexDirection:"column",gap:14 }}>
-          {children}
-        </div>
-        <div style={{ height:16 }}/>
-      </div>
-      {/* Sticky footer */}
-      <div style={{ padding:"12px 18px",borderTop:`1px solid ${C.border}`,display:"flex",gap:10,justifyContent:"flex-end",background:C.card }}>
-        <button onClick={onCancel} disabled={saving} style={{ background:"transparent",color:C.muted,border:`1px solid ${C.border}`,padding:"9px 18px",borderRadius:7,fontFamily:F,fontSize:13,cursor:saving?"default":"pointer",opacity:saving?0.5:1 }}>Cancel</button>
-        <button onClick={onSave} disabled={saving} style={{ background:saving?"transparent":accent,color:saving?accent:(accent===C.accent?"#000":"#fff"),border:saving?`1px solid ${accent}44`:"none",padding:"9px 26px",borderRadius:7,fontFamily:F,fontWeight:700,fontSize:13,cursor:saving?"default":"pointer",display:"flex",alignItems:"center",gap:7 }}>
-          {saving&&<div style={{ width:13,height:13,border:"2px solid",borderColor:accent,borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>}
-          {saving?"Saving…":saveLabel}
-        </button>
-      </div>
-    </div>
-  );
-}
-
-// ─── ConfirmDialog ────────────────────────────────────────────────────────────
-// Reusable confirmation dialog for delete / edit actions.
-// variant: "delete" (red) | "edit" (amber) | "warn" (amber)
-function ConfirmDialog({ title, message, confirmLabel, cancelLabel, variant="delete", onConfirm, onCancel, children }){
-  const isDelete = variant==="delete";
-  const accentColor = isDelete ? C.red : C.accent;
-  const accentDim   = isDelete ? C.redDim : C.accentDim;
-  
-  return(
-    <Overlay onClose={onCancel}>
-      <div onClick={e=>e.stopPropagation()} style={{ background:C.card,border:`1px solid ${accentColor}44`,borderRadius:18,padding:"32px 28px",width:420,maxWidth:"92vw",boxShadow:"0 24px 60px rgba(0,0,0,.45)",fontFamily:F }}>
-        {/* Icon */}
-        <div style={{ width:58,height:58,borderRadius:"50%",background:accentDim,border:`2px solid ${accentColor}44`,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 20px" }}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={accentColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={isDelete?"M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6":"M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"}/></svg></div>
-        {/* Title + message */}
-        <div style={{ textAlign:"center",marginBottom:children?16:24 }}>
-          <div style={{ color:C.text,fontWeight:700,fontSize:18,marginBottom:10 }}>{title}</div>
-          <div style={{ color:C.muted,fontSize:13,lineHeight:1.65 }}>{message}</div>
-        </div>
-        {/* Optional extra content (e.g. item preview) */}
-        {children&&<div style={{ marginBottom:22 }}>{children}</div>}
-        {/* Buttons */}
-        <div style={{ display:"flex",gap:10 }}>
-          <button onClick={onCancel} style={{ flex:1,background:"transparent",color:C.text,border:`1px solid ${C.border}`,padding:"12px 0",borderRadius:9,fontWeight:600,fontSize:13,cursor:"pointer",fontFamily:F,transition:"all .15s" }}
-            onMouseEnter={e=>e.currentTarget.style.borderColor=C.accent+"88"}
-            onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}>
-            {cancelLabel||"Cancel"}
-          </button>
-          <button onClick={onConfirm} style={{ flex:1,background:accentColor,color:isDelete?"#fff":"#000",border:"none",padding:"12px 0",borderRadius:9,fontWeight:700,fontSize:13,cursor:"pointer",fontFamily:F,transition:"opacity .15s" }}
-            onMouseEnter={e=>e.currentTarget.style.opacity=".88"}
-            onMouseLeave={e=>e.currentTarget.style.opacity="1"}>
-            {confirmLabel||"Confirm"}
-          </button>
-        </div>
-      </div>
-    </Overlay>
-  );
-}
 
 // ─── Hooks ─────────────────────────────────────────────────────────────────────
+// ─── Context ──────────────────────────────────────────────────────────────────
+const CompanyCtx = React.createContext(null);
+const useCompany = () => useContext(CompanyCtx);
+
+// ─── Polling interval for real-time sync (ms) ─────────────────────────────────
+const POLL_MS = 15000;
+
+// ─── useFiles: kept for legacy plan/photo uploads (localStorage only) ─────────
 function useFiles(key){
   const [files,setFiles]=useState([]); const [ready,setReady]=useState(false);
   useEffect(()=>{ let alive=true; (async()=>{ try{ const r=await storage.get(key); if(alive)setFiles(r?JSON.parse(r.value):[]); }catch(_){ if(alive)setFiles([]); } if(alive)setReady(true); })(); return()=>{alive=false;};  },[key]);
   const persist=async(next)=>{ setFiles(next); await storage.set(key,JSON.stringify(next)); };
   return{ files,ready, add:f=>persist([...files,f]), remove:id=>persist(files.filter(f=>f.id!==id)), update:(id,p)=>persist(files.map(f=>f.id===id?{...f,...p}:f)) };
 }
+
+// ─── useTeam: Supabase-backed per-project team members ───────────────────────
 function useTeam(projectId){
-  const seed=PROJ_CREW_SEED[projectId]||[]; const [members,setMembers]=useState(null); const key=`team:${projectId}`;
-  useEffect(()=>{ let alive=true; (async()=>{ const r=await storage.get(key); if(!alive)return; if(r)setMembers(JSON.parse(r.value)); else{ setMembers(seed); await storage.set(key,JSON.stringify(seed)); } })(); return()=>{alive=false;}; },[projectId]);
-  const save=async(next)=>{ setMembers(next); await storage.set(key,JSON.stringify(next)); };
-  return{ members:members||[],ready:members!==null, addMember:m=>save([...(members||[]),m]), removeMember:id=>save((members||[]).filter(m=>m.id!==id)), updateMember:(id,patch)=>save((members||[]).map(m=>m.id===id?{...m,...patch,init:patch.name?patch.name.trim().split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase():m.init}:m)) };
+  const cid = useCompany();
+  const [members,setMembers]=useState(null);
+  const load=useCallback(async()=>{
+    if(!cid||!projectId) return;
+    const {data,error}=await dbTeam.getByProject(projectId);
+    if(!error&&data) setMembers(data.map(mapMember));
+  },[cid,projectId]);
+  useEffect(()=>{ load(); const t=setInterval(load,POLL_MS); return()=>clearInterval(t); },[load]);
+  return{
+    members:members||[], ready:members!==null,
+    addMember:   async(m)=>{ await dbTeam.add(m,projectId); load(); },
+    removeMember:async(id)=>{ await dbTeam.delete(id); load(); },
+    updateMember:async(id,patch)=>{ await dbTeam.update(id,patch); load(); },
+  };
 }
+
+// ─── useTasks: Supabase-backed tasks ─────────────────────────────────────────
 function useTasks(){
+  const cid = useCompany();
   const [tasks,setTasks]=useState(null);
-  useEffect(()=>{ let alive=true; (async()=>{ const r=await storage.get("tasks:global"); if(!alive)return; if(r)setTasks(JSON.parse(r.value)); else{ setTasks(TASKS_SEED); await storage.set("tasks:global",JSON.stringify(TASKS_SEED)); } })(); return()=>{alive=false;}; },[]);
-  const save=async(next)=>{ setTasks(next); await storage.set("tasks:global",JSON.stringify(next)); };
-  return{ tasks:tasks||[],ready:tasks!==null, addTask:t=>save([...(tasks||[]),t]), removeTask:id=>save((tasks||[]).filter(t=>t.id!==id)), updateTask:(id,p)=>save((tasks||[]).map(t=>t.id===id?{...t,...p}:t)) };
+  const load=useCallback(async()=>{
+    if(!cid) return;
+    const {data,error}=await dbTasks.getAll();
+    if(!error&&data) setTasks(data.map(mapTask));
+  },[cid]);
+  useEffect(()=>{ load(); const t=setInterval(load,POLL_MS); return()=>clearInterval(t); },[load]);
+  return{
+    tasks:tasks||[], ready:tasks!==null,
+    addTask:   async(t)=>{ await dbTasks.add(t); load(); },
+    removeTask:async(id)=>{ await dbTasks.delete(id); load(); },
+    updateTask:async(id,p)=>{ await dbTasks.update(id,p); load(); },
+  };
 }
+
+// ─── useTenders: Supabase-backed tenders ─────────────────────────────────────
 function useTenders(){
+  const cid = useCompany();
   const [tenders,setTenders]=useState(null);
-  useEffect(()=>{ let alive=true; (async()=>{ const r=await storage.get("tenders:global"); if(!alive)return; if(r)setTenders(JSON.parse(r.value)); else{ setTenders(TENDERS_SEED); await storage.set("tenders:global",JSON.stringify(TENDERS_SEED)); } })(); return()=>{alive=false;}; },[]);
-  const save=async(next)=>{ setTenders(next); await storage.set("tenders:global",JSON.stringify(next)); };
-  return{ tenders:tenders||[],ready:tenders!==null, addTender:t=>save([...(tenders||[]),t]), removeTender:id=>save((tenders||[]).filter(t=>t.id!==id)), addOffer:(tid,o)=>save((tenders||[]).map(t=>t.id===tid?{...t,offers:[...t.offers,o]}:t)), removeOffer:(tid,oid)=>save((tenders||[]).map(t=>t.id===tid?{...t,offers:t.offers.filter(o=>o.id!==oid)}:t)) };
+  const load=useCallback(async()=>{
+    if(!cid) return;
+    const {data,error}=await dbTenders.getAll();
+    if(!error&&data) setTenders(data.map(mapTender));
+  },[cid]);
+  useEffect(()=>{ load(); const t=setInterval(load,POLL_MS); return()=>clearInterval(t); },[load]);
+  return{
+    tenders:tenders||[], ready:tenders!==null,
+    addTender:  async(t)=>{ await dbTenders.add(t); load(); },
+    removeTender:async(id)=>{ await dbTenders.delete(id); load(); },
+    addOffer:   async(tid,o)=>{ const ten=tenders?.find(t=>t.id===tid); if(ten){ await dbTenders.update(tid,{offers:[...ten.offers,o]}); load(); } },
+    removeOffer:async(tid,oid)=>{ const ten=tenders?.find(t=>t.id===tid); if(ten){ await dbTenders.update(tid,{offers:ten.offers.filter(o=>o.id!==oid)}); load(); } },
+  };
 }
 
-// ─── useProjects hook (dynamic projects on top of seed) ───────────────────────
+// ─── usePayments: Supabase-backed payments ───────────────────────────────────
 function usePayments(){
+  const cid = useCompany();
   const [payments,setPayments]=useState(null);
-  useEffect(()=>{ let alive=true; (async()=>{ const r=await storage.get("payments:global"); if(!alive)return; setPayments(r?JSON.parse(r.value):[]); })(); return()=>{alive=false;}; },[]);
-  const save=async(next)=>{ setPayments(next); await storage.set("payments:global",JSON.stringify(next)); };
-  return{ payments:payments||[], ready:payments!==null,
-    addPayment:   p  =>save([...(payments||[]),p]),
-    removePayment:id =>save((payments||[]).filter(p=>p.id!==id)),
-    updatePayment:(id,patch)=>save((payments||[]).map(p=>p.id===id?{...p,...patch}:p)),
+  const load=useCallback(async()=>{
+    if(!cid) return;
+    const {data,error}=await dbPayments.getAll();
+    if(!error&&data) setPayments(data.map(mapPayment));
+  },[cid]);
+  useEffect(()=>{ load(); const t=setInterval(load,POLL_MS); return()=>clearInterval(t); },[load]);
+  return{
+    payments:payments||[], ready:payments!==null,
+    addPayment:   async(p)=>{ await dbPayments.add(p); load(); },
+    removePayment:async(id)=>{ await dbPayments.delete(id); load(); },
+    updatePayment:async(id,patch)=>{ await dbPayments.update(id,patch); load(); },
   };
 }
 
+// ─── useProjects: Supabase-backed projects ───────────────────────────────────
 function useProjects(){
-  const [extra,setExtra]=useState(null);
-  const [edits,setEdits]=useState(null);       // patches for static projects
-  const [deleted,setDeleted]=useState(null);   // set of deleted static project ids
-  useEffect(()=>{ let alive=true;
-    (async()=>{
-      const [r1,r2,r3]=await Promise.all([
-        storage.get("projects:extra"),
-        storage.get("projects:edits"),
-        storage.get("projects:deleted"),
-      ]);
-      if(!alive)return;
-      setExtra(r1?JSON.parse(r1.value):[]);
-      setEdits(r2?JSON.parse(r2.value):{});
-      setDeleted(r3?new Set(JSON.parse(r3.value)):new Set());
-    })(); return()=>{alive=false;};
-  },[]);
-  const saveExtra  =async(next)=>{ setExtra(next);   await storage.set("projects:extra",  JSON.stringify(next)); };
-  const saveEdits  =async(next)=>{ setEdits(next);   await storage.set("projects:edits",  JSON.stringify(next)); };
-  const saveDeleted=async(next)=>{ setDeleted(next); await storage.set("projects:deleted",JSON.stringify([...next])); };
-
-  const addProject=p=>saveExtra([...(extra||[]),p]);
-
-  const updateProject=async(id,patch)=>{
-    if((extra||[]).find(p=>p.id===id)){
-      await saveExtra((extra||[]).map(p=>p.id===id?{...p,...patch}:p));
-    } else {
-      const next={...(edits||{}),[id]:{...((edits||{})[id]||{}),...patch}};
-      await saveEdits(next);
-    }
+  const cid = useCompany();
+  const [projects,setProjects]=useState(null);
+  const load=useCallback(async()=>{
+    if(!cid) return;
+    const {data,error}=await dbProjects.getAll();
+    if(!error&&data) setProjects(data.map(mapProject));
+  },[cid]);
+  useEffect(()=>{ load(); const t=setInterval(load,POLL_MS); return()=>clearInterval(t); },[load]);
+  return{
+    allProjects:projects||[], extraProjects:projects||[], ready:projects!==null,
+    addProject:   async(p)=>{ await dbProjects.add(p); load(); },
+    updateProject:async(id,patch)=>{ await dbProjects.update(id,patch); load(); },
+    deleteProject:async(id)=>{ await dbProjects.delete(id); load(); },
   };
-
-  // Permanently delete a project (extra) or mark static project hidden
-  const deleteProject=async(id)=>{
-    if((extra||[]).find(p=>p.id===id)){
-      await saveExtra((extra||[]).filter(p=>p.id!==id));
-    } else {
-      const next=new Set(deleted||[]);
-      next.add(id);
-      await saveDeleted(next);
-    }
-    // Also clean up its edits entry
-    if((edits||{})[id]){
-      const nextE={...(edits||{})};
-      delete nextE[id];
-      await saveEdits(nextE);
-    }
-  };
-
-  const allProjects=useMemo(()=>[
-    ...PROJECTS
-      .filter(p=>!(deleted||new Set()).has(p.id))
-      .map(p=>({...p,...((edits||{})[p.id]||{})})),
-    ...(extra||[])
-  ],[extra,edits,deleted]);
-
-  return{ allProjects, extraProjects:extra||[], addProject, updateProject, deleteProject, ready:extra!==null&&edits!==null&&deleted!==null };
 }
 
-// ─── Global Activity Log hook ──────────────────────────────────────────────────
+// ─── useGlobalLog: Supabase-backed activity log ──────────────────────────────
 function useGlobalLog(){
+  const cid = useCompany();
   const [log,setLog]=useState(null);
-  useEffect(()=>{ let alive=true; (async()=>{ const r=await storage.get("globallog"); if(!alive)return; setLog(r?JSON.parse(r.value):[]); })(); return()=>{alive=false;}; },[]);
-  const push=async(entry)=>{ const next=[entry,...(log||[])]; setLog(next); await storage.set("globallog",JSON.stringify(next)); };
+  const load=useCallback(async()=>{
+    if(!cid) return;
+    const {data,error}=await dbLog.getRecent();
+    if(!error&&data) setLog(data.map(mapLog));
+  },[cid]);
+  useEffect(()=>{ load(); const t=setInterval(load,POLL_MS); return()=>clearInterval(t); },[load]);
+  const push=async(entry)=>{ await dbLog.push(entry.action||'',entry.detail||'',entry.icon||'●'); load(); };
   return{ log:log||[], push };
 }
 
-
-// ─── useAllMembers: live list across every project ─────────────────────────────
+// ─── useAllMembers: all team members across all projects ─────────────────────
 function useAllMembers(allProjects=[]){
+  const cid = useCompany();
   const [members,setMembers]=useState([]);
   const [version,setVersion]=useState(0);
   const refresh=()=>setVersion(v=>v+1);
   useEffect(()=>{
+    if(!cid) return;
     let alive=true;
     (async()=>{
-      const allIds=[
-        ...PROJECTS.map(p=>p.id),
-        ...allProjects.filter(p=>!PROJECTS.find(s=>s.id===p.id)).map(p=>p.id)
-      ];
-      const seen=new Map(); // name → member, last-write wins (dedup)
-      for(const id of allIds){
-        try{
-          const r=await storage.get(`team:${id}`);
-          const list=r?JSON.parse(r.value):(PROJ_CREW_SEED[id]||[]);
-          list.forEach(m=>seen.set(m.name,{...m,projId:id}));
-        }catch(_){}
+      const {data,error}=await dbTeam.getAll();
+      if(!error&&data&&alive){
+        const seen=new Map();
+        data.map(mapMember).forEach(m=>seen.set(m.name,m));
+        setMembers([...seen.values()]);
       }
-      if(alive)setMembers([...seen.values()]);
     })();
     return()=>{alive=false;};
-  },[allProjects,version]);
+  },[cid,allProjects,version]);
   return{ members, refresh };
 }
 
@@ -497,6 +354,103 @@ function DropZone({ onFiles,busy,label }){
       <div style={{ fontSize:22,marginBottom:4 }}>{busy?"...":"+"}</div>
       <div style={{ color:busy?C.accent:C.muted,fontFamily:F,fontSize:12 }}>{busy?"Uploading…":label||"Drop files here or click to browse"}</div>
       <input ref={ref} type="file" multiple style={{ display:"none" }} onChange={e=>{const f=Array.from(e.target.files);if(f.length)onFiles(f);e.target.value="";}}/>
+    </div>
+  );
+}
+
+// ─── Core UI Primitives ────────────────────────────────────────────────────────
+
+/** Full-screen overlay backdrop. Click outside or press Esc to close. */
+function Overlay({ children, onClose }){
+  React.useEffect(()=>{
+    const fn=(e)=>{ if(e.key==="Escape") onClose?.(); };
+    window.addEventListener("keydown",fn);
+    return()=>window.removeEventListener("keydown",fn);
+  },[onClose]);
+  return(
+    <div onClick={e=>{ if(e.target===e.currentTarget) onClose?.(); }}
+      style={{ position:"fixed",inset:0,background:C.overlay,zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",overflowY:"auto",padding:"20px 16px" }}>
+      {children}
+    </div>
+  );
+}
+
+/** Reusable confirmation dialog */
+function ConfirmDialog({ title,message,children,onConfirm,onCancel,confirmLabel="Confirm",variant="delete" }){
+  const color = variant==="delete"?C.red : variant==="edit"?C.blue : C.accent;
+  return(
+    <Overlay onClose={onCancel}>
+      <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,padding:32,width:420,maxWidth:"95vw" }}>
+        <div style={{ display:"flex",alignItems:"center",gap:12,marginBottom:16 }}>
+          <div style={{ width:40,height:40,borderRadius:10,background:color+"1a",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0 }}>
+            {variant==="delete"?"🗑️":variant==="edit"?"✏️":"⚠️"}
+          </div>
+          <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}>{title}</div>
+        </div>
+        {message&&<div style={{ color:C.muted,fontFamily:F,fontSize:13,lineHeight:1.6,marginBottom:16 }}>{message}</div>}
+        {children&&<div style={{ marginBottom:16 }}>{children}</div>}
+        <div style={{ display:"flex",gap:10,justifyContent:"flex-end" }}>
+          <button onClick={onCancel} style={{ background:"transparent",color:C.muted,border:`1px solid ${C.border}`,padding:"9px 20px",borderRadius:8,fontFamily:F,fontSize:13,cursor:"pointer" }}>Cancel</button>
+          <button onClick={onConfirm} style={{ background:color,color:"#fff",border:"none",padding:"9px 20px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer" }}>{confirmLabel}</button>
+        </div>
+      </div>
+    </Overlay>
+  );
+}
+
+/** Coloured status badge pill */
+function Badge({ status }){
+  const map={
+    "active":    {bg:C.greenDim,  color:C.green,  label:"Active"},
+    "completed": {bg:C.surface,   color:C.muted,  label:"Completed"},
+    "on-hold":   {bg:C.accentDim, color:C.accent, label:"On Hold"},
+    "quoting":   {bg:C.blueDim,   color:C.blue,   label:"Quoting"},
+    "on-site":   {bg:C.greenDim,  color:C.green,  label:"On Site"},
+    "remote":    {bg:C.blueDim,   color:C.blue,   label:"Remote"},
+    "pending":   {bg:C.accentDim, color:C.accent, label:"Pending"},
+    "done":      {bg:C.greenDim,  color:C.green,  label:"Done"},
+    "paid":      {bg:C.greenDim,  color:C.green,  label:"Paid"},
+    "overdue":   {bg:C.redDim,    color:C.red,    label:"Overdue"},
+    "draft":     {bg:C.surface,   color:C.muted,  label:"Draft"},
+    "plan":      {bg:C.blueDim,   color:C.blue,   label:"Plan"},
+    "contract":  {bg:C.purpleDim, color:C.purple, label:"Contract"},
+    "receipt":   {bg:C.greenDim,  color:C.green,  label:"Receipt"},
+  };
+  const s=map[status]||{bg:C.surface,color:C.muted,label:status||"—"};
+  return(
+    <span style={{ background:s.bg,color:s.color,border:`1px solid ${s.color}33`,padding:"2px 8px",borderRadius:5,fontFamily:F,fontSize:11,fontWeight:700,whiteSpace:"nowrap" }}>
+      {s.label}
+    </span>
+  );
+}
+
+/** Horizontal progress bar */
+function Bar({ pct=0, color }){
+  const c = color||C.accent;
+  const clamped = Math.max(0,Math.min(100,Number(pct)||0));
+  return(
+    <div style={{ height:6,borderRadius:4,background:C.border,overflow:"hidden" }}>
+      <div style={{ height:"100%",width:`${clamped}%`,background:c,borderRadius:4,transition:"width .4s ease" }}/>
+    </div>
+  );
+}
+
+/** Inline panel form wrapper used inside project detail panels */
+function InlineFormShell({ header,accent,saveLabel="Save",onSave,onCancel,err,saving,children }){
+  return(
+    <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:12,padding:"20px 24px",marginBottom:16 }}>
+      <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:18 }}>
+        <span style={{ color:accent||C.accent,fontFamily:F,fontWeight:700,fontSize:15 }}>{header}</span>
+        <button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:20,cursor:"pointer",lineHeight:1 }}>✕</button>
+      </div>
+      {children}
+      {err&&<div style={{ color:C.red,fontFamily:F,fontSize:12,marginTop:10 }}>{err}</div>}
+      <div style={{ display:"flex",gap:10,marginTop:16,justifyContent:"flex-end" }}>
+        <button onClick={onCancel} style={{ background:"transparent",color:C.muted,border:`1px solid ${C.border}`,padding:"8px 18px",borderRadius:8,fontFamily:F,fontSize:13,cursor:"pointer" }}>Cancel</button>
+        <button onClick={onSave} disabled={saving} style={{ background:saving?"transparent":accent||C.accent,color:saving?accent||C.accent:"#000",border:saving?`1px solid ${accent||C.accent}44`:"none",padding:"8px 20px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer" }}>
+          {saving?"Saving…":saveLabel}
+        </button>
+      </div>
     </div>
   );
 }
@@ -637,23 +591,23 @@ function InvModal({ pending,onConfirm,onCancel }){
               {aiNote&&<div style={{ background:aiNote.startsWith("OK")?C.greenDim:C.accentDim,border:`1px solid ${aiNote.startsWith("OK")?C.green+"44":C.accent+"44"}`,borderRadius:8,padding:"9px 13px",color:aiNote.startsWith("OK")?C.green:C.accent,fontFamily:F,fontSize:12,marginBottom:16 }}>{aiNote}</div>}
               <div style={{ display:"flex",flexDirection:"column",gap:12 }}>
                 <div style={{ display:"flex",gap:12 }}>
-                  <div style={{ flex:2 }}><label style={LBL}>Supplier / Company Name</label><input style={INP} value={supplier} onChange={e=>setSupplier(e.target.value)} placeholder="e.g. Gulf Steel Co."/></div>
-                  <div style={{ flex:1 }}><label style={LBL}>Invoice #</label><input style={INP} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="INV-001"/></div>
+                  <div style={{ flex:2 }}><label style={LBL()}>Supplier / Company Name</label><input style={INP()} value={supplier} onChange={e=>setSupplier(e.target.value)} placeholder="e.g. Gulf Steel Co."/></div>
+                  <div style={{ flex:1 }}><label style={LBL()}>Invoice #</label><input style={INP()} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="INV-001"/></div>
                 </div>
                 <div style={{ display:"flex",gap:12 }}>
-                  <div style={{ flex:1 }}><label style={LBL}>Invoice Date</label><input style={{ ...INP,colorScheme:"dark" }} type="date" value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
-                  <div style={{ flex:1 }}><label style={LBL}>Due Date</label><input style={{ ...INP,colorScheme:"dark" }} type="date" value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
+                  <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
+                  <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
                 </div>
                 <div style={{ display:"flex",gap:12 }}>
-                  <div style={{ flex:2 }}><label style={LBL}>Total Amount</label><input style={INP} type="number" value={amount} onChange={e=>setAmount(e.target.value)} placeholder="0.00"/></div>
-                  <div style={{ flex:1 }}><label style={LBL}>Currency</label>
-                    <select value={currency} onChange={e=>setCurrency(e.target.value)} style={{ ...INP,cursor:"pointer" }}>
+                  <div style={{ flex:2 }}><label style={LBL()}>Total Amount</label><input style={INP()} type="number" value={amount} onChange={e=>setAmount(e.target.value)} placeholder="0.00"/></div>
+                  <div style={{ flex:1 }}><label style={LBL()}>Currency</label>
+                    <select value={currency} onChange={e=>setCurrency(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
                       {["USD","AED","SAR","EUR","GBP","QAR","KWD"].map(c=><option key={c} value={c}>{c}</option>)}
                     </select>
                   </div>
                 </div>
-                <div><label style={LBL}>Description</label><textarea style={{ ...INP,resize:"none" }} rows={2} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="Invoice summary or scope"/></div>
-                <div><label style={LBL}>Status</label>
+                <div><label style={LBL()}>Description</label><textarea style={{ ...INP(),resize:"none" }} rows={2} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="Invoice summary or scope"/></div>
+                <div><label style={LBL()}>Status</label>
                   <div style={{ display:"flex",gap:8 }}>{INV_ST.map(s=><button key={s.v} onClick={()=>setStatus(s.v)} style={{ flex:1,padding:"9px 0",borderRadius:7,cursor:"pointer",fontFamily:F,fontSize:12,fontWeight:700,border:status===s.v?`2px solid ${s.c}`:`1px solid ${C.border}`,background:status===s.v?s.c+"22":"transparent",color:status===s.v?s.c:C.muted }}>{s.l}</button>)}</div>
                 </div>
               </div>
@@ -763,12 +717,12 @@ function AddMemberModal({ project,onConfirm,onCancel }){
         <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:22 }}><span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}>Add Team Member</span><button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:20,cursor:"pointer" }}>✕</button></div>
         {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"8px 12px",color:C.red,fontFamily:F,fontSize:12,marginBottom:14 }}>{err}</div>}
         <div style={{ display:"flex",flexDirection:"column",gap:14 }}>
-          <div><label style={LBL}>Full Name *</label><input style={INP} placeholder="e.g. John Smith" value={name} onChange={e=>{setName(e.target.value);setErr("");}}/></div>
-          <div><label style={LBL}>Role *</label><select value={role} onChange={e=>setRole(e.target.value)} style={{ ...INP,cursor:"pointer" }}>{ROLES.map(r=><option key={r} value={r}>{r}</option>)}</select></div>
-          <div><label style={LBL}>Project</label><select value={projId} onChange={e=>setProjId(Number(e.target.value))} style={{ ...INP,cursor:"pointer" }}>{(allProjects||PROJECTS).map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></div>
-          <div><label style={LBL}>Phone *</label><input style={INP} placeholder="+971 50 000 0000" value={phone} onChange={e=>{setPhone(e.target.value);setErr("");}}/></div>
-          <div><label style={LBL}>Email (optional)</label><input style={INP} placeholder="name@example.com" value={email} onChange={e=>setEmail(e.target.value)}/></div>
-          <div><label style={LBL}>Status</label><div style={{ display:"flex",gap:8 }}>{ST.map(s=><button key={s.v} onClick={()=>setStatus(s.v)} style={{ flex:1,padding:"9px 0",borderRadius:7,cursor:"pointer",fontFamily:F,fontSize:12,fontWeight:700,border:status===s.v?`2px solid ${C.green}`:`1px solid ${C.border}`,background:status===s.v?C.greenDim:"transparent",color:status===s.v?C.green:C.muted }}>{s.l}</button>)}</div></div>
+          <div><label style={LBL()}>Full Name *</label><input style={INP()} placeholder="e.g. John Smith" value={name} onChange={e=>{setName(e.target.value);setErr("");}}/></div>
+          <div><label style={LBL()}>Role *</label><select value={role} onChange={e=>setRole(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>{ROLES.map(r=><option key={r} value={r}>{r}</option>)}</select></div>
+          <div><label style={LBL()}>Project</label><select value={projId||""} onChange={e=>setProjId(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>{(allProjects||[]).map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></div>
+          <div><label style={LBL()}>Phone *</label><input style={INP()} placeholder="+971 50 000 0000" value={phone} onChange={e=>{setPhone(e.target.value);setErr("");}}/></div>
+          <div><label style={LBL()}>Email (optional)</label><input style={INP()} placeholder="name@example.com" value={email} onChange={e=>setEmail(e.target.value)}/></div>
+          <div><label style={LBL()}>Status</label><div style={{ display:"flex",gap:8 }}>{ST.map(s=><button key={s.v} onClick={()=>setStatus(s.v)} style={{ flex:1,padding:"9px 0",borderRadius:7,cursor:"pointer",fontFamily:F,fontSize:12,fontWeight:700,border:status===s.v?`2px solid ${C.green}`:`1px solid ${C.border}`,background:status===s.v?C.greenDim:"transparent",color:status===s.v?C.green:C.muted }}>{s.l}</button>)}</div></div>
         </div>
         <div style={{ display:"flex",gap:10,marginTop:22 }}>
           <button onClick={submit} style={{ flex:1,background:C.accent,color:"#000",border:"none",padding:"12px 0",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer" }}>✓ Add Member</button>
@@ -779,32 +733,56 @@ function AddMemberModal({ project,onConfirm,onCancel }){
   );
 }
 
-function AddTaskModal({ onConfirm,onCancel,allMembers,allProjects=PROJECTS }){
-  const [title,setTitle]=useState("");const [desc,setDesc]=useState("");const [member,setMember]=useState(allMembers[0]?.name||"");
-  const [projId,setProjId]=useState(allProjects[0]?.id||PROJECTS[0].id);const [date,setDate]=useState("");const [err,setErr]=useState("");
+function AddTaskModal({ onConfirm,onCancel,allMembers,allProjects=[] }){
+  const [title,setTitle]=useState("");const [desc,setDesc]=useState("");
+  const [member,setMember]=useState(allMembers[0]?.name||"");
+  const [projId,setProjId]=useState(allProjects[0]?.id||"");
+  const [date,setDate]=useState("");const [err,setErr]=useState("");
+  // Also allow typing a custom member name if not in list
+  const [customMember,setCustomMember]=useState(false);
   const submit=()=>{
-    if(!title.trim()){setErr("Task title is required");return;} if(!member.trim()){setErr("Team member is required");return;} if(!date){setErr("Date is required");return;}
-    const proj=allProjects.find(p=>p.id===projId)||PROJECTS.find(p=>p.id===projId);
+    if(!title.trim()){setErr("Task title is required");return;}
+    if(!member.trim()){setErr("Team member is required");return;}
+    if(!date){setErr("Date is required");return;}
+    const proj=allProjects.find(p=>p.id===projId);
     onConfirm({ id:`t${Date.now()}`,title:title.trim(),desc:desc.trim(),member:member.trim(),project:proj?.name||"",date,projId,status:"pending" });
   };
   return(
     <Overlay onClose={onCancel}>
       <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,padding:28,width:460,maxHeight:"90vh",overflowY:"auto" }}>
-        <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:22 }}><span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}>Assign Task</span><button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:20,cursor:"pointer" }}>✕</button></div>
+        <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:22 }}>
+          <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}>Assign Task</span>
+          <button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:20,cursor:"pointer" }}><Ic.Close size={14} color={C.muted}/></button>
+        </div>
         {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"8px 12px",color:C.red,fontFamily:F,fontSize:12,marginBottom:14 }}>{err}</div>}
         <div style={{ display:"flex",flexDirection:"column",gap:14 }}>
-          <div><label style={LBL}>Task Title *</label><input style={INP} placeholder="e.g. Site Inspection" value={title} onChange={e=>{setTitle(e.target.value);setErr("");}}/></div>
-          <div><label style={LBL}>Description</label><textarea style={{ ...INP,resize:"none" }} rows={2} placeholder="What needs to be done?" value={desc} onChange={e=>setDesc(e.target.value)}/></div>
-          <div><label style={LBL}>Assigned Team Member *</label>
-            <select value={member} onChange={e=>setMember(e.target.value)} style={{ ...INP,cursor:"pointer" }}>
-              {allMembers.length>0?allMembers.map(m=><option key={m.id||m.name} value={m.name}>{m.name} – {m.role}</option>):<option value="">No members</option>}
+          <div><label style={LBL()}>Task Title *</label><input style={INP()} placeholder="e.g. Site Inspection" value={title} onChange={e=>{setTitle(e.target.value);setErr("");}}/></div>
+          <div><label style={LBL()}>Description</label><textarea style={{ ...INP(),resize:"none" }} rows={2} placeholder="What needs to be done?" value={desc} onChange={e=>setDesc(e.target.value)}/></div>
+          <div>
+            <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:5 }}>
+              <label style={LBL()}>Assigned Member *</label>
+              <button onClick={()=>setCustomMember(!customMember)} style={{ background:"transparent",border:"none",color:C.blue,fontFamily:F,fontSize:11,cursor:"pointer" }}>
+                {customMember?"Pick from list":"Type manually"}
+              </button>
+            </div>
+            {customMember
+              ? <input style={INP()} placeholder="Enter name manually" value={member} onChange={e=>setMember(e.target.value)}/>
+              : <select value={member} onChange={e=>setMember(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
+                  <option value="">— Select member —</option>
+                  {allMembers.map(m=><option key={m.id||m.name} value={m.name}>{m.name}{m.role?` — ${m.role}`:""}</option>)}
+                </select>
+            }
+          </div>
+          <div><label style={LBL()}>Project</label>
+            <select value={projId} onChange={e=>setProjId(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
+              <option value="">— No project —</option>
+              {allProjects.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}
             </select>
           </div>
-          <div><label style={LBL}>Project</label><select value={projId} onChange={e=>setProjId(Number(e.target.value))} style={{ ...INP,cursor:"pointer" }}>{allProjects.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></div>
-          <div><label style={LBL}>Due Date *</label><input style={{ ...INP,colorScheme:"dark" }} type="date" value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
+          <div><label style={LBL()}>Due Date *</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
         </div>
         <div style={{ display:"flex",gap:10,marginTop:22 }}>
-          <button onClick={submit} style={{ flex:1,background:C.accent,color:"#000",border:"none",padding:"12px 0",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer" }}>✓ Assign Task</button>
+          <button onClick={submit} style={{ flex:1,background:C.accent,color:"#000",border:"none",padding:"12px 0",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer" }}>Assign Task</button>
           <button onClick={onCancel} style={{ background:"transparent",color:C.muted,border:`1px solid ${C.border}`,padding:"12px 18px",borderRadius:8,fontFamily:F,fontSize:13,cursor:"pointer" }}>Cancel</button>
         </div>
       </div>
@@ -872,34 +850,34 @@ function AddInvoiceFormModal({ project, onConfirm, onCancel, allInvoices=[] }){
           <div style={{ display:"flex",flexDirection:"column",gap:15 }}>
             {/* Supplier + Invoice # */}
             <div style={{ display:"flex",gap:14 }}>
-              <div style={{ flex:2 }}><label style={LBL}>Supplier / Company</label><input style={INP} value={supplier} onChange={e=>setSupplier(e.target.value)} placeholder="e.g. Gulf Steel Co."/></div>
-              <div style={{ flex:1 }}><label style={LBL}>Invoice #</label><input style={INP} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="INV-001"/></div>
+              <div style={{ flex:2 }}><label style={LBL()}>Supplier / Company</label><input style={INP()} value={supplier} onChange={e=>setSupplier(e.target.value)} placeholder="e.g. Gulf Steel Co."/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Invoice #</label><input style={INP()} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="INV-001"/></div>
             </div>
             {/* Dates */}
             <div style={{ display:"flex",gap:14 }}>
-              <div style={{ flex:1 }}><label style={LBL}>Invoice Date</label><input style={{ ...INP,colorScheme:"dark" }} type="date" value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
-              <div style={{ flex:1 }}><label style={LBL}>Due Date</label><input style={{ ...INP,colorScheme:"dark" }} type="date" value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
             </div>
             {/* Amount + Currency */}
             <div style={{ display:"flex",gap:14 }}>
-              <div style={{ flex:2 }}><label style={LBL}>Amount *</label><input style={INP} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setErr("");}} placeholder="0.00"/></div>
-              <div style={{ flex:1 }}><label style={LBL}>Currency</label>
-                <select value={currency} onChange={e=>setCurrency(e.target.value)} style={{ ...INP,cursor:"pointer" }}>
+              <div style={{ flex:2 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setErr("");}} placeholder="0.00"/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Currency</label>
+                <select value={currency} onChange={e=>setCurrency(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
                   {["AED","USD","SAR","EUR","GBP","QAR","KWD"].map(c=><option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
             </div>
             {/* Description */}
-            <div><label style={LBL}>Description</label><textarea style={{ ...INP,resize:"none" }} rows={2} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="Scope or summary of this invoice"/></div>
+            <div><label style={LBL()}>Description</label><textarea style={{ ...INP(),resize:"none" }} rows={2} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="Scope or summary of this invoice"/></div>
             {/* Status */}
-            <div><label style={LBL}>Status</label>
+            <div><label style={LBL()}>Status</label>
               <div style={{ display:"flex",gap:8 }}>
                 {INV_ST.map(s=><button key={s.v} onClick={()=>setStatus(s.v)} style={{ flex:1,padding:"9px 0",borderRadius:7,cursor:"pointer",fontFamily:F,fontSize:12,fontWeight:700,border:status===s.v?`2px solid ${s.c}`:`1px solid ${C.border}`,background:status===s.v?s.c+"22":"transparent",color:status===s.v?s.c:C.muted,transition:"all .15s" }}>{s.l}</button>)}
               </div>
             </div>
             {/* Document upload */}
             <div>
-              <label style={LBL}>Attach Document <span style={{color:C.muted,fontWeight:400}}>(PDF, image, screenshot — optional)</span></label>
+              <label style={LBL()}>Attach Document <span style={{color:C.muted,fontWeight:400}}>(PDF, image, screenshot — optional)</span></label>
               {docFile
                 ?<div style={{ background:C.surface,border:`1px solid ${C.green}44`,borderRadius:10,padding:"14px 16px" }}>
                     {aiRunning&&<div style={{ color:C.purple,fontFamily:F,fontSize:12,marginBottom:8,display:"flex",alignItems:"center",gap:8 }}><div style={{ width:12,height:12,border:"2px solid",borderColor:C.purple,borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Extracting with AI…</div>}
@@ -1111,23 +1089,23 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
   // ─── Shared form body ──────────────────────────────────────────────────────
   const FormBody = () => (<>
     <div style={{ display:"flex",gap:12 }}>
-      <div style={{ flex:2 }}><label style={LBL}>Supplier / Company</label><input style={INP} value={supplier} onChange={e=>setSupplier(e.target.value)} placeholder="e.g. Gulf Steel Co."/></div>
-      <div style={{ flex:1 }}><label style={LBL}>Invoice #</label><input style={INP} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="INV-001"/></div>
+      <div style={{ flex:2 }}><label style={LBL()}>Supplier / Company</label><input style={INP()} value={supplier} onChange={e=>setSupplier(e.target.value)} placeholder="e.g. Gulf Steel Co."/></div>
+      <div style={{ flex:1 }}><label style={LBL()}>Invoice #</label><input style={INP()} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="INV-001"/></div>
     </div>
     <div style={{ display:"flex",gap:12 }}>
-      <div style={{ flex:1 }}><label style={LBL}>Invoice Date</label><input style={{...INP,colorScheme:"dark"}} type="date" value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
-      <div style={{ flex:1 }}><label style={LBL}>Due Date</label><input style={{...INP,colorScheme:"dark"}} type="date" value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
+      <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><input style={{...INP(),colorScheme:"dark"}} type="date" value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
+      <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><input style={{...INP(),colorScheme:"dark"}} type="date" value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
     </div>
     <div style={{ display:"flex",gap:12 }}>
-      <div style={{ flex:2 }}><label style={LBL}>Amount *</label><input style={INP} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setFormErr("");}} placeholder="0.00"/></div>
-      <div style={{ flex:1 }}><label style={LBL}>Currency</label><select value={currency} onChange={e=>setCurrency(e.target.value)} style={{...INP,cursor:"pointer"}}>{["AED","USD","SAR","EUR","GBP","QAR","KWD"].map(c=><option key={c}>{c}</option>)}</select></div>
+      <div style={{ flex:2 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setFormErr("");}} placeholder="0.00"/></div>
+      <div style={{ flex:1 }}><label style={LBL()}>Currency</label><select value={currency} onChange={e=>setCurrency(e.target.value)} style={{...INP(),cursor:"pointer"}}>{["AED","USD","SAR","EUR","GBP","QAR","KWD"].map(c=><option key={c}>{c}</option>)}</select></div>
     </div>
-    <div><label style={LBL}>Description / Notes</label><textarea style={{...INP,resize:"none"}} rows={2} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="Scope or summary"/></div>
-    <div><label style={LBL}>Status</label>
+    <div><label style={LBL()}>Description / Notes</label><textarea style={{...INP(),resize:"none"}} rows={2} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="Scope or summary"/></div>
+    <div><label style={LBL()}>Status</label>
       <div style={{ display:"flex",gap:7 }}>{INV_ST.map(s=><button key={s.v} onClick={()=>setStatus(s.v)} style={{ flex:1,padding:"8px 0",borderRadius:7,cursor:"pointer",fontFamily:F,fontSize:12,fontWeight:700,border:status===s.v?`2px solid ${s.c}`:`1px solid ${C.border}`,background:status===s.v?s.c+"22":"transparent",color:status===s.v?s.c:C.muted }}>{s.l}</button>)}</div>
     </div>
     <div>
-      <label style={LBL}>Document <span style={{color:C.muted,fontWeight:400}}>(optional — AI auto-extracts)</span></label>
+      <label style={LBL()}>Document <span style={{color:C.muted,fontWeight:400}}>(optional — AI auto-extracts)</span></label>
       <DocZone/>
       <input ref={fileRef} type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.doc,.docx,.xls,.xlsx" style={{ display:"none" }} onChange={e=>{const f=e.target.files[0];if(f)handleDoc(f);e.target.value="";}}/>
     </div>
@@ -1246,7 +1224,7 @@ function AddPlanFormModal({ project, onConfirm, onCancel }){
           <div style={{ display:"flex",flexDirection:"column",gap:16 }}>
             {/* File upload first — primary action */}
             <div>
-              <label style={LBL}>Upload Document *</label>
+              <label style={LBL()}>Upload Document *</label>
               {docFile
                 ?<div style={{ background:C.surface,border:`1px solid ${C.green}44`,borderRadius:10,padding:"14px 16px" }}>
                     <div style={{ display:"flex",alignItems:"center",gap:10 }}>
@@ -1277,9 +1255,9 @@ function AddPlanFormModal({ project, onConfirm, onCancel }){
               <input ref={fileRef} type="file" accept="*" style={{ display:"none" }} onChange={e=>{const f=e.target.files[0];if(f){handleDocFile(f);setErr("");}e.target.value="";}}/>
             </div>
             {/* Title */}
-            <div><label style={LBL}>Document Title</label><input style={INP} value={title} onChange={e=>setTitle(e.target.value)} placeholder="e.g. Foundation Layout v3"/></div>
+            <div><label style={LBL()}>Document Title</label><input style={INP()} value={title} onChange={e=>setTitle(e.target.value)} placeholder="e.g. Foundation Layout v3"/></div>
             {/* Category */}
-            <div><label style={LBL}>Document Type</label>
+            <div><label style={LBL()}>Document Type</label>
               <div style={{ display:"flex",gap:8,flexWrap:"wrap" }}>
                 {PLAN_CATS.map(c=>(
                   <button key={c.v} onClick={()=>setCat(c.v)} style={{ padding:"7px 14px",borderRadius:7,cursor:"pointer",fontFamily:F,fontSize:12,fontWeight:700,border:cat===c.v?`2px solid ${C.blue}`:`1px solid ${C.border}`,background:cat===c.v?C.blueDim:"transparent",color:cat===c.v?C.blue:C.muted,transition:"all .15s",display:"flex",alignItems:"center",gap:5 }}>{c.icon} {c.l}</button>
@@ -1287,8 +1265,8 @@ function AddPlanFormModal({ project, onConfirm, onCancel }){
               </div>
             </div>
             {/* Notes */}
-            <div><label style={LBL}>Notes <span style={{color:C.muted,fontWeight:400}}>(optional)</span></label>
-              <textarea style={{ ...INP,resize:"none" }} rows={2} value={notes} onChange={e=>setNotes(e.target.value)} placeholder="Version info, revision notes, instructions…"/>
+            <div><label style={LBL()}>Notes <span style={{color:C.muted,fontWeight:400}}>(optional)</span></label>
+              <textarea style={{ ...INP(),resize:"none" }} rows={2} value={notes} onChange={e=>setNotes(e.target.value)} placeholder="Version info, revision notes, instructions…"/>
             </div>
           </div>
         </div>
@@ -1361,7 +1339,7 @@ function PlansPanel({ project,onActivity }){
         ?<InlineFormShell header="📐 Add Plan / Document" accent={C.blue} saveLabel="📐 Save Document" onSave={submitPlan} onCancel={()=>setShowAdd(false)} err={planErr}>
             {/* File upload */}
             <div>
-              <label style={LBL}>Upload File *</label>
+              <label style={LBL()}>Upload File *</label>
               {planFile
                 ?<div style={{ background:C.surface,border:`1px solid ${C.green}44`,borderRadius:9,padding:"12px 14px",display:"flex",alignItems:"center",gap:10 }}>
                     {planFile.dataUrl?.startsWith("data:image")?<img src={planFile.dataUrl} alt="" style={{ width:40,height:40,objectFit:"cover",borderRadius:6,flexShrink:0 }}/>:<div style={{ width:40,height:40,background:C.card,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0 }}>📄</div>}
@@ -1376,13 +1354,13 @@ function PlansPanel({ project,onActivity }){
               }
               <input ref={planFileRef} type="file" accept="*" style={{ display:"none" }} onChange={e=>{const f=e.target.files[0];if(f)handlePlanFile(f);e.target.value="";}}/>
             </div>
-            <div><label style={LBL}>Document Title</label><input style={INP} value={planTitle} onChange={e=>setPlanTitle(e.target.value)} placeholder="e.g. Foundation Layout v3"/></div>
-            <div><label style={LBL}>Document Type</label>
+            <div><label style={LBL()}>Document Title</label><input style={INP()} value={planTitle} onChange={e=>setPlanTitle(e.target.value)} placeholder="e.g. Foundation Layout v3"/></div>
+            <div><label style={LBL()}>Document Type</label>
               <div style={{ display:"flex",gap:7,flexWrap:"wrap" }}>
                 {PLAN_CATS.map(c=><button key={c.v} onClick={()=>setPlanCat(c.v)} style={{ padding:"7px 12px",borderRadius:7,cursor:"pointer",fontFamily:F,fontSize:11,fontWeight:700,border:planCat===c.v?`2px solid ${C.blue}`:`1px solid ${C.border}`,background:planCat===c.v?C.blueDim:"transparent",color:planCat===c.v?C.blue:C.muted,display:"flex",alignItems:"center",gap:4 }}>{c.icon} {c.l}</button>)}
               </div>
             </div>
-            <div><label style={LBL}>Notes <span style={{color:C.muted,fontWeight:400}}>(optional)</span></label><textarea style={{ ...INP,resize:"none" }} rows={2} value={planNotes} onChange={e=>setPlanNotes(e.target.value)} placeholder="Version info, revision notes…"/></div>
+            <div><label style={LBL()}>Notes <span style={{color:C.muted,fontWeight:400}}>(optional)</span></label><textarea style={{ ...INP(),resize:"none" }} rows={2} value={planNotes} onChange={e=>setPlanNotes(e.target.value)} placeholder="Version info, revision notes…"/></div>
           </InlineFormShell>
         :<button onClick={()=>{ setPlanTitle("");setPlanCat("drawing");setPlanNotes("");setPlanFile(null);setPlanErr("");setShowAdd(true); }} style={{ background:C.blue,color:"#fff",border:"none",padding:"10px 22px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:7 }}>📐 + Add Plan / Document</button>
       }
@@ -1425,14 +1403,14 @@ function TeamPanel({ project,onOpenTeamPage }){
       )}
       {showAdd
         ?<InlineFormShell header="👷 Add Team Member" accent={C.green} saveLabel="Add Member" onSave={submitMember} onCancel={()=>setShowAdd(false)} err={tmErr}>
-            <div><label style={LBL}>Full Name *</label><input style={INP} value={tmName} onChange={e=>{setTmName(e.target.value);setTmErr("");}} placeholder="e.g. Marcus Webb"/></div>
-            <div><label style={LBL}>Role</label>
-              <select value={tmRole} onChange={e=>setTmRole(e.target.value)} style={{ ...INP,cursor:"pointer" }}>
+            <div><label style={LBL()}>Full Name *</label><input style={INP()} value={tmName} onChange={e=>{setTmName(e.target.value);setTmErr("");}} placeholder="e.g. Marcus Webb"/></div>
+            <div><label style={LBL()}>Role</label>
+              <select value={tmRole} onChange={e=>setTmRole(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
                 {ROLES.map(r=><option key={r}>{r}</option>)}
               </select>
             </div>
-            <div><label style={LBL}>Phone *</label><input style={INP} value={tmPhone} onChange={e=>{setTmPhone(e.target.value);setTmErr("");}} placeholder="+971 50 000 0000"/></div>
-            <div><label style={LBL}>Status</label>
+            <div><label style={LBL()}>Phone *</label><input style={INP()} value={tmPhone} onChange={e=>{setTmPhone(e.target.value);setTmErr("");}} placeholder="+971 50 000 0000"/></div>
+            <div><label style={LBL()}>Status</label>
               <div style={{ display:"flex",gap:7 }}>
                 {[{v:"on-site",l:"On Site"},{v:"remote",l:"Remote"}].map(s=>{const sm=SM[s.v]||{};return(<button key={s.v} onClick={()=>setTmStatus(s.v)} style={{ flex:1,padding:"8px 0",borderRadius:7,cursor:"pointer",fontFamily:F,fontSize:12,fontWeight:700,border:tmStatus===s.v?`2px solid ${sm.color||C.green}`:`1px solid ${C.border}`,background:tmStatus===s.v?(sm.bg||C.greenDim):"transparent",color:tmStatus===s.v?(sm.color||C.green):C.muted }}>{s.l}</button>);})}
               </div>
@@ -1500,14 +1478,14 @@ function EditMemberModal({ member, allProjects, onConfirm, onCancel }){
         <div style={{ display:"flex",flexDirection:"column",gap:14 }}>
           {/* Name */}
           <div>
-            <label style={LBL}>Full Name *</label>
-            <input style={INP} value={name} onChange={e=>{setName(e.target.value);setErr("");}} placeholder="e.g. Marcus Webb"/>
+            <label style={LBL()}>Full Name *</label>
+            <input style={INP()} value={name} onChange={e=>{setName(e.target.value);setErr("");}} placeholder="e.g. Marcus Webb"/>
           </div>
 
           {/* Role */}
           <div>
-            <label style={LBL}>Profession / Role *</label>
-            <select value={role} onChange={e=>setRole(e.target.value)} style={{ ...INP,cursor:"pointer" }}>
+            <label style={LBL()}>Profession / Role *</label>
+            <select value={role} onChange={e=>setRole(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
               {ROLES.map(r=><option key={r} value={r}>{r}</option>)}
             </select>
           </div>
@@ -1515,26 +1493,26 @@ function EditMemberModal({ member, allProjects, onConfirm, onCancel }){
           {/* Phone + Email */}
           <div style={{ display:"flex",gap:12 }}>
             <div style={{ flex:1 }}>
-              <label style={LBL}>Phone Number *</label>
-              <input style={INP} value={phone} onChange={e=>{setPhone(e.target.value);setErr("");}} placeholder="+971 50 000 0000"/>
+              <label style={LBL()}>Phone Number *</label>
+              <input style={INP()} value={phone} onChange={e=>{setPhone(e.target.value);setErr("");}} placeholder="+971 50 000 0000"/>
             </div>
             <div style={{ flex:1 }}>
-              <label style={LBL}>Email <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
-              <input style={INP} value={email} onChange={e=>setEmail(e.target.value)} placeholder="name@example.com"/>
+              <label style={LBL()}>Email <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
+              <input style={INP()} value={email} onChange={e=>setEmail(e.target.value)} placeholder="name@example.com"/>
             </div>
           </div>
 
           {/* Assigned Project */}
           <div>
-            <label style={LBL}>Assigned Project</label>
-            <select value={projId} onChange={e=>setProjId(Number(e.target.value))} style={{ ...INP,cursor:"pointer" }}>
+            <label style={LBL()}>Assigned Project</label>
+            <select value={projId} onChange={e=>setProjId(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
               {allProjects.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}
             </select>
           </div>
 
           {/* Status */}
           <div>
-            <label style={LBL}>Status</label>
+            <label style={LBL()}>Status</label>
             <div style={{ display:"flex",gap:8 }}>
               {ST.map(s=>(
                 <button key={s.v} onClick={()=>setStatus(s.v)} style={{ flex:1,padding:"9px 0",borderRadius:7,cursor:"pointer",fontFamily:F,fontSize:12,fontWeight:700,border:status===s.v?`2px solid ${C.green}`:`1px solid ${C.border}`,background:status===s.v?C.greenDim:"transparent",color:status===s.v?C.green:C.muted,transition:"all .15s" }}>{s.l}</button>
@@ -1544,7 +1522,7 @@ function EditMemberModal({ member, allProjects, onConfirm, onCancel }){
 
           {/* Type */}
           <div>
-            <label style={LBL}>Type</label>
+            <label style={LBL()}>Type</label>
             <div style={{ display:"flex",gap:8 }}>
               {TY.map(t=>(
                 <button key={t.v} onClick={()=>setType(t.v)} style={{ flex:1,padding:"9px 0",borderRadius:7,cursor:"pointer",fontFamily:F,fontSize:12,fontWeight:700,border:type===t.v?`2px solid ${C.blue}`:`1px solid ${C.border}`,background:type===t.v?C.blueDim:"transparent",color:type===t.v?C.blue:C.muted,transition:"all .15s" }}>{t.l}</button>
@@ -1770,7 +1748,7 @@ function TeamPage({ project,onBack,onAddToLog,tasks=[],updateTask }){
 
 
 // ─── TASKS PAGE ────────────────────────────────────────────────────────────────
-function TasksPage({ tasks,addTask,updateTask,removeTask,allProjects=PROJECTS }){
+function TasksPage({ tasks,addTask,updateTask,removeTask,allProjects=[] }){
   const { members:allMembers }=useAllMembers(allProjects);
   const [showAdd,setShowAdd]=useState(false);
   const [filter,setFilter]=useState("all");
@@ -1810,7 +1788,7 @@ function TasksPage({ tasks,addTask,updateTask,removeTask,allProjects=PROJECTS })
             <button key={v} onClick={()=>setFilter(v)} style={{ background:filter===v?C.accentDim:"transparent",color:filter===v?C.accent:C.muted,border:filter===v?`1px solid ${C.accentMid}`:"1px solid transparent",borderRadius:6,padding:"7px 14px",fontFamily:F,fontSize:12,fontWeight:700,cursor:"pointer" }}>{l}</button>
           ))}
         </div>
-        <select value={projFilter} onChange={e=>setProjFilter(e.target.value)} style={{ ...INP,width:"auto",padding:"7px 14px",borderRadius:9,cursor:"pointer" }}>
+        <select value={projFilter} onChange={e=>setProjFilter(e.target.value)} style={{ ...INP(),width:"auto",padding:"7px 14px",borderRadius:9,cursor:"pointer" }}>
           <option value="all">All Projects</option>
           {allProjects.map(p=><option key={p.id} value={String(p.id)}>{p.name}</option>)}
         </select>
@@ -1988,18 +1966,18 @@ function UploadOfferModal({ tenderId, onConfirm, onCancel }){
                 {file.dataUrl?.startsWith("data:image")&&<img src={file.dataUrl} alt="" style={{ width:44,height:44,objectFit:"cover",borderRadius:4,border:`1px solid ${C.border}` }}/>}
               </div>}
               <div style={{ display:"flex",flexDirection:"column",gap:12 }}>
-                <div><label style={LBL}>Supplier / Company Name *</label><input style={INP} value={supplier} onChange={e=>setSupplier(e.target.value)} placeholder="e.g. Gulf Steel Co."/></div>
+                <div><label style={LBL()}>Supplier / Company Name *</label><input style={INP()} value={supplier} onChange={e=>setSupplier(e.target.value)} placeholder="e.g. Gulf Steel Co."/></div>
                 <div style={{ display:"flex",gap:12 }}>
-                  <div style={{ flex:1 }}><label style={LBL}>Quantity</label><input style={INP} value={quantity} onChange={e=>setQuantity(e.target.value)} placeholder="e.g. 500 tonnes"/></div>
-                  <div style={{ flex:1 }}><label style={LBL}>Unit Price</label><input style={INP} type="number" value={unitPrice} onChange={e=>setUnitPrice(e.target.value)} placeholder="0.00"/></div>
-                  <div style={{ flex:1 }}><label style={LBL}>Total Price *</label><input style={INP} type="number" value={price} onChange={e=>setPrice(e.target.value)} placeholder="0.00"/></div>
+                  <div style={{ flex:1 }}><label style={LBL()}>Quantity</label><input style={INP()} value={quantity} onChange={e=>setQuantity(e.target.value)} placeholder="e.g. 500 tonnes"/></div>
+                  <div style={{ flex:1 }}><label style={LBL()}>Unit Price</label><input style={INP()} type="number" value={unitPrice} onChange={e=>setUnitPrice(e.target.value)} placeholder="0.00"/></div>
+                  <div style={{ flex:1 }}><label style={LBL()}>Total Price *</label><input style={INP()} type="number" value={price} onChange={e=>setPrice(e.target.value)} placeholder="0.00"/></div>
                 </div>
                 <div style={{ display:"flex",gap:12 }}>
-                  <div style={{ flex:1 }}><label style={LBL}>Delivery Time</label><input style={INP} value={delivery} onChange={e=>setDelivery(e.target.value)} placeholder="e.g. 10 days"/></div>
-                  <div style={{ flex:1 }}><label style={LBL}>Offer Validity</label><input style={INP} value={validity} onChange={e=>setValidity(e.target.value)} placeholder="e.g. 30 days"/></div>
+                  <div style={{ flex:1 }}><label style={LBL()}>Delivery Time</label><input style={INP()} value={delivery} onChange={e=>setDelivery(e.target.value)} placeholder="e.g. 10 days"/></div>
+                  <div style={{ flex:1 }}><label style={LBL()}>Offer Validity</label><input style={INP()} value={validity} onChange={e=>setValidity(e.target.value)} placeholder="e.g. 30 days"/></div>
                 </div>
-                <div><label style={LBL}>Quality / Specifications</label><input style={INP} value={quality} onChange={e=>setQuality(e.target.value)} placeholder="e.g. High – ISO certified"/></div>
-                <div><label style={LBL}>Notes</label><textarea style={{ ...INP,resize:"none" }} rows={2} value={notes} onChange={e=>setNotes(e.target.value)} placeholder="Conditions, inclusions, exclusions…"/></div>
+                <div><label style={LBL()}>Quality / Specifications</label><input style={INP()} value={quality} onChange={e=>setQuality(e.target.value)} placeholder="e.g. High – ISO certified"/></div>
+                <div><label style={LBL()}>Notes</label><textarea style={{ ...INP(),resize:"none" }} rows={2} value={notes} onChange={e=>setNotes(e.target.value)} placeholder="Conditions, inclusions, exclusions…"/></div>
               </div>
             </div>
           )}
@@ -2019,14 +1997,14 @@ function UploadOfferModal({ tenderId, onConfirm, onCancel }){
 }
 
 // ─── TENDERS PAGE ──────────────────────────────────────────────────────────────
-function TendersPage({ allProjects=PROJECTS }){
+function TendersPage({ allProjects=[] }){
   const { tenders,ready,addTender,removeTender,addOffer,removeOffer }=useTenders();
   const [showAddMat,setShowAddMat]=useState(false);
   const [addingOffer,setAddingOffer]=useState(null);
   const [analyses,setAnalyses]=useState({});
   const [analysing,setAnalysing]=useState(null);
   const [expanded,setExpanded]=useState({});
-  const [mName,setMName]=useState("");const [mProj,setMProj]=useState(allProjects[0]?.id||PROJECTS[0].id);const [mDesc,setMDesc]=useState("");const [mErr,setMErr]=useState("");
+  const [mName,setMName]=useState("");const [mProj,setMProj]=useState(allProjects[0]?.id||"");const [mDesc,setMDesc]=useState("");const [mErr,setMErr]=useState("");
 
 
   const submitMat=()=>{ if(!mName.trim()){setMErr("Name required");return;} addTender({ id:`ten${Date.now()}`,name:mName.trim(),projId:mProj,project:allProjects.find(p=>p.id===mProj)?.name||"",desc:mDesc.trim(),offers:[] }); setMName("");setMDesc("");setShowAddMat(false); };
@@ -2072,9 +2050,9 @@ function TendersPage({ allProjects=PROJECTS }){
             <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20 }}><span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}>Add Material / Good</span><button onClick={()=>setShowAddMat(false)} style={{ background:"none",border:"none",color:C.muted,fontSize:20,cursor:"pointer" }}>✕</button></div>
             {mErr&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"8px 12px",color:C.red,fontFamily:F,fontSize:12,marginBottom:14 }}>{mErr}</div>}
             <div style={{ display:"flex",flexDirection:"column",gap:14 }}>
-              <div><label style={LBL}>Material / Good Name *</label><input style={INP} placeholder="e.g. Structural Steel Beams" value={mName} onChange={e=>{setMName(e.target.value);setMErr("");}}/></div>
-              <div><label style={LBL}>Associated Project</label><select value={mProj} onChange={e=>setMProj(Number(e.target.value))} style={{ ...INP,cursor:"pointer" }}>{allProjects.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></div>
-              <div><label style={LBL}>Description (optional)</label><textarea style={{ ...INP,resize:"none" }} rows={2} placeholder="Specifications, quantity…" value={mDesc} onChange={e=>setMDesc(e.target.value)}/></div>
+              <div><label style={LBL()}>Material / Good Name *</label><input style={INP()} placeholder="e.g. Structural Steel Beams" value={mName} onChange={e=>{setMName(e.target.value);setMErr("");}}/></div>
+              <div><label style={LBL()}>Associated Project</label><select value={mProj} onChange={e=>setMProj(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>{allProjects.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></div>
+              <div><label style={LBL()}>Description (optional)</label><textarea style={{ ...INP(),resize:"none" }} rows={2} placeholder="Specifications, quantity…" value={mDesc} onChange={e=>setMDesc(e.target.value)}/></div>
             </div>
             <div style={{ display:"flex",gap:10,marginTop:22 }}>
               <button onClick={submitMat} style={{ flex:1,background:C.accent,color:"#000",border:"none",padding:"12px 0",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer" }}>✓ Add Material</button>
@@ -2205,7 +2183,7 @@ function TendersPage({ allProjects=PROJECTS }){
 const PAYMENT_METHODS = ["Bank Transfer","Cash","Cheque","Card","Online Transfer","Other"];
 
 function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
-  const [projId,setProjId]  = useState(allProjects[0]?.id||1);
+  const [projId,setProjId]  = useState(allProjects[0]?.id||null);
   const [amount,setAmount]  = useState("");
   const [date,setDate]      = useState("");
   const [method,setMethod]  = useState(PAYMENT_METHODS[0]);
@@ -2253,32 +2231,32 @@ function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
         <div style={{ flex:1,overflowY:"auto",padding:"22px 28px" }}>
         {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"9px 12px",color:C.red,fontFamily:F,fontSize:12,marginBottom:14 }}>⚠ {err}</div>}
         <div style={{ display:"flex",flexDirection:"column",gap:14 }}>
-          <div><label style={LBL}>Project</label>
-            <select value={projId} onChange={e=>setProjId(Number(e.target.value))} style={{ ...INP,cursor:"pointer" }}>
+          <div><label style={LBL()}>Project</label>
+            <select value={projId} onChange={e=>setProjId(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
               {allProjects.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}
             </select>
           </div>
           <div style={{ display:"flex",gap:12 }}>
-            <div style={{ flex:1 }}><label style={LBL}>Amount *</label><input style={INP} type="number" placeholder="0.00" value={amount} onChange={e=>{setAmount(e.target.value);setErr("");}}/></div>
-            <div style={{ flex:1 }}><label style={LBL}>Payment Date *</label><input style={{ ...INP,colorScheme:"dark" }} type="date" value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
+            <div style={{ flex:1 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" placeholder="0.00" value={amount} onChange={e=>{setAmount(e.target.value);setErr("");}}/></div>
+            <div style={{ flex:1 }}><label style={LBL()}>Payment Date *</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
           </div>
-          <div><label style={LBL}>Payment Method</label>
-            <select value={method} onChange={e=>setMethod(e.target.value)} style={{ ...INP,cursor:"pointer" }}>
+          <div><label style={LBL()}>Payment Method</label>
+            <select value={method} onChange={e=>setMethod(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
               {PAYMENT_METHODS.map(m=><option key={m} value={m}>{m}</option>)}
             </select>
           </div>
-          <div><label style={LBL}>Related Invoice <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
-            <select value={invRef} onChange={e=>setInvRef(e.target.value)} style={{ ...INP,cursor:"pointer" }}>
+          <div><label style={LBL()}>Related Invoice <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
+            <select value={invRef} onChange={e=>setInvRef(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
               <option value="">— None —</option>
               {projInvoices.map(i=><option key={i.id||i.invId} value={i.id||i.invId}>{i.id||i.invId} · ${Number(i.amount).toLocaleString()}</option>)}
             </select>
           </div>
-          <div><label style={LBL}>Notes <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
-            <textarea style={{ ...INP,resize:"none" }} rows={2} value={notes} onChange={e=>setNotes(e.target.value)} placeholder="Reference number, comments…"/>
+          <div><label style={LBL()}>Notes <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
+            <textarea style={{ ...INP(),resize:"none" }} rows={2} value={notes} onChange={e=>setNotes(e.target.value)} placeholder="Reference number, comments…"/>
           </div>
           {/* Receipt / document upload */}
           <div>
-            <label style={LBL}>Attach Receipt / Document <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
+            <label style={LBL()}>Attach Receipt / Document <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
             {receipt
               ?<div style={{ background:C.surface,border:`1px solid ${C.green}44`,borderRadius:10,padding:"14px 16px" }}>
                   <div style={{ display:"flex",alignItems:"center",gap:10 }}>
@@ -2320,7 +2298,7 @@ function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
 // ─── EditPaymentModal ─────────────────────────────────────────────────────────
 function EditPaymentModal({ payment, allProjects, allInvoices, onConfirm, onCancel }){
   const fmtDate=d=>d?new Date(d+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):"—";
-  const [projId,setProjId]  = useState(payment.projId||allProjects[0]?.id||1);
+  const [projId,setProjId]  = useState(payment.projId||allProjects[0]?.id||null);
   const [amount,setAmount]  = useState(String(payment.amount||""));
   const [date,setDate]      = useState(payment.date||"");
   const [method,setMethod]  = useState(payment.method||PAYMENT_METHODS[0]);
@@ -2363,31 +2341,31 @@ function EditPaymentModal({ payment, allProjects, allInvoices, onConfirm, onCanc
         <div style={{ flex:1,overflowY:"auto",padding:"22px 28px" }}>
           {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"9px 12px",color:C.red,fontFamily:F,fontSize:12,marginBottom:14 }}>⚠ {err}</div>}
           <div style={{ display:"flex",flexDirection:"column",gap:14 }}>
-            <div><label style={LBL}>Project</label>
-              <select value={projId} onChange={e=>setProjId(Number(e.target.value))} style={{ ...INP,cursor:"pointer" }}>
+            <div><label style={LBL()}>Project</label>
+              <select value={projId} onChange={e=>setProjId(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
                 {allProjects.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}
               </select>
             </div>
             <div style={{ display:"flex",gap:12 }}>
-              <div style={{ flex:1 }}><label style={LBL}>Amount *</label><input style={INP} type="number" placeholder="0.00" value={amount} onChange={e=>{setAmount(e.target.value);setErr("");}}/></div>
-              <div style={{ flex:1 }}><label style={LBL}>Payment Date *</label><input style={{ ...INP,colorScheme:"dark" }} type="date" value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" placeholder="0.00" value={amount} onChange={e=>{setAmount(e.target.value);setErr("");}}/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Payment Date *</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
             </div>
-            <div><label style={LBL}>Payment Method</label>
-              <select value={method} onChange={e=>setMethod(e.target.value)} style={{ ...INP,cursor:"pointer" }}>
+            <div><label style={LBL()}>Payment Method</label>
+              <select value={method} onChange={e=>setMethod(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
                 {PAYMENT_METHODS.map(m=><option key={m} value={m}>{m}</option>)}
               </select>
             </div>
-            <div><label style={LBL}>Related Invoice <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
-              <select value={invRef} onChange={e=>setInvRef(e.target.value)} style={{ ...INP,cursor:"pointer" }}>
+            <div><label style={LBL()}>Related Invoice <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
+              <select value={invRef} onChange={e=>setInvRef(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
                 <option value="">— None —</option>
                 {projInvoices.map(i=><option key={i.id||i.invId} value={i.id||i.invId}>{i.id||i.invId} · ${Number(i.amount).toLocaleString()}</option>)}
               </select>
             </div>
-            <div><label style={LBL}>Notes <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
-              <textarea style={{ ...INP,resize:"none" }} rows={2} value={notes} onChange={e=>setNotes(e.target.value)} placeholder="Reference number, comments…"/>
+            <div><label style={LBL()}>Notes <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
+              <textarea style={{ ...INP(),resize:"none" }} rows={2} value={notes} onChange={e=>setNotes(e.target.value)} placeholder="Reference number, comments…"/>
             </div>
             <div>
-              <label style={LBL}>Receipt / Document <span style={{fontWeight:400,color:C.muted}}>(optional — replace existing)</span></label>
+              <label style={LBL()}>Receipt / Document <span style={{fontWeight:400,color:C.muted}}>(optional — replace existing)</span></label>
               {receipt
                 ?<div style={{ background:C.surface,border:`1px solid ${C.green}44`,borderRadius:10,padding:"14px 16px" }}>
                     <div style={{ display:"flex",alignItems:"center",gap:10 }}>
@@ -2532,23 +2510,23 @@ function PaymentsPanel({ project, payments, addPayment, updatePayment, removePay
       {showAdd
         ?<InlineFormShell header="Record Payment" accent={C.green} saveLabel="Save Payment" onSave={submitPay} onCancel={()=>setShowAdd(false)} err={payErr} saving={paySaving}>
             <div style={{ display:"flex",gap:12 }}>
-              <div style={{ flex:1 }}><label style={LBL}>Amount *</label><input style={INP} type="number" placeholder="0.00" value={payAmount} onChange={e=>{setPayAmount(e.target.value);setPayErr("");}}/></div>
-              <div style={{ flex:1 }}><label style={LBL}>Payment Date *</label><input style={{ ...INP,colorScheme:"dark" }} type="date" value={payDate} onChange={e=>{setPayDate(e.target.value);setPayErr("");}}/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" placeholder="0.00" value={payAmount} onChange={e=>{setPayAmount(e.target.value);setPayErr("");}}/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Payment Date *</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={payDate} onChange={e=>{setPayDate(e.target.value);setPayErr("");}}/></div>
             </div>
-            <div><label style={LBL}>Payment Method</label>
-              <select value={payMethod} onChange={e=>setPayMethod(e.target.value)} style={{ ...INP,cursor:"pointer" }}>
+            <div><label style={LBL()}>Payment Method</label>
+              <select value={payMethod} onChange={e=>setPayMethod(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
                 {PAYMENT_METHODS.map(m=><option key={m}>{m}</option>)}
               </select>
             </div>
-            <div><label style={LBL}>Related Invoice <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
-              <select value={payInvRef} onChange={e=>setPayInvRef(e.target.value)} style={{ ...INP,cursor:"pointer" }}>
+            <div><label style={LBL()}>Related Invoice <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
+              <select value={payInvRef} onChange={e=>setPayInvRef(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
                 <option value="">— None —</option>
                 {projInvoices.map(i=><option key={i.id||i.invId} value={i.id||i.invId}>{i.id||i.invId} · ${Number(i.amount).toLocaleString()}</option>)}
               </select>
             </div>
-            <div><label style={LBL}>Notes <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label><textarea style={{ ...INP,resize:"none" }} rows={2} value={payNotes} onChange={e=>setPayNotes(e.target.value)} placeholder="Reference number, comments…"/></div>
+            <div><label style={LBL()}>Notes <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label><textarea style={{ ...INP(),resize:"none" }} rows={2} value={payNotes} onChange={e=>setPayNotes(e.target.value)} placeholder="Reference number, comments…"/></div>
             <div>
-              <label style={LBL}>Attach Receipt <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
+              <label style={LBL()}>Attach Receipt <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
               {payReceipt
                 ?<div style={{ background:C.surface,border:`1px solid ${C.green}44`,borderRadius:9,padding:"12px 14px",display:"flex",alignItems:"center",gap:10 }}>
                     <div style={{ width:34,height:34,background:C.card,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,flexShrink:0 }}>{payReceipt.dataUrl?.startsWith("data:image")?"🖼️":"📄"}</div>
@@ -2626,7 +2604,7 @@ function PaymentsPage({ payments, allProjects, addPayment, allInvoices, removePa
         ))}
       </div>
       <div style={{ display:"flex",gap:10,marginBottom:20,flexWrap:"wrap" }}>
-        <select value={projFilter} onChange={e=>setProjFilter(e.target.value)} style={{ ...INP,width:"auto",padding:"8px 14px",borderRadius:8,cursor:"pointer" }}>
+        <select value={projFilter} onChange={e=>setProjFilter(e.target.value)} style={{ ...INP(),width:"auto",padding:"8px 14px",borderRadius:8,cursor:"pointer" }}>
           <option value="all">All Projects</option>
           {allProjects.map(p=><option key={p.id} value={String(p.id)}>{p.name}</option>)}
         </select>
@@ -2663,29 +2641,30 @@ function PaymentsPage({ payments, allProjects, addPayment, allInvoices, removePa
 }
 
 // ─── REPORT GENERATOR ─────────────────────────────────────────────────────────
-function ReportPage({ tasks, allProjects }){
-  const [projId,setProjId]=useState((allProjects&&allProjects[0]?.id)||PROJECTS[0].id);
+function ReportPage({ tasks, allProjects, allInvoices }){
+  const [projId,setProjId]=useState(null);
   const [from,setFrom]=useState("2025-01-01");
   const [to,setTo]=useState("2025-12-31");
   const [report,setReport]=useState(null);
   const [generating,setGen]=useState(false);
+
+  // Set default project once list loads
+  useEffect(()=>{ if(!projId && allProjects?.length) setProjId(allProjects[0].id); },[allProjects]);
 
   const fmtD=(d)=>{ try{ return new Date(d+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}); }catch{return d;} };
 
   const generate=()=>{
     setGen(true);
     setTimeout(()=>{
-      const project=(allProjects||PROJECTS).find(p=>p.id===projId)||PROJECTS.find(p=>p.id===projId);
-      const invoices=(PROJ_INV[projId]||[]).filter(i=>inRange(i.due,from,to));
-      const logs=PROJ_LOGS_SEED[projId]||[];
-      const notes=PROJ_NOTES_SEED[projId]||[];
-      const ptasks=tasks.filter(t=>t.projId===projId&&inRange(t.date,from,to));
-      const totalInv=invoices.reduce((s,i)=>s+i.amount,0);
-      const paidInv=invoices.filter(i=>i.status==="paid").reduce((s,i)=>s+i.amount,0);
-      const members=PROJ_CREW_SEED[projId]||[];
-      setReport({ project,invoices,logs,notes,tasks:ptasks,totalInv,paidInv,members,from,to });
+      const project=(allProjects||[]).find(p=>p.id===projId);
+      if(!project){ setGen(false); return; }
+      const invoices=(allInvoices||[]).filter(i=>(i.projId===projId||i.project===project?.name)&&inRange(i.due,from,to));
+      const ptasks=(tasks||[]).filter(t=>t.projId===projId&&inRange(t.date,from,to));
+      const totalInv=invoices.reduce((s,i)=>s+Number(i.amount||0),0);
+      const paidInv=invoices.filter(i=>i.status==="paid").reduce((s,i)=>s+Number(i.amount||0),0);
+      setReport({ project,invoices,logs:[],notes:[],tasks:ptasks,totalInv,paidInv,members:[],from,to });
       setGen(false);
-    },800);
+    },600);
   };
 
   return(
@@ -2698,9 +2677,9 @@ function ReportPage({ tasks, allProjects }){
       <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:14,padding:"24px 28px",marginBottom:24 }}>
         <SLabel>Report Configuration</SLabel>
         <div style={{ display:"flex",gap:16,flexWrap:"wrap",alignItems:"flex-end" }}>
-          <div style={{ flex:2,minWidth:200 }}><label style={LBL}>Project</label><select value={projId} onChange={e=>{setProjId(Number(e.target.value));setReport(null);}} style={{ ...INP,cursor:"pointer" }}>{(allProjects||PROJECTS).map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></div>
-          <div style={{ flex:1,minWidth:140 }}><label style={LBL}>From</label><input type="date" value={from} onChange={e=>{setFrom(e.target.value);setReport(null);}} style={{ ...INP,colorScheme:"dark" }}/></div>
-          <div style={{ flex:1,minWidth:140 }}><label style={LBL}>To</label><input type="date" value={to} onChange={e=>{setTo(e.target.value);setReport(null);}} style={{ ...INP,colorScheme:"dark" }}/></div>
+          <div style={{ flex:2,minWidth:200 }}><label style={LBL()}>Project</label><select value={projId||""} onChange={e=>{setProjId(e.target.value);setReport(null);}} style={{ ...INP(),cursor:"pointer" }}>{(allProjects||[]).map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></div>
+          <div style={{ flex:1,minWidth:140 }}><label style={LBL()}>From</label><input type="date" value={from} onChange={e=>{setFrom(e.target.value);setReport(null);}} style={{ ...INP(),colorScheme:"dark" }}/></div>
+          <div style={{ flex:1,minWidth:140 }}><label style={LBL()}>To</label><input type="date" value={to} onChange={e=>{setTo(e.target.value);setReport(null);}} style={{ ...INP(),colorScheme:"dark" }}/></div>
           <button onClick={generate} disabled={generating} style={{ background:generating?"transparent":C.accent,color:generating?C.accent:"#000",border:generating?`1px solid ${C.accent}44`:"none",padding:"10px 28px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",gap:8,flexShrink:0,height:40 }}>
             {generating?<><div style={{ width:15,height:15,border:"2px solid #f59e0b44",borderTopColor:C.accent,borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Generating…</>:"Generate Report"}
           </button>
@@ -2732,7 +2711,7 @@ function ReportPage({ tasks, allProjects }){
               </div>
             </div>
             <div style={{ display:"flex",gap:24,marginTop:22,flexWrap:"wrap" }}>
-              {[["Phase",report.project.phase],["Progress",report.project.progress+"%"],["Contract Value","$"+report.project.value.toLocaleString()],["Client",report.project.client.name],["Due",report.project.dueFmt]].map(([k,v])=>(
+              {[["Phase",report.project.phase],["Progress",report.project.progress+"%"],["Contract Value","$"+report.project.value.toLocaleString()],["Client",report.project.client?.name||report.project.client?.company||"—"],["Due",report.project.dueFmt]].map(([k,v])=>(
                 <div key={k}><div style={{ color:C.muted,fontFamily:F,fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:.5 }}>{k}</div><div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:14,marginTop:3 }}>{v}</div></div>
               ))}
             </div>
@@ -2837,7 +2816,7 @@ function ReportPage({ tasks, allProjects }){
 }
 
 // ─── Calendar Page ─────────────────────────────────────────────────────────────
-function CalendarPage({ allInvoices,tasks,onAddTask,projectEvents=[],payments=[],allProjects=PROJECTS }){
+function CalendarPage({ allInvoices,tasks,onAddTask,projectEvents=[],payments=[],allProjects=[] }){
   const today=new Date();
   const [year,setYear]=useState(today.getFullYear());const [month,setMonth]=useState(today.getMonth());
   const [view,setView]=useState("month");const [filter,setFilter]=useState("all");const [sel,setSel]=useState(null);
@@ -2952,7 +2931,7 @@ function CalendarPage({ allInvoices,tasks,onAddTask,projectEvents=[],payments=[]
       {view==="day"&&(
         <div>
           <div style={{ display:"flex",alignItems:"center",gap:10,marginBottom:16 }}>
-            <input type="date" value={dayDate} onChange={e=>setDayDate(e.target.value)} style={{ ...INP,width:"auto",colorScheme:"dark" }}/>
+            <input type="date" value={dayDate} onChange={e=>setDayDate(e.target.value)} style={{ ...INP(),width:"auto",colorScheme:"dark" }}/>
             {dayDate&&<span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:15 }}>{new Date(dayDate+"T12:00:00").toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric"})}</span>}
           </div>
           <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:14,padding:"20px 24px" }}>
@@ -3127,7 +3106,7 @@ function PhotoCommentModal({ photo, comments, onAddComment, onEditComment, onDel
                 {editingId===c.id
                   ?<div>
                     <textarea autoFocus value={editText} onChange={e=>setEditText(e.target.value)} onKeyDown={e=>{ if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();saveEdit();} if(e.key==="Escape")cancelEdit(); }}
-                      rows={3} style={{ ...INP,resize:"none",fontSize:12,lineHeight:1.5,marginBottom:8 }}/>
+                      rows={3} style={{ ...INP(),resize:"none",fontSize:12,lineHeight:1.5,marginBottom:8 }}/>
                     <div style={{ display:"flex",gap:6 }}>
                       <button onClick={saveEdit} style={{ flex:1,background:C.green,color:"#fff",border:"none",padding:"6px 0",borderRadius:5,fontFamily:F,fontWeight:700,fontSize:11,cursor:"pointer" }}>✓ Save</button>
                       <button onClick={cancelEdit} style={{ background:"transparent",color:C.muted,border:`1px solid ${C.border}`,padding:"6px 10px",borderRadius:5,fontFamily:F,fontSize:11,cursor:"pointer" }}>Cancel</button>
@@ -3156,7 +3135,7 @@ function PhotoCommentModal({ photo, comments, onAddComment, onEditComment, onDel
             <textarea ref={textRef} value={text} onChange={e=>setText(e.target.value)}
               onKeyDown={e=>{ if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();submit();} }}
               placeholder="Write a comment… (Enter to send)" rows={3}
-              style={{ ...INP,resize:"none",fontSize:12,lineHeight:1.5,marginBottom:8 }}/>
+              style={{ ...INP(),resize:"none",fontSize:12,lineHeight:1.5,marginBottom:8 }}/>
             <button onClick={submit} disabled={!text.trim()} style={{ width:"100%",background:text.trim()?C.accent:C.border,color:text.trim()?"#000":C.muted,border:"none",padding:"9px 0",borderRadius:7,fontFamily:F,fontWeight:700,fontSize:12,cursor:text.trim()?"pointer":"default",transition:"all .15s" }}>💬 Add Comment</button>
           </div>
         </div>
@@ -3216,8 +3195,8 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
   const [editingProject,setEditingProject] = useState(false);
   const [confirmProjectPatch,setConfirmProjectPatch] = useState(null);
   const [noteText,setNoteText]       = useState("");
-  const [notes,setNotes]             = useState(()=>PROJ_NOTES_SEED[project.id]||[]);
-  const [log,setLog]                 = useState(()=>PROJ_LOGS_SEED[project.id]||[]);
+  const [notes,setNotes]             = useState([]);
+  const [log,setLog]                 = useState([]);
   const photoRef                     = useRef();
   const dragOver                     = useRef(null);
   const dragItem                     = useRef(null);
@@ -3568,21 +3547,21 @@ function EditProjectModal({ project, onConfirm, onCancel }){
           {/* Step 1 */}
           {step===1&&(
             <div style={{ display:"flex",flexDirection:"column",gap:15,paddingBottom:4 }}>
-              <div><label style={LBL}>Project Name *</label><input style={INP} value={name} onChange={e=>{setName(e.target.value);setErr("");}}/></div>
-              <div><label style={LBL}>Project Address *</label><input style={INP} value={address} onChange={e=>{setAddress(e.target.value);setErr("");}}/></div>
-              <div><label style={LBL}>Description <span style={{color:C.muted,fontWeight:400}}>(optional)</span></label>
-                <textarea style={{ ...INP,resize:"none",lineHeight:1.55 }} rows={3} value={desc} onChange={e=>setDesc(e.target.value)}/></div>
+              <div><label style={LBL()}>Project Name *</label><input style={INP()} value={name} onChange={e=>{setName(e.target.value);setErr("");}}/></div>
+              <div><label style={LBL()}>Project Address *</label><input style={INP()} value={address} onChange={e=>{setAddress(e.target.value);setErr("");}}/></div>
+              <div><label style={LBL()}>Description <span style={{color:C.muted,fontWeight:400}}>(optional)</span></label>
+                <textarea style={{ ...INP(),resize:"none",lineHeight:1.55 }} rows={3} value={desc} onChange={e=>setDesc(e.target.value)}/></div>
               <div style={{ display:"flex",gap:12 }}>
-                <div style={{ flex:1 }}><label style={LBL}>Contract Value</label>
-                  <input style={INP} type="number" value={value} onChange={e=>setValue(e.target.value)} placeholder="0.00"/>
+                <div style={{ flex:1 }}><label style={LBL()}>Contract Value</label>
+                  <input style={INP()} type="number" value={value} onChange={e=>setValue(e.target.value)} placeholder="0.00"/>
                 </div>
-                <div style={{ flex:1 }}><label style={LBL}>Current Phase</label>
-                  <select value={phase} onChange={e=>setPhase(e.target.value)} style={{ ...INP,cursor:"pointer" }}>
+                <div style={{ flex:1 }}><label style={LBL()}>Current Phase</label>
+                  <select value={phase} onChange={e=>setPhase(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
                     {PHASES.map(p=><option key={p} value={p}>{p}</option>)}
                   </select>
                 </div>
               </div>
-              <div><label style={LBL}>Project Status</label>
+              <div><label style={LBL()}>Project Status</label>
                 <div style={{ display:"flex",gap:8,flexWrap:"wrap" }}>
                   {PROJ_STATUSES.map(s=>(
                     <button key={s.v} onClick={()=>setStatus(s.v)} style={{ flex:1,minWidth:90,padding:"9px 0",borderRadius:7,cursor:"pointer",fontFamily:F,fontSize:12,fontWeight:700,border:status===s.v?`2px solid ${s.c}`:`1px solid ${C.border}`,background:status===s.v?s.c+"22":"transparent",color:status===s.v?s.c:C.muted,transition:"all .15s" }}>{s.l}</button>
@@ -3596,10 +3575,10 @@ function EditProjectModal({ project, onConfirm, onCancel }){
           {step===2&&(
             <div style={{ display:"flex",flexDirection:"column",gap:20,paddingBottom:4 }}>
               <div>
-                <label style={{ ...LBL,marginBottom:12 }}>Project Timeline</label>
+                <label style={{ ...LBL(),marginBottom:12 }}>Project Timeline</label>
                 <div style={{ display:"flex",gap:14 }}>
-                  <div style={{ flex:1 }}><label style={LBL}>Starting Date</label><input type="date" value={startISO} onChange={e=>setStartISO(e.target.value)} style={{ ...INP,colorScheme:"dark" }}/></div>
-                  <div style={{ flex:1 }}><label style={LBL}>Expected Finish Date</label><input type="date" value={endISO} onChange={e=>setEndISO(e.target.value)} style={{ ...INP,colorScheme:"dark" }}/></div>
+                  <div style={{ flex:1 }}><label style={LBL()}>Starting Date</label><input type="date" value={startISO} onChange={e=>setStartISO(e.target.value)} style={{ ...INP(),colorScheme:"dark" }}/></div>
+                  <div style={{ flex:1 }}><label style={LBL()}>Expected Finish Date</label><input type="date" value={endISO} onChange={e=>setEndISO(e.target.value)} style={{ ...INP(),colorScheme:"dark" }}/></div>
                 </div>
                 {startISO&&endISO&&(()=>{
                   const diff=Math.round((new Date(endISO)-new Date(startISO))/(1000*60*60*24));
@@ -3609,7 +3588,7 @@ function EditProjectModal({ project, onConfirm, onCancel }){
                 {startISO&&endISO&&new Date(endISO)<=new Date(startISO)&&<div style={{ marginTop:10,background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"8px 12px",color:C.red,fontFamily:F,fontSize:12 }}>⚠️ End date must be after start date</div>}
               </div>
               <div>
-                <label style={{ ...LBL,marginBottom:12 }}>Project Type</label>
+                <label style={{ ...LBL(),marginBottom:12 }}>Project Type</label>
                 <div style={{ display:"flex",gap:12 }}>
                   {[["business","🏢","Business","For a company or organization"],["customer","👤","Customer","For an individual client"]].map(([v,ic,l,sub])=>(
                     <div key={v} onClick={()=>setProjType(v)} style={{ flex:1,border:`2px solid ${projType===v?v==="business"?C.purple:C.blue:C.border}`,borderRadius:12,padding:"16px 18px",cursor:"pointer",background:projType===v?v==="business"?C.purpleDim:C.blueDim:"transparent",transition:"all .15s" }}>
@@ -3641,17 +3620,17 @@ function EditProjectModal({ project, onConfirm, onCancel }){
                     </div>
                     <div style={{ display:"flex",flexDirection:"column",gap:11 }}>
                       <div style={{ display:"flex",gap:12 }}>
-                        <div style={{ flex:1 }}><label style={LBL}>Full Name</label><input style={INP} value={c.name} onChange={e=>updateContact(c.id,"name",e.target.value)} placeholder="Contact name"/></div>
-                        <div style={{ flex:1 }}><label style={LBL}>Role</label>
-                          <select value={c.role} onChange={e=>updateContact(c.id,"role",e.target.value)} style={{ ...INP,cursor:"pointer" }}>
+                        <div style={{ flex:1 }}><label style={LBL()}>Full Name</label><input style={INP()} value={c.name} onChange={e=>updateContact(c.id,"name",e.target.value)} placeholder="Contact name"/></div>
+                        <div style={{ flex:1 }}><label style={LBL()}>Role</label>
+                          <select value={c.role} onChange={e=>updateContact(c.id,"role",e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
                             {CONTACT_ROLES.map(r=><option key={r} value={r}>{r}</option>)}
                           </select>
                         </div>
                       </div>
-                      <div><label style={LBL}>Company / Organisation</label><input style={INP} value={c.company} onChange={e=>updateContact(c.id,"company",e.target.value)} placeholder="Company name (optional)"/></div>
+                      <div><label style={LBL()}>Company / Organisation</label><input style={INP()} value={c.company} onChange={e=>updateContact(c.id,"company",e.target.value)} placeholder="Company name (optional)"/></div>
                       <div style={{ display:"flex",gap:12 }}>
-                        <div style={{ flex:1 }}><label style={LBL}>Phone</label><input style={INP} value={c.phone} onChange={e=>updateContact(c.id,"phone",e.target.value)} placeholder="+971 50 000 0000"/></div>
-                        <div style={{ flex:1 }}><label style={LBL}>Email</label><input style={INP} value={c.email} onChange={e=>updateContact(c.id,"email",e.target.value)} placeholder="email@example.com"/></div>
+                        <div style={{ flex:1 }}><label style={LBL()}>Phone</label><input style={INP()} value={c.phone} onChange={e=>updateContact(c.id,"phone",e.target.value)} placeholder="+971 50 000 0000"/></div>
+                        <div style={{ flex:1 }}><label style={LBL()}>Email</label><input style={INP()} value={c.email} onChange={e=>updateContact(c.id,"email",e.target.value)} placeholder="email@example.com"/></div>
                       </div>
                     </div>
                   </div>
@@ -3765,16 +3744,16 @@ function NewProjectModal({ onConfirm, onCancel }){
           {step===1&&(
             <div style={{ display:"flex",flexDirection:"column",gap:16,paddingBottom:4 }}>
               <div>
-                <label style={LBL}>Project Name *</label>
-                <input style={INP} placeholder="e.g. Riverside Townhomes Phase 2" value={name} onChange={e=>{setName(e.target.value);setErr("");}}/>
+                <label style={LBL()}>Project Name *</label>
+                <input style={INP()} placeholder="e.g. Riverside Townhomes Phase 2" value={name} onChange={e=>{setName(e.target.value);setErr("");}}/>
               </div>
               <div>
-                <label style={LBL}>Project Address *</label>
-                <input style={INP} placeholder="Full address including city, country" value={address} onChange={e=>{setAddress(e.target.value);setErr("");}}/>
+                <label style={LBL()}>Project Address *</label>
+                <input style={INP()} placeholder="Full address including city, country" value={address} onChange={e=>{setAddress(e.target.value);setErr("");}}/>
               </div>
               <div>
-                <label style={LBL}>Project Description <span style={{ color:C.muted,fontWeight:400 }}>(optional)</span></label>
-                <textarea style={{ ...INP,resize:"none",lineHeight:1.55 }} rows={3} placeholder="Brief overview of scope, objectives, or special requirements…" value={desc} onChange={e=>setDesc(e.target.value)}/>
+                <label style={LBL()}>Project Description <span style={{ color:C.muted,fontWeight:400 }}>(optional)</span></label>
+                <textarea style={{ ...INP(),resize:"none",lineHeight:1.55 }} rows={3} placeholder="Brief overview of scope, objectives, or special requirements…" value={desc} onChange={e=>setDesc(e.target.value)}/>
               </div>
             </div>
           )}
@@ -3783,15 +3762,15 @@ function NewProjectModal({ onConfirm, onCancel }){
           {step===2&&(
             <div style={{ display:"flex",flexDirection:"column",gap:20,paddingBottom:4 }}>
               <div>
-                <label style={{ ...LBL,marginBottom:12 }}>Project Timeline</label>
+                <label style={{ ...LBL(),marginBottom:12 }}>Project Timeline</label>
                 <div style={{ display:"flex",gap:14 }}>
                   <div style={{ flex:1 }}>
-                    <label style={LBL}>Starting Date</label>
-                    <input type="date" value={startISO} onChange={e=>setStartISO(e.target.value)} style={{ ...INP,colorScheme:"dark" }}/>
+                    <label style={LBL()}>Starting Date</label>
+                    <input type="date" value={startISO} onChange={e=>setStartISO(e.target.value)} style={{ ...INP(),colorScheme:"dark" }}/>
                   </div>
                   <div style={{ flex:1 }}>
-                    <label style={LBL}>Expected Finish Date</label>
-                    <input type="date" value={endISO} onChange={e=>setEndISO(e.target.value)} style={{ ...INP,colorScheme:"dark" }}/>
+                    <label style={LBL()}>Expected Finish Date</label>
+                    <input type="date" value={endISO} onChange={e=>setEndISO(e.target.value)} style={{ ...INP(),colorScheme:"dark" }}/>
                   </div>
                 </div>
                 {startISO&&endISO&&(()=>{
@@ -3803,7 +3782,7 @@ function NewProjectModal({ onConfirm, onCancel }){
               </div>
 
               <div>
-                <label style={{ ...LBL,marginBottom:12 }}>Project Type</label>
+                <label style={{ ...LBL(),marginBottom:12 }}>Project Type</label>
                 <div style={{ display:"flex",gap:12 }}>
                   {[["business","🏢","Business","For a company or organization"],["customer","👤","Customer","For an individual client"]].map(([v,ic,l,sub])=>(
                     <div key={v} onClick={()=>setProjType(v)} style={{ flex:1,border:`2px solid ${projType===v?v==="business"?C.purple:C.blue:C.border}`,borderRadius:12,padding:"16px 18px",cursor:"pointer",background:projType===v?v==="business"?C.purpleDim:C.blueDim:"transparent",transition:"all .15s" }}>
@@ -3835,15 +3814,15 @@ function NewProjectModal({ onConfirm, onCancel }){
                     </div>
                     <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
                       <div style={{ display:"flex",gap:10 }}>
-                        <div style={{ flex:1 }}><label style={LBL}>Contact Name *</label><input style={INP} placeholder="Full name" value={c.name} onChange={e=>updateContact(c.id,"name",e.target.value)}/></div>
-                        <div style={{ flex:1 }}><label style={LBL}>Company <span style={{ fontWeight:400 }}>(optional)</span></label><input style={INP} placeholder="Company name" value={c.company} onChange={e=>updateContact(c.id,"company",e.target.value)}/></div>
+                        <div style={{ flex:1 }}><label style={LBL()}>Contact Name *</label><input style={INP()} placeholder="Full name" value={c.name} onChange={e=>updateContact(c.id,"name",e.target.value)}/></div>
+                        <div style={{ flex:1 }}><label style={LBL()}>Company <span style={{ fontWeight:400 }}>(optional)</span></label><input style={INP()} placeholder="Company name" value={c.company} onChange={e=>updateContact(c.id,"company",e.target.value)}/></div>
                       </div>
                       <div style={{ display:"flex",gap:10 }}>
-                        <div style={{ flex:1 }}><label style={LBL}>Phone Number</label><input style={INP} placeholder="+971 50 000 0000" value={c.phone} onChange={e=>updateContact(c.id,"phone",e.target.value)}/></div>
-                        <div style={{ flex:1 }}><label style={LBL}>Email</label><input style={INP} placeholder="name@example.com" value={c.email} onChange={e=>updateContact(c.id,"email",e.target.value)}/></div>
+                        <div style={{ flex:1 }}><label style={LBL()}>Phone Number</label><input style={INP()} placeholder="+971 50 000 0000" value={c.phone} onChange={e=>updateContact(c.id,"phone",e.target.value)}/></div>
+                        <div style={{ flex:1 }}><label style={LBL()}>Email</label><input style={INP()} placeholder="name@example.com" value={c.email} onChange={e=>updateContact(c.id,"email",e.target.value)}/></div>
                       </div>
-                      <div style={{ flex:1 }}><label style={LBL}>Role / Relationship</label>
-                        <select value={c.role} onChange={e=>updateContact(c.id,"role",e.target.value)} style={{ ...INP,cursor:"pointer" }}>
+                      <div style={{ flex:1 }}><label style={LBL()}>Role / Relationship</label>
+                        <select value={c.role} onChange={e=>updateContact(c.id,"role",e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
                           {CONTACT_ROLES.map(r=><option key={r} value={r}>{r}</option>)}
                         </select>
                       </div>
@@ -4198,41 +4177,19 @@ function Dashboard({ onSelect, allProjects=[], allInvoices=[], payments=[], task
 // (editable, deletable) just like any user-created invoice.
 // There are NO permanently protected invoices; the _static flag is gone.
 function useGlobalInvoices(){
-  const [dynInv,setDynInv]=useState(null);
-
-  useEffect(()=>{ let alive=true;
-    (async()=>{
-      const r=await storage.get("invoices:global");
-      if(!alive)return;
-      if(r){
-        // Already seeded — just load
-        setDynInv(JSON.parse(r.value));
-      } else {
-        // First run: seed ALL_INV_STATIC into the dynamic store
-        const seeded=ALL_INV_STATIC.map(i=>({
-          ...i,
-          // Ensure every row has the fields the rest of the app expects
-          invId: i.id,
-          invoiceStatus: i.status,
-          dueFmt: i.dueFmt||i.due||"—",
-          _seeded: true,   // marks origin but does NOT lock the row
-        }));
-        setDynInv(seeded);
-        await storage.set("invoices:global", JSON.stringify(seeded));
-      }
-    })();
-    return()=>{alive=false;};
-  },[]);
-
-  const save=async(next)=>{ setDynInv(next); await storage.set("invoices:global",JSON.stringify(next)); };
-
-  // allInvoices is now purely dynInv — no static overlay
-  const allInvoices=useMemo(()=>dynInv||[],[dynInv]);
-
-  return{ allInvoices, ready:dynInv!==null,
-    addInvoice:  inv  => save([...(dynInv||[]), inv]),
-    updateInvoice:(id,patch)=>save((dynInv||[]).map(i=>i.id===id?{...i,...patch}:i)),
-    removeInvoice: id  => save((dynInv||[]).filter(i=>i.id!==id)),
+  const cid = useCompany();
+  const [allInvoices,setAllInvoices]=useState(null);
+  const load=useCallback(async()=>{
+    if(!cid) return;
+    const {data,error}=await dbInvoices.getAll();
+    if(!error&&data) setAllInvoices(data.map(mapInvoice));
+  },[cid]);
+  useEffect(()=>{ load(); const t=setInterval(load,POLL_MS); return()=>clearInterval(t); },[load]);
+  return{
+    allInvoices:allInvoices||[], ready:allInvoices!==null,
+    addInvoice:   async(inv)=>{ await dbInvoices.add(inv); load(); },
+    updateInvoice:async(id,patch)=>{ await dbInvoices.update(id,patch); load(); },
+    removeInvoice:async(id)=>{ await dbInvoices.delete(id); load(); },
   };
 }
 
@@ -4263,19 +4220,19 @@ function EditInvoiceModal({ invoice, allProjects, onConfirm, onCancel }){
         </div>
         {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"9px 12px",color:C.red,fontFamily:F,fontSize:12,marginBottom:14 }}>⚠ {err}</div>}
         <div style={{ display:"flex",flexDirection:"column",gap:13 }}>
-          <div><label style={LBL}>Project</label>
-            <select value={project} onChange={e=>setProject(e.target.value)} style={{ ...INP,cursor:"pointer" }}>
+          <div><label style={LBL()}>Project</label>
+            <select value={project} onChange={e=>setProject(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
               <option value="">— Select Project —</option>
               {allProjects.map(p=><option key={p.id} value={p.name}>{p.name}</option>)}
             </select>
           </div>
-          <div><label style={LBL}>Client / Company</label><input style={INP} value={client} onChange={e=>setClient(e.target.value)} placeholder="Client name"/></div>
-          <div><label style={LBL}>Description</label><textarea style={{ ...INP,resize:"none" }} rows={2} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="Invoice description"/></div>
+          <div><label style={LBL()}>Client / Company</label><input style={INP()} value={client} onChange={e=>setClient(e.target.value)} placeholder="Client name"/></div>
+          <div><label style={LBL()}>Description</label><textarea style={{ ...INP(),resize:"none" }} rows={2} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="Invoice description"/></div>
           <div style={{ display:"flex",gap:12 }}>
-            <div style={{ flex:1 }}><label style={LBL}>Amount *</label><input style={INP} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setErr("");}} placeholder="0.00"/></div>
-            <div style={{ flex:1 }}><label style={LBL}>Due Date</label><input style={{ ...INP,colorScheme:"dark" }} type="date" value={due} onChange={e=>setDue(e.target.value)}/></div>
+            <div style={{ flex:1 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setErr("");}} placeholder="0.00"/></div>
+            <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={due} onChange={e=>setDue(e.target.value)}/></div>
           </div>
-          <div><label style={LBL}>Status</label>
+          <div><label style={LBL()}>Status</label>
             <div style={{ display:"flex",gap:8 }}>
               {INV_ST.map(s=><button key={s.v} onClick={()=>setStatus(s.v)} style={{ flex:1,padding:"9px 0",borderRadius:7,cursor:"pointer",fontFamily:F,fontSize:12,fontWeight:700,border:status===s.v?`2px solid ${s.c}`:`1px solid ${C.border}`,background:status===s.v?s.c+"22":"transparent",color:status===s.v?s.c:C.muted,transition:"all .15s" }}>{s.l}</button>)}
             </div>
@@ -4390,35 +4347,35 @@ function AddGlobalInvoiceModal({ allProjects, allInvoices=[], onConfirm, onCance
           <div style={{ display:"flex",flexDirection:"column",gap:13 }}>
             {/* Invoice # + Date */}
             <div style={{ display:"flex",gap:12 }}>
-              <div style={{ flex:1 }}><label style={LBL}>Invoice # *</label><input style={INP} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="INV-001"/></div>
-              <div style={{ flex:1 }}><label style={LBL}>Invoice Date</label><input style={{ ...INP,colorScheme:"dark" }} type="date" value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Invoice # *</label><input style={INP()} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="INV-001"/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
             </div>
             {/* Project */}
-            <div><label style={LBL}>Project *</label>
-              <select value={project} onChange={e=>setProject(e.target.value)} style={{ ...INP,cursor:"pointer" }}>
+            <div><label style={LBL()}>Project *</label>
+              <select value={project} onChange={e=>setProject(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
                 <option value="">— Select Project —</option>
                 {allProjects.map(p=><option key={p.id} value={p.name}>{p.name}</option>)}
               </select>
             </div>
             {/* Supplier + Client */}
             <div style={{ display:"flex",gap:12 }}>
-              <div style={{ flex:1 }}><label style={LBL}>Supplier / Company</label><input style={INP} value={supplier} onChange={e=>setSupplier(e.target.value)} placeholder="e.g. Gulf Steel Co."/></div>
-              <div style={{ flex:1 }}><label style={LBL}>Client</label><input style={INP} value={client} onChange={e=>setClient(e.target.value)} placeholder="Auto-filled from project"/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Supplier / Company</label><input style={INP()} value={supplier} onChange={e=>setSupplier(e.target.value)} placeholder="e.g. Gulf Steel Co."/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Client</label><input style={INP()} value={client} onChange={e=>setClient(e.target.value)} placeholder="Auto-filled from project"/></div>
             </div>
             {/* Description */}
-            <div><label style={LBL}>Description</label><textarea style={{ ...INP,resize:"none" }} rows={2} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="What is this invoice for?"/></div>
+            <div><label style={LBL()}>Description</label><textarea style={{ ...INP(),resize:"none" }} rows={2} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="What is this invoice for?"/></div>
             {/* Amount + Currency + Due */}
             <div style={{ display:"flex",gap:12 }}>
-              <div style={{ flex:2 }}><label style={LBL}>Amount *</label><input style={INP} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setErr("");}} placeholder="0.00"/></div>
-              <div style={{ flex:1 }}><label style={LBL}>Currency</label>
-                <select value={currency} onChange={e=>setCurrency(e.target.value)} style={{ ...INP,cursor:"pointer" }}>
+              <div style={{ flex:2 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setErr("");}} placeholder="0.00"/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Currency</label>
+                <select value={currency} onChange={e=>setCurrency(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
                   {CURRENCIES.map(c=><option key={c}>{c}</option>)}
                 </select>
               </div>
-              <div style={{ flex:1.5 }}><label style={LBL}>Due Date</label><input style={{ ...INP,colorScheme:"dark" }} type="date" value={due} onChange={e=>setDue(e.target.value)}/></div>
+              <div style={{ flex:1.5 }}><label style={LBL()}>Due Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={due} onChange={e=>setDue(e.target.value)}/></div>
             </div>
             {/* Status */}
-            <div><label style={LBL}>Status</label>
+            <div><label style={LBL()}>Status</label>
               <div style={{ display:"flex",gap:8 }}>
                 {INV_ST.map(s=><button key={s.v} onClick={()=>setStatus(s.v)} style={{ flex:1,padding:"9px 0",borderRadius:7,cursor:"pointer",fontFamily:F,fontSize:12,fontWeight:700,border:status===s.v?`2px solid ${s.c}`:`1px solid ${C.border}`,background:status===s.v?s.c+"22":"transparent",color:status===s.v?s.c:C.muted,transition:"all .15s" }}>{s.l}</button>)}
               </div>
@@ -4525,11 +4482,11 @@ function InvoicingPage({ allProjects=[], allInvoices=[], addInvoice, updateInvoi
 
       {/* Filters */}
       <div style={{ display:"flex",gap:10,marginBottom:20,flexWrap:"wrap" }}>
-        <select value={projFilter} onChange={e=>setProjFilter(e.target.value)} style={{ ...INP,width:"auto",padding:"9px 14px",borderRadius:8,cursor:"pointer",flexShrink:0 }}>
+        <select value={projFilter} onChange={e=>setProjFilter(e.target.value)} style={{ ...INP(),width:"auto",padding:"9px 14px",borderRadius:8,cursor:"pointer",flexShrink:0 }}>
           <option value="all">All Projects</option>
           {projects.map(p=><option key={p} value={p}>{p}</option>)}
         </select>
-        <select value={clientFilter} onChange={e=>setClientFilter(e.target.value)} style={{ ...INP,width:"auto",padding:"9px 14px",borderRadius:8,cursor:"pointer",flexShrink:0 }}>
+        <select value={clientFilter} onChange={e=>setClientFilter(e.target.value)} style={{ ...INP(),width:"auto",padding:"9px 14px",borderRadius:8,cursor:"pointer",flexShrink:0 }}>
           <option value="all">All Clients</option>
           {clients.map(c=><option key={c} value={c}>{c}</option>)}
         </select>
@@ -4588,50 +4545,33 @@ function TeamGlobal({ allProjects=[], onLog }){
   const refresh=()=>setVersion(v=>v+1);
 
   useEffect(()=>{
+    if(!allProjects?.length) return;
     let alive=true;
     (async()=>{
-      const allIds=[...PROJECTS.map(p=>p.id),...allProjects.filter(p=>!PROJECTS.find(s=>s.id===p.id)).map(p=>p.id)];
-      const allM=[];
-      for(const id of allIds){
-        try{
-          const r=await storage.get(`team:${id}`);
-          const proj=[...PROJECTS,...allProjects].find(p=>p.id===id);
-          const pname=proj?.name||`Project ${id}`;
-          const members=r?JSON.parse(r.value):(PROJ_CREW_SEED[id]||[]);
-          members.forEach(m=>allM.push({...m,projId:id,projectName:pname}));
-        }catch{}
+      const {data,error}=await dbTeam.getAll();
+      if(!alive) return;
+      if(!error&&data){
+        const allM=data.map(m=>({
+          ...mapMember(m),
+          projectName: allProjects.find(p=>p.id===m.project_id)?.name||"Unknown Project"
+        }));
+        setLiveMembers(allM);
       }
-      if(alive)setLiveMembers(allM);
     })();
     return()=>{alive=false;};
   },[allProjects,version]);
 
   // Write member update back to the project's team storage key
-  const saveToProject=async(projId,updater)=>{
-    const key=`team:${projId}`;
-    const r=await storage.get(key);
-    const current=r?JSON.parse(r.value):(PROJ_CREW_SEED[projId]||[]);
-    const next=updater(current);
-    await storage.set(key,JSON.stringify(next));
-  };
-
-  const handleAddMember=async(m)=>{
-    if(!m.projId){ alert("Please select a project for this member."); return; }
-    await saveToProject(m.projId,cur=>[...cur,{...m,id:`${Date.now()}-${Math.random().toString(36).slice(2)}`}]);
-    if(onLog) onLog({ id:Date.now(),action:`${m.name} added to team`,detail:m.projectName||"",user:profile?.full_name||"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"👷" });
-    refresh(); setShowAddModal(false);
-  };
-
   const handleEditMember=async(patch)=>{
-    const {projId,id}=editingMember;
-    await saveToProject(projId,cur=>cur.map(m=>m.id===id?{...m,...patch,init:patch.name?patch.name.trim().split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase():m.init}:m));
+    const {id}=editingMember;
+    await dbTeam.update(id, patch);
     if(onLog) onLog({ id:Date.now(),action:`${editingMember.name} updated`,detail:editingMember.projectName||"",user:profile?.full_name||"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"✏️" });
     refresh(); setEditingMember(null); setConfirmEditMember(null);
   };
 
   const handleDeleteMember=async()=>{
-    const {projId,id,name,projectName}=confirmDelMember;
-    await saveToProject(projId,cur=>cur.filter(m=>m.id!==id));
+    const {id,name,projectName}=confirmDelMember;
+    await dbTeam.delete(id);
     if(onLog) onLog({ id:Date.now(),action:`${name} removed from team`,detail:projectName||"",user:profile?.full_name||"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"🗑️" });
     refresh(); setConfirmDelMember(null);
   };
@@ -4691,7 +4631,7 @@ function TeamGlobal({ allProjects=[], onLog }){
 
       {/* Filter bar */}
       <div style={{ display:"flex",gap:10,marginBottom:16,flexWrap:"wrap" }}>
-        <select value={projFilter} onChange={e=>setProjFilter(e.target.value)} style={{ ...INP,width:"auto",padding:"8px 14px",borderRadius:8,cursor:"pointer" }}>
+        <select value={projFilter} onChange={e=>setProjFilter(e.target.value)} style={{ ...INP(),width:"auto",padding:"8px 14px",borderRadius:8,cursor:"pointer" }}>
           <option value="all">All Projects</option>
           {allProjects.map(p=><option key={p.id} value={String(p.id)}>{p.name}</option>)}
         </select>
@@ -4736,7 +4676,7 @@ function TeamGlobal({ allProjects=[], onLog }){
 function TeamGlobalAddModal({ allProjects, onConfirm, onCancel }){
   const [name,setName]=useState(""); const [role,setRole]=useState(ROLES[0]);
   const [phone,setPhone]=useState(""); const [email,setEmail]=useState("");
-  const [projId,setProjId]=useState(allProjects[0]?.id||1);
+  const [projId,setProjId]=useState(allProjects[0]?.id||null);
   const [status,setStatus]=useState("on-site"); const [err,setErr]=useState("");
   const proj=allProjects.find(p=>p.id===projId);
   const submit=()=>{
@@ -4754,23 +4694,23 @@ function TeamGlobalAddModal({ allProjects, onConfirm, onCancel }){
       {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"9px 12px",color:C.red,fontFamily:F,fontSize:12,marginBottom:14 }}>⚠ {err}</div>}
       <div style={{ display:"flex",flexDirection:"column",gap:13 }}>
         <div style={{ display:"flex",gap:12 }}>
-          <div style={{ flex:2 }}><label style={LBL}>Name *</label><input style={INP} value={name} onChange={e=>{setName(e.target.value);setErr("");}} placeholder="Full name"/></div>
-          <div style={{ flex:2 }}><label style={LBL}>Role</label>
-            <select value={role} onChange={e=>setRole(e.target.value)} style={{ ...INP,cursor:"pointer" }}>
+          <div style={{ flex:2 }}><label style={LBL()}>Name *</label><input style={INP()} value={name} onChange={e=>{setName(e.target.value);setErr("");}} placeholder="Full name"/></div>
+          <div style={{ flex:2 }}><label style={LBL()}>Role</label>
+            <select value={role} onChange={e=>setRole(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
               {ROLES.map(r=><option key={r}>{r}</option>)}
             </select>
           </div>
         </div>
         <div style={{ display:"flex",gap:12 }}>
-          <div style={{ flex:1 }}><label style={LBL}>Phone</label><input style={INP} value={phone} onChange={e=>setPhone(e.target.value)} placeholder="+971 50 000 0000"/></div>
-          <div style={{ flex:1 }}><label style={LBL}>Email</label><input style={INP} value={email} onChange={e=>setEmail(e.target.value)} placeholder="name@company.com"/></div>
+          <div style={{ flex:1 }}><label style={LBL()}>Phone</label><input style={INP()} value={phone} onChange={e=>setPhone(e.target.value)} placeholder="+971 50 000 0000"/></div>
+          <div style={{ flex:1 }}><label style={LBL()}>Email</label><input style={INP()} value={email} onChange={e=>setEmail(e.target.value)} placeholder="name@company.com"/></div>
         </div>
-        <div><label style={LBL}>Assign to Project</label>
-          <select value={projId} onChange={e=>setProjId(Number(e.target.value))} style={{ ...INP,cursor:"pointer" }}>
+        <div><label style={LBL()}>Assign to Project</label>
+          <select value={projId} onChange={e=>setProjId(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
             {allProjects.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}
           </select>
         </div>
-        <div><label style={LBL}>Status</label>
+        <div><label style={LBL()}>Status</label>
           <div style={{ display:"flex",gap:7 }}>
             {["on-site","remote"].map(s=>{const sm=SM[s]||{};return(
               <button key={s} onClick={()=>setStatus(s)} style={{ flex:1,padding:"8px 0",borderRadius:7,cursor:"pointer",fontFamily:F,fontSize:11,fontWeight:700,border:status===s?`2px solid ${sm.color||C.green}`:`1px solid ${C.border}`,background:status===s?(sm.bg||C.greenDim):"transparent",color:status===s?(sm.color||C.green):C.muted }}>{sm.label||s}</button>
@@ -5448,7 +5388,8 @@ async function generatePdfBlob(metrics, report){
 // ─── Accountant Page ───────────────────────────────────────────────────────────
 function AccountantPage({ allProjects=[], allInvoices=[], payments=[] }){
   const { currency:gCur, setCurrency:setGCur } = useCurrencyCtx();
-  const [projId,setProjId]    = useState(allProjects[0]?.id||null);
+  const [projId,setProjId]    = useState(null);
+  useEffect(()=>{ if(!projId && allProjects?.length) setProjId(allProjects[0].id); },[allProjects]);
   const [report,setReport]    = useState(null);
   const [generating,setGen]   = useState(false);
   const [pdfBuilding,setPdfB] = useState(false);
@@ -5612,7 +5553,7 @@ Address the contractor as "the Company". Flag overdue amounts if any.`;
         <div style={{ display:"flex",gap:16,alignItems:"flex-end",flexWrap:"wrap" }}>
           <div style={{ flex:1,minWidth:200 }}>
             <label style={{ display:"block",color:C.muted,fontFamily:F,fontSize:11,fontWeight:700,textTransform:"uppercase",letterSpacing:.7,marginBottom:7 }}>Select Project</label>
-            <select value={projId||""} onChange={e=>{ setProjId(Number(e.target.value)); setReport(null); setErr(""); }}
+            <select value={projId||""} onChange={e=>{ setProjId(e.target.value); setReport(null); setErr(""); }}
               style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,padding:"11px 14px",color:C.text,fontFamily:F,fontSize:14,fontWeight:600,cursor:"pointer",width:"100%" }}>
               {allProjects.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}
             </select>
@@ -5838,21 +5779,38 @@ Address the contractor as "the Company". Flag overdue amounts if any.`;
 
 
 const NAV=[
-  { id:"dashboard",   label:"Dashboard",          icon:"⊞" },
-  { id:"projects",    label:"Projects",           icon:"🏗" },
-  { id:"invoicing",   label:"Invoices",           icon:"💳" },
-  { id:"payments",    label:"Payments",           icon:"💰" },
-  { id:"team",        label:"Team",               icon:"👥" },
-  { id:"calendar",    label:"Calendar",           icon:"📅" },
-  { id:"tasks",       label:"Tasks",              icon:"✅" },
-  { id:"tenders",     label:"Tenders",            icon:"📦" },
-  { id:"reports",     label:"Report Generator",   icon:"📊" },
-  { id:"prices",      label:"Price Tracking",     icon:"📈" },
-  { id:"accountant",  label:"Accountant",         icon:"🧾" },
+  { id:"dashboard",  label:"Dashboard",       IcComp: ({c})=><Ic.Dashboard size={15} color={c}/> },
+  { id:"projects",   label:"Projects",        IcComp: ({c})=><Ic.Projects  size={15} color={c}/> },
+  { id:"invoicing",  label:"Invoices",        IcComp: ({c})=><Ic.Invoices  size={15} color={c}/> },
+  { id:"payments",   label:"Payments",        IcComp: ({c})=><Ic.Payments  size={15} color={c}/> },
+  { id:"team",       label:"Team",            IcComp: ({c})=><Ic.Team      size={15} color={c}/> },
+  { id:"calendar",   label:"Calendar",        IcComp: ({c})=><Ic.Calendar  size={15} color={c}/> },
+  { id:"tasks",      label:"Tasks",           IcComp: ({c})=><Ic.Tasks     size={15} color={c}/> },
+  { id:"tenders",    label:"Tenders",         IcComp: ({c})=><Ic.Tenders   size={15} color={c}/> },
+  { id:"reports",    label:"Reports",         IcComp: ({c})=><Ic.Reports   size={15} color={c}/> },
+  { id:"prices",     label:"Price Tracking",  IcComp: ({c})=><Ic.Prices    size={15} color={c}/> },
+  { id:"accountant", label:"Accountant",      IcComp: ({c})=><Ic.Accountant size={15} color={c}/> },
 ];
 
 export default function App({ session, profile, onLogout }){
-  return <CurrencyProvider><ThemeProvider><AppInner session={session} profile={profile} onLogout={onLogout}/></ThemeProvider></CurrencyProvider>;
+  // Init DB synchronously so hooks have company_id on first render
+  if(profile?.company_id){
+    initDb(profile.company_id, session?.user?.id, profile.full_name||profile.email||'User');
+  }
+
+  if(!profile?.company_id) return (
+    <div style={{ minHeight:'100vh',background:'#0f1117',display:'flex',alignItems:'center',justifyContent:'center',color:'#7a849e',fontFamily:"'Inter',sans-serif",fontSize:14 }}>
+      Setting up your workspace…
+    </div>
+  );
+
+  return (
+    <CompanyCtx.Provider value={profile.company_id}>
+      <CurrencyProvider><ThemeProvider>
+        <AppInner session={session} profile={profile} onLogout={onLogout}/>
+      </ThemeProvider></CurrencyProvider>
+    </CompanyCtx.Provider>
+  );
 }
 
 function AppInner({ session, profile, onLogout }){
@@ -5959,7 +5917,7 @@ function AppInner({ session, profile, onLogout }){
     if(tab==="tasks")      return <TasksPage tasks={tasks} addTask={addTask} updateTask={updateTask} removeTask={removeTask} allProjects={allProjects}/>;
     if(tab==="tenders")    return <TendersPage allProjects={allProjects}/>;
     if(tab==="payments")   return <PaymentsPage payments={payments} allProjects={allProjects} addPayment={handleAddPayment} allInvoices={allInvoices} removePayment={handleRemovePayment} updatePayment={handleUpdatePayment}/>;
-    if(tab==="reports")    return <ReportPage tasks={tasks} allProjects={allProjects}/>;
+    if(tab==="reports")    return <ReportPage tasks={tasks} allProjects={allProjects} allInvoices={allInvoices}/>;
     if(tab==="prices")     return <PriceTrackingPage/>;
     if(tab==="accountant") return <AccountantPage allProjects={allProjects} allInvoices={allInvoices} payments={payments}/>;
     if(tab==="users")      return session&&profile ? <UsersPage currentUser={session.user} profile={profile}/> : null;
@@ -5985,17 +5943,21 @@ function AppInner({ session, profile, onLogout }){
         <div style={{ padding:"22px 18px 18px",borderBottom:`1px solid ${C.border}` }}>
           <div style={{ display:"flex",alignItems:"center",gap:10 }}>
             <div style={{ width:32,height:32,background:C.accent,borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 20h20M6 20V10l6-7 6 7v10M10 20v-5h4v5"/></svg></div>
-            <div><div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:15 }}>BuildFlow</div><div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>Pro Plan</div></div>
+            <div><div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:15 }}>BuildFlow</div><div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>{profile?.companies?.name||"Construction Management"}</div></div>
           </div>
         </div>
         <nav style={{ flex:1,padding:"14px 10px",overflowY:"auto" }}>
           {[...NAV.filter(n=>!profile||!profile.permissions||profile.permissions[n.id]!==false),
-            ...(profile&&(profile.role==="superadmin"||profile.role==="admin")?[{id:"users",label:"Users",iconKey:"team"}]:[])
-          ].map(n=>(
-            <button key={n.id} onClick={()=>switchTab(n.id)} style={{ display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 12px",borderRadius:8,marginBottom:3,background:tab===n.id?C.accentDim:"transparent",border:tab===n.id?`1px solid ${C.accentMid}`:"1px solid transparent",color:tab===n.id?C.accent:C.muted,fontFamily:F,fontSize:13,fontWeight:tab===n.id?700:500,cursor:"pointer",textAlign:"left",transition:"all .15s" }}>
-              <Icon d={ICONS[n.iconKey]} size={15} stroke={tab===n.id?C.accent:C.muted}/>{n.label}
-            </button>
-          ))}
+            ...(profile&&(profile.role==="superadmin"||profile.role==="admin")?[{id:"users",label:"Users",IcComp:({c})=><Ic.Team size={15} color={c}/>}]:[])
+          ].map(n=>{
+            const active=tab===n.id;
+            const color=active?C.accent:C.muted;
+            return(
+              <button key={n.id} onClick={()=>switchTab(n.id)} style={{ display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 12px",borderRadius:8,marginBottom:2,background:active?C.accentDim:"transparent",border:active?`1px solid ${C.accentMid}`:"1px solid transparent",color,fontFamily:F,fontSize:13,fontWeight:active?700:500,cursor:"pointer",textAlign:"left",transition:"all .15s" }}>
+                {n.IcComp && <n.IcComp c={color}/>}{n.label}
+              </button>
+            );
+          })}
         </nav>
         <div style={{ padding:"14px 18px",borderTop:`1px solid ${C.border}` }}>
           {/* Theme toggle */}
