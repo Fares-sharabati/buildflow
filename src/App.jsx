@@ -201,8 +201,55 @@ const PROJ_NOTES_SEED = {};
 const TASKS_SEED = [];
 const TENDERS_SEED = [];
 
+// ─── Global Utility Functions ──────────────────────────────────────────────────
 
-// ─── Hooks ─────────────────────────────────────────────────────────────────────
+/** Days in a given month (0-indexed month) */
+const daysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
+
+/** 0-indexed weekday (0=Sun) of the 1st of the month */
+const firstDayOfMonth = (year, month) => new Date(year, month, 1).getDay();
+
+/** True if date string `d` falls between ISO strings `from` and `to` (inclusive) */
+const inRange = (d, from, to) => {
+  if (!d) return false;
+  try { return d >= from && d <= to; } catch { return false; }
+};
+
+/** Format bytes as human-readable string */
+const fmtBytes = (bytes) => {
+  if (!bytes || bytes === 0) return '0 B';
+  const k = 1024;
+  const sizes = ['B','KB','MB','GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
+};
+
+/** Format ISO date string as "Jan 1, 2025" — safe, never throws */
+const fmtDate = (iso) => {
+  if (!iso) return '—';
+  try { return new Date(iso + 'T12:00:00').toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }); }
+  catch { return iso; }
+};
+
+/** How many days remain until project.due (null if no due date) */
+const daysRemaining = (project) => {
+  if (!project?.due) return null;
+  try {
+    const due = new Date(project.due + 'T12:00:00');
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    return Math.round((due - now) / (1000 * 60 * 60 * 24));
+  } catch { return null; }
+};
+
+/** Project progress: use stored progress or derive from status */
+const calcProgress = (project) => {
+  if (project?.progress != null && project.progress >= 0) return Number(project.progress) || 0;
+  const map = { quoting:0, active:45, 'on-hold':30, completed:100 };
+  return map[project?.status] ?? 0;
+};
+
+
 // ─── Context ──────────────────────────────────────────────────────────────────
 const CompanyCtx = React.createContext(null);
 const useCompany = () => useContext(CompanyCtx);
@@ -3860,7 +3907,7 @@ function ProjectsList({ onSelect, allProjects, onAddProject, onUpdateProject, on
   const [editingProj,setEditingProj]=useState(null);
   const [confirmPatch,setConfirmPatch]=useState(null); // {proj, patch}
   const [confirmDelete,setConfirmDelete]=useState(null); // project to delete
-  const handleCreate=(proj)=>{ onAddProject(proj); setShowNew(false); onSelect(proj); };
+  const handleCreate=async(proj)=>{ await onAddProject(proj); setShowNew(false); onSelect(proj); };
   return(
     <div>
       {showNew&&<NewProjectModal onConfirm={handleCreate} onCancel={()=>setShowNew(false)}/>}
@@ -5867,7 +5914,7 @@ function AppInner({ session, profile, onLogout }){
   };
 
   const handleAddProject=async(proj)=>{
-    addProject(proj);
+    await addProject(proj);
     await pushGlobal({ id:Date.now(), action:`Project "${proj.name}" created`, detail:proj.name, user:profile?.full_name||"User", time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}), icon:"🏗" });
   };
   const handleUpdateProject=async(id,patch)=>{
