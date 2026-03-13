@@ -6,26 +6,29 @@ import LoginPage from './LoginPage'
 import App from './App.jsx'
 
 function Root() {
-  const [session, setSession] = useState(undefined)
-  const [profile, setProfile] = useState(null)
+  const [session, setSession]   = useState(undefined)
+  const [profile, setProfile]   = useState(null)
 
   useEffect(() => {
+    // On page load: restore session from localStorage and load profile
     supabase.auth.getSession().then(async ({ data: { session } }) => {
-      setSession(session)
+      setSession(session ?? null)
       if (session) await loadProfile(session.user)
     })
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      setSession(session)
-      if (session) await loadProfile(session.user)
-      else setProfile(null)
+    // Only use onAuthStateChange to track SIGNED_OUT
+    // (login flow is handled by LoginPage directly via handleLogin)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session) {
+        setSession(null)
+        setProfile(null)
+      }
     })
 
     return () => subscription.unsubscribe()
   }, [])
 
   const loadProfile = async (user) => {
-    // Step 1: load profile row (no join)
     const { data: prof, error } = await supabase
       .from('profiles')
       .select('*')
@@ -34,11 +37,9 @@ function Root() {
 
     if (error || !prof) {
       console.error('Profile load error:', error)
-      setProfile(null)
-      return
+      return   // ← do NOT setProfile(null) — keeps any existing profile intact
     }
 
-    // Step 2: load company name separately
     let companyName = 'Construction Management'
     if (prof.company_id) {
       const { data: company } = await supabase
@@ -52,7 +53,9 @@ function Root() {
     setProfile({ ...prof, companies: { name: companyName } })
   }
 
+  // Called by LoginPage after successful login + profile fetch
   const handleLogin = ({ user, profile }) => {
+    setSession({ user })
     setProfile(profile)
   }
 
@@ -62,11 +65,12 @@ function Root() {
     setProfile(null)
   }
 
+  // Still loading initial session
   if (session === undefined) {
     return (
-      <div style={{ minHeight: '100vh', background: '#0f1117', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ width: 32, height: 32, border: '3px solid #2a3045', borderTopColor: '#f59e0b', borderRadius: '50%', animation: 'spin .7s linear infinite' }}/>
-        <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
+      <div style={{ minHeight:'100vh', background:'#0f1117', display:'flex', alignItems:'center', justifyContent:'center' }}>
+        <div style={{ width:32, height:32, border:'3px solid #2a3045', borderTopColor:'#f59e0b', borderRadius:'50%', animation:'spin .7s linear infinite' }}/>
+        <style>{`@keyframes spin { to { transform:rotate(360deg) } }`}</style>
       </div>
     )
   }
