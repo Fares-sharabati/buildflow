@@ -25,12 +25,31 @@ function Root() {
   }, [])
 
   const loadProfile = async (user) => {
-    const { data } = await supabase
+    // Step 1: load profile row (no join)
+    const { data: prof, error } = await supabase
       .from('profiles')
-      .select('*, companies(*)')
+      .select('*')
       .eq('id', user.id)
       .single()
-    setProfile(data)
+
+    if (error || !prof) {
+      console.error('Profile load error:', error)
+      setProfile(null)
+      return
+    }
+
+    // Step 2: load company name separately
+    let companyName = 'Construction Management'
+    if (prof.company_id) {
+      const { data: company } = await supabase
+        .from('companies')
+        .select('name')
+        .eq('id', prof.company_id)
+        .single()
+      if (company?.name) companyName = company.name
+    }
+
+    setProfile({ ...prof, companies: { name: companyName } })
   }
 
   const handleLogin = ({ user, profile }) => {

@@ -1,12 +1,7 @@
 // @ts-nocheck
 import { useState, useEffect, useContext, useRef, useMemo, useCallback } from 'react'
-import UsersPage from './UsersPage.jsx'
 import { initDb, dbProjects, dbInvoices, dbPayments, dbTasks, dbTeam, dbTenders, dbLog, dbProfiles, dbNotes, mapInvoice, mapPayment, mapTask, mapProject, mapMember, mapTender, mapLog } from './db.js'
 
-function UsersPageWrapper({ session, profile }) {
-  if (!session || !profile) return null;
-  return <UsersPage currentUser={session.user} profile={profile}/>;
-}
 
 import React from 'react';
 
@@ -505,6 +500,126 @@ function InlineFormShell({ header,accent,saveLabel="Save",onSave,onCancel,err,sa
     </div>
   );
 }
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ─── SHARED DESIGN SYSTEM ─────────────────────────────────────────────────────
+// These primitives govern ALL buttons, tables, cards, and empty states.
+// Never write inline button styles in page components — use these.
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * RowBtn — small action button for use inside table rows.
+ * type: "edit" | "delete" | "view" | "receipt"
+ */
+function RowBtn({ type, onClick, children }){
+  const cfg = {
+    edit:    { bg:()=>C.blueDim,       color:()=>C.blue,  border:()=>`1px solid ${C.blue}44`,  label:"Edit",   icon:"✏️" },
+    delete:  { bg:()=>"transparent",   color:()=>C.red,   border:()=>`1px solid ${C.red}33`,   label:"Delete", icon:null },
+    view:    { bg:()=>"transparent",   color:()=>C.blue,  border:()=>`1px solid ${C.blue}33`,  label:"View",   icon:null },
+    receipt: { bg:()=>C.greenDim,      color:()=>C.green, border:()=>`1px solid ${C.green}44`, label:"Receipt",icon:null },
+  }[type]||{ bg:()=>C.surface, color:()=>C.muted, border:()=>`1px solid ${C.border}`, label:"", icon:null };
+  return(
+    <button onClick={onClick}
+      style={{ background:cfg.bg(), color:cfg.color(), border:cfg.border(),
+        padding:"4px 10px", borderRadius:6, fontFamily:F, fontSize:11, fontWeight:700,
+        cursor:"pointer", display:"inline-flex", alignItems:"center", gap:4, whiteSpace:"nowrap" }}>
+      {cfg.icon&&<span style={{fontSize:10,lineHeight:1}}>{cfg.icon}</span>}
+      {children||cfg.label}
+    </button>
+  );
+}
+
+/** Wrapper div that spaces a group of RowBtns consistently */
+function RowActions({ children }){
+  return <div style={{ display:"flex", gap:5, alignItems:"center" }}>{children}</div>;
+}
+
+/**
+ * Btn — full-size button for page headers and modals.
+ * variant: "primary" | "secondary" | "danger" | "success"
+ */
+function Btn({ onClick, disabled, variant="primary", color, size="md", children, style:xs={} }){
+  const pad   = size==="sm"?"7px 14px":size==="lg"?"12px 28px":"10px 22px";
+  const fs    = size==="sm"?12:size==="lg"?14:13;
+  const bases = {
+    primary:   ()=>({ background:color||C.accent,   color:"#000",    border:"none" }),
+    secondary: ()=>({ background:C.surface,         color:C.text,    border:`1px solid ${C.border}` }),
+    danger:    ()=>({ background:C.redDim,          color:C.red,     border:`1px solid ${C.red}33`  }),
+    success:   ()=>({ background:C.green,           color:"#fff",    border:"none" }),
+    ghost:     ()=>({ background:"transparent",     color:C.muted,   border:`1px solid ${C.border}` }),
+  };
+  const base = (bases[variant]||bases.primary)();
+  const disabledStyle = disabled ? { background:"transparent", color:(color||C.accent), border:`1px solid ${(color||C.accent)}44` } : {};
+  return(
+    <button onClick={onClick} disabled={disabled}
+      style={{ ...base, ...disabledStyle, padding:pad, borderRadius:9, fontFamily:F, fontWeight:700,
+        fontSize:fs, cursor:disabled?"default":"pointer", display:"inline-flex", alignItems:"center",
+        gap:7, whiteSpace:"nowrap", ...xs }}>
+      {children}
+    </button>
+  );
+}
+
+/** Metric stat card used in page header stat rows */
+function StatCard({ label, value, sub, color }){
+  return(
+    <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:10, padding:"18px 22px", flex:1, minWidth:130 }}>
+      <div style={{ color:C.muted, fontSize:11, fontFamily:F, fontWeight:700, textTransform:"uppercase", letterSpacing:"0.05em", marginBottom:6 }}>{label}</div>
+      <div style={{ color:color||C.text, fontSize:26, fontFamily:F, fontWeight:700, lineHeight:1 }}>{value}</div>
+      {sub&&<div style={{ color:C.muted, fontSize:12, fontFamily:F, marginTop:5 }}>{sub}</div>}
+    </div>
+  );
+}
+
+/** Consistent page-level header: title + subtitle + optional action button */
+function PageHeader({ icon, title, subtitle, action }){
+  return(
+    <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:24, flexWrap:"wrap", gap:12 }}>
+      <div>
+        <h2 style={{ color:C.text, fontSize:22, fontFamily:F, fontWeight:700, margin:0 }}>{icon&&`${icon} `}{title}</h2>
+        {subtitle&&<div style={{ color:C.muted, fontFamily:F, fontSize:12, marginTop:3 }}>{subtitle}</div>}
+      </div>
+      {action&&<div>{action}</div>}
+    </div>
+  );
+}
+
+/** Consistent empty state for tables and lists */
+function EmptyState({ icon="📭", title="Nothing here yet", sub, style:xs={} }){
+  return(
+    <div style={{ padding:"52px 20px", textAlign:"center", color:C.muted, fontFamily:F, ...xs }}>
+      {icon&&<div style={{ fontSize:36, marginBottom:10 }}>{icon}</div>}
+      <div style={{ fontSize:14, fontWeight:700, color:C.text, marginBottom:4 }}>{title}</div>
+      {sub&&<div style={{ fontSize:12 }}>{sub}</div>}
+    </div>
+  );
+}
+
+/** Standard table header cell style (use as style={TH()}) */
+const TH = (extra={}) => ({ color:C.muted, fontWeight:700, padding:"12px 16px", textAlign:"left", fontSize:12, fontFamily:F, ...extra });
+
+/** Standard table data cell style */
+const TD = (extra={}) => ({ padding:"13px 16px", fontFamily:F, fontSize:13, ...extra });
+
+/** Human-readable invoice number: prefers inv_id / invId over raw UUID */
+const fmtInvId = (inv) => {
+  const id = inv?.invId || inv?.iid || inv?.inv_id || inv?.id || "";
+  // If it looks like a UUID (8-4-4-4-12 hex), fall back to "INV-???"
+  if(/^[0-9a-f]{8}-[0-9a-f]{4}-/i.test(id)) return "INV-???";
+  return id || "—";
+};
+
+/** Resolve a stored invRef to a human-readable invoice number */
+const resolveInvRef = (invRef, allInvoices=[]) => {
+  if(!invRef) return "—";
+  // If it already looks human-readable (INV-xxx), return it
+  if(!/^[0-9a-f]{8}-/i.test(invRef)) return invRef;
+  // It's a UUID — look up the invoice
+  const inv = allInvoices.find(i => i.id === invRef || i.invId === invRef);
+  return inv ? fmtInvId(inv) : invRef;
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
 
 // ─── Modals ────────────────────────────────────────────────────────────────────
 function ContactModal({ client,onClose }){
@@ -1188,21 +1303,22 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
         <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,overflow:"hidden",marginBottom:14 }}>
           <table style={{ width:"100%",borderCollapse:"collapse",fontFamily:F,fontSize:12 }}>
             <thead><tr style={{ background:C.bg,borderBottom:`1px solid ${C.border}` }}>
-              {["#","Supplier","Amount","Due","Status","Actions"].map(h=><th key={h} style={{ color:C.muted,fontWeight:700,padding:"8px 12px",textAlign:"left",fontSize:11 }}>{h}</th>)}
+              {["Invoice #","Supplier","Amount","Due Date","Status",""].map(h=><th key={h} style={TH({padding:"9px 12px",fontSize:11})}>{h}</th>)}
             </tr></thead>
             <tbody>{rows.map((row,i)=>{ const st=INV_ST.find(s=>s.v===row.st)||INV_ST[0]; return(
-              <tr key={row.id} style={{ borderBottom:i<rows.length-1?`1px solid ${C.border}22`:"none" }}>
-                <td style={{ color:C.accent,padding:"9px 12px",fontWeight:700,fontSize:11,whiteSpace:"nowrap" }}>{row.iid}</td>
-                <td style={{ color:C.text,padding:"9px 12px",maxWidth:100,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontSize:11 }}>{row.supplier||row.desc||"—"}</td>
-                <td style={{ color:C.text,padding:"9px 12px",fontWeight:700,whiteSpace:"nowrap" }}>{row.amount?`$${Number(row.amount).toLocaleString()}`:"—"}</td>
-                <td style={{ color:row.st==="overdue"?C.red:C.muted,padding:"9px 12px",fontSize:11,whiteSpace:"nowrap" }}>{row.dd||"—"}</td>
-                <td style={{ padding:"9px 12px" }}><button onClick={()=>cycle(row)} style={{ background:st.c+"22",color:st.c,border:`1px solid ${st.c}55`,padding:"2px 8px",borderRadius:4,fontFamily:F,fontSize:11,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap" }}>{st.l}</button></td>
-                <td style={{ padding:"9px 12px" }}>
-                  <div style={{ display:"flex",gap:4,alignItems:"center" }}>
-                    {row.dataUrl&&<button onClick={()=>setPreview(row)} style={{ background:"transparent",color:C.blue,border:`1px solid ${C.blue}33`,padding:"3px 8px",borderRadius:4,fontFamily:F,fontSize:11,cursor:"pointer",display:"flex",alignItems:"center",gap:3 }}><Ic.File size={11} color="currentColor"/> View</button>}
-                    <button onClick={()=>openEdit(row)} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}44`,padding:"3px 8px",borderRadius:4,fontFamily:F,fontSize:11,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:3 }}><Ic.Edit size={11} color="currentColor"/> Edit</button>
-                    <button onClick={()=>setConfirmDel(row)} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,padding:"3px 6px",borderRadius:4,fontFamily:F,fontSize:11,cursor:"pointer" }}><Ic.Delete size={12} color="currentColor"/></button>
-                  </div>
+              <tr key={row.id} style={{ borderBottom:i<rows.length-1?`1px solid ${C.border}22`:"none",transition:"background .12s" }}
+                onMouseEnter={e=>e.currentTarget.style.background=C.bg} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+                <td style={TD({color:C.accent,fontWeight:700,fontSize:11,whiteSpace:"nowrap",padding:"9px 12px"})}>{fmtInvId(row)}</td>
+                <td style={TD({color:C.text,maxWidth:110,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontSize:11,padding:"9px 12px"})}>{row.supplier||row.desc||"—"}</td>
+                <td style={TD({color:C.text,fontWeight:700,whiteSpace:"nowrap",padding:"9px 12px"})}>{row.amount?`$${Number(row.amount).toLocaleString()}`:"—"}</td>
+                <td style={TD({color:row.st==="overdue"?C.red:C.muted,fontSize:11,whiteSpace:"nowrap",padding:"9px 12px"})}>{row.dd||"—"}</td>
+                <td style={TD({padding:"9px 12px"})}><button onClick={()=>cycle(row)} style={{ background:st.c+"22",color:st.c,border:`1px solid ${st.c}55`,padding:"3px 9px",borderRadius:5,fontFamily:F,fontSize:11,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap" }}>{st.l}</button></td>
+                <td style={TD({padding:"9px 12px"})}>
+                  <RowActions>
+                    {row.dataUrl&&<RowBtn type="view" onClick={()=>setPreview(row)}>View</RowBtn>}
+                    <RowBtn type="edit" onClick={()=>openEdit(row)}>Edit</RowBtn>
+                    <RowBtn type="delete" onClick={()=>setConfirmDel(row)}>Delete</RowBtn>
+                  </RowActions>
                 </td>
               </tr>);})}
             </tbody>
@@ -1227,9 +1343,7 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
 
       {/* Add button */}
       {mode==="list"&&(
-        <button onClick={openAdd} style={{ background:C.accent,color:"#000",border:"none",padding:"10px 22px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:7 }}>
-          <Ic.Plus size={14} color="#000"/> Add Invoice
-        </button>
+        <Btn variant="primary" onClick={openAdd}><Ic.Plus size={13} color="#000"/> Add Invoice</Btn>
       )}
     </div>
   );
@@ -1381,8 +1495,8 @@ function PlansPanel({ project,onActivity }){
             {f.dataUrl?.startsWith("data:image")?<img src={f.dataUrl} alt="" style={{ width:40,height:40,objectFit:"cover",borderRadius:5,border:`1px solid ${C.border}`,flexShrink:0 }}/>:<div style={{ width:40,height:40,background:C.card,borderRadius:5,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0 }}>{f.icon||"📄"}</div>}
             <div style={{ flex:1,minWidth:0 }}><div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:12,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{f.displayTitle||f.name}</div><div style={{ color:C.muted,fontFamily:F,fontSize:10,marginTop:2 }}>{fmtBytes(f.size)} · {f.uploadedAt}{f.notes&&<span> · {f.notes.slice(0,40)}</span>}</div></div>
             <Badge status={f.badgeStatus}/>
-            <button onClick={()=>setPreview(f)} style={{ background:"transparent",color:C.blue,border:`1px solid ${C.blue}33`,padding:"3px 9px",borderRadius:4,fontFamily:F,fontSize:11,cursor:"pointer" }}>View</button>
-            <button onClick={()=>setConfirmDelete(f)} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,padding:"3px 9px",borderRadius:4,fontFamily:F,fontSize:11,cursor:"pointer" }}>Del</button>
+            <RowBtn type="view" onClick={()=>setPreview(f)}>View</RowBtn>
+            <RowBtn type="delete" onClick={()=>setConfirmDelete(f)}>Delete</RowBtn>
           </div>
         ))}</div>
       )}
@@ -1822,15 +1936,13 @@ function TasksPage({ tasks,addTask,updateTask,removeTask,allProjects=[] }){
     <div>
       {showAdd&&<AddTaskModal onConfirm={t=>{addTask(t);setShowAdd(false);}} onCancel={()=>setShowAdd(false)} allMembers={allMembers} allProjects={allProjects}/>}
 
-      <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:24 }}>
-        <div><h2 style={{ color:C.text,fontSize:22,fontFamily:F,fontWeight:700,margin:0 }}>Task Management</h2><div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>Assign and track work across your team</div></div>
-        <button onClick={()=>setShowAdd(true)} style={{ background:C.accent,color:"#000",border:"none",padding:"11px 22px",borderRadius:9,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer" }}>+ Assign Task</button>
-      </div>
+      <PageHeader icon="✅" title="Task Management" subtitle="Assign and track work across your team"
+        action={<Btn variant="primary" onClick={()=>setShowAdd(true)}>+ Assign Task</Btn>}/>
 
       <div style={{ display:"flex",gap:12,marginBottom:20,flexWrap:"wrap" }}>
-        {[["Total",tasks.length,C.blue],["Pending",tasks.filter(t=>t.status==="pending").length,C.accent],["Completed",tasks.filter(t=>t.status==="done").length,C.green]].map(([l,v,c])=>(
-          <div key={l} style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:10,padding:"16px 22px",flex:1,minWidth:120 }}><div style={{ color:C.muted,fontFamily:F,fontSize:11,marginBottom:5 }}>{l}</div><div style={{ color:c,fontFamily:F,fontWeight:700,fontSize:28,lineHeight:1 }}>{v}</div></div>
-        ))}
+        <StatCard label="Total"     value={tasks.length}                                          sub="all tasks"   color={C.blue}/>
+        <StatCard label="Pending"   value={tasks.filter(t=>t.status==="pending").length}          sub="in progress" color={C.accent}/>
+        <StatCard label="Completed" value={tasks.filter(t=>t.status==="done").length}             sub="done"        color={C.green}/>
       </div>
 
       <div style={{ display:"flex",gap:10,marginBottom:20,flexWrap:"wrap" }}>
@@ -1868,7 +1980,7 @@ function TasksPage({ tasks,addTask,updateTask,removeTask,allProjects=[] }){
                       <div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:4,display:"flex",gap:10 }}><span>{t.project}</span><span>{t.date}</span></div>
                     </div>
                     <Badge status={t.status}/>
-                    <button onClick={()=>removeTask(t.id)} style={{ background:"transparent",color:C.red,border:"none",padding:"4px 6px",fontFamily:F,fontSize:14,cursor:"pointer",flexShrink:0 }}>✕</button>
+                    <RowBtn type="delete" onClick={()=>removeTask(t.id)}>Delete</RowBtn>
                   </div>
                 ))}
               </div>
@@ -2055,6 +2167,8 @@ function TendersPage({ allProjects=[] }){
   const [analyses,setAnalyses]=useState({});
   const [analysing,setAnalysing]=useState(null);
   const [expanded,setExpanded]=useState({});
+  const [confirmDelTender,setConfirmDelTender]=useState(null);
+  const [confirmDelOffer,setConfirmDelOffer]=useState(null);
   const [mName,setMName]=useState("");const [mProj,setMProj]=useState(allProjects[0]?.id||"");const [mDesc,setMDesc]=useState("");const [mErr,setMErr]=useState("");
 
 
@@ -2095,6 +2209,31 @@ function TendersPage({ allProjects=[] }){
     <div>
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
 
+      {confirmDelTender&&(
+        <ConfirmDialog title="Delete Tender?"
+          message={`Delete "${confirmDelTender.name}" and all its offers? This cannot be undone.`}
+          confirmLabel="Yes, Delete" variant="delete"
+          onConfirm={()=>{ removeTender(confirmDelTender.id); setConfirmDelTender(null); }}
+          onCancel={()=>setConfirmDelTender(null)}>
+          <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:"10px 14px",display:"flex",justifyContent:"space-between",alignItems:"center" }}>
+            <span style={{ color:C.accent,fontFamily:F,fontWeight:700 }}>{confirmDelTender.name}</span>
+            <span style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{confirmDelTender.offers?.length||0} offer{confirmDelTender.offers?.length!==1?"s":""}</span>
+          </div>
+        </ConfirmDialog>
+      )}
+      {confirmDelOffer&&(
+        <ConfirmDialog title="Remove Offer?"
+          message={`Remove this offer from "${confirmDelOffer.tenderName}"?`}
+          confirmLabel="Yes, Remove" variant="delete"
+          onConfirm={()=>{ removeOffer(confirmDelOffer.tenderId,confirmDelOffer.offerId); setConfirmDelOffer(null); }}
+          onCancel={()=>setConfirmDelOffer(null)}>
+          <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:"10px 14px",display:"flex",justifyContent:"space-between",alignItems:"center" }}>
+            <span style={{ color:C.text,fontFamily:F,fontWeight:600 }}>{confirmDelOffer.supplierName||"Supplier"}</span>
+            {confirmDelOffer.price&&<span style={{ color:C.accent,fontFamily:F,fontWeight:700 }}>${Number(confirmDelOffer.price).toLocaleString()}</span>}
+          </div>
+        </ConfirmDialog>
+      )}
+
       {showAddMat&&(
         <Overlay onClose={()=>setShowAddMat(false)}>
           <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,padding:28,width:460 }}>
@@ -2133,7 +2272,7 @@ function TendersPage({ allProjects=[] }){
                 <div style={{ width:48,height:48,borderRadius:12,background:C.accentDim,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:C.accent,flexShrink:0 }}>MAT</div>
                 <div style={{ flex:1 }}><div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:16 }}>{tender.name}</div><div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2 }}>{tender.project} · {tender.offers.length} offer{tender.offers.length!==1?"s":""}  {tender.desc&&`· ${tender.desc}`}</div></div>
                 <span style={{ color:open?C.accent:C.muted,fontSize:20,transform:open?"rotate(90deg)":"none",transition:"transform .25s" }}>›</span>
-                <button onClick={e=>{e.stopPropagation();removeTender(tender.id);}} style={{ background:"transparent",color:C.red,border:"none",padding:"4px 8px",fontFamily:F,fontSize:14,cursor:"pointer" }}>✕</button>
+                <button onClick={e=>{e.stopPropagation();setConfirmDelTender(tender);}} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,padding:"4px 10px",borderRadius:6,fontFamily:F,fontSize:11,fontWeight:700,cursor:"pointer" }}>Delete</button>
               </div>
 
               {open&&<div style={{ padding:"0 22px 22px",borderTop:`1px solid ${C.border}22` }}>
@@ -2154,7 +2293,7 @@ function TendersPage({ allProjects=[] }){
                             <td style={{ color:C.text,padding:"10px 12px",maxWidth:140,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{o.quality||"—"}</td>
                             <td style={{ color:C.muted,padding:"10px 12px",whiteSpace:"nowrap" }}>{o.delivery||"—"}</td>
                             <td style={{ color:C.muted,padding:"10px 12px",maxWidth:140,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{o.notes||"—"}</td>
-                            <td style={{ padding:"10px 12px" }}><button onClick={()=>removeOffer(tender.id,o.id)} style={{ background:"transparent",color:C.red,border:"none",cursor:"pointer",fontSize:13 }}>✕</button></td>
+                            <td style={{ padding:"10px 12px" }}><RowBtn type="delete" onClick={()=>setConfirmDelOffer({tenderId:tender.id,offerId:o.id,tenderName:tender.name,supplierName:o.supplier,price:o.price})}>Delete</RowBtn></td>
                           </tr>
                         );
                       })}</tbody>
@@ -2163,11 +2302,12 @@ function TendersPage({ allProjects=[] }){
                 )}
 
                 <div style={{ display:"flex",gap:10,marginBottom:analysis?16:0 }}>
-                  <button onClick={()=>setAddingOffer(tender.id)} style={{ background:C.surface,color:C.text,border:`1px solid ${C.border}`,padding:"9px 18px",borderRadius:8,fontFamily:F,fontWeight:600,fontSize:13,cursor:"pointer" }}>+ Add Offer</button>
+                  <Btn variant="secondary" onClick={()=>setAddingOffer(tender.id)}>+ Add Offer</Btn>
                   {tender.offers.length>=2&&(
-                    <button onClick={()=>runAnalysis(tender)} disabled={isAnalysing} style={{ background:isAnalysing?"transparent":C.purple,color:isAnalysing?C.purple:"#fff",border:`1px solid ${C.purple}44`,padding:"9px 20px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:8 }}>
-                      {isAnalysing?<><div style={{ width:14,height:14,border:`2px solid ${C.purple}`,borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Analysing…</>:"🤖 AI Analysis"}
-                    </button>
+                    <Btn variant="ghost" disabled={isAnalysing} onClick={()=>runAnalysis(tender)}
+                      style={{ color:isAnalysing?C.purple:"#fff", background:isAnalysing?"transparent":C.purple, border:`1px solid ${C.purple}44` }}>
+                      {isAnalysing?<><div style={{ width:13,height:13,border:`2px solid ${C.purple}`,borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Analysing…</>:"🤖 AI Analysis"}
+                    </Btn>
                   )}
                 </div>
 
@@ -2299,7 +2439,7 @@ function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
           <div><label style={LBL()}>Related Invoice <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
             <select value={invRef} onChange={e=>setInvRef(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
               <option value="">— None —</option>
-              {projInvoices.map(i=><option key={i.id||i.invId} value={i.id||i.invId}>{i.id||i.invId} · ${Number(i.amount).toLocaleString()}</option>)}
+              {projInvoices.map(i=><option key={i.id||i.invId} value={fmtInvId(i)}>{fmtInvId(i)} · ${Number(i.amount).toLocaleString()}</option>)}
             </select>
           </div>
           <div><label style={LBL()}>Notes <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
@@ -2409,7 +2549,7 @@ function EditPaymentModal({ payment, allProjects, allInvoices, onConfirm, onCanc
             <div><label style={LBL()}>Related Invoice <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
               <select value={invRef} onChange={e=>setInvRef(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
                 <option value="">— None —</option>
-                {projInvoices.map(i=><option key={i.id||i.invId} value={i.id||i.invId}>{i.id||i.invId} · ${Number(i.amount).toLocaleString()}</option>)}
+                {projInvoices.map(i=><option key={i.id||i.invId} value={fmtInvId(i)}>{fmtInvId(i)} · ${Number(i.amount).toLocaleString()}</option>)}
               </select>
             </div>
             <div><label style={LBL()}>Notes <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
@@ -2539,14 +2679,14 @@ function PaymentsPanel({ project, payments, addPayment, updatePayment, removePay
                 <td style={{ color:C.muted,padding:"9px 12px" }}>{p.dateFmt}</td>
                 <td style={{ color:C.green,padding:"9px 12px",fontWeight:700 }}>${p.amount.toLocaleString()}</td>
                 <td style={{ color:C.muted,padding:"9px 12px" }}>{p.method}</td>
-                <td style={{ color:C.accent,padding:"9px 12px",fontSize:11 }}>{p.invRef||"—"}</td>
+                <td style={TD({color:C.accent,fontWeight:600,fontSize:11,padding:"9px 12px"})}>{resolveInvRef(p.invRef,allInvoices)}</td>
                 <td style={{ color:C.muted,padding:"9px 12px",maxWidth:100,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{p.notes||"—"}</td>
                 <td style={{ padding:"9px 12px" }}>
-                  <div style={{ display:"flex",gap:4 }}>
+                  <RowActions>
                     {p.receipt&&<PayReceiptBtn receipt={p.receipt}/>}
-                    <button onClick={()=>setEditingPayment(p)} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}33`,padding:"2px 8px",borderRadius:4,fontFamily:F,fontSize:11,cursor:"pointer" }}>✏️</button>
-                    <button onClick={()=>setConfirmDeletePay(p)} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,padding:"2px 7px",borderRadius:4,fontFamily:F,fontSize:11,cursor:"pointer" }}>Del</button>
-                  </div>
+                    <RowBtn type="edit" onClick={()=>setEditingPayment(p)}>Edit</RowBtn>
+                    <RowBtn type="delete" onClick={()=>setConfirmDeletePay(p)}>Delete</RowBtn>
+                  </RowActions>
                 </td>
               </tr>
             ))}</tbody>
@@ -2572,7 +2712,7 @@ function PaymentsPanel({ project, payments, addPayment, updatePayment, removePay
             <div><label style={LBL()}>Related Invoice <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
               <select value={payInvRef} onChange={e=>setPayInvRef(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
                 <option value="">— None —</option>
-                {projInvoices.map(i=><option key={i.id||i.invId} value={i.id||i.invId}>{i.id||i.invId} · ${Number(i.amount).toLocaleString()}</option>)}
+                {projInvoices.map(i=><option key={i.id||i.invId} value={fmtInvId(i)}>{fmtInvId(i)} · ${Number(i.amount).toLocaleString()}</option>)}
               </select>
             </div>
             <div><label style={LBL()}>Notes <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label><textarea style={{ ...INP(),resize:"none" }} rows={2} value={payNotes} onChange={e=>setPayNotes(e.target.value)} placeholder="Reference number, comments…"/></div>
@@ -2593,7 +2733,7 @@ function PaymentsPanel({ project, payments, addPayment, updatePayment, removePay
               <input ref={payFileRef} type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.bmp,.doc,.docx" style={{ display:"none" }} onChange={e=>{const f=e.target.files[0];if(f)handlePayFile(f);e.target.value="";}}/>
             </div>
           </InlineFormShell>
-        :<button onClick={()=>{ setPayAmount("");setPayDate("");setPayMethod(PAYMENT_METHODS[0]);setPayInvRef("");setPayNotes("");setPayReceipt(null);setPayErr("");setShowAdd(true); }} style={{ background:C.green,color:"#fff",border:"none",padding:"9px 18px",borderRadius:7,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer" }}>+ Record Payment</button>
+        :<Btn variant="success" onClick={()=>{ setPayAmount("");setPayDate("");setPayMethod(PAYMENT_METHODS[0]);setPayInvRef("");setPayNotes("");setPayReceipt(null);setPayErr("");setShowAdd(true); }}>+ Record Payment</Btn>
       }
     </div>
   );
@@ -2642,17 +2782,12 @@ function PaymentsPage({ payments, allProjects, addPayment, allInvoices, removePa
           </div>
         </ConfirmDialog>
       )}
-      <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:24 }}>
-        <div><h2 style={{ color:C.text,fontSize:22,fontFamily:F,fontWeight:700,margin:0 }}>Payments</h2><div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>Track all client payments across projects</div></div>
-        <button onClick={()=>setShowAdd(true)} style={{ background:C.green,color:"#fff",border:"none",padding:"11px 22px",borderRadius:9,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer" }}>+ Record Payment</button>
-      </div>
+      <PageHeader icon="💳" title="Payments" subtitle="Track all client payments across projects"
+        action={<Btn variant="success" size="md" onClick={()=>setShowAdd(true)}>+ Record Payment</Btn>}/>
       <div style={{ display:"flex",gap:12,marginBottom:24,flexWrap:"wrap" }}>
-        {[["Total Received","$"+total.toLocaleString(),C.green],["This Month","$"+thisMonth.toLocaleString(),C.blue],["Transactions",payments.length,C.purple]].map(([l,v,c])=>(
-          <div key={l} style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:10,padding:"18px 22px",flex:1,minWidth:130 }}>
-            <div style={{ color:C.muted,fontFamily:F,fontSize:11,marginBottom:5 }}>{l}</div>
-            <div style={{ color:c,fontFamily:F,fontWeight:700,fontSize:26,lineHeight:1 }}>{v}</div>
-          </div>
-        ))}
+        <StatCard label="Total Received"  value={"$"+total.toLocaleString()}         sub={`${payments.length} transactions`} color={C.green}/>
+        <StatCard label="This Month"      value={"$"+thisMonth.toLocaleString()}      sub="current month"                     color={C.blue}/>
+        <StatCard label="Transactions"    value={payments.length}                     sub="all time"                          color={C.purple}/>
       </div>
       <div style={{ display:"flex",gap:10,marginBottom:20,flexWrap:"wrap" }}>
         <select value={projFilter} onChange={e=>setProjFilter(e.target.value)} style={{ ...INP(),width:"auto",padding:"8px 14px",borderRadius:8,cursor:"pointer" }}>
@@ -2662,25 +2797,26 @@ function PaymentsPage({ payments, allProjects, addPayment, allInvoices, removePa
       </div>
       <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,overflow:"hidden" }}>
         {filtered.length===0
-          ?<div style={{ padding:"48px 20px",textAlign:"center",color:C.muted,fontFamily:F,fontSize:13 }}>No payments recorded yet</div>
+          ?<EmptyState icon="💰" title="No payments recorded yet" sub="Record your first payment above"/>
           :<table style={{ width:"100%",borderCollapse:"collapse",fontFamily:F,fontSize:13 }}>
             <thead><tr style={{ borderBottom:`1px solid ${C.border}`,background:C.surface }}>
-              {["Date","Project","Amount","Method","Invoice Ref","Notes","Receipt",""].map(h=><th key={h} style={{ color:C.muted,fontWeight:700,padding:"12px 16px",textAlign:"left",fontSize:12 }}>{h}</th>)}
+              {["Date","Project","Amount","Method","Invoice Ref","Notes","Receipt",""].map(h=><th key={h} style={TH()}>{h}</th>)}
             </tr></thead>
             <tbody>{filtered.map((p,i)=>(
-              <tr key={p.id} style={{ borderBottom:i<filtered.length-1?`1px solid ${C.border}22`:"none" }}>
-                <td style={{ color:C.muted,padding:"13px 16px" }}>{p.dateFmt}</td>
-                <td style={{ color:C.text,padding:"13px 16px",fontWeight:600 }}>{p.project}</td>
-                <td style={{ color:C.green,padding:"13px 16px",fontWeight:700 }}>${p.amount.toLocaleString()}</td>
-                <td style={{ color:C.muted,padding:"13px 16px" }}>{p.method}</td>
-                <td style={{ color:C.accent,padding:"13px 16px",fontSize:12 }}>{p.invRef||"—"}</td>
-                <td style={{ color:C.muted,padding:"13px 16px",maxWidth:140,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{p.notes||"—"}</td>
-                <td style={{ padding:"13px 16px" }}>{p.receipt?<PayReceiptBtn receipt={p.receipt}/>:"—"}</td>
-                <td style={{ padding:"13px 16px" }}>
-                  <div style={{ display:"flex",gap:6 }}>
-                    <button onClick={()=>setEditingPayment(p)} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}33`,padding:"4px 9px",borderRadius:5,fontFamily:F,fontSize:11,fontWeight:700,cursor:"pointer" }}>✏️ Edit</button>
-                    <button onClick={()=>setConfirmDelete(p)} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,padding:"4px 9px",borderRadius:5,fontFamily:F,fontSize:11,fontWeight:700,cursor:"pointer" }}>Del</button>
-                  </div>
+              <tr key={p.id} style={{ borderBottom:i<filtered.length-1?`1px solid ${C.border}22`:"none",transition:"background .12s" }}
+                onMouseEnter={e=>e.currentTarget.style.background=C.surface} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+                <td style={TD({color:C.muted})}>{p.dateFmt}</td>
+                <td style={TD({color:C.text,fontWeight:600})}>{p.project}</td>
+                <td style={TD({color:C.green,fontWeight:700})}>${p.amount.toLocaleString()}</td>
+                <td style={TD({color:C.muted})}>{p.method}</td>
+                <td style={TD({color:C.accent,fontWeight:700,fontSize:12})}>{resolveInvRef(p.invRef,allInvoices)}</td>
+                <td style={TD({color:C.muted,maxWidth:140,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"})}>{p.notes||"—"}</td>
+                <td style={TD()}>{p.receipt?<PayReceiptBtn receipt={p.receipt}/>:"—"}</td>
+                <td style={TD()}>
+                  <RowActions>
+                    <RowBtn type="edit" onClick={()=>setEditingPayment(p)}>Edit</RowBtn>
+                    <RowBtn type="delete" onClick={()=>setConfirmDelete(p)}>Delete</RowBtn>
+                  </RowActions>
                 </td>
               </tr>
             ))}</tbody>
@@ -3171,8 +3307,8 @@ function PhotoCommentModal({ photo, comments, onAddComment, onEditComment, onDel
                         <div style={{ color:C.muted,fontFamily:F,fontSize:10,marginTop:1 }}>{c.time}</div>
                       </div>
                       <div style={{ display:"flex",gap:4 }}>
-                        <button onClick={()=>startEdit(c)} style={{ background:"transparent",color:C.muted,border:"none",padding:"3px 6px",borderRadius:4,fontFamily:F,fontSize:11,cursor:"pointer" }} title="Edit">✏️</button>
-                        <button onClick={()=>onDeleteComment(photo.id,c.id)} style={{ background:"transparent",color:C.red,border:"none",padding:"3px 6px",borderRadius:4,fontFamily:F,fontSize:11,cursor:"pointer" }} title="Delete">Del</button>
+                        <RowBtn type="edit" onClick={()=>startEdit(c)}>Edit</RowBtn>
+                        <RowBtn type="delete" onClick={()=>onDeleteComment(photo.id,c.id)}>Delete</RowBtn>
                       </div>
                     </div>
                   </div>
@@ -3210,7 +3346,7 @@ function PhotoCard({ photo, comments, onOpen, onDelete }){
         {/* overlay buttons */}
         <div style={{ position:"absolute",top:6,right:6,display:"flex",gap:5,opacity:0,transition:"opacity .18s" }} className="photo-actions">
           <button onClick={e=>{e.stopPropagation();onOpen(photo);}} style={{ background:"rgba(0,0,0,.65)",color:"#fff",border:"none",borderRadius:5,width:28,height:28,fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center" }} title="View & comment">💬</button>
-          <button onClick={e=>{e.stopPropagation();onDelete(photo.id);}} style={{ background:"rgba(200,50,50,.8)",color:"#fff",border:"none",borderRadius:5,width:28,height:28,fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center" }} title="Delete">Del</button>
+          <button onClick={e=>{e.stopPropagation();onDelete(photo.id);}} style={{ background:"rgba(200,50,50,.8)",color:"#fff",border:"none",borderRadius:5,width:28,height:28,fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center" }} title="Delete">×</button>
         </div>
         {/* comment count badge */}
         {comments.length>0&&(
@@ -3341,8 +3477,8 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
               </div>
               <div style={{ display:"flex",gap:12,alignItems:"center",flexShrink:0,flexWrap:"wrap" }}>
                 <div><div style={{ color:C.muted,fontFamily:F,fontSize:10,fontWeight:700 }}>CONTRACT VALUE</div><div style={{ color:C.accent,fontFamily:F,fontWeight:700,fontSize:20 }}>${project.value.toLocaleString()}</div></div>
-                <button onClick={()=>setContactOpen(true)} style={{ background:C.accent,color:"#000",border:"none",padding:"11px 22px",borderRadius:9,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer" }}>👤 Contact</button>
-                <button onClick={()=>setEditingProject(true)} style={{ background:C.surface,color:C.text,border:`1px solid ${C.border}`,padding:"11px 18px",borderRadius:9,fontFamily:F,fontWeight:600,fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",gap:6 }}>✏️ Edit</button>
+                <Btn variant="primary" size="lg" onClick={()=>setContactOpen(true)}>👤 Contact</Btn>
+                <Btn variant="secondary" size="lg" onClick={()=>setEditingProject(true)}>✏️ Edit Project</Btn>
               </div>
             </div>
             {project.status!=="quoting"&&(
@@ -4508,27 +4644,15 @@ function InvoicingPage({ allProjects=[], allInvoices=[], addInvoice, updateInvoi
       )}
 
       {/* Header */}
-      <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:24,flexWrap:"wrap",gap:12 }}>
-        <div>
-          <h2 style={{ color:C.text,fontSize:22,fontFamily:F,fontWeight:700,margin:0 }}>🧾 Invoices</h2>
-          <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>All invoices across every project</div>
-        </div>
-        <button onClick={()=>setShowAdd(true)} style={{ background:C.accent,color:"#000",border:"none",padding:"11px 22px",borderRadius:9,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer" }}>+ New Invoice</button>
-      </div>
+      <PageHeader icon="🧾" title="Invoices" subtitle="All invoices across every project"
+        action={<Btn variant="primary" onClick={()=>setShowAdd(true)}>+ New Invoice</Btn>}/>
 
       {/* Stats */}
       <div style={{ display:"flex",gap:12,marginBottom:24,flexWrap:"wrap" }}>
-        {[["Outstanding","$"+(outstanding/1000).toFixed(0)+"k",`${filtered.filter(i=>i.status!=="paid").length} invoices`,C.blue],
-          ["Overdue","$"+(overdue/1000).toFixed(0)+"k","Needs follow-up",C.red],
-          ["Collected","$"+(paid/1000).toFixed(0)+"k",`${filtered.filter(i=>i.status==="paid").length} paid`,C.green],
-          ["Total Invoices",filtered.length,"All statuses",C.purple]
-        ].map(([l,v,s,c])=>(
-          <div key={l} style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:10,padding:"18px 22px",flex:1,minWidth:130 }}>
-            <div style={{ color:C.muted,fontSize:11,fontFamily:F,marginBottom:5 }}>{l}</div>
-            <div style={{ color:c,fontSize:26,fontFamily:F,fontWeight:700,lineHeight:1 }}>{v}</div>
-            <div style={{ color:C.muted,fontSize:12,fontFamily:F,marginTop:4 }}>{s}</div>
-          </div>
-        ))}
+        <StatCard label="Outstanding"   value={"$"+(outstanding/1000).toFixed(0)+"k"}  sub={`${filtered.filter(i=>i.status!=="paid").length} invoices`}        color={C.blue}/>
+        <StatCard label="Overdue"       value={"$"+(overdue/1000).toFixed(0)+"k"}       sub="Needs follow-up"                                                    color={C.red}/>
+        <StatCard label="Collected"     value={"$"+(paid/1000).toFixed(0)+"k"}          sub={`${filtered.filter(i=>i.status==="paid").length} paid`}             color={C.green}/>
+        <StatCard label="Total Invoices" value={filtered.length}                         sub="All statuses"                                                       color={C.purple}/>
       </div>
 
       {/* Filters */}
@@ -4548,30 +4672,30 @@ function InvoicingPage({ allProjects=[], allInvoices=[], addInvoice, updateInvoi
       {/* Table */}
       <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,overflow:"hidden" }}>
         {filtered.length===0
-          ?<div style={{ padding:"48px 20px",textAlign:"center",color:C.muted,fontFamily:F,fontSize:13 }}><div style={{ fontSize:40,marginBottom:12 }}>🧾</div>No invoices match your filters</div>
+          ?<EmptyState icon="🧾" title="No invoices match your filters" sub="Try clearing your filters"/>
           :<table style={{ width:"100%",borderCollapse:"collapse",fontFamily:F,fontSize:13 }}>
             <thead><tr style={{ borderBottom:`1px solid ${C.border}`,background:C.surface }}>
-              {["Invoice #","Project","Client","Amount","Due","Status","Actions"].map(h=><th key={h} style={{ color:C.muted,fontWeight:700,padding:"12px 16px",textAlign:"left",fontSize:12 }}>{h}</th>)}
+              {["Invoice #","Project","Client","Amount","Due Date","Status",""].map(h=><th key={h} style={TH()}>{h}</th>)}
             </tr></thead>
             <tbody>{filtered.map((inv,i)=>{
               const st=INV_ST.find(s=>s.v===(inv.status||inv.invoiceStatus))||INV_ST[0];
               return(
                 <tr key={inv.id} style={{ borderBottom:i<filtered.length-1?`1px solid ${C.border}22`:"none",transition:"background .15s" }}
                   onMouseEnter={e=>e.currentTarget.style.background=C.surface} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                  <td style={{ color:C.accent,padding:"14px 16px",fontWeight:700 }}>{inv.id||inv.invId}</td>
-                  <td style={{ color:C.text,padding:"14px 16px",fontWeight:600 }}>{inv.project||"—"}</td>
-                  <td style={{ color:C.muted,padding:"14px 16px" }}>{inv.client||"—"}</td>
-                  <td style={{ color:C.text,padding:"14px 16px",fontWeight:700 }}>${Number(inv.amount||0).toLocaleString()}</td>
-                  <td style={{ color:(inv.status||inv.invoiceStatus)==="overdue"?C.red:C.muted,padding:"14px 16px" }}>{inv.dueFmt||inv.dueDate||"—"}</td>
-                  <td style={{ padding:"14px 16px" }}>
+                  <td style={TD({color:C.accent,fontWeight:700})}>{fmtInvId(inv)}</td>
+                  <td style={TD({color:C.text,fontWeight:600})}>{inv.project||"—"}</td>
+                  <td style={TD({color:C.muted})}>{inv.client||"—"}</td>
+                  <td style={TD({color:C.text,fontWeight:700})}>${Number(inv.amount||0).toLocaleString()}</td>
+                  <td style={TD({color:(inv.status||inv.invoiceStatus)==="overdue"?C.red:C.muted})}>{inv.dueFmt||inv.dueDate||"—"}</td>
+                  <td style={TD()}>
                     <button onClick={()=>cycleStatus(inv)} title="Click to cycle status" style={{ background:st.c+"22",color:st.c,border:`1px solid ${st.c}55`,padding:"4px 10px",borderRadius:5,fontFamily:F,fontSize:12,fontWeight:700,cursor:"pointer" }}>{st.l}</button>
                   </td>
-                  <td style={{ padding:"14px 16px" }}>
-                    <div style={{ display:"flex",gap:6 }}>
-                      {inv.dataUrl&&<button onClick={()=>setPreviewInv(inv)} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}33`,padding:"5px 10px",borderRadius:5,fontFamily:F,fontSize:11,fontWeight:700,cursor:"pointer" }}>View</button>}
-                      <button onClick={()=>setEditing(inv)} style={{ background:"transparent",color:C.muted,border:`1px solid ${C.border}`,padding:"5px 10px",borderRadius:5,fontFamily:F,fontSize:11,fontWeight:700,cursor:"pointer" }}>✏️ Edit</button>
-                      <button onClick={()=>setConfirmDelete(inv)} style={{ background:C.redDim,color:C.red,border:`1px solid ${C.red}33`,padding:"5px 10px",borderRadius:5,fontFamily:F,fontSize:11,fontWeight:700,cursor:"pointer" }}>🗑 Delete</button>
-                    </div>
+                  <td style={TD()}>
+                    <RowActions>
+                      {inv.dataUrl&&<RowBtn type="view" onClick={()=>setPreviewInv(inv)}>View</RowBtn>}
+                      <RowBtn type="edit" onClick={()=>setEditing(inv)}>Edit</RowBtn>
+                      <RowBtn type="delete" onClick={()=>setConfirmDelete(inv)}>Delete</RowBtn>
+                    </RowActions>
                   </td>
                 </tr>
               );
@@ -4584,39 +4708,50 @@ function InvoicingPage({ allProjects=[], allInvoices=[], addInvoice, updateInvoi
 }
 
 function TeamGlobal({ allProjects=[], onLog }){
-  // Collect ALL members from every project (including seeds) – refresh on mount
-  const [liveMembers,setLiveMembers]=useState([]);
-  const [version,setVersion]=useState(0); // bump to force refresh
-  const [showAddModal,setShowAddModal]=useState(false);
-  const [editingMember,setEditingMember]=useState(null);
-  const [confirmEditMember,setConfirmEditMember]=useState(null);
-  const [confirmDelMember,setConfirmDelMember]=useState(null);
-  const [projFilter,setProjFilter]=useState("all");
+  const cid = useCompany();
+  const [liveMembers,setLiveMembers]   = useState([]);
+  const [sysUsers,setSysUsers]         = useState([]);
+  const [version,setVersion]           = useState(0);
+  const [showAddModal,setShowAddModal] = useState(false);
+  const [editingMember,setEditingMember]         = useState(null);
+  const [confirmEditMember,setConfirmEditMember] = useState(null);
+  const [confirmDelMember,setConfirmDelMember]   = useState(null);
+  const [projFilter,setProjFilter] = useState("all");
+  const [activeTab,setActiveTab]   = useState("crew"); // "crew" | "users"
 
-  const refresh=()=>setVersion(v=>v+1);
+  const refresh = () => setVersion(v => v+1);
 
+  // Load project team members
   useEffect(()=>{
-    if(!allProjects?.length) return;
-    let alive=true;
+    let alive = true;
     (async()=>{
-      const {data,error}=await dbTeam.getAll();
+      const {data,error} = await dbTeam.getAll();
       if(!alive) return;
-      if(!error&&data){
-        const allM=data.map(m=>({
+      if(!error && data){
+        setLiveMembers(data.map(m=>({
           ...mapMember(m),
           projectName: allProjects.find(p=>p.id===m.project_id)?.name||"Unknown Project"
-        }));
-        setLiveMembers(allM);
+        })));
       }
     })();
-    return()=>{alive=false;};
+    return()=>{ alive=false; };
   },[allProjects,version]);
 
-  // Write member update back to the project's team storage key
+  // Load system users (profiles)
+  useEffect(()=>{
+    if(!cid) return;
+    let alive = true;
+    (async()=>{
+      const {data,error} = await dbProfiles.getCompanyUsers();
+      if(!alive) return;
+      if(!error && data) setSysUsers(data);
+    })();
+    return()=>{ alive=false; };
+  },[cid,version]);
+
   const handleEditMember=async(patch)=>{
-    const {id}=editingMember;
-    await dbTeam.update(id, patch);
-    if(onLog) onLog({ id:Date.now(),action:`${editingMember.name} updated`,detail:editingMember.projectName||"",user:profile?.full_name||"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"✏️" });
+    await dbTeam.update(editingMember.id, patch);
+    if(onLog) onLog({ id:Date.now(),action:`${editingMember.name} updated`,detail:editingMember.projectName||"",user:"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"✏️" });
     refresh(); setEditingMember(null); setConfirmEditMember(null);
   };
 
@@ -4633,19 +4768,17 @@ function TeamGlobal({ allProjects=[], onLog }){
     refresh(); setConfirmDelMember(null);
   };
 
-  const filtered=projFilter==="all"?liveMembers:liveMembers.filter(m=>String(m.projId)===projFilter);
-  const onSite=liveMembers.filter(m=>m.status==="on-site").length;
-  const remote=liveMembers.filter(m=>m.status==="remote").length;
+  const filtered = projFilter==="all" ? liveMembers : liveMembers.filter(m=>String(m.projId)===projFilter);
+  const onSite   = liveMembers.filter(m=>m.status==="on-site").length;
+  const remote   = liveMembers.filter(m=>m.status==="remote").length;
 
   return(
     <div>
-      {/* Add Member Modal */}
       {showAddModal&&(
         <Overlay onClose={()=>setShowAddModal(false)}>
           <TeamGlobalAddModal allProjects={allProjects} onConfirm={handleAddMember} onCancel={()=>setShowAddModal(false)}/>
         </Overlay>
       )}
-      {/* Edit Member Modal */}
       {editingMember&&(
         <EditMemberModal member={editingMember} allProjects={allProjects}
           onConfirm={patch=>{ setConfirmEditMember({patch}); setEditingMember(null); }}
@@ -4658,7 +4791,7 @@ function TeamGlobal({ allProjects=[], onLog }){
           onCancel={()=>setConfirmEditMember(null)}/>
       )}
       {confirmDelMember&&(
-        <ConfirmDialog title="Remove Team Member?" message={`Are you sure you want to remove ${confirmDelMember.name} from ${confirmDelMember.projectName}? This action cannot be undone.`}
+        <ConfirmDialog title="Remove Team Member?" message={`Remove ${confirmDelMember.name} from ${confirmDelMember.projectName}? This cannot be undone.`}
           confirmLabel="Yes, Remove" variant="delete"
           onConfirm={handleDeleteMember} onCancel={()=>setConfirmDelMember(null)}>
           <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:"10px 14px",display:"flex",alignItems:"center",gap:10 }}>
@@ -4668,17 +4801,18 @@ function TeamGlobal({ allProjects=[], onLog }){
         </ConfirmDialog>
       )}
 
+      {/* Header */}
       <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:24,flexWrap:"wrap",gap:12 }}>
         <div>
           <h2 style={{ color:C.text,fontSize:20,fontFamily:F,fontWeight:700,margin:0 }}>👥 Team & Scheduling</h2>
-          <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>{liveMembers.length} members across all projects</div>
+          <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>{liveMembers.length} crew · {sysUsers.length} system users</div>
         </div>
-        <button onClick={()=>setShowAddModal(true)} style={{ background:C.accent,color:"#000",border:"none",padding:"10px 20px",borderRadius:9,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer" }}>+ Add Member</button>
+        {activeTab==="crew"&&<button onClick={()=>setShowAddModal(true)} style={{ background:C.accent,color:"#000",border:"none",padding:"10px 20px",borderRadius:9,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer" }}>+ Add Member</button>}
       </div>
 
-      {/* Stats row */}
+      {/* Stats */}
       <div style={{ display:"flex",gap:12,marginBottom:20,flexWrap:"wrap" }}>
-        {[["Total Members",liveMembers.length,C.blue],["On Site",onSite,C.green],["Remote",remote,C.purple],["Projects",allProjects.length,C.accent]].map(([l,v,c])=>(
+        {[["Crew Members",liveMembers.length,C.blue],["On Site",onSite,C.green],["Remote",remote,C.purple],["System Users",sysUsers.length,C.accent]].map(([l,v,c])=>(
           <div key={l} style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:10,padding:"16px 20px",flex:1,minWidth:110 }}>
             <div style={{ color:C.muted,fontFamily:F,fontSize:11,marginBottom:5 }}>{l}</div>
             <div style={{ color:c,fontFamily:F,fontWeight:700,fontSize:28,lineHeight:1 }}>{v}</div>
@@ -4686,48 +4820,98 @@ function TeamGlobal({ allProjects=[], onLog }){
         ))}
       </div>
 
-      {/* Filter bar */}
-      <div style={{ display:"flex",gap:10,marginBottom:16,flexWrap:"wrap" }}>
-        <select value={projFilter} onChange={e=>setProjFilter(e.target.value)} style={{ ...INP(),width:"auto",padding:"8px 14px",borderRadius:8,cursor:"pointer" }}>
-          <option value="all">All Projects</option>
-          {allProjects.map(p=><option key={p.id} value={String(p.id)}>{p.name}</option>)}
-        </select>
-        <span style={{ color:C.muted,fontFamily:F,fontSize:12,alignSelf:"center",marginLeft:"auto" }}>{filtered.length} member{filtered.length!==1?"s":""}</span>
-      </div>
-
-      {/* Members list */}
-      {filtered.length===0&&<div style={{ background:C.card,border:`2px dashed ${C.border}`,borderRadius:12,padding:"48px 20px",textAlign:"center",color:C.muted,fontFamily:F,fontSize:13 }}><div style={{ fontSize:36,marginBottom:10 }}>👷</div>No team members yet — click <strong>+ Add Member</strong> to get started</div>}
-      <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
-        {filtered.map(m=>(
-          <div key={`${m.projId}-${m.id}`} style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"16px 22px",display:"flex",alignItems:"center",gap:16,transition:"border-color .18s" }}
-            onMouseEnter={e=>e.currentTarget.style.borderColor=C.accent+"55"}
-            onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}>
-            <div style={{ width:46,height:46,borderRadius:"50%",background:(m.color||C.blue)+"22",border:`2px solid ${(m.color||C.blue)}55`,display:"flex",alignItems:"center",justifyContent:"center",color:m.color||C.blue,fontFamily:F,fontWeight:700,fontSize:15,flexShrink:0 }}>{m.init}</div>
-            <div style={{ flex:1,minWidth:0 }}>
-              <div style={{ display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:3 }}>
-                <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:15 }}>{m.name}</span>
-                <Badge status={m.type||"employee"}/>
-              </div>
-              <div style={{ color:C.muted,fontFamily:F,fontSize:12,display:"flex",gap:14,flexWrap:"wrap" }}>
-                <span>🔨 {m.role}</span>
-                {m.phone&&<span>📞 {m.phone}</span>}
-                {m.email&&<span>✉️ {m.email}</span>}
-                <span style={{ color:C.accent }}>🏗 {m.projectName}</span>
-              </div>
-            </div>
-            <div style={{ display:"flex",flexDirection:"column",gap:6,alignItems:"flex-end",flexShrink:0 }}>
-              <Badge status={m.status||"on-site"}/>
-              <div style={{ display:"flex",gap:5 }}>
-                <button onClick={()=>setEditingMember(m)} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}33`,padding:"4px 10px",borderRadius:5,fontFamily:F,fontSize:11,fontWeight:700,cursor:"pointer" }}>✏️ Edit</button>
-                <button onClick={()=>setConfirmDelMember(m)} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,padding:"4px 9px",borderRadius:5,fontFamily:F,fontSize:11,cursor:"pointer" }}>Del</button>
-              </div>
-            </div>
-          </div>
+      {/* Tab switcher */}
+      <div style={{ display:"flex",background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:4,gap:3,marginBottom:20,width:"fit-content" }}>
+        {[["crew","🔨 Project Crew"],["users","🖥 System Users"]].map(([v,l])=>(
+          <button key={v} onClick={()=>setActiveTab(v)} style={{ background:activeTab===v?C.accentDim:"transparent",color:activeTab===v?C.accent:C.muted,border:activeTab===v?`1px solid ${C.accentMid}`:"1px solid transparent",borderRadius:6,padding:"8px 18px",fontFamily:F,fontSize:13,fontWeight:700,cursor:"pointer" }}>{l}</button>
         ))}
       </div>
+
+      {/* ── PROJECT CREW TAB ── */}
+      {activeTab==="crew"&&(
+        <div>
+          <div style={{ display:"flex",gap:10,marginBottom:16,flexWrap:"wrap",alignItems:"center" }}>
+            <select value={projFilter} onChange={e=>setProjFilter(e.target.value)} style={{ ...INP(),width:"auto",padding:"8px 14px",borderRadius:8,cursor:"pointer" }}>
+              <option value="all">All Projects</option>
+              {allProjects.map(p=><option key={p.id} value={String(p.id)}>{p.name}</option>)}
+            </select>
+            <span style={{ color:C.muted,fontFamily:F,fontSize:12,marginLeft:"auto" }}>{filtered.length} member{filtered.length!==1?"s":""}</span>
+          </div>
+          {filtered.length===0&&(
+            <div style={{ background:C.card,border:`2px dashed ${C.border}`,borderRadius:12,padding:"48px 20px",textAlign:"center",color:C.muted,fontFamily:F,fontSize:13 }}>
+              <div style={{ fontSize:36,marginBottom:10 }}>👷</div>No crew members yet — click <strong>+ Add Member</strong> to get started
+            </div>
+          )}
+          <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
+            {filtered.map(m=>(
+              <div key={`${m.projId}-${m.id}`} style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"16px 22px",display:"flex",alignItems:"center",gap:16,transition:"border-color .18s" }}
+                onMouseEnter={e=>e.currentTarget.style.borderColor=C.accent+"55"}
+                onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}>
+                <div style={{ width:46,height:46,borderRadius:"50%",background:(m.color||C.blue)+"22",border:`2px solid ${(m.color||C.blue)}55`,display:"flex",alignItems:"center",justifyContent:"center",color:m.color||C.blue,fontFamily:F,fontWeight:700,fontSize:15,flexShrink:0 }}>{m.init}</div>
+                <div style={{ flex:1,minWidth:0 }}>
+                  <div style={{ display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:3 }}>
+                    <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:15 }}>{m.name}</span>
+                    <Badge status={m.type||"employee"}/>
+                  </div>
+                  <div style={{ color:C.muted,fontFamily:F,fontSize:12,display:"flex",gap:14,flexWrap:"wrap" }}>
+                    <span>🔨 {m.role}</span>
+                    {m.phone&&<span>📞 {m.phone}</span>}
+                    {m.email&&<span>✉️ {m.email}</span>}
+                    <span style={{ color:C.accent }}>🏗 {m.projectName}</span>
+                  </div>
+                </div>
+                <div style={{ display:"flex",flexDirection:"column",gap:6,alignItems:"flex-end",flexShrink:0 }}>
+                  <Badge status={m.status||"on-site"}/>
+                  <div style={{ display:"flex",gap:5 }}>
+                    <RowBtn type="edit" onClick={()=>setEditingMember(m)}>Edit</RowBtn>
+                    <RowBtn type="delete" onClick={()=>setConfirmDelMember(m)}>Delete</RowBtn>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── SYSTEM USERS TAB ── */}
+      {activeTab==="users"&&(
+        <div>
+          <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginBottom:16 }}>These are the accounts that can log into BuildFlow. Managed by your administrator.</div>
+          {sysUsers.length===0&&(
+            <div style={{ background:C.card,border:`2px dashed ${C.border}`,borderRadius:12,padding:"48px 20px",textAlign:"center",color:C.muted,fontFamily:F,fontSize:13 }}>
+              <div style={{ fontSize:36,marginBottom:10 }}>🖥</div>No system users found
+            </div>
+          )}
+          <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
+            {sysUsers.map(u=>{
+              const initials=(u.full_name||u.email||"?").split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();
+              const roleColor = u.role==="superadmin"?C.red : u.role==="admin"?C.accent : C.blue;
+              const roleBg    = u.role==="superadmin"?C.redDim : u.role==="admin"?C.accentDim : C.blueDim;
+              return(
+                <div key={u.id} style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"16px 22px",display:"flex",alignItems:"center",gap:16 }}
+                  onMouseEnter={e=>e.currentTarget.style.borderColor=C.accent+"55"}
+                  onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}>
+                  <div style={{ width:46,height:46,borderRadius:"50%",background:roleBg,border:`2px solid ${roleColor}44`,display:"flex",alignItems:"center",justifyContent:"center",color:roleColor,fontFamily:F,fontWeight:700,fontSize:15,flexShrink:0 }}>{initials}</div>
+                  <div style={{ flex:1,minWidth:0 }}>
+                    <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:3,flexWrap:"wrap" }}>
+                      <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:15 }}>{u.full_name||"—"}</span>
+                      <span style={{ background:roleBg,color:roleColor,padding:"2px 9px",borderRadius:4,fontSize:11,fontWeight:700,fontFamily:F }}>{u.role||"user"}</span>
+                    </div>
+                    <div style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{u.email}</div>
+                  </div>
+                  <div style={{ color:C.muted,fontFamily:F,fontSize:11,flexShrink:0 }}>
+                    {Object.entries(u.permissions||{}).filter(([,v])=>v).map(([k])=>k).join(" · ")||"No permissions"}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
 
 // Add Member Modal for global Team section
 function TeamGlobalAddModal({ allProjects, onConfirm, onCancel }){
@@ -5370,7 +5554,7 @@ async function generatePdfBlob(metrics, report){
       doc.setFont("helvetica","bold"); rgb(GREEN);
       doc.text(fmt(p.amount), px+pcols[2]-3, y+5.5,{align:"right"}); px+=pcols[2];
       doc.setFont("helvetica","normal"); rgb(BLUE);
-      doc.text(p.invRef||"—", px, y+5.5); px+=pcols[3];
+      doc.text(p.invRef ? resolveInvRef(p.invRef, metrics.invoices||[]) : "—", px, y+5.5); px+=pcols[3];
       rgb(DGREY);
       doc.text(doc.splitTextToSize(p.notes||"—", pcols[4]-3)[0], px, y+5.5);
       y+=RH;
@@ -5780,7 +5964,7 @@ Address the contractor as "the Company". Flag overdue amounts if any.`;
                         <td style={{ color:C.muted,padding:"9px 14px" }}>{p.dateFmt||p.date||"—"}</td>
                         <td style={{ color:C.text,padding:"9px 14px" }}>{p.method||"—"}</td>
                         <td style={{ color:C.green,padding:"9px 14px",fontWeight:700 }}>{fmt(p.amount)}</td>
-                        <td style={{ color:C.accent,padding:"9px 14px",fontSize:11 }}>{p.invRef||"—"}</td>
+                        <td style={{ color:C.accent,padding:"9px 14px",fontSize:11 }}>{resolveInvRef(p.invRef,allInvoices)}</td>
                         <td style={{ color:C.muted,padding:"9px 14px",maxWidth:130,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{p.notes||"—"}</td>
                       </tr>
                     ))}
@@ -5977,7 +6161,6 @@ function AppInner({ session, profile, onLogout }){
     if(tab==="reports")    return <ReportPage tasks={tasks} allProjects={allProjects} allInvoices={allInvoices}/>;
     if(tab==="prices")     return <PriceTrackingPage/>;
     if(tab==="accountant") return <AccountantPage allProjects={allProjects} allInvoices={allInvoices} payments={payments}/>;
-    if(tab==="users")      return session&&profile ? <UsersPage currentUser={session.user} profile={profile}/> : null;
     return <div style={{ color:C.muted,fontFamily:F,fontSize:14,padding:"40px 0",textAlign:"center" }}>Coming soon…</div>;
   };
 
@@ -6004,9 +6187,7 @@ function AppInner({ session, profile, onLogout }){
           </div>
         </div>
         <nav style={{ flex:1,padding:"14px 10px",overflowY:"auto" }}>
-          {[...NAV.filter(n=>!profile||!profile.permissions||profile.permissions[n.id]!==false),
-            ...(profile&&(profile.role==="superadmin"||profile.role==="admin")?[{id:"users",label:"Users",IcComp:({c})=><Ic.Team size={15} color={c}/>}]:[])
-          ].map(n=>{
+          {NAV.filter(n=>!profile||!profile.permissions||profile.permissions[n.id]!==false).map(n=>{
             const active=tab===n.id;
             const color=active?C.accent:C.muted;
             return(
