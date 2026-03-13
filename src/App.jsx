@@ -249,10 +249,6 @@ const calcProgress = (project) => {
   return map[project?.status] ?? 0;
 };
 
-const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-const DAYS_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-const DAYS_LONG  = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-
 
 // ─── Context ──────────────────────────────────────────────────────────────────
 const CompanyCtx = React.createContext(null);
@@ -505,126 +501,6 @@ function InlineFormShell({ header,accent,saveLabel="Save",onSave,onCancel,err,sa
     </div>
   );
 }
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// ─── SHARED DESIGN SYSTEM ─────────────────────────────────────────────────────
-// These primitives govern ALL buttons, tables, cards, and empty states.
-// Never write inline button styles in page components — use these.
-// ═══════════════════════════════════════════════════════════════════════════════
-
-/**
- * RowBtn — small action button for use inside table rows.
- * type: "edit" | "delete" | "view" | "receipt"
- */
-function RowBtn({ type, onClick, children }){
-  const cfg = {
-    edit:    { bg:()=>C.blueDim,       color:()=>C.blue,  border:()=>`1px solid ${C.blue}44`,  label:"Edit",   icon:"✏️" },
-    delete:  { bg:()=>"transparent",   color:()=>C.red,   border:()=>`1px solid ${C.red}33`,   label:"Delete", icon:null },
-    view:    { bg:()=>"transparent",   color:()=>C.blue,  border:()=>`1px solid ${C.blue}33`,  label:"View",   icon:null },
-    receipt: { bg:()=>C.greenDim,      color:()=>C.green, border:()=>`1px solid ${C.green}44`, label:"Receipt",icon:null },
-  }[type]||{ bg:()=>C.surface, color:()=>C.muted, border:()=>`1px solid ${C.border}`, label:"", icon:null };
-  return(
-    <button onClick={onClick}
-      style={{ background:cfg.bg(), color:cfg.color(), border:cfg.border(),
-        padding:"4px 10px", borderRadius:6, fontFamily:F, fontSize:11, fontWeight:700,
-        cursor:"pointer", display:"inline-flex", alignItems:"center", gap:4, whiteSpace:"nowrap" }}>
-      {cfg.icon&&<span style={{fontSize:10,lineHeight:1}}>{cfg.icon}</span>}
-      {children||cfg.label}
-    </button>
-  );
-}
-
-/** Wrapper div that spaces a group of RowBtns consistently */
-function RowActions({ children }){
-  return <div style={{ display:"flex", gap:5, alignItems:"center" }}>{children}</div>;
-}
-
-/**
- * Btn — full-size button for page headers and modals.
- * variant: "primary" | "secondary" | "danger" | "success"
- */
-function Btn({ onClick, disabled, variant="primary", color, size="md", children, style:xs={} }){
-  const pad   = size==="sm"?"7px 14px":size==="lg"?"12px 28px":"10px 22px";
-  const fs    = size==="sm"?12:size==="lg"?14:13;
-  const bases = {
-    primary:   ()=>({ background:color||C.accent,   color:"#000",    border:"none" }),
-    secondary: ()=>({ background:C.surface,         color:C.text,    border:`1px solid ${C.border}` }),
-    danger:    ()=>({ background:C.redDim,          color:C.red,     border:`1px solid ${C.red}33`  }),
-    success:   ()=>({ background:C.green,           color:"#fff",    border:"none" }),
-    ghost:     ()=>({ background:"transparent",     color:C.muted,   border:`1px solid ${C.border}` }),
-  };
-  const base = (bases[variant]||bases.primary)();
-  const disabledStyle = disabled ? { background:"transparent", color:(color||C.accent), border:`1px solid ${(color||C.accent)}44` } : {};
-  return(
-    <button onClick={onClick} disabled={disabled}
-      style={{ ...base, ...disabledStyle, padding:pad, borderRadius:9, fontFamily:F, fontWeight:700,
-        fontSize:fs, cursor:disabled?"default":"pointer", display:"inline-flex", alignItems:"center",
-        gap:7, whiteSpace:"nowrap", ...xs }}>
-      {children}
-    </button>
-  );
-}
-
-/** Metric stat card used in page header stat rows */
-function StatCard({ label, value, sub, color }){
-  return(
-    <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:10, padding:"18px 22px", flex:1, minWidth:130 }}>
-      <div style={{ color:C.muted, fontSize:11, fontFamily:F, fontWeight:700, textTransform:"uppercase", letterSpacing:"0.05em", marginBottom:6 }}>{label}</div>
-      <div style={{ color:color||C.text, fontSize:26, fontFamily:F, fontWeight:700, lineHeight:1 }}>{value}</div>
-      {sub&&<div style={{ color:C.muted, fontSize:12, fontFamily:F, marginTop:5 }}>{sub}</div>}
-    </div>
-  );
-}
-
-/** Consistent page-level header: title + subtitle + optional action button */
-function PageHeader({ icon, title, subtitle, action }){
-  return(
-    <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:24, flexWrap:"wrap", gap:12 }}>
-      <div>
-        <h2 style={{ color:C.text, fontSize:22, fontFamily:F, fontWeight:700, margin:0 }}>{icon&&`${icon} `}{title}</h2>
-        {subtitle&&<div style={{ color:C.muted, fontFamily:F, fontSize:12, marginTop:3 }}>{subtitle}</div>}
-      </div>
-      {action&&<div>{action}</div>}
-    </div>
-  );
-}
-
-/** Consistent empty state for tables and lists */
-function EmptyState({ icon="📭", title="Nothing here yet", sub, style:xs={} }){
-  return(
-    <div style={{ padding:"52px 20px", textAlign:"center", color:C.muted, fontFamily:F, ...xs }}>
-      {icon&&<div style={{ fontSize:36, marginBottom:10 }}>{icon}</div>}
-      <div style={{ fontSize:14, fontWeight:700, color:C.text, marginBottom:4 }}>{title}</div>
-      {sub&&<div style={{ fontSize:12 }}>{sub}</div>}
-    </div>
-  );
-}
-
-/** Standard table header cell style (use as style={TH()}) */
-const TH = (extra={}) => ({ color:C.muted, fontWeight:700, padding:"12px 16px", textAlign:"left", fontSize:12, fontFamily:F, ...extra });
-
-/** Standard table data cell style */
-const TD = (extra={}) => ({ padding:"13px 16px", fontFamily:F, fontSize:13, ...extra });
-
-/** Human-readable invoice number: prefers inv_id / invId over raw UUID */
-const fmtInvId = (inv) => {
-  const id = inv?.invId || inv?.iid || inv?.inv_id || inv?.id || "";
-  // If it looks like a UUID (8-4-4-4-12 hex), fall back to "INV-???"
-  if(/^[0-9a-f]{8}-[0-9a-f]{4}-/i.test(id)) return "INV-???";
-  return id || "—";
-};
-
-/** Resolve a stored invRef to a human-readable invoice number */
-const resolveInvRef = (invRef, allInvoices=[]) => {
-  if(!invRef) return "—";
-  // If it already looks human-readable (INV-xxx), return it
-  if(!/^[0-9a-f]{8}-/i.test(invRef)) return invRef;
-  // It's a UUID — look up the invoice
-  const inv = allInvoices.find(i => i.id === invRef || i.invId === invRef);
-  return inv ? fmtInvId(inv) : invRef;
-};
-
-// ═══════════════════════════════════════════════════════════════════════════════
 
 // ─── Modals ────────────────────────────────────────────────────────────────────
 function ContactModal({ client,onClose }){
@@ -1308,22 +1184,21 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
         <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,overflow:"hidden",marginBottom:14 }}>
           <table style={{ width:"100%",borderCollapse:"collapse",fontFamily:F,fontSize:12 }}>
             <thead><tr style={{ background:C.bg,borderBottom:`1px solid ${C.border}` }}>
-              {["Invoice #","Supplier","Amount","Due Date","Status",""].map(h=><th key={h} style={TH({padding:"9px 12px",fontSize:11})}>{h}</th>)}
+              {["#","Supplier","Amount","Due","Status","Actions"].map(h=><th key={h} style={{ color:C.muted,fontWeight:700,padding:"8px 12px",textAlign:"left",fontSize:11 }}>{h}</th>)}
             </tr></thead>
             <tbody>{rows.map((row,i)=>{ const st=INV_ST.find(s=>s.v===row.st)||INV_ST[0]; return(
-              <tr key={row.id} style={{ borderBottom:i<rows.length-1?`1px solid ${C.border}22`:"none",transition:"background .12s" }}
-                onMouseEnter={e=>e.currentTarget.style.background=C.bg} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                <td style={TD({color:C.accent,fontWeight:700,fontSize:11,whiteSpace:"nowrap",padding:"9px 12px"})}>{fmtInvId(row)}</td>
-                <td style={TD({color:C.text,maxWidth:110,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontSize:11,padding:"9px 12px"})}>{row.supplier||row.desc||"—"}</td>
-                <td style={TD({color:C.text,fontWeight:700,whiteSpace:"nowrap",padding:"9px 12px"})}>{row.amount?`$${Number(row.amount).toLocaleString()}`:"—"}</td>
-                <td style={TD({color:row.st==="overdue"?C.red:C.muted,fontSize:11,whiteSpace:"nowrap",padding:"9px 12px"})}>{row.dd||"—"}</td>
-                <td style={TD({padding:"9px 12px"})}><button onClick={()=>cycle(row)} style={{ background:st.c+"22",color:st.c,border:`1px solid ${st.c}55`,padding:"3px 9px",borderRadius:5,fontFamily:F,fontSize:11,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap" }}>{st.l}</button></td>
-                <td style={TD({padding:"9px 12px"})}>
-                  <RowActions>
-                    {row.dataUrl&&<RowBtn type="view" onClick={()=>setPreview(row)}>View</RowBtn>}
-                    <RowBtn type="edit" onClick={()=>openEdit(row)}>Edit</RowBtn>
-                    <RowBtn type="delete" onClick={()=>setConfirmDel(row)}>Delete</RowBtn>
-                  </RowActions>
+              <tr key={row.id} style={{ borderBottom:i<rows.length-1?`1px solid ${C.border}22`:"none" }}>
+                <td style={{ color:C.accent,padding:"9px 12px",fontWeight:700,fontSize:11,whiteSpace:"nowrap" }}>{row.iid}</td>
+                <td style={{ color:C.text,padding:"9px 12px",maxWidth:100,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontSize:11 }}>{row.supplier||row.desc||"—"}</td>
+                <td style={{ color:C.text,padding:"9px 12px",fontWeight:700,whiteSpace:"nowrap" }}>{row.amount?`$${Number(row.amount).toLocaleString()}`:"—"}</td>
+                <td style={{ color:row.st==="overdue"?C.red:C.muted,padding:"9px 12px",fontSize:11,whiteSpace:"nowrap" }}>{row.dd||"—"}</td>
+                <td style={{ padding:"9px 12px" }}><button onClick={()=>cycle(row)} style={{ background:st.c+"22",color:st.c,border:`1px solid ${st.c}55`,padding:"2px 8px",borderRadius:4,fontFamily:F,fontSize:11,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap" }}>{st.l}</button></td>
+                <td style={{ padding:"9px 12px" }}>
+                  <div style={{ display:"flex",gap:4,alignItems:"center" }}>
+                    {row.dataUrl&&<button onClick={()=>setPreview(row)} style={{ background:"transparent",color:C.blue,border:`1px solid ${C.blue}33`,padding:"3px 8px",borderRadius:4,fontFamily:F,fontSize:11,cursor:"pointer",display:"flex",alignItems:"center",gap:3 }}><Ic.File size={11} color="currentColor"/> View</button>}
+                    <button onClick={()=>openEdit(row)} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}44`,padding:"3px 8px",borderRadius:4,fontFamily:F,fontSize:11,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:3 }}><Ic.Edit size={11} color="currentColor"/> Edit</button>
+                    <button onClick={()=>setConfirmDel(row)} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,padding:"3px 6px",borderRadius:4,fontFamily:F,fontSize:11,cursor:"pointer" }}><Ic.Delete size={12} color="currentColor"/></button>
+                  </div>
                 </td>
               </tr>);})}
             </tbody>
@@ -1348,7 +1223,9 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
 
       {/* Add button */}
       {mode==="list"&&(
-        <Btn variant="primary" onClick={openAdd}><Ic.Plus size={13} color="#000"/> Add Invoice</Btn>
+        <button onClick={openAdd} style={{ background:C.accent,color:"#000",border:"none",padding:"10px 22px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:7 }}>
+          <Ic.Plus size={14} color="#000"/> Add Invoice
+        </button>
       )}
     </div>
   );
@@ -1500,8 +1377,8 @@ function PlansPanel({ project,onActivity }){
             {f.dataUrl?.startsWith("data:image")?<img src={f.dataUrl} alt="" style={{ width:40,height:40,objectFit:"cover",borderRadius:5,border:`1px solid ${C.border}`,flexShrink:0 }}/>:<div style={{ width:40,height:40,background:C.card,borderRadius:5,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0 }}>{f.icon||"📄"}</div>}
             <div style={{ flex:1,minWidth:0 }}><div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:12,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{f.displayTitle||f.name}</div><div style={{ color:C.muted,fontFamily:F,fontSize:10,marginTop:2 }}>{fmtBytes(f.size)} · {f.uploadedAt}{f.notes&&<span> · {f.notes.slice(0,40)}</span>}</div></div>
             <Badge status={f.badgeStatus}/>
-            <RowBtn type="view" onClick={()=>setPreview(f)}>View</RowBtn>
-            <RowBtn type="delete" onClick={()=>setConfirmDelete(f)}>Delete</RowBtn>
+            <button onClick={()=>setPreview(f)} style={{ background:"transparent",color:C.blue,border:`1px solid ${C.blue}33`,padding:"3px 9px",borderRadius:4,fontFamily:F,fontSize:11,cursor:"pointer" }}>View</button>
+            <button onClick={()=>setConfirmDelete(f)} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,padding:"3px 9px",borderRadius:4,fontFamily:F,fontSize:11,cursor:"pointer" }}>Del</button>
           </div>
         ))}</div>
       )}
@@ -1941,13 +1818,15 @@ function TasksPage({ tasks,addTask,updateTask,removeTask,allProjects=[] }){
     <div>
       {showAdd&&<AddTaskModal onConfirm={t=>{addTask(t);setShowAdd(false);}} onCancel={()=>setShowAdd(false)} allMembers={allMembers} allProjects={allProjects}/>}
 
-      <PageHeader icon="✅" title="Task Management" subtitle="Assign and track work across your team"
-        action={<Btn variant="primary" onClick={()=>setShowAdd(true)}>+ Assign Task</Btn>}/>
+      <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:24 }}>
+        <div><h2 style={{ color:C.text,fontSize:22,fontFamily:F,fontWeight:700,margin:0 }}>Task Management</h2><div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>Assign and track work across your team</div></div>
+        <button onClick={()=>setShowAdd(true)} style={{ background:C.accent,color:"#000",border:"none",padding:"11px 22px",borderRadius:9,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer" }}>+ Assign Task</button>
+      </div>
 
       <div style={{ display:"flex",gap:12,marginBottom:20,flexWrap:"wrap" }}>
-        <StatCard label="Total"     value={tasks.length}                                          sub="all tasks"   color={C.blue}/>
-        <StatCard label="Pending"   value={tasks.filter(t=>t.status==="pending").length}          sub="in progress" color={C.accent}/>
-        <StatCard label="Completed" value={tasks.filter(t=>t.status==="done").length}             sub="done"        color={C.green}/>
+        {[["Total",tasks.length,C.blue],["Pending",tasks.filter(t=>t.status==="pending").length,C.accent],["Completed",tasks.filter(t=>t.status==="done").length,C.green]].map(([l,v,c])=>(
+          <div key={l} style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:10,padding:"16px 22px",flex:1,minWidth:120 }}><div style={{ color:C.muted,fontFamily:F,fontSize:11,marginBottom:5 }}>{l}</div><div style={{ color:c,fontFamily:F,fontWeight:700,fontSize:28,lineHeight:1 }}>{v}</div></div>
+        ))}
       </div>
 
       <div style={{ display:"flex",gap:10,marginBottom:20,flexWrap:"wrap" }}>
@@ -1985,7 +1864,7 @@ function TasksPage({ tasks,addTask,updateTask,removeTask,allProjects=[] }){
                       <div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:4,display:"flex",gap:10 }}><span>{t.project}</span><span>{t.date}</span></div>
                     </div>
                     <Badge status={t.status}/>
-                    <RowBtn type="delete" onClick={()=>removeTask(t.id)}>Delete</RowBtn>
+                    <button onClick={()=>removeTask(t.id)} style={{ background:"transparent",color:C.red,border:"none",padding:"4px 6px",fontFamily:F,fontSize:14,cursor:"pointer",flexShrink:0 }}>✕</button>
                   </div>
                 ))}
               </div>
@@ -2172,8 +2051,6 @@ function TendersPage({ allProjects=[] }){
   const [analyses,setAnalyses]=useState({});
   const [analysing,setAnalysing]=useState(null);
   const [expanded,setExpanded]=useState({});
-  const [confirmDelTender,setConfirmDelTender]=useState(null);
-  const [confirmDelOffer,setConfirmDelOffer]=useState(null);
   const [mName,setMName]=useState("");const [mProj,setMProj]=useState(allProjects[0]?.id||"");const [mDesc,setMDesc]=useState("");const [mErr,setMErr]=useState("");
 
 
@@ -2214,31 +2091,6 @@ function TendersPage({ allProjects=[] }){
     <div>
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
 
-      {confirmDelTender&&(
-        <ConfirmDialog title="Delete Tender?"
-          message={`Delete "${confirmDelTender.name}" and all its offers? This cannot be undone.`}
-          confirmLabel="Yes, Delete" variant="delete"
-          onConfirm={()=>{ removeTender(confirmDelTender.id); setConfirmDelTender(null); }}
-          onCancel={()=>setConfirmDelTender(null)}>
-          <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:"10px 14px",display:"flex",justifyContent:"space-between",alignItems:"center" }}>
-            <span style={{ color:C.accent,fontFamily:F,fontWeight:700 }}>{confirmDelTender.name}</span>
-            <span style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{confirmDelTender.offers?.length||0} offer{confirmDelTender.offers?.length!==1?"s":""}</span>
-          </div>
-        </ConfirmDialog>
-      )}
-      {confirmDelOffer&&(
-        <ConfirmDialog title="Remove Offer?"
-          message={`Remove this offer from "${confirmDelOffer.tenderName}"?`}
-          confirmLabel="Yes, Remove" variant="delete"
-          onConfirm={()=>{ removeOffer(confirmDelOffer.tenderId,confirmDelOffer.offerId); setConfirmDelOffer(null); }}
-          onCancel={()=>setConfirmDelOffer(null)}>
-          <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:"10px 14px",display:"flex",justifyContent:"space-between",alignItems:"center" }}>
-            <span style={{ color:C.text,fontFamily:F,fontWeight:600 }}>{confirmDelOffer.supplierName||"Supplier"}</span>
-            {confirmDelOffer.price&&<span style={{ color:C.accent,fontFamily:F,fontWeight:700 }}>${Number(confirmDelOffer.price).toLocaleString()}</span>}
-          </div>
-        </ConfirmDialog>
-      )}
-
       {showAddMat&&(
         <Overlay onClose={()=>setShowAddMat(false)}>
           <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,padding:28,width:460 }}>
@@ -2277,7 +2129,7 @@ function TendersPage({ allProjects=[] }){
                 <div style={{ width:48,height:48,borderRadius:12,background:C.accentDim,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:C.accent,flexShrink:0 }}>MAT</div>
                 <div style={{ flex:1 }}><div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:16 }}>{tender.name}</div><div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2 }}>{tender.project} · {tender.offers.length} offer{tender.offers.length!==1?"s":""}  {tender.desc&&`· ${tender.desc}`}</div></div>
                 <span style={{ color:open?C.accent:C.muted,fontSize:20,transform:open?"rotate(90deg)":"none",transition:"transform .25s" }}>›</span>
-                <button onClick={e=>{e.stopPropagation();setConfirmDelTender(tender);}} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,padding:"4px 10px",borderRadius:6,fontFamily:F,fontSize:11,fontWeight:700,cursor:"pointer" }}>Delete</button>
+                <button onClick={e=>{e.stopPropagation();removeTender(tender.id);}} style={{ background:"transparent",color:C.red,border:"none",padding:"4px 8px",fontFamily:F,fontSize:14,cursor:"pointer" }}>✕</button>
               </div>
 
               {open&&<div style={{ padding:"0 22px 22px",borderTop:`1px solid ${C.border}22` }}>
@@ -2298,7 +2150,7 @@ function TendersPage({ allProjects=[] }){
                             <td style={{ color:C.text,padding:"10px 12px",maxWidth:140,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{o.quality||"—"}</td>
                             <td style={{ color:C.muted,padding:"10px 12px",whiteSpace:"nowrap" }}>{o.delivery||"—"}</td>
                             <td style={{ color:C.muted,padding:"10px 12px",maxWidth:140,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{o.notes||"—"}</td>
-                            <td style={{ padding:"10px 12px" }}><RowBtn type="delete" onClick={()=>setConfirmDelOffer({tenderId:tender.id,offerId:o.id,tenderName:tender.name,supplierName:o.supplier,price:o.price})}>Delete</RowBtn></td>
+                            <td style={{ padding:"10px 12px" }}><button onClick={()=>removeOffer(tender.id,o.id)} style={{ background:"transparent",color:C.red,border:"none",cursor:"pointer",fontSize:13 }}>✕</button></td>
                           </tr>
                         );
                       })}</tbody>
@@ -2307,12 +2159,11 @@ function TendersPage({ allProjects=[] }){
                 )}
 
                 <div style={{ display:"flex",gap:10,marginBottom:analysis?16:0 }}>
-                  <Btn variant="secondary" onClick={()=>setAddingOffer(tender.id)}>+ Add Offer</Btn>
+                  <button onClick={()=>setAddingOffer(tender.id)} style={{ background:C.surface,color:C.text,border:`1px solid ${C.border}`,padding:"9px 18px",borderRadius:8,fontFamily:F,fontWeight:600,fontSize:13,cursor:"pointer" }}>+ Add Offer</button>
                   {tender.offers.length>=2&&(
-                    <Btn variant="ghost" disabled={isAnalysing} onClick={()=>runAnalysis(tender)}
-                      style={{ color:isAnalysing?C.purple:"#fff", background:isAnalysing?"transparent":C.purple, border:`1px solid ${C.purple}44` }}>
-                      {isAnalysing?<><div style={{ width:13,height:13,border:`2px solid ${C.purple}`,borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Analysing…</>:"🤖 AI Analysis"}
-                    </Btn>
+                    <button onClick={()=>runAnalysis(tender)} disabled={isAnalysing} style={{ background:isAnalysing?"transparent":C.purple,color:isAnalysing?C.purple:"#fff",border:`1px solid ${C.purple}44`,padding:"9px 20px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:8 }}>
+                      {isAnalysing?<><div style={{ width:14,height:14,border:`2px solid ${C.purple}`,borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Analysing…</>:"🤖 AI Analysis"}
+                    </button>
                   )}
                 </div>
 
@@ -2444,7 +2295,7 @@ function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
           <div><label style={LBL()}>Related Invoice <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
             <select value={invRef} onChange={e=>setInvRef(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
               <option value="">— None —</option>
-              {projInvoices.map(i=><option key={i.id||i.invId} value={fmtInvId(i)}>{fmtInvId(i)} · ${Number(i.amount).toLocaleString()}</option>)}
+              {projInvoices.map(i=><option key={i.id||i.invId} value={i.id||i.invId}>{i.id||i.invId} · ${Number(i.amount).toLocaleString()}</option>)}
             </select>
           </div>
           <div><label style={LBL()}>Notes <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
@@ -2554,7 +2405,7 @@ function EditPaymentModal({ payment, allProjects, allInvoices, onConfirm, onCanc
             <div><label style={LBL()}>Related Invoice <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
               <select value={invRef} onChange={e=>setInvRef(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
                 <option value="">— None —</option>
-                {projInvoices.map(i=><option key={i.id||i.invId} value={fmtInvId(i)}>{fmtInvId(i)} · ${Number(i.amount).toLocaleString()}</option>)}
+                {projInvoices.map(i=><option key={i.id||i.invId} value={i.id||i.invId}>{i.id||i.invId} · ${Number(i.amount).toLocaleString()}</option>)}
               </select>
             </div>
             <div><label style={LBL()}>Notes <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
@@ -2684,14 +2535,14 @@ function PaymentsPanel({ project, payments, addPayment, updatePayment, removePay
                 <td style={{ color:C.muted,padding:"9px 12px" }}>{p.dateFmt}</td>
                 <td style={{ color:C.green,padding:"9px 12px",fontWeight:700 }}>${p.amount.toLocaleString()}</td>
                 <td style={{ color:C.muted,padding:"9px 12px" }}>{p.method}</td>
-                <td style={TD({color:C.accent,fontWeight:600,fontSize:11,padding:"9px 12px"})}>{resolveInvRef(p.invRef,allInvoices)}</td>
+                <td style={{ color:C.accent,padding:"9px 12px",fontSize:11 }}>{p.invRef||"—"}</td>
                 <td style={{ color:C.muted,padding:"9px 12px",maxWidth:100,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{p.notes||"—"}</td>
                 <td style={{ padding:"9px 12px" }}>
-                  <RowActions>
+                  <div style={{ display:"flex",gap:4 }}>
                     {p.receipt&&<PayReceiptBtn receipt={p.receipt}/>}
-                    <RowBtn type="edit" onClick={()=>setEditingPayment(p)}>Edit</RowBtn>
-                    <RowBtn type="delete" onClick={()=>setConfirmDeletePay(p)}>Delete</RowBtn>
-                  </RowActions>
+                    <button onClick={()=>setEditingPayment(p)} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}33`,padding:"2px 8px",borderRadius:4,fontFamily:F,fontSize:11,cursor:"pointer" }}>✏️</button>
+                    <button onClick={()=>setConfirmDeletePay(p)} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,padding:"2px 7px",borderRadius:4,fontFamily:F,fontSize:11,cursor:"pointer" }}>Del</button>
+                  </div>
                 </td>
               </tr>
             ))}</tbody>
@@ -2717,7 +2568,7 @@ function PaymentsPanel({ project, payments, addPayment, updatePayment, removePay
             <div><label style={LBL()}>Related Invoice <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
               <select value={payInvRef} onChange={e=>setPayInvRef(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
                 <option value="">— None —</option>
-                {projInvoices.map(i=><option key={i.id||i.invId} value={fmtInvId(i)}>{fmtInvId(i)} · ${Number(i.amount).toLocaleString()}</option>)}
+                {projInvoices.map(i=><option key={i.id||i.invId} value={i.id||i.invId}>{i.id||i.invId} · ${Number(i.amount).toLocaleString()}</option>)}
               </select>
             </div>
             <div><label style={LBL()}>Notes <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label><textarea style={{ ...INP(),resize:"none" }} rows={2} value={payNotes} onChange={e=>setPayNotes(e.target.value)} placeholder="Reference number, comments…"/></div>
@@ -2738,7 +2589,7 @@ function PaymentsPanel({ project, payments, addPayment, updatePayment, removePay
               <input ref={payFileRef} type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.bmp,.doc,.docx" style={{ display:"none" }} onChange={e=>{const f=e.target.files[0];if(f)handlePayFile(f);e.target.value="";}}/>
             </div>
           </InlineFormShell>
-        :<Btn variant="success" onClick={()=>{ setPayAmount("");setPayDate("");setPayMethod(PAYMENT_METHODS[0]);setPayInvRef("");setPayNotes("");setPayReceipt(null);setPayErr("");setShowAdd(true); }}>+ Record Payment</Btn>
+        :<button onClick={()=>{ setPayAmount("");setPayDate("");setPayMethod(PAYMENT_METHODS[0]);setPayInvRef("");setPayNotes("");setPayReceipt(null);setPayErr("");setShowAdd(true); }} style={{ background:C.green,color:"#fff",border:"none",padding:"9px 18px",borderRadius:7,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer" }}>+ Record Payment</button>
       }
     </div>
   );
@@ -2787,12 +2638,17 @@ function PaymentsPage({ payments, allProjects, addPayment, allInvoices, removePa
           </div>
         </ConfirmDialog>
       )}
-      <PageHeader icon="💳" title="Payments" subtitle="Track all client payments across projects"
-        action={<Btn variant="success" size="md" onClick={()=>setShowAdd(true)}>+ Record Payment</Btn>}/>
+      <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:24 }}>
+        <div><h2 style={{ color:C.text,fontSize:22,fontFamily:F,fontWeight:700,margin:0 }}>Payments</h2><div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>Track all client payments across projects</div></div>
+        <button onClick={()=>setShowAdd(true)} style={{ background:C.green,color:"#fff",border:"none",padding:"11px 22px",borderRadius:9,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer" }}>+ Record Payment</button>
+      </div>
       <div style={{ display:"flex",gap:12,marginBottom:24,flexWrap:"wrap" }}>
-        <StatCard label="Total Received"  value={"$"+total.toLocaleString()}         sub={`${payments.length} transactions`} color={C.green}/>
-        <StatCard label="This Month"      value={"$"+thisMonth.toLocaleString()}      sub="current month"                     color={C.blue}/>
-        <StatCard label="Transactions"    value={payments.length}                     sub="all time"                          color={C.purple}/>
+        {[["Total Received","$"+total.toLocaleString(),C.green],["This Month","$"+thisMonth.toLocaleString(),C.blue],["Transactions",payments.length,C.purple]].map(([l,v,c])=>(
+          <div key={l} style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:10,padding:"18px 22px",flex:1,minWidth:130 }}>
+            <div style={{ color:C.muted,fontFamily:F,fontSize:11,marginBottom:5 }}>{l}</div>
+            <div style={{ color:c,fontFamily:F,fontWeight:700,fontSize:26,lineHeight:1 }}>{v}</div>
+          </div>
+        ))}
       </div>
       <div style={{ display:"flex",gap:10,marginBottom:20,flexWrap:"wrap" }}>
         <select value={projFilter} onChange={e=>setProjFilter(e.target.value)} style={{ ...INP(),width:"auto",padding:"8px 14px",borderRadius:8,cursor:"pointer" }}>
@@ -2802,26 +2658,25 @@ function PaymentsPage({ payments, allProjects, addPayment, allInvoices, removePa
       </div>
       <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,overflow:"hidden" }}>
         {filtered.length===0
-          ?<EmptyState icon="💰" title="No payments recorded yet" sub="Record your first payment above"/>
+          ?<div style={{ padding:"48px 20px",textAlign:"center",color:C.muted,fontFamily:F,fontSize:13 }}>No payments recorded yet</div>
           :<table style={{ width:"100%",borderCollapse:"collapse",fontFamily:F,fontSize:13 }}>
             <thead><tr style={{ borderBottom:`1px solid ${C.border}`,background:C.surface }}>
-              {["Date","Project","Amount","Method","Invoice Ref","Notes","Receipt",""].map(h=><th key={h} style={TH()}>{h}</th>)}
+              {["Date","Project","Amount","Method","Invoice Ref","Notes","Receipt",""].map(h=><th key={h} style={{ color:C.muted,fontWeight:700,padding:"12px 16px",textAlign:"left",fontSize:12 }}>{h}</th>)}
             </tr></thead>
             <tbody>{filtered.map((p,i)=>(
-              <tr key={p.id} style={{ borderBottom:i<filtered.length-1?`1px solid ${C.border}22`:"none",transition:"background .12s" }}
-                onMouseEnter={e=>e.currentTarget.style.background=C.surface} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                <td style={TD({color:C.muted})}>{p.dateFmt}</td>
-                <td style={TD({color:C.text,fontWeight:600})}>{p.project}</td>
-                <td style={TD({color:C.green,fontWeight:700})}>${p.amount.toLocaleString()}</td>
-                <td style={TD({color:C.muted})}>{p.method}</td>
-                <td style={TD({color:C.accent,fontWeight:700,fontSize:12})}>{resolveInvRef(p.invRef,allInvoices)}</td>
-                <td style={TD({color:C.muted,maxWidth:140,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"})}>{p.notes||"—"}</td>
-                <td style={TD()}>{p.receipt?<PayReceiptBtn receipt={p.receipt}/>:"—"}</td>
-                <td style={TD()}>
-                  <RowActions>
-                    <RowBtn type="edit" onClick={()=>setEditingPayment(p)}>Edit</RowBtn>
-                    <RowBtn type="delete" onClick={()=>setConfirmDelete(p)}>Delete</RowBtn>
-                  </RowActions>
+              <tr key={p.id} style={{ borderBottom:i<filtered.length-1?`1px solid ${C.border}22`:"none" }}>
+                <td style={{ color:C.muted,padding:"13px 16px" }}>{p.dateFmt}</td>
+                <td style={{ color:C.text,padding:"13px 16px",fontWeight:600 }}>{p.project}</td>
+                <td style={{ color:C.green,padding:"13px 16px",fontWeight:700 }}>${p.amount.toLocaleString()}</td>
+                <td style={{ color:C.muted,padding:"13px 16px" }}>{p.method}</td>
+                <td style={{ color:C.accent,padding:"13px 16px",fontSize:12 }}>{p.invRef||"—"}</td>
+                <td style={{ color:C.muted,padding:"13px 16px",maxWidth:140,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{p.notes||"—"}</td>
+                <td style={{ padding:"13px 16px" }}>{p.receipt?<PayReceiptBtn receipt={p.receipt}/>:"—"}</td>
+                <td style={{ padding:"13px 16px" }}>
+                  <div style={{ display:"flex",gap:6 }}>
+                    <button onClick={()=>setEditingPayment(p)} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}33`,padding:"4px 9px",borderRadius:5,fontFamily:F,fontSize:11,fontWeight:700,cursor:"pointer" }}>✏️ Edit</button>
+                    <button onClick={()=>setConfirmDelete(p)} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,padding:"4px 9px",borderRadius:5,fontFamily:F,fontSize:11,fontWeight:700,cursor:"pointer" }}>Del</button>
+                  </div>
                 </td>
               </tr>
             ))}</tbody>
@@ -3312,8 +3167,8 @@ function PhotoCommentModal({ photo, comments, onAddComment, onEditComment, onDel
                         <div style={{ color:C.muted,fontFamily:F,fontSize:10,marginTop:1 }}>{c.time}</div>
                       </div>
                       <div style={{ display:"flex",gap:4 }}>
-                        <RowBtn type="edit" onClick={()=>startEdit(c)}>Edit</RowBtn>
-                        <RowBtn type="delete" onClick={()=>onDeleteComment(photo.id,c.id)}>Delete</RowBtn>
+                        <button onClick={()=>startEdit(c)} style={{ background:"transparent",color:C.muted,border:"none",padding:"3px 6px",borderRadius:4,fontFamily:F,fontSize:11,cursor:"pointer" }} title="Edit">✏️</button>
+                        <button onClick={()=>onDeleteComment(photo.id,c.id)} style={{ background:"transparent",color:C.red,border:"none",padding:"3px 6px",borderRadius:4,fontFamily:F,fontSize:11,cursor:"pointer" }} title="Delete">Del</button>
                       </div>
                     </div>
                   </div>
@@ -3351,7 +3206,7 @@ function PhotoCard({ photo, comments, onOpen, onDelete }){
         {/* overlay buttons */}
         <div style={{ position:"absolute",top:6,right:6,display:"flex",gap:5,opacity:0,transition:"opacity .18s" }} className="photo-actions">
           <button onClick={e=>{e.stopPropagation();onOpen(photo);}} style={{ background:"rgba(0,0,0,.65)",color:"#fff",border:"none",borderRadius:5,width:28,height:28,fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center" }} title="View & comment">💬</button>
-          <button onClick={e=>{e.stopPropagation();onDelete(photo.id);}} style={{ background:"rgba(200,50,50,.8)",color:"#fff",border:"none",borderRadius:5,width:28,height:28,fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center" }} title="Delete">×</button>
+          <button onClick={e=>{e.stopPropagation();onDelete(photo.id);}} style={{ background:"rgba(200,50,50,.8)",color:"#fff",border:"none",borderRadius:5,width:28,height:28,fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center" }} title="Delete">Del</button>
         </div>
         {/* comment count badge */}
         {comments.length>0&&(
@@ -3482,8 +3337,8 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
               </div>
               <div style={{ display:"flex",gap:12,alignItems:"center",flexShrink:0,flexWrap:"wrap" }}>
                 <div><div style={{ color:C.muted,fontFamily:F,fontSize:10,fontWeight:700 }}>CONTRACT VALUE</div><div style={{ color:C.accent,fontFamily:F,fontWeight:700,fontSize:20 }}>${project.value.toLocaleString()}</div></div>
-                <Btn variant="primary" size="lg" onClick={()=>setContactOpen(true)}>👤 Contact</Btn>
-                <Btn variant="secondary" size="lg" onClick={()=>setEditingProject(true)}>✏️ Edit Project</Btn>
+                <button onClick={()=>setContactOpen(true)} style={{ background:C.accent,color:"#000",border:"none",padding:"11px 22px",borderRadius:9,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer" }}>👤 Contact</button>
+                <button onClick={()=>setEditingProject(true)} style={{ background:C.surface,color:C.text,border:`1px solid ${C.border}`,padding:"11px 18px",borderRadius:9,fontFamily:F,fontWeight:600,fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",gap:6 }}>✏️ Edit</button>
               </div>
             </div>
             {project.status!=="quoting"&&(
@@ -4649,15 +4504,27 @@ function InvoicingPage({ allProjects=[], allInvoices=[], addInvoice, updateInvoi
       )}
 
       {/* Header */}
-      <PageHeader icon="🧾" title="Invoices" subtitle="All invoices across every project"
-        action={<Btn variant="primary" onClick={()=>setShowAdd(true)}>+ New Invoice</Btn>}/>
+      <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:24,flexWrap:"wrap",gap:12 }}>
+        <div>
+          <h2 style={{ color:C.text,fontSize:22,fontFamily:F,fontWeight:700,margin:0 }}>🧾 Invoices</h2>
+          <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>All invoices across every project</div>
+        </div>
+        <button onClick={()=>setShowAdd(true)} style={{ background:C.accent,color:"#000",border:"none",padding:"11px 22px",borderRadius:9,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer" }}>+ New Invoice</button>
+      </div>
 
       {/* Stats */}
       <div style={{ display:"flex",gap:12,marginBottom:24,flexWrap:"wrap" }}>
-        <StatCard label="Outstanding"   value={"$"+(outstanding/1000).toFixed(0)+"k"}  sub={`${filtered.filter(i=>i.status!=="paid").length} invoices`}        color={C.blue}/>
-        <StatCard label="Overdue"       value={"$"+(overdue/1000).toFixed(0)+"k"}       sub="Needs follow-up"                                                    color={C.red}/>
-        <StatCard label="Collected"     value={"$"+(paid/1000).toFixed(0)+"k"}          sub={`${filtered.filter(i=>i.status==="paid").length} paid`}             color={C.green}/>
-        <StatCard label="Total Invoices" value={filtered.length}                         sub="All statuses"                                                       color={C.purple}/>
+        {[["Outstanding","$"+(outstanding/1000).toFixed(0)+"k",`${filtered.filter(i=>i.status!=="paid").length} invoices`,C.blue],
+          ["Overdue","$"+(overdue/1000).toFixed(0)+"k","Needs follow-up",C.red],
+          ["Collected","$"+(paid/1000).toFixed(0)+"k",`${filtered.filter(i=>i.status==="paid").length} paid`,C.green],
+          ["Total Invoices",filtered.length,"All statuses",C.purple]
+        ].map(([l,v,s,c])=>(
+          <div key={l} style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:10,padding:"18px 22px",flex:1,minWidth:130 }}>
+            <div style={{ color:C.muted,fontSize:11,fontFamily:F,marginBottom:5 }}>{l}</div>
+            <div style={{ color:c,fontSize:26,fontFamily:F,fontWeight:700,lineHeight:1 }}>{v}</div>
+            <div style={{ color:C.muted,fontSize:12,fontFamily:F,marginTop:4 }}>{s}</div>
+          </div>
+        ))}
       </div>
 
       {/* Filters */}
@@ -4677,30 +4544,30 @@ function InvoicingPage({ allProjects=[], allInvoices=[], addInvoice, updateInvoi
       {/* Table */}
       <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,overflow:"hidden" }}>
         {filtered.length===0
-          ?<EmptyState icon="🧾" title="No invoices match your filters" sub="Try clearing your filters"/>
+          ?<div style={{ padding:"48px 20px",textAlign:"center",color:C.muted,fontFamily:F,fontSize:13 }}><div style={{ fontSize:40,marginBottom:12 }}>🧾</div>No invoices match your filters</div>
           :<table style={{ width:"100%",borderCollapse:"collapse",fontFamily:F,fontSize:13 }}>
             <thead><tr style={{ borderBottom:`1px solid ${C.border}`,background:C.surface }}>
-              {["Invoice #","Project","Client","Amount","Due Date","Status",""].map(h=><th key={h} style={TH()}>{h}</th>)}
+              {["Invoice #","Project","Client","Amount","Due","Status","Actions"].map(h=><th key={h} style={{ color:C.muted,fontWeight:700,padding:"12px 16px",textAlign:"left",fontSize:12 }}>{h}</th>)}
             </tr></thead>
             <tbody>{filtered.map((inv,i)=>{
               const st=INV_ST.find(s=>s.v===(inv.status||inv.invoiceStatus))||INV_ST[0];
               return(
                 <tr key={inv.id} style={{ borderBottom:i<filtered.length-1?`1px solid ${C.border}22`:"none",transition:"background .15s" }}
                   onMouseEnter={e=>e.currentTarget.style.background=C.surface} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                  <td style={TD({color:C.accent,fontWeight:700})}>{fmtInvId(inv)}</td>
-                  <td style={TD({color:C.text,fontWeight:600})}>{inv.project||"—"}</td>
-                  <td style={TD({color:C.muted})}>{inv.client||"—"}</td>
-                  <td style={TD({color:C.text,fontWeight:700})}>${Number(inv.amount||0).toLocaleString()}</td>
-                  <td style={TD({color:(inv.status||inv.invoiceStatus)==="overdue"?C.red:C.muted})}>{inv.dueFmt||inv.dueDate||"—"}</td>
-                  <td style={TD()}>
+                  <td style={{ color:C.accent,padding:"14px 16px",fontWeight:700 }}>{inv.id||inv.invId}</td>
+                  <td style={{ color:C.text,padding:"14px 16px",fontWeight:600 }}>{inv.project||"—"}</td>
+                  <td style={{ color:C.muted,padding:"14px 16px" }}>{inv.client||"—"}</td>
+                  <td style={{ color:C.text,padding:"14px 16px",fontWeight:700 }}>${Number(inv.amount||0).toLocaleString()}</td>
+                  <td style={{ color:(inv.status||inv.invoiceStatus)==="overdue"?C.red:C.muted,padding:"14px 16px" }}>{inv.dueFmt||inv.dueDate||"—"}</td>
+                  <td style={{ padding:"14px 16px" }}>
                     <button onClick={()=>cycleStatus(inv)} title="Click to cycle status" style={{ background:st.c+"22",color:st.c,border:`1px solid ${st.c}55`,padding:"4px 10px",borderRadius:5,fontFamily:F,fontSize:12,fontWeight:700,cursor:"pointer" }}>{st.l}</button>
                   </td>
-                  <td style={TD()}>
-                    <RowActions>
-                      {inv.dataUrl&&<RowBtn type="view" onClick={()=>setPreviewInv(inv)}>View</RowBtn>}
-                      <RowBtn type="edit" onClick={()=>setEditing(inv)}>Edit</RowBtn>
-                      <RowBtn type="delete" onClick={()=>setConfirmDelete(inv)}>Delete</RowBtn>
-                    </RowActions>
+                  <td style={{ padding:"14px 16px" }}>
+                    <div style={{ display:"flex",gap:6 }}>
+                      {inv.dataUrl&&<button onClick={()=>setPreviewInv(inv)} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}33`,padding:"5px 10px",borderRadius:5,fontFamily:F,fontSize:11,fontWeight:700,cursor:"pointer" }}>View</button>}
+                      <button onClick={()=>setEditing(inv)} style={{ background:"transparent",color:C.muted,border:`1px solid ${C.border}`,padding:"5px 10px",borderRadius:5,fontFamily:F,fontSize:11,fontWeight:700,cursor:"pointer" }}>✏️ Edit</button>
+                      <button onClick={()=>setConfirmDelete(inv)} style={{ background:C.redDim,color:C.red,border:`1px solid ${C.red}33`,padding:"5px 10px",borderRadius:5,fontFamily:F,fontSize:11,fontWeight:700,cursor:"pointer" }}>🗑 Delete</button>
+                    </div>
                   </td>
                 </tr>
               );
@@ -4749,16 +4616,10 @@ function TeamGlobal({ allProjects=[], onLog }){
     refresh(); setEditingMember(null); setConfirmEditMember(null);
   };
 
-  const handleAddMember=async(m)=>{
-    await dbTeam.add(m, m.projId);
-    if(onLog) onLog({ id:Date.now(),action:`${m.name} added to team`,detail:m.projectName||"",user:"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"👷" });
-    setShowAddModal(false); refresh();
-  };
-
   const handleDeleteMember=async()=>{
     const {id,name,projectName}=confirmDelMember;
     await dbTeam.delete(id);
-    if(onLog) onLog({ id:Date.now(),action:`${name} removed from team`,detail:projectName||"",user:"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"🗑️" });
+    if(onLog) onLog({ id:Date.now(),action:`${name} removed from team`,detail:projectName||"",user:profile?.full_name||"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"🗑️" });
     refresh(); setConfirmDelMember(null);
   };
 
@@ -4847,8 +4708,8 @@ function TeamGlobal({ allProjects=[], onLog }){
             <div style={{ display:"flex",flexDirection:"column",gap:6,alignItems:"flex-end",flexShrink:0 }}>
               <Badge status={m.status||"on-site"}/>
               <div style={{ display:"flex",gap:5 }}>
-                <RowBtn type="edit" onClick={()=>setEditingMember(m)}>Edit</RowBtn>
-                <RowBtn type="delete" onClick={()=>setConfirmDelMember(m)}>Delete</RowBtn>
+                <button onClick={()=>setEditingMember(m)} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}33`,padding:"4px 10px",borderRadius:5,fontFamily:F,fontSize:11,fontWeight:700,cursor:"pointer" }}>✏️ Edit</button>
+                <button onClick={()=>setConfirmDelMember(m)} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,padding:"4px 9px",borderRadius:5,fontFamily:F,fontSize:11,cursor:"pointer" }}>Del</button>
               </div>
             </div>
           </div>
@@ -5499,7 +5360,7 @@ async function generatePdfBlob(metrics, report){
       doc.setFont("helvetica","bold"); rgb(GREEN);
       doc.text(fmt(p.amount), px+pcols[2]-3, y+5.5,{align:"right"}); px+=pcols[2];
       doc.setFont("helvetica","normal"); rgb(BLUE);
-      doc.text(p.invRef ? resolveInvRef(p.invRef, metrics.invoices||[]) : "—", px, y+5.5); px+=pcols[3];
+      doc.text(p.invRef||"—", px, y+5.5); px+=pcols[3];
       rgb(DGREY);
       doc.text(doc.splitTextToSize(p.notes||"—", pcols[4]-3)[0], px, y+5.5);
       y+=RH;
@@ -5909,7 +5770,7 @@ Address the contractor as "the Company". Flag overdue amounts if any.`;
                         <td style={{ color:C.muted,padding:"9px 14px" }}>{p.dateFmt||p.date||"—"}</td>
                         <td style={{ color:C.text,padding:"9px 14px" }}>{p.method||"—"}</td>
                         <td style={{ color:C.green,padding:"9px 14px",fontWeight:700 }}>{fmt(p.amount)}</td>
-                        <td style={{ color:C.accent,padding:"9px 14px",fontSize:11 }}>{resolveInvRef(p.invRef,allInvoices)}</td>
+                        <td style={{ color:C.accent,padding:"9px 14px",fontSize:11 }}>{p.invRef||"—"}</td>
                         <td style={{ color:C.muted,padding:"9px 14px",maxWidth:130,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{p.notes||"—"}</td>
                       </tr>
                     ))}
