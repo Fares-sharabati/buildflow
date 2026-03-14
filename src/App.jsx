@@ -1,9 +1,21 @@
 // @ts-nocheck
 import { useState, useEffect, useContext, useRef, useMemo, useCallback } from 'react'
-import { initDb, dbProjects, dbInvoices, dbPayments, dbTasks, dbTeam, dbTenders, dbLog, dbProfiles, dbNotes, mapInvoice, mapPayment, mapTask, mapProject, mapMember, mapTender, mapLog } from './db.js'
+import { initDb, dbProjects, dbInvoices, dbPayments, dbTasks, dbTeam, dbTenders, dbLog, dbProfiles, dbNotes, dbFiles, mapInvoice, mapPayment, mapTask, mapProject, mapMember, mapTender, mapLog } from './db.js'
 
 
 import React from 'react';
+import UsersPage from './UsersPage.jsx'
+import { supabase, supabaseStorage } from './supabaseClient.js'
+
+// ─── Upload a raw File to Supabase Storage, return {url, path, name, size} ────
+async function uploadFile(raw, folder, companyId) {
+  if (!raw || !companyId) return null;
+  const ext  = raw.name.split('.').pop().toLowerCase();
+  const path = `${companyId}/${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+  const { data, error } = await supabaseStorage.upload('buildflow-files', path, raw);
+  if (error) { console.error('Storage upload error:', error); return null; }
+  return { url: data.publicUrl, path, name: raw.name, size: raw.size };
+}
 
 // ─── SVG Icon System ───────────────────────────────────────────────────────────
 const Icon = ({ d, size=16, stroke="#7a849e" }) => (
@@ -256,12 +268,67 @@ const useCompany = () => useContext(CompanyCtx);
 // ─── Polling interval for real-time sync (ms) ─────────────────────────────────
 const POLL_MS = 15000;
 
-// ─── useFiles: kept for legacy plan/photo uploads (localStorage only) ─────────
-function useFiles(key){
-  const [files,setFiles]=useState([]); const [ready,setReady]=useState(false);
-  useEffect(()=>{ let alive=true; (async()=>{ try{ const r=await storage.get(key); if(alive)setFiles(r?JSON.parse(r.value):[]); }catch(_){ if(alive)setFiles([]); } if(alive)setReady(true); })(); return()=>{alive=false;};  },[key]);
-  const persist=async(next)=>{ setFiles(next); await storage.set(key,JSON.stringify(next)); };
-  return{ files,ready, add:f=>persist([...files,f]), remove:id=>persist(files.filter(f=>f.id!==id)), update:(id,p)=>persist(files.map(f=>f.id===id?{...f,...p}:f)) };
+// ─── useFiles: Supabase Storage-backed file management ─────────────────────────
+function useFiles(key) {
+  // key format: "photos:projectId" | "plans:projectId"
+  const cid = useCompany();
+  const [files, setFiles] = useState([]);
+  const [ready, setReady]   = useState(false);
+  const [version, bump]     = useState(0);
+
+  const [type, projectId] = key.split(':');
+
+  useEffect(() => {
+    if (!cid || !projectId) return;
+    let alive = true;
+    (async () => {
+      const { data, error } = await dbFiles.getByProject(projectId, type);
+      if (!alive) return;
+      if (!error && data) {
+        setFiles(data.map(r => ({
+          id: r.id,
+          name: r.name,
+          size: r.size,
+          url: r.url,
+          storagePath: r.storage_path,
+          uploadedAt: r.uploaded_at ? new Date(r.uploaded_at).toLocaleDateString() : '',
+        })));
+      }
+      setReady(true);
+    })();
+    return () => { alive = false; };
+  }, [cid, projectId, type, version]);
+
+  const add = async (file, fileBlob) => {
+    if (!cid || !projectId) return;
+    // Upload to Supabase Storage
+    const ext = file.name.split('.').pop();
+    const path = `${cid}/${type}/${projectId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const { data, error } = await supabaseStorage.upload('buildflow-files', path, fileBlob);
+    if (error) { console.error('Upload failed:', error); return; }
+    // Save metadata to project_files table
+    await dbFiles.add({
+      company_id: cid,
+      project_id: projectId,
+      type,
+      name: file.name,
+      size: file.size,
+      url: data.publicUrl,
+      storage_path: path,
+    });
+    bump(v => v + 1);
+  };
+
+  const remove = async (id) => {
+    const f = files.find(f => f.id === id);
+    if (f?.storagePath) {
+      await supabaseStorage.remove('buildflow-files', [f.storagePath]);
+    }
+    await dbFiles.remove(id);
+    bump(v => v + 1);
+  };
+
+  return { files, ready, add, remove, update: () => {} };
 }
 
 // ─── useTeam: Supabase-backed per-project team members ───────────────────────
@@ -369,7 +436,7 @@ function useGlobalLog(){
   return{ log:log||[], push };
 }
 
-// ─── useAllMembers: all team members across all projects ─────────────────────
+// ─── useAllMembers: loads system users (profiles) as the team ─────────────────
 function useAllMembers(allProjects=[]){
   const cid = useCompany();
   const [members,setMembers]=useState([]);
@@ -379,15 +446,24 @@ function useAllMembers(allProjects=[]){
     if(!cid) return;
     let alive=true;
     (async()=>{
-      const {data,error}=await dbTeam.getAll();
+      const {data,error}=await dbProfiles.getCompanyUsers();
       if(!error&&data&&alive){
-        const seen=new Map();
-        data.map(mapMember).forEach(m=>seen.set(m.name,m));
-        setMembers([...seen.values()]);
+        const COLORS=['#3b82f6','#a855f7','#22c55e','#f59e0b','#f43f5e','#06b6d4','#ec4899','#14b8a6'];
+        setMembers(data.map((u,i)=>({
+          id:       u.id,
+          name:     u.full_name || u.email,
+          email:    u.email,
+          role:     u.job_title || u.role || 'Team Member',
+          phone:    u.phone || '',
+          status:   u.status || 'on-site',
+          color:    u.color || COLORS[i % COLORS.length],
+          init:     (u.full_name||u.email||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(),
+          type:     u.role === 'admin' || u.role === 'superadmin' ? 'admin' : 'employee',
+        })));
       }
     })();
     return()=>{alive=false;};
-  },[cid,allProjects,version]);
+  },[cid,version]);
   return{ members, refresh };
 }
 
@@ -803,7 +879,7 @@ function InvModal({ pending,onConfirm,onCancel }){
 
 function FilePreviewModal({ file,onClose }){
   if(!file)return null;
-  const dataUrl = file.dataUrl||"";
+  const dataUrl = file.url||file.dataUrl||"";
   const name    = file.name||"Document";
   const isImg   = dataUrl.startsWith("data:image");
   const isPdf   = dataUrl.startsWith("data:application/pdf") || name.toLowerCase().endsWith(".pdf");
@@ -972,7 +1048,7 @@ function AddInvoiceFormModal({ project, onConfirm, onCancel, allInvoices=[] }){
   const handleDocFile=async(raw)=>{
     if(!raw)return;
     const du=raw.size<5*1024*1024?await new Promise(r=>{const rd=new FileReader();rd.onload=e=>r(e.target.result);rd.readAsDataURL(raw);}):null;
-    setDocFile({name:raw.name,size:raw.size,dataUrl:du});
+    setDocFile({name:raw.name,size:raw.size,dataUrl:du,_rawFile:raw});
     if(du){
       setAiRunning(true); setAiNote("🤖 Reading document with AI…");
       const result=await aiExtractInvoice({name:raw.name,size:raw.size,dataUrl:du});
@@ -990,11 +1066,18 @@ function AddInvoiceFormModal({ project, onConfirm, onCancel, allInvoices=[] }){
     }
   };
 
-  const submit=()=>{
+  const submit=async()=>{
     if(!amount||isNaN(parseFloat(amount))){setErr("Invoice amount is required");return;}
     const fmt=dueDate?new Date(dueDate+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):"—";
     const id=invNum.trim()||nextId();
-    onConfirm({ id:`${Date.now()}`,invId:id,name:docFile?.name||`${id}.pdf`,size:docFile?.size||0,dataUrl:docFile?.dataUrl||null,icon:"🧾",invoiceStatus:status,desc:desc||id,amount:parseFloat(amount),dueDate:fmt,dueDateISO:dueDate,uploadedAt:new Date().toLocaleDateString(),supplier:supplier||"—",invDate:invDate||"—",currency });
+    // Upload file to Supabase Storage if we have one
+    let fileUrl = docFile?.dataUrl || null;
+    let filePath = null;
+    if(docFile?._rawFile && cid){
+      const uploaded = await uploadFile(docFile._rawFile, 'invoices', cid);
+      if(uploaded){ fileUrl = uploaded.url; filePath = uploaded.path; }
+    }
+    onConfirm({ id:`${Date.now()}`,invId:id,name:docFile?.name||`${id}.pdf`,size:docFile?.size||0,dataUrl:fileUrl,url:fileUrl,storagePath:filePath,icon:"🧾",invoiceStatus:status,desc:desc||id,amount:parseFloat(amount),dueDate:fmt,dueDateISO:dueDate,uploadedAt:new Date().toLocaleDateString(),supplier:supplier||"—",invDate:invDate||"—",currency });
   };
 
   return(
@@ -1049,14 +1132,14 @@ function AddInvoiceFormModal({ project, onConfirm, onCancel, allInvoices=[] }){
                     {aiRunning&&<div style={{ color:C.purple,fontFamily:F,fontSize:12,marginBottom:8,display:"flex",alignItems:"center",gap:8 }}><div style={{ width:12,height:12,border:"2px solid",borderColor:C.purple,borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Extracting with AI…</div>}
                     {aiNote&&!aiRunning&&<div style={{ color:aiNote.startsWith("OK")?C.green:C.muted,fontFamily:F,fontSize:11,marginBottom:10,padding:"8px 10px",background:aiNote.startsWith("OK")?C.greenDim:C.surface,borderRadius:6,border:`1px solid ${aiNote.startsWith("OK")?C.green+"33":C.border}` }}>{aiNote}</div>}
                     <div style={{ display:"flex",alignItems:"center",gap:10 }}>
-                      <div style={{ width:42,height:42,background:C.card,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0 }}>{docFile.dataUrl?.startsWith("data:image")?"🖼️":"📄"}</div>
+                      <div style={{ width:42,height:42,background:C.card,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0 }}>{docFile.url ? !docFile.url.includes(".pdf") : docFile.dataUrl?.startsWith("data:image")?"🖼️":"📄"}</div>
                       <div style={{ flex:1,minWidth:0 }}>
                         <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:13,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{docFile.name}</div>
                         <div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:2 }}>{docFile.size?(docFile.size/1024).toFixed(1)+" KB":""}</div>
                       </div>
                       <button onClick={()=>{setDocFile(null);setAiNote("");}} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,borderRadius:6,padding:"4px 8px",fontFamily:F,fontSize:12,cursor:"pointer" }}>Remove</button>
                     </div>
-                    {docFile.dataUrl?.startsWith("data:image")&&<img src={docFile.dataUrl} alt="" style={{ maxWidth:"100%",maxHeight:180,objectFit:"contain",borderRadius:8,marginTop:12,border:`1px solid ${C.border}` }}/>}
+                    {docFile.url ? !docFile.url.includes(".pdf") : docFile.dataUrl?.startsWith("data:image")&&<img src={docFile.dataUrl} alt="" style={{ maxWidth:"100%",maxHeight:180,objectFit:"contain",borderRadius:8,marginTop:12,border:`1px solid ${C.border}` }}/>}
                   </div>
                 :<div onClick={()=>fileRef.current.click()}
                     onDragOver={e=>{e.preventDefault();e.currentTarget.style.borderColor=C.accent;e.currentTarget.style.background=C.accentDim;}}
@@ -1148,7 +1231,7 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
   const handleDoc = async (raw) => {
     if(!raw) return;
     const du = raw.size<5*1024*1024 ? await new Promise(r=>{const rd=new FileReader();rd.onload=e=>r(e.target.result);rd.readAsDataURL(raw);}) : null;
-    setDocFile({name:raw.name,size:raw.size,dataUrl:du});
+    setDocFile({name:raw.name,size:raw.size,dataUrl:du,_rawFile:raw});
     if(du){
       setAiRunning(true); setAiNote("Reading with AI…");
       const res = await aiExtractInvoice({name:raw.name,size:raw.size,dataUrl:du});
@@ -1177,7 +1260,7 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
       const invObj = {
         id: String(Date.now()), invId,
         name: docFile?.name||`${invId}.pdf`, size: docFile?.size||0,
-        dataUrl: docFile?.dataUrl||null, icon: "receipt",
+        dataUrl: docFile?.url||docFile?.dataUrl||null, url: docFile?.url||docFile?.dataUrl||null, icon: "receipt",
         invoiceStatus:status, status,
         desc: desc||invId,
         amount: parseFloat(amount), dueDate:fmt, dueDateISO:dueDate,
@@ -1233,12 +1316,12 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
         {aiNote&&!aiRunning&&<div style={{ color:aiNote.startsWith("AI")?C.green:C.muted,fontFamily:F,fontSize:11,marginBottom:8,padding:"6px 9px",background:aiNote.startsWith("AI")?C.greenDim:"transparent",borderRadius:5 }}>{aiNote}</div>}
         <div style={{ display:"flex",alignItems:"center",gap:10 }}>
           <div style={{ width:34,height:34,background:C.card,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
-            {docFile.dataUrl?.startsWith("data:image")?<Ic.Image size={18} color={C.muted}/>:<Ic.File size={18} color={C.muted}/>}
+            {docFile.url ? !docFile.url.includes(".pdf") : docFile.dataUrl?.startsWith("data:image")?<Ic.Image size={18} color={C.muted}/>:<Ic.File size={18} color={C.muted}/>}
           </div>
           <div style={{ flex:1,minWidth:0 }}><div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:12,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{docFile.name}</div><div style={{ color:C.muted,fontFamily:F,fontSize:10 }}>{docFile.size?(docFile.size/1024).toFixed(1)+" KB":""}</div></div>
           <button onClick={()=>{setDocFile(null);setAiNote("");}} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,borderRadius:5,padding:"3px 8px",fontFamily:F,fontSize:11,cursor:"pointer" }}>Remove</button>
         </div>
-        {docFile.dataUrl?.startsWith("data:image")&&<img src={docFile.dataUrl} alt="" style={{ maxWidth:"100%",maxHeight:120,objectFit:"contain",borderRadius:7,marginTop:8,border:`1px solid ${C.border}` }}/>}
+        {docFile.url ? !docFile.url.includes(".pdf") : docFile.dataUrl?.startsWith("data:image")&&<img src={docFile.dataUrl} alt="" style={{ maxWidth:"100%",maxHeight:120,objectFit:"contain",borderRadius:7,marginTop:8,border:`1px solid ${C.border}` }}/>}
       </div>
     : <div onClick={()=>fileRef.current?.click()}
         onDragOver={e=>{e.preventDefault();e.currentTarget.style.borderColor=C.accent;e.currentTarget.style.background=C.accentDim;}}
@@ -1315,7 +1398,7 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
                 <td style={TD({padding:"9px 12px"})}><button onClick={()=>cycle(row)} style={{ background:st.c+"22",color:st.c,border:`1px solid ${st.c}55`,padding:"3px 9px",borderRadius:5,fontFamily:F,fontSize:11,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap" }}>{st.l}</button></td>
                 <td style={TD({padding:"9px 12px"})}>
                   <RowActions>
-                    {row.dataUrl&&<RowBtn type="view" onClick={()=>setPreview(row)}>View</RowBtn>}
+                    {(row.url||row.dataUrl)&&<RowBtn type="view" onClick={()=>setPreview(row)}>View</RowBtn>}
                     <RowBtn type="edit" onClick={()=>openEdit(row)}>Edit</RowBtn>
                     <RowBtn type="delete" onClick={()=>setConfirmDel(row)}>Delete</RowBtn>
                   </RowActions>
@@ -1362,7 +1445,7 @@ function AddPlanFormModal({ project, onConfirm, onCancel }){
   const handleDocFile=async(raw)=>{
     if(!raw)return;
     const du=raw.size<6*1024*1024?await new Promise(r=>{const rd=new FileReader();rd.onload=e=>r(e.target.result);rd.readAsDataURL(raw);}):null;
-    setDocFile({name:raw.name,size:raw.size,dataUrl:du});
+    setDocFile({name:raw.name,size:raw.size,dataUrl:du,_rawFile:raw});
     if(!title)setTitle(raw.name.replace(/\.[^.]+$/,"").replace(/[_-]/g," "));
   };
 
@@ -1393,7 +1476,7 @@ function AddPlanFormModal({ project, onConfirm, onCancel }){
               {docFile
                 ?<div style={{ background:C.surface,border:`1px solid ${C.green}44`,borderRadius:10,padding:"14px 16px" }}>
                     <div style={{ display:"flex",alignItems:"center",gap:10 }}>
-                      {docFile.dataUrl?.startsWith("data:image")
+                      {docFile.url ? !docFile.url.includes(".pdf") : docFile.dataUrl?.startsWith("data:image")
                         ?<img src={docFile.dataUrl} alt="" style={{ width:52,height:52,objectFit:"cover",borderRadius:6,border:`1px solid ${C.border}`,flexShrink:0 }}/>
                         :<div style={{ width:52,height:52,background:C.card,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,flexShrink:0 }}>📄</div>
                       }
@@ -1566,26 +1649,9 @@ function TeamPanel({ project,onOpenTeamPage }){
           {members.length>4&&<div style={{ color:C.muted,fontFamily:F,fontSize:11,textAlign:"center",padding:"4px 0" }}>+{members.length-4} more</div>}
         </div>
       )}
-      {showAdd
-        ?<InlineFormShell header="👷 Add Team Member" accent={C.green} saveLabel="Add Member" onSave={submitMember} onCancel={()=>setShowAdd(false)} err={tmErr}>
-            <div><label style={LBL()}>Full Name *</label><input style={INP()} value={tmName} onChange={e=>{setTmName(e.target.value);setTmErr("");}} placeholder="e.g. Marcus Webb"/></div>
-            <div><label style={LBL()}>Role</label>
-              <select value={tmRole} onChange={e=>setTmRole(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
-                {ROLES.map(r=><option key={r}>{r}</option>)}
-              </select>
-            </div>
-            <div><label style={LBL()}>Phone *</label><input style={INP()} value={tmPhone} onChange={e=>{setTmPhone(e.target.value);setTmErr("");}} placeholder="+971 50 000 0000"/></div>
-            <div><label style={LBL()}>Status</label>
-              <div style={{ display:"flex",gap:7 }}>
-                {[{v:"on-site",l:"On Site"},{v:"remote",l:"Remote"}].map(s=>{const sm=SM[s.v]||{};return(<button key={s.v} onClick={()=>setTmStatus(s.v)} style={{ flex:1,padding:"8px 0",borderRadius:7,cursor:"pointer",fontFamily:F,fontSize:12,fontWeight:700,border:tmStatus===s.v?`2px solid ${sm.color||C.green}`:`1px solid ${C.border}`,background:tmStatus===s.v?(sm.bg||C.greenDim):"transparent",color:tmStatus===s.v?(sm.color||C.green):C.muted }}>{s.l}</button>);})}
-              </div>
-            </div>
-          </InlineFormShell>
-        :<div style={{ display:"flex",gap:8 }}>
-            <button onClick={()=>{ setTmName("");setTmRole(ROLES[0]);setTmPhone("");setTmStatus("on-site");setTmErr("");setShowAdd(true); }} style={{ background:C.green,color:"#fff",border:"none",padding:"9px 18px",borderRadius:7,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer" }}>👷 + Add Member</button>
+      <div style={{ display:"flex",gap:8 }}>
             <button onClick={onOpenTeamPage} style={{ background:"transparent",color:C.text,border:`1px solid ${C.border}`,padding:"9px 16px",borderRadius:7,fontFamily:F,fontWeight:600,fontSize:13,cursor:"pointer" }}>Full Team →</button>
           </div>
-      }
     </div>
   );
 }
@@ -1830,7 +1896,7 @@ function TeamPage({ project,onBack,onAddToLog,tasks=[],updateTask }){
             </div>
             <div style={{ color:C.muted,fontFamily:F,fontSize:13,marginLeft:14 }}>📍 {project.address}</div>
           </div>
-          <button onClick={()=>setShowAdd(true)} style={{ background:C.accent,color:"#000",border:"none",padding:"11px 22px",borderRadius:9,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer" }}>+ Add Member</button>
+
         </div>
       </div>
 
@@ -1855,7 +1921,7 @@ function TeamPage({ project,onBack,onAddToLog,tasks=[],updateTask }){
 
         {ready&&members.length===0&&(
           <div style={{ border:`2px dashed ${C.border}`,borderRadius:10,padding:"40px 20px",textAlign:"center",color:C.muted,fontFamily:F,fontSize:13 }}>
-            <div style={{ fontSize:36,marginBottom:10 }}>👷</div>No members yet — click <strong>+ Add Member</strong> to get started
+            <div style={{ fontSize:36,marginBottom:10 }}>👷</div>No team members yet — they're managed via Supabase
           </div>
         )}
 
@@ -2387,15 +2453,23 @@ function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
   const proj = allProjects.find(p=>p.id===projId);
   const projInvoices = allInvoices.filter(i=>i.projId===projId||i.project===proj?.name);
 
+  const cid = useCompany();
+
   const handleFile=async(raw)=>{
     if(raw.size>5*1024*1024){ setErr("File too large (max 5MB)"); return; }
     const du=await new Promise(r=>{const rd=new FileReader();rd.onload=e=>r(e.target.result);rd.readAsDataURL(raw);});
-    setReceipt({ name:raw.name, size:raw.size, dataUrl:du });
+    setReceipt({ name:raw.name, size:raw.size, dataUrl:du, _rawFile:raw });
   };
 
-  const submit=()=>{
+  const submit=async()=>{
     if(!amount||isNaN(parseFloat(amount))){ setErr("Payment amount is required"); return; }
     if(!date){ setErr("Payment date is required"); return; }
+    // Upload receipt to storage if present
+    let receiptData = receipt ? { name:receipt.name, size:receipt.size, url:receipt.url||receipt.dataUrl } : null;
+    if(receipt?._rawFile && cid){
+      const uploaded = await uploadFile(receipt._rawFile, 'receipts', cid);
+      if(uploaded) receiptData = { name:receipt.name, size:receipt.size, url:uploaded.url, path:uploaded.path };
+    }
     const fmtDate=d=>new Date(d+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
     onConfirm({
       id:`pay-${Date.now()}`,
@@ -2404,7 +2478,7 @@ function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
       date, dateFmt:fmtDate(date),
       method, invRef:invRef||null,
       notes:notes.trim(),
-      receipt:receipt||null,
+      receipt:receiptData||null,
       recordedAt:new Date().toLocaleDateString(),
     });
   };
@@ -2451,14 +2525,14 @@ function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
             {receipt
               ?<div style={{ background:C.surface,border:`1px solid ${C.green}44`,borderRadius:10,padding:"14px 16px" }}>
                   <div style={{ display:"flex",alignItems:"center",gap:10 }}>
-                    <div style={{ width:42,height:42,background:C.card,borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0 }}>{receipt.dataUrl?.startsWith("data:image")?"🖼️":"📄"}</div>
+                    <div style={{ width:42,height:42,background:C.card,borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0 }}>{receipt.url||receipt.dataUrl?.startsWith("data:image")?"🖼️":"📄"}</div>
                     <div style={{ flex:1,minWidth:0 }}>
                       <div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:12 }}>✓ File attached</div>
                       <div style={{ color:C.text,fontFamily:F,fontSize:11,marginTop:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{receipt.name}</div>
                     </div>
                     <button onClick={()=>setReceipt(null)} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,borderRadius:6,padding:"4px 8px",fontFamily:F,fontSize:12,cursor:"pointer" }}>Remove</button>
                   </div>
-                  {receipt.dataUrl?.startsWith("data:image")&&<img src={receipt.dataUrl} alt="" style={{ maxWidth:"100%",maxHeight:180,objectFit:"contain",borderRadius:8,marginTop:10,border:`1px solid ${C.border}` }}/>}
+                  {receipt.url||receipt.dataUrl?.startsWith("data:image")&&<img src={receipt.url||receipt.dataUrl} alt="" style={{ maxWidth:"100%",maxHeight:180,objectFit:"contain",borderRadius:8,marginTop:10,border:`1px solid ${C.border}` }}/>}
                 </div>
               :<div onClick={()=>fileRef.current.click()}
                   onDragOver={e=>{e.preventDefault();e.currentTarget.style.borderColor=C.green;e.currentTarget.style.background=C.greenDim;}}
@@ -2560,14 +2634,14 @@ function EditPaymentModal({ payment, allProjects, allInvoices, onConfirm, onCanc
               {receipt
                 ?<div style={{ background:C.surface,border:`1px solid ${C.green}44`,borderRadius:10,padding:"14px 16px" }}>
                     <div style={{ display:"flex",alignItems:"center",gap:10 }}>
-                      <div style={{ width:42,height:42,background:C.card,borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0 }}>{receipt.dataUrl?.startsWith("data:image")?"🖼️":"📄"}</div>
+                      <div style={{ width:42,height:42,background:C.card,borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0 }}>{receipt.url||receipt.dataUrl?.startsWith("data:image")?"🖼️":"📄"}</div>
                       <div style={{ flex:1,minWidth:0 }}>
                         <div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:12 }}>✓ Attached</div>
                         <div style={{ color:C.text,fontFamily:F,fontSize:11,marginTop:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{receipt.name}</div>
                       </div>
                       <button onClick={()=>setReceipt(null)} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,borderRadius:6,padding:"4px 8px",fontFamily:F,fontSize:12,cursor:"pointer" }}>Remove</button>
                     </div>
-                    {receipt.dataUrl?.startsWith("data:image")&&<img src={receipt.dataUrl} alt="" style={{ maxWidth:"100%",maxHeight:160,objectFit:"contain",borderRadius:8,marginTop:10,border:`1px solid ${C.border}` }}/>}
+                    {receipt.url||receipt.dataUrl?.startsWith("data:image")&&<img src={receipt.url||receipt.dataUrl} alt="" style={{ maxWidth:"100%",maxHeight:160,objectFit:"contain",borderRadius:8,marginTop:10,border:`1px solid ${C.border}` }}/>}
                   </div>
                 :<div onClick={()=>fileRef.current.click()}
                     onDragOver={e=>{e.preventDefault();e.currentTarget.style.borderColor=C.green;e.currentTarget.style.background=C.greenDim;}}
@@ -2596,7 +2670,7 @@ function EditPaymentModal({ payment, allProjects, allInvoices, onConfirm, onCanc
 function PayReceiptBtn({ receipt }){
   const [show,setShow]=useState(false);
   return(<>
-    {show&&<FilePreviewModal file={receipt} onClose={()=>setShow(false)}/>}
+    {show&&<FilePreviewModal file={receipt?{...receipt,dataUrl:receipt.url||receipt.dataUrl}:null} onClose={()=>setShow(false)}/>}
     <button onClick={()=>setShow(true)} style={{ background:"transparent",color:C.blue,border:`1px solid ${C.blue}33`,padding:"2px 8px",borderRadius:4,fontFamily:F,fontSize:11,cursor:"pointer" }}>View</button>
   </>);
 }
@@ -3264,7 +3338,7 @@ function PhotoCommentModal({ photo, comments, onAddComment, onEditComment, onDel
 
         {/* Left: photo */}
         <div style={{ flex:1,minWidth:0,background:"#000",display:"flex",alignItems:"center",justifyContent:"center",position:"relative",minHeight:300 }}>
-          <img src={photo.dataUrl} alt={photo.name} style={{ maxWidth:"100%",maxHeight:"92vh",objectFit:"contain",display:"block" }}/>
+          <img src={photo.url} alt={photo.name} style={{ maxWidth:"100%",maxHeight:"92vh",objectFit:"contain",display:"block" }}/>
           <button onClick={onClose} style={{ position:"absolute",top:12,right:12,background:"rgba(0,0,0,.6)",border:"none",color:"#fff",width:32,height:32,borderRadius:"50%",fontSize:18,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",lineHeight:1 }}>✕</button>
           <div style={{ position:"absolute",bottom:0,left:0,right:0,background:"linear-gradient(transparent,rgba(0,0,0,.7))",padding:"16px 18px" }}>
             <div style={{ color:"#fff",fontFamily:F,fontWeight:600,fontSize:13 }}>{photo.name.replace(/\.[^.]+$/,"")}</div>
@@ -3341,7 +3415,7 @@ function PhotoCard({ photo, comments, onOpen, onDelete }){
 
       {/* Thumbnail */}
       <div onClick={()=>onOpen(photo)} style={{ position:"relative",aspectRatio:"4/3",cursor:"pointer",overflow:"hidden",background:"#000" }}>
-        <img src={photo.dataUrl} alt={photo.name} style={{ width:"100%",height:"100%",objectFit:"cover",display:"block",transition:"transform .25s" }}
+        <img src={photo.url} alt={photo.name} style={{ width:"100%",height:"100%",objectFit:"cover",display:"block",transition:"transform .25s" }}
           onMouseEnter={e=>e.currentTarget.style.transform="scale(1.04)"} onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"}/>
         {/* overlay buttons */}
         <div style={{ position:"absolute",top:6,right:6,display:"flex",gap:5,opacity:0,transition:"opacity .18s" }} className="photo-actions">
@@ -3401,7 +3475,12 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
   };
   const mergedLog= useMemo(()=>[...extraLog.filter(e=>!log.find(l=>l.id===e.id)),...log].sort((a,b)=>(b.id||0)-(a.id||0)),[extraLog,log]);
   const saveNote = ()=>{ if(!noteText.trim())return; const n={id:Date.now(),text:noteText.trim(),author:profile?.full_name||"User",time:new Date().toLocaleDateString()}; setNotes(p=>[n,...p]); pushLog("Note added","📝"); setNoteText(""); };
-  const uploadPhotos = files=>Array.from(files).forEach(f=>{ const rd=new FileReader(); rd.onload=async e=>{ await addPhoto({id:`${Date.now()}-${Math.random().toString(36).slice(2)}`,name:f.name,size:f.size,dataUrl:e.target.result,uploadedAt:new Date().toLocaleDateString()}); pushLog("Photo uploaded","📷"); }; rd.readAsDataURL(f); });
+  const uploadPhotos = async(files)=>{
+    for(const f of Array.from(files)){
+      await addPhoto({name:f.name,size:f.size}, f);
+      pushLog("Photo uploaded","📷");
+    }
+  };
   const projectPayments = useMemo(()=>payments.filter(p=>p.projId===project.id||p.project===project.name),[payments,project]);
   const handleAddPayment= async(p)=>{ addPayment&&addPayment(p); pushLog(`Payment $${p.amount.toLocaleString()} recorded`,"PAY"); };
 
@@ -4709,263 +4788,222 @@ function InvoicingPage({ allProjects=[], allInvoices=[], addInvoice, updateInvoi
 
 function TeamGlobal({ allProjects=[], onLog }){
   const cid = useCompany();
-  const [liveMembers,setLiveMembers]   = useState([]);
-  const [sysUsers,setSysUsers]         = useState([]);
-  const [version,setVersion]           = useState(0);
-  const [showAddModal,setShowAddModal] = useState(false);
-  const [editingMember,setEditingMember]         = useState(null);
-  const [confirmEditMember,setConfirmEditMember] = useState(null);
-  const [confirmDelMember,setConfirmDelMember]   = useState(null);
-  const [projFilter,setProjFilter] = useState("all");
-  const [activeTab,setActiveTab]   = useState("crew"); // "crew" | "users"
+  const { members:users, refresh } = useAllMembers(allProjects);
+  const [allTasks,  setAllTasks]   = useState([]);
+  const [version,   setVersion]    = useState(0);
+  const [editingUser, setEditingUser]       = useState(null);
+  const [confirmEdit, setConfirmEdit]       = useState(null);
+  const [projFilter,  setProjFilter]        = useState('all');
+  const [search,      setSearch]            = useState('');
 
-  const refresh = () => setVersion(v => v+1);
-
-  // Load project team members
-  useEffect(()=>{
-    let alive = true;
-    (async()=>{
-      const {data,error} = await dbTeam.getAll();
-      if(!alive) return;
-      if(!error && data){
-        setLiveMembers(data.map(m=>({
-          ...mapMember(m),
-          projectName: allProjects.find(p=>p.id===m.project_id)?.name||"Unknown Project"
-        })));
-      }
-    })();
-    return()=>{ alive=false; };
-  },[allProjects,version]);
-
-  // Load system users (profiles)
+  // Load all tasks to show per-user workload
   useEffect(()=>{
     if(!cid) return;
     let alive = true;
     (async()=>{
-      const {data,error} = await dbProfiles.getCompanyUsers();
+      const { data, error } = await dbTasks.getAll();
       if(!alive) return;
-      if(!error && data) setSysUsers(data);
+      if(!error && data) setAllTasks(data.map(mapTask));
     })();
-    return()=>{ alive=false; };
+    return ()=>{ alive=false; };
   },[cid,version]);
 
-  const handleEditMember=async(patch)=>{
-    await dbTeam.update(editingMember.id, patch);
-    if(onLog) onLog({ id:Date.now(),action:`${editingMember.name} updated`,detail:editingMember.projectName||"",user:"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"✏️" });
-    refresh(); setEditingMember(null); setConfirmEditMember(null);
+  const handleEditUser = async(patch)=>{
+    const { id } = editingUser;
+    // Update job_title, phone, status, color in profiles
+    await supabase.from('profiles').update({
+      job_title: patch.job_title,
+      phone:     patch.phone,
+      status:    patch.status,
+      color:     patch.color,
+    }).eq('id', id);
+    if(onLog) onLog({ id:Date.now(), action:`${editingUser.name} updated`, detail:'Team', user:'Admin', time:new Date().toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}), icon:'✏️' });
+    setVersion(v=>v+1); setEditingUser(null); setConfirmEdit(null);
   };
 
-  const handleAddMember=async(m)=>{
-    await dbTeam.add(m, m.projId);
-    if(onLog) onLog({ id:Date.now(),action:`${m.name} added to team`,detail:m.projectName||"",user:"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"👷" });
-    setShowAddModal(false); refresh();
-  };
+  // Filter users
+  const filtered = users.filter(u=>{
+    if(search && !u.name.toLowerCase().includes(search.toLowerCase()) && !u.email.toLowerCase().includes(search.toLowerCase())) return false;
+    if(projFilter !== 'all'){
+      const proj = allProjects.find(p=>String(p.id)===projFilter);
+      if(!proj) return true;
+      const hasTask = allTasks.some(t=>t.member===u.name && (t.projId===projFilter || t.project===proj.name));
+      if(!hasTask) return false;
+    }
+    return true;
+  });
 
-  const handleDeleteMember=async()=>{
-    const {id,name,projectName}=confirmDelMember;
-    await dbTeam.delete(id);
-    if(onLog) onLog({ id:Date.now(),action:`${name} removed from team`,detail:projectName||"",user:"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"🗑️" });
-    refresh(); setConfirmDelMember(null);
-  };
+  const onSite  = users.filter(u=>u.status==='on-site').length;
+  const remote  = users.filter(u=>u.status==='remote').length;
 
-  const filtered = projFilter==="all" ? liveMembers : liveMembers.filter(m=>String(m.projId)===projFilter);
-  const onSite   = liveMembers.filter(m=>m.status==="on-site").length;
-  const remote   = liveMembers.filter(m=>m.status==="remote").length;
+  const COLORS = ['#3b82f6','#a855f7','#22c55e','#f59e0b','#f43f5e','#06b6d4','#ec4899','#14b8a6'];
 
   return(
     <div>
-      {showAddModal&&(
-        <Overlay onClose={()=>setShowAddModal(false)}>
-          <TeamGlobalAddModal allProjects={allProjects} onConfirm={handleAddMember} onCancel={()=>setShowAddModal(false)}/>
+      {/* Edit user modal */}
+      {editingUser&&(
+        <Overlay onClose={()=>setEditingUser(null)}>
+          <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,padding:28,width:460 }} onClick={e=>e.stopPropagation()}>
+            <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20 }}>
+              <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}>✏️ Edit Team Member</span>
+              <button onClick={()=>setEditingUser(null)} style={{ background:'none',border:'none',color:C.muted,fontSize:20,cursor:'pointer' }}>✕</button>
+            </div>
+            <EditUserForm user={editingUser} onSave={patch=>setConfirmEdit({patch})} onCancel={()=>setEditingUser(null)} COLORS={COLORS}/>
+          </div>
         </Overlay>
       )}
-      {editingMember&&(
-        <EditMemberModal member={editingMember} allProjects={allProjects}
-          onConfirm={patch=>{ setConfirmEditMember({patch}); setEditingMember(null); }}
-          onCancel={()=>setEditingMember(null)}/>
-      )}
-      {confirmEditMember&&(
-        <ConfirmDialog title="Save Member Changes?" message="Are you sure you want to apply these changes?"
+      {confirmEdit&&(
+        <ConfirmDialog title="Save Changes?" message={`Update info for ${editingUser?.name}?`}
           confirmLabel="Yes, Save" variant="edit"
-          onConfirm={()=>handleEditMember(confirmEditMember.patch)}
-          onCancel={()=>setConfirmEditMember(null)}/>
-      )}
-      {confirmDelMember&&(
-        <ConfirmDialog title="Remove Team Member?" message={`Remove ${confirmDelMember.name} from ${confirmDelMember.projectName}? This cannot be undone.`}
-          confirmLabel="Yes, Remove" variant="delete"
-          onConfirm={handleDeleteMember} onCancel={()=>setConfirmDelMember(null)}>
-          <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:"10px 14px",display:"flex",alignItems:"center",gap:10 }}>
-            <div style={{ width:38,height:38,borderRadius:"50%",background:(confirmDelMember.color||C.blue)+"22",border:`2px solid ${(confirmDelMember.color||C.blue)}44`,display:"flex",alignItems:"center",justifyContent:"center",color:confirmDelMember.color||C.blue,fontFamily:F,fontWeight:700,fontSize:13,flexShrink:0 }}>{confirmDelMember.init}</div>
-            <div><div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:13 }}>{confirmDelMember.name}</div><div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>{confirmDelMember.role} · {confirmDelMember.projectName}</div></div>
-          </div>
-        </ConfirmDialog>
+          onConfirm={()=>handleEditUser(confirmEdit.patch)}
+          onCancel={()=>setConfirmEdit(null)}/>
       )}
 
       {/* Header */}
-      <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:24,flexWrap:"wrap",gap:12 }}>
+      <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24,flexWrap:'wrap',gap:12 }}>
         <div>
-          <h2 style={{ color:C.text,fontSize:20,fontFamily:F,fontWeight:700,margin:0 }}>👥 Team & Scheduling</h2>
-          <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>{liveMembers.length} crew · {sysUsers.length} system users</div>
+          <h2 style={{ color:C.text,fontSize:20,fontFamily:F,fontWeight:700,margin:0 }}>👥 Team</h2>
+          <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>{users.length} members · managed via User Management</div>
         </div>
-        {activeTab==="crew"&&<button onClick={()=>setShowAddModal(true)} style={{ background:C.accent,color:"#000",border:"none",padding:"10px 20px",borderRadius:9,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer" }}>+ Add Member</button>}
       </div>
 
       {/* Stats */}
-      <div style={{ display:"flex",gap:12,marginBottom:20,flexWrap:"wrap" }}>
-        {[["Crew Members",liveMembers.length,C.blue],["On Site",onSite,C.green],["Remote",remote,C.purple],["System Users",sysUsers.length,C.accent]].map(([l,v,c])=>(
-          <div key={l} style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:10,padding:"16px 20px",flex:1,minWidth:110 }}>
+      <div style={{ display:'flex',gap:12,marginBottom:20,flexWrap:'wrap' }}>
+        {[['Total',users.length,C.blue],['On Site',onSite,C.green],['Remote',remote,C.purple],['Projects',allProjects.length,C.accent]].map(([l,v,c])=>(
+          <div key={l} style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:10,padding:'16px 20px',flex:1,minWidth:110 }}>
             <div style={{ color:C.muted,fontFamily:F,fontSize:11,marginBottom:5 }}>{l}</div>
             <div style={{ color:c,fontFamily:F,fontWeight:700,fontSize:28,lineHeight:1 }}>{v}</div>
           </div>
         ))}
       </div>
 
-      {/* Tab switcher */}
-      <div style={{ display:"flex",background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:4,gap:3,marginBottom:20,width:"fit-content" }}>
-        {[["crew","🔨 Project Crew"],["users","🖥 System Users"]].map(([v,l])=>(
-          <button key={v} onClick={()=>setActiveTab(v)} style={{ background:activeTab===v?C.accentDim:"transparent",color:activeTab===v?C.accent:C.muted,border:activeTab===v?`1px solid ${C.accentMid}`:"1px solid transparent",borderRadius:6,padding:"8px 18px",fontFamily:F,fontSize:13,fontWeight:700,cursor:"pointer" }}>{l}</button>
-        ))}
+      {/* Filters */}
+      <div style={{ display:'flex',gap:10,marginBottom:18,flexWrap:'wrap' }}>
+        <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search by name or email…"
+          style={{ ...INP(),flex:1,minWidth:180,padding:'8px 14px',borderRadius:8 }}/>
+        <select value={projFilter} onChange={e=>setProjFilter(e.target.value)} style={{ ...INP(),width:'auto',padding:'8px 14px',borderRadius:8,cursor:'pointer' }}>
+          <option value="all">All Projects</option>
+          {allProjects.map(p=><option key={p.id} value={String(p.id)}>{p.name}</option>)}
+        </select>
       </div>
 
-      {/* ── PROJECT CREW TAB ── */}
-      {activeTab==="crew"&&(
-        <div>
-          <div style={{ display:"flex",gap:10,marginBottom:16,flexWrap:"wrap",alignItems:"center" }}>
-            <select value={projFilter} onChange={e=>setProjFilter(e.target.value)} style={{ ...INP(),width:"auto",padding:"8px 14px",borderRadius:8,cursor:"pointer" }}>
-              <option value="all">All Projects</option>
-              {allProjects.map(p=><option key={p.id} value={String(p.id)}>{p.name}</option>)}
-            </select>
-            <span style={{ color:C.muted,fontFamily:F,fontSize:12,marginLeft:"auto" }}>{filtered.length} member{filtered.length!==1?"s":""}</span>
-          </div>
-          {filtered.length===0&&(
-            <div style={{ background:C.card,border:`2px dashed ${C.border}`,borderRadius:12,padding:"48px 20px",textAlign:"center",color:C.muted,fontFamily:F,fontSize:13 }}>
-              <div style={{ fontSize:36,marginBottom:10 }}>👷</div>No crew members yet — click <strong>+ Add Member</strong> to get started
-            </div>
-          )}
-          <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
-            {filtered.map(m=>(
-              <div key={`${m.projId}-${m.id}`} style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"16px 22px",display:"flex",alignItems:"center",gap:16,transition:"border-color .18s" }}
-                onMouseEnter={e=>e.currentTarget.style.borderColor=C.accent+"55"}
-                onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}>
-                <div style={{ width:46,height:46,borderRadius:"50%",background:(m.color||C.blue)+"22",border:`2px solid ${(m.color||C.blue)}55`,display:"flex",alignItems:"center",justifyContent:"center",color:m.color||C.blue,fontFamily:F,fontWeight:700,fontSize:15,flexShrink:0 }}>{m.init}</div>
+      {/* Member cards */}
+      {filtered.length===0&&(
+        <div style={{ background:C.card,border:`2px dashed ${C.border}`,borderRadius:12,padding:'48px 20px',textAlign:'center',color:C.muted,fontFamily:F,fontSize:13 }}>
+          <div style={{ fontSize:36,marginBottom:10 }}>👥</div>
+          {users.length===0 ? 'No team members yet — add users via Supabase then set their details here' : 'No members match your filter'}
+        </div>
+      )}
+      <div style={{ display:'flex',flexDirection:'column',gap:12 }}>
+        {filtered.map(u=>{
+          const userTasks   = allTasks.filter(t=>t.member===u.name);
+          const activeTasks = userTasks.filter(t=>t.status!=='done');
+          const doneTasks   = userTasks.filter(t=>t.status==='done');
+          const userProjects= [...new Set(userTasks.map(t=>t.project).filter(Boolean))];
+          return(
+            <div key={u.id} style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,overflow:'hidden',transition:'border-color .18s' }}
+              onMouseEnter={e=>e.currentTarget.style.borderColor=C.accent+'55'}
+              onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}>
+              {/* Main row */}
+              <div style={{ display:'flex',alignItems:'center',gap:16,padding:'16px 20px' }}>
+                <div style={{ width:48,height:48,borderRadius:'50%',background:(u.color||C.blue)+'22',border:`2px solid ${(u.color||C.blue)}55`,display:'flex',alignItems:'center',justifyContent:'center',color:u.color||C.blue,fontFamily:F,fontWeight:700,fontSize:16,flexShrink:0 }}>{u.init}</div>
                 <div style={{ flex:1,minWidth:0 }}>
-                  <div style={{ display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:3 }}>
-                    <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:15 }}>{m.name}</span>
-                    <Badge status={m.type||"employee"}/>
+                  <div style={{ display:'flex',alignItems:'center',gap:8,flexWrap:'wrap',marginBottom:3 }}>
+                    <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:15 }}>{u.name}</span>
+                    <Badge status={u.type||'employee'}/>
+                    <Badge status={u.status||'on-site'}/>
                   </div>
-                  <div style={{ color:C.muted,fontFamily:F,fontSize:12,display:"flex",gap:14,flexWrap:"wrap" }}>
-                    <span>🔨 {m.role}</span>
-                    {m.phone&&<span>📞 {m.phone}</span>}
-                    {m.email&&<span>✉️ {m.email}</span>}
-                    <span style={{ color:C.accent }}>🏗 {m.projectName}</span>
-                  </div>
-                </div>
-                <div style={{ display:"flex",flexDirection:"column",gap:6,alignItems:"flex-end",flexShrink:0 }}>
-                  <Badge status={m.status||"on-site"}/>
-                  <div style={{ display:"flex",gap:5 }}>
-                    <RowBtn type="edit" onClick={()=>setEditingMember(m)}>Edit</RowBtn>
-                    <RowBtn type="delete" onClick={()=>setConfirmDelMember(m)}>Delete</RowBtn>
+                  <div style={{ color:C.muted,fontFamily:F,fontSize:12,display:'flex',gap:14,flexWrap:'wrap' }}>
+                    {u.role&&<span>🔨 {u.role}</span>}
+                    {u.phone&&<span>📞 {u.phone}</span>}
+                    <span>✉️ {u.email}</span>
                   </div>
                 </div>
+                {/* Task summary */}
+                <div style={{ display:'flex',gap:8,flexShrink:0 }}>
+                  <div style={{ background:C.accentDim,border:`1px solid ${C.accentMid}`,borderRadius:8,padding:'6px 12px',textAlign:'center',minWidth:52 }}>
+                    <div style={{ color:C.accent,fontFamily:F,fontWeight:700,fontSize:18,lineHeight:1 }}>{activeTasks.length}</div>
+                    <div style={{ color:C.muted,fontFamily:F,fontSize:10,marginTop:2 }}>active</div>
+                  </div>
+                  <div style={{ background:C.greenDim,border:`1px solid ${C.green}33`,borderRadius:8,padding:'6px 12px',textAlign:'center',minWidth:52 }}>
+                    <div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:18,lineHeight:1 }}>{doneTasks.length}</div>
+                    <div style={{ color:C.muted,fontFamily:F,fontSize:10,marginTop:2 }}>done</div>
+                  </div>
+                </div>
+                <RowBtn type="edit" onClick={()=>setEditingUser(u)}>Edit</RowBtn>
               </div>
-            ))}
-          </div>
-        </div>
-      )}
 
-      {/* ── SYSTEM USERS TAB ── */}
-      {activeTab==="users"&&(
-        <div>
-          <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginBottom:16 }}>These are the accounts that can log into BuildFlow. Managed by your administrator.</div>
-          {sysUsers.length===0&&(
-            <div style={{ background:C.card,border:`2px dashed ${C.border}`,borderRadius:12,padding:"48px 20px",textAlign:"center",color:C.muted,fontFamily:F,fontSize:13 }}>
-              <div style={{ fontSize:36,marginBottom:10 }}>🖥</div>No system users found
-            </div>
-          )}
-          <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
-            {sysUsers.map(u=>{
-              const initials=(u.full_name||u.email||"?").split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();
-              const roleColor = u.role==="superadmin"?C.red : u.role==="admin"?C.accent : C.blue;
-              const roleBg    = u.role==="superadmin"?C.redDim : u.role==="admin"?C.accentDim : C.blueDim;
-              return(
-                <div key={u.id} style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"16px 22px",display:"flex",alignItems:"center",gap:16 }}
-                  onMouseEnter={e=>e.currentTarget.style.borderColor=C.accent+"55"}
-                  onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}>
-                  <div style={{ width:46,height:46,borderRadius:"50%",background:roleBg,border:`2px solid ${roleColor}44`,display:"flex",alignItems:"center",justifyContent:"center",color:roleColor,fontFamily:F,fontWeight:700,fontSize:15,flexShrink:0 }}>{initials}</div>
-                  <div style={{ flex:1,minWidth:0 }}>
-                    <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:3,flexWrap:"wrap" }}>
-                      <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:15 }}>{u.full_name||"—"}</span>
-                      <span style={{ background:roleBg,color:roleColor,padding:"2px 9px",borderRadius:4,fontSize:11,fontWeight:700,fontFamily:F }}>{u.role||"user"}</span>
+              {/* Projects + active tasks */}
+              {(userProjects.length>0||activeTasks.length>0)&&(
+                <div style={{ padding:'10px 20px 14px',borderTop:`1px solid ${C.border}22`,background:C.surface }}>
+                  {userProjects.length>0&&(
+                    <div style={{ display:'flex',gap:6,flexWrap:'wrap',marginBottom:activeTasks.length>0?8:0 }}>
+                      <span style={{ color:C.muted,fontFamily:F,fontSize:11,marginRight:4,alignSelf:'center' }}>🏗</span>
+                      {userProjects.map(p=>(
+                        <span key={p} style={{ background:C.accentDim,color:C.accent,border:`1px solid ${C.accentMid}`,borderRadius:99,padding:'2px 10px',fontFamily:F,fontSize:11,fontWeight:600 }}>{p}</span>
+                      ))}
                     </div>
-                    <div style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{u.email}</div>
-                  </div>
-                  <div style={{ color:C.muted,fontFamily:F,fontSize:11,flexShrink:0 }}>
-                    {Object.entries(u.permissions||{}).filter(([,v])=>v).map(([k])=>k).join(" · ")||"No permissions"}
-                  </div>
+                  )}
+                  {activeTasks.length>0&&(
+                    <div style={{ display:'flex',flexDirection:'column',gap:4 }}>
+                      {activeTasks.slice(0,3).map(t=>(
+                        <div key={t.id} style={{ display:'flex',alignItems:'center',gap:8 }}>
+                          <div style={{ width:5,height:5,borderRadius:'50%',background:C.accent,flexShrink:0 }}/>
+                          <span style={{ color:C.muted,fontFamily:F,fontSize:11,flex:1,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{t.title}</span>
+                          {t.date&&<span style={{ color:C.muted,fontFamily:F,fontSize:10,flexShrink:0 }}>{t.date}</span>}
+                        </div>
+                      ))}
+                      {activeTasks.length>3&&<span style={{ color:C.muted,fontFamily:F,fontSize:10,paddingLeft:13 }}>+{activeTasks.length-3} more tasks</span>}
+                    </div>
+                  )}
                 </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
+              )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
 
-
-// Add Member Modal for global Team section
-function TeamGlobalAddModal({ allProjects, onConfirm, onCancel }){
-  const [name,setName]=useState(""); const [role,setRole]=useState(ROLES[0]);
-  const [phone,setPhone]=useState(""); const [email,setEmail]=useState("");
-  const [projId,setProjId]=useState(allProjects[0]?.id||null);
-  const [status,setStatus]=useState("on-site"); const [err,setErr]=useState("");
-  const proj=allProjects.find(p=>p.id===projId);
-  const submit=()=>{
-    if(!name.trim()){ setErr("Name is required"); return; }
-    const init=name.trim().split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();
-    const colors=[C.blue,C.purple,C.green,C.accent,"#f43f5e","#06b6d4"];
-    onConfirm({ name:name.trim(),role,phone:phone.trim(),email:email.trim(),status,projId,projectName:proj?.name||"",init,color:colors[Math.floor(Math.random()*colors.length)],type:"employee" });
-  };
+function EditUserForm({ user, onSave, onCancel, COLORS }){
+  const [jobTitle,setJobTitle] = useState(user.role||'');
+  const [phone,   setPhone]    = useState(user.phone||'');
+  const [status,  setStatus]   = useState(user.status||'on-site');
+  const [color,   setColor]    = useState(user.color||COLORS[0]);
   return(
-    <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,padding:28,width:460 }} onClick={e=>e.stopPropagation()}>
-      <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20 }}>
-        <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}>👷 Add Team Member</span>
-        <button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:20,cursor:"pointer" }}>✕</button>
+    <div style={{ display:'flex',flexDirection:'column',gap:14 }}>
+      <div><label style={LBL()}>Job Title</label>
+        <select value={jobTitle} onChange={e=>setJobTitle(e.target.value)} style={{ ...INP(),cursor:'pointer' }}>
+          <option value="">— Select —</option>
+          {ROLES.map(r=><option key={r}>{r}</option>)}
+        </select>
       </div>
-      {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"9px 12px",color:C.red,fontFamily:F,fontSize:12,marginBottom:14 }}>⚠ {err}</div>}
-      <div style={{ display:"flex",flexDirection:"column",gap:13 }}>
-        <div style={{ display:"flex",gap:12 }}>
-          <div style={{ flex:2 }}><label style={LBL()}>Name *</label><input style={INP()} value={name} onChange={e=>{setName(e.target.value);setErr("");}} placeholder="Full name"/></div>
-          <div style={{ flex:2 }}><label style={LBL()}>Role</label>
-            <select value={role} onChange={e=>setRole(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
-              {ROLES.map(r=><option key={r}>{r}</option>)}
-            </select>
-          </div>
-        </div>
-        <div style={{ display:"flex",gap:12 }}>
-          <div style={{ flex:1 }}><label style={LBL()}>Phone</label><input style={INP()} value={phone} onChange={e=>setPhone(e.target.value)} placeholder="+971 50 000 0000"/></div>
-          <div style={{ flex:1 }}><label style={LBL()}>Email</label><input style={INP()} value={email} onChange={e=>setEmail(e.target.value)} placeholder="name@company.com"/></div>
-        </div>
-        <div><label style={LBL()}>Assign to Project</label>
-          <select value={projId} onChange={e=>setProjId(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
-            {allProjects.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}
-          </select>
-        </div>
-        <div><label style={LBL()}>Status</label>
-          <div style={{ display:"flex",gap:7 }}>
-            {["on-site","remote"].map(s=>{const sm=SM[s]||{};return(
-              <button key={s} onClick={()=>setStatus(s)} style={{ flex:1,padding:"8px 0",borderRadius:7,cursor:"pointer",fontFamily:F,fontSize:11,fontWeight:700,border:status===s?`2px solid ${sm.color||C.green}`:`1px solid ${C.border}`,background:status===s?(sm.bg||C.greenDim):"transparent",color:status===s?(sm.color||C.green):C.muted }}>{sm.label||s}</button>
-            );})}
-          </div>
+      <div><label style={LBL()}>Phone</label>
+        <input style={INP()} value={phone} onChange={e=>setPhone(e.target.value)} placeholder="+971 50 000 0000"/>
+      </div>
+      <div><label style={LBL()}>Status</label>
+        <div style={{ display:'flex',gap:8 }}>
+          {[['on-site','On Site',C.green],['remote','Remote',C.purple]].map(([v,l,c])=>(
+            <button key={v} onClick={()=>setStatus(v)} style={{ flex:1,padding:'9px 0',borderRadius:7,cursor:'pointer',fontFamily:F,fontSize:12,fontWeight:700,border:status===v?`2px solid ${c}`:`1px solid ${C.border}`,background:status===v?c+'22':'transparent',color:status===v?c:C.muted }}>{l}</button>
+          ))}
         </div>
       </div>
-      <div style={{ display:"flex",gap:10,marginTop:22 }}>
-        <button onClick={submit} style={{ flex:1,background:C.accent,color:"#000",border:"none",padding:"12px 0",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer" }}>✓ Add Member</button>
-        <button onClick={onCancel} style={{ background:"transparent",color:C.muted,border:`1px solid ${C.border}`,padding:"12px 16px",borderRadius:8,fontFamily:F,fontSize:13,cursor:"pointer" }}>Cancel</button>
+      <div><label style={LBL()}>Avatar Color</label>
+        <div style={{ display:'flex',gap:8,flexWrap:'wrap' }}>
+          {COLORS.map(c=>(
+            <button key={c} onClick={()=>setColor(c)} style={{ width:32,height:32,borderRadius:'50%',background:c,border:color===c?`3px solid ${C.text}`:'3px solid transparent',cursor:'pointer' }}/>
+          ))}
+        </div>
+      </div>
+      <div style={{ display:'flex',gap:10,marginTop:8 }}>
+        <button onClick={()=>onSave({ job_title:jobTitle,phone,status,color })} style={{ flex:1,background:C.accent,color:'#000',border:'none',padding:'11px 0',borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:'pointer' }}>Save Changes</button>
+        <button onClick={onCancel} style={{ background:'transparent',color:C.muted,border:`1px solid ${C.border}`,padding:'11px 16px',borderRadius:8,fontFamily:F,fontSize:13,cursor:'pointer' }}>Cancel</button>
       </div>
     </div>
   );
 }
+
 
 // ─── Price Tracking Page ───────────────────────────────────────────────────────
 const MATERIALS = [
@@ -6161,6 +6199,7 @@ function AppInner({ session, profile, onLogout }){
     if(tab==="reports")    return <ReportPage tasks={tasks} allProjects={allProjects} allInvoices={allInvoices}/>;
     if(tab==="prices")     return <PriceTrackingPage/>;
     if(tab==="accountant") return <AccountantPage allProjects={allProjects} allInvoices={allInvoices} payments={payments}/>;
+    if(tab==="users") return <UsersPage currentUser={session.user} profile={profile}/>;
     return <div style={{ color:C.muted,fontFamily:F,fontSize:14,padding:"40px 0",textAlign:"center" }}>Coming soon…</div>;
   };
 
@@ -6187,7 +6226,10 @@ function AppInner({ session, profile, onLogout }){
           </div>
         </div>
         <nav style={{ flex:1,padding:"14px 10px",overflowY:"auto" }}>
-          {NAV.filter(n=>!profile||!profile.permissions||profile.permissions[n.id]!==false).map(n=>{
+          {[
+            ...NAV.filter(n=>!profile||!profile.permissions||profile.permissions[n.id]!==false),
+            ...(profile&&(profile.role==="superadmin"||profile.role==="admin")?[{id:"users",label:"User Management",IcComp:({c})=><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/><circle cx="19" cy="9" r="2.5"/><path d="M22 14h-1.5"/></svg>}]:[])
+          ].map(n=>{
             const active=tab===n.id;
             const color=active?C.accent:C.muted;
             return(

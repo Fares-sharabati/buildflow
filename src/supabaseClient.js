@@ -164,3 +164,44 @@ const from = (table) => {
 }
 
 export const supabase = { auth, from }
+
+// ─── Supabase Storage API ──────────────────────────────────────────────────────
+export const supabaseStorage = {
+  // Upload a File or Blob. path = e.g. "companyId/photos/projectId/filename.jpg"
+  upload: async (bucket, path, file) => {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${bucket}/${path}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${getToken() || SUPABASE_ANON_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Content-Type': file.type || 'application/octet-stream',
+          'x-upsert': 'true',
+        },
+        body: file,
+      })
+      if (!res.ok) { const e = await res.json(); return { data: null, error: e } }
+      const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${path}`
+      return { data: { path, publicUrl }, error: null }
+    } catch (e) { return { data: null, error: { message: e.message } } }
+  },
+
+  getPublicUrl: (bucket, path) =>
+    `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${path}`,
+
+  remove: async (bucket, paths) => {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${bucket}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${getToken() || SUPABASE_ANON_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prefixes: paths }),
+      })
+      if (!res.ok) { const e = await res.json(); return { error: e } }
+      return { error: null }
+    } catch (e) { return { error: { message: e.message } } }
+  },
+}

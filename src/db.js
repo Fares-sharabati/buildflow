@@ -326,3 +326,13 @@ export const mapLog = (row) => ({
   time:   new Date(row.created_at).toLocaleString('en-US', { month:'short', day:'numeric', hour:'numeric', minute:'2-digit' }),
   icon:   row.icon || '●',
 })
+
+// ── Project Files (photos, plans) ─────────────────────────────────────────────
+export const dbFiles = {
+  getByProject: (projectId, type) => {
+    const q = supabase.from('project_files').select('*').eq('project_id', projectId)
+    return type ? q.eq('type', type) : q
+  },
+  add: (row) => supabase.from('project_files').insert(row),
+  remove: (id) => supabase.from('project_files').delete().eq('id', id),
+}
