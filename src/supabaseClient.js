@@ -179,15 +179,18 @@ const from = (table) => {
         try {
           let url = `${SUPABASE_URL}/rest/v1/${table}?`
           _filters.forEach(f => { url += `${f}&` })
+          console.log('[BuildFlow] PATCH', url, patch)
           const res = await fetch(url, {
             method: 'PATCH',
             headers: await headersAsync({ 'Prefer': 'return=representation' }),
             body: JSON.stringify(patch),
           })
-          const data = await res.json()
-          if (!res.ok) return { data: null, error: data }
+          const text = await res.text()
+          console.log('[BuildFlow] PATCH response', res.status, text.slice(0, 200))
+          if (!res.ok) return { data: null, error: text }
+          const data = text ? JSON.parse(text) : []
           return { data, error: null }
-        } catch (e) { return { data: null, error: { message: e.message } } }
+        } catch (e) { console.error('[BuildFlow] PATCH error', e); return { data: null, error: { message: e.message } } }
       }
       const ub = { eq: (col,val) => { _filters.push(`${col}=eq.${encodeURIComponent(val)}`); return ub }, then: (resolve) => doUpdate().then(resolve) }
       return ub

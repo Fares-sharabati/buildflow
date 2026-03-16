@@ -35,25 +35,58 @@ export const dbProjects = {
     created_by:  _userId,
   }),
 
-  update: (id, patch) => {
-    // Map app-shaped patch to DB columns — only send what exists in the schema
+  update: async (id, patch) => {
     const dbPatch = {}
-    if (patch.name        !== undefined) dbPatch.name       = patch.name
-    if (patch.address     !== undefined) dbPatch.address    = patch.address
-    if (patch.status      !== undefined) dbPatch.status     = patch.status
-    if (patch.progress    !== undefined) dbPatch.progress   = Number(patch.progress) || 0
-    if (patch.phase       !== undefined) dbPatch.phase      = patch.phase
-    if (patch.location    !== undefined) dbPatch.location   = patch.location
-    if (patch.value       !== undefined) dbPatch.value      = Number(patch.value) || 0
-    if (patch.client      !== undefined) dbPatch.client     = patch.client
-    if (patch.projType    !== undefined) dbPatch.proj_type  = patch.projType
-    if (patch.startDateISO!== undefined) dbPatch.start_date = patch.startDateISO
-    if (patch.due         !== undefined) dbPatch.due_date   = patch.due
-    if (patch.dueFmt      !== undefined) dbPatch.due_fmt    = patch.dueFmt
-    if (patch.desc        !== undefined) dbPatch.description= patch.desc
-    return supabase.from('projects').update(dbPatch).eq('id', id).eq('company_id', cid())
-  },
+    if (patch.name        !== undefined) dbPatch.name        = patch.name
+    if (patch.address     !== undefined) dbPatch.address     = patch.address
+    if (patch.status      !== undefined) dbPatch.status      = patch.status
+    if (patch.progress    !== undefined) dbPatch.progress    = Number(patch.progress) || 0
+    if (patch.location    !== undefined) dbPatch.location    = patch.location
+    if (patch.value       !== undefined) dbPatch.value       = Number(patch.value) || 0
+    if (patch.client      !== undefined) dbPatch.client      = patch.client
+    if (patch.projType    !== undefined) dbPatch.proj_type   = patch.projType
+    if (patch.startDateISO!== undefined) dbPatch.start_date  = patch.startDateISO
+    if (patch.due         !== undefined) dbPatch.due_date    = patch.due
+    if (patch.dueFmt      !== undefined) dbPatch.due_fmt     = patch.dueFmt
+    if (patch.desc        !== undefined) dbPatch.description = patch.desc
 
+    const SURL = 'https://mghwscmrosxiymtdqvaa.supabase.co'
+    const SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1naHdzY21yb3N4aXltdGRxdmFhIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MzI2MTQzNSwiZXhwIjoyMDg4ODM3NDM1fQ.-NoIyr9Peh-IRfny32AdyjvPaZPgY32eAh2CQVgzA1Y'
+    
+    // Show exactly what we are sending
+    const url = `${SURL}/rest/v1/projects?id=eq.${id}`
+    console.log('[BF-UPDATE] id:', id, 'patch:', JSON.stringify(dbPatch), 'url:', url)
+    
+    try {
+      const res = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SERVICE_KEY,
+          'Authorization': `Bearer ${SERVICE_KEY}`,
+          'Prefer': 'return=representation',
+        },
+        body: JSON.stringify(dbPatch),
+      })
+      const text = await res.text()
+      console.log('[BF-UPDATE] response status:', res.status, 'body:', text.slice(0, 500))
+      
+      if (!res.ok) {
+        window._BF_LAST_ERROR = `HTTP ${res.status}: ${text}`
+        return { data: null, error: text }
+      }
+      
+      const data = text ? JSON.parse(text) : []
+      const rowsAffected = Array.isArray(data) ? data.length : 1
+      console.log('[BF-UPDATE] rows affected:', rowsAffected)
+      window._BF_LAST_UPDATE = { id, patch: dbPatch, rows: rowsAffected, data }
+      return { data, error: null }
+    } catch(e) {
+      console.error('[BF-UPDATE] EXCEPTION:', e.message)
+      window._BF_LAST_ERROR = e.message
+      return { data: null, error: e.message }
+    }
+  },
   delete: (id) => supabase.from('projects').delete().eq('id', id).eq('company_id', cid()),
 }
 

@@ -409,18 +409,46 @@ function usePayments(){
 function useProjects(){
   const cid = useCompany();
   const [projects,setProjects]=useState(null);
+  const savingRef = React.useRef(false); // pause poll during save
+
   const load=useCallback(async()=>{
     if(!cid) return;
+    if(savingRef.current) return; // skip poll while a save is in progress
     const {data,error}=await dbProjects.getAll();
     if(!error&&data) setProjects(data.map(mapProject));
   },[cid]);
+
   useEffect(()=>{ load(); const t=setInterval(load,POLL_MS); return()=>clearInterval(t); },[load]);
+
+  const loadFresh=async()=>{
+    // Force load regardless of savingRef - used after save completes
+    if(!cid) return;
+    const {data,error}=await dbProjects.getAll();
+    if(!error&&data) setProjects(data.map(mapProject));
+  };
+
   return{
     allProjects:projects||[], extraProjects:projects||[], ready:projects!==null,
-    addProject:    async(p)=>{ await dbProjects.add(p); load(); },
-    updateProject: async(id,patch)=>{ await dbProjects.update(id,patch); load(); },
-    deleteProject: async(id)=>{ await dbProjects.delete(id); load(); },
-    refreshProjects: load,
+    addProject: async(p)=>{
+      savingRef.current = true;
+      try{ await dbProjects.add(p); await loadFresh(); }
+      finally{ savingRef.current = false; }
+    },
+    updateProject: async(id,patch)=>{
+      savingRef.current = true;
+      try{
+        await dbProjects.update(id,patch);
+        // Small delay so Supabase fully commits before we read back
+        await new Promise(r=>setTimeout(r,300));
+        await loadFresh();
+      } finally{ savingRef.current = false; }
+    },
+    deleteProject: async(id)=>{
+      savingRef.current = true;
+      try{ await dbProjects.delete(id); await loadFresh(); }
+      finally{ savingRef.current = false; }
+    },
+    refreshProjects: loadFresh,
   };
 }
 
@@ -3098,7 +3126,7 @@ function ReportPage({ tasks, allProjects, allInvoices }){
               </div>
             </div>
             <div style={{ display:"flex",gap:24,marginTop:22,flexWrap:"wrap" }}>
-              {[["Phase",report.project.phase],["Progress",report.project.progress+"%"],["Contract Value","$"+report.project.value.toLocaleString()],["Client",report.project.client?.name||report.project.client?.company||"—"],["Due",report.project.dueFmt]].map(([k,v])=>(
+              {[["Progress",report.project.progress+"%"],["Contract Value","$"+report.project.value.toLocaleString()],["Client",report.project.client?.name||report.project.client?.company||"—"],["Due",report.project.dueFmt]].map(([k,v])=>(
                 <div key={k}><div style={{ color:C.muted,fontFamily:F,fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:.5 }}>{k}</div><div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:14,marginTop:3 }}>{v}</div></div>
               ))}
             </div>
@@ -3251,7 +3279,7 @@ function CalendarPage({ allInvoices,tasks,onAddTask,projectEvents=[],payments=[]
                 :sel.type==="payment"
                 ?[["Project",sel.detail.project||"—"],["Amount",`$${Number(sel.detail.amount||0).toLocaleString()}`],["Date",sel.detail.dateFmt||sel.detail.date||"—"],["Method",sel.detail.method||"—"],["Invoice Ref",sel.detail.invRef||"—"],["Notes",sel.detail.notes||"—"]].map(([k,v])=><div key={k} style={{ display:"flex",justifyContent:"space-between",marginBottom:8 }}><span style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{k}</span><span style={{ color:k==="Amount"?C.green:C.text,fontFamily:F,fontSize:12,fontWeight:600,maxWidth:"60%",textAlign:"right" }}>{v}</span></div>)
                 :sel.type==="project"
-                ?[["Project",sel.detail.name],["Client",sel.detail.client?.name||"—"],["Phase",sel.detail.phase||"—"],["Start",sel.detail.startDate||"—"],["Due",sel.detail.dueFmt||"—"],["Status",sel.detail.status||"—"],["Type",sel.detail.projType==="business"?"🏢 Business":sel.detail.projType==="customer"?"👤 Customer":"—"]].map(([k,v])=><div key={k} style={{ display:"flex",justifyContent:"space-between",marginBottom:8 }}><span style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{k}</span><span style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,maxWidth:"60%",textAlign:"right" }}>{v}</span></div>)
+                ?[["Project",sel.detail.name],["Client",sel.detail.client?.name||"—"],["Start",sel.detail.startDate||"—"],["Due",sel.detail.dueFmt||"—"],["Status",sel.detail.status||"—"],["Type",sel.detail.projType==="business"?"🏢 Business":sel.detail.projType==="customer"?"👤 Customer":"—"]].map(([k,v])=><div key={k} style={{ display:"flex",justifyContent:"space-between",marginBottom:8 }}><span style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{k}</span><span style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,maxWidth:"60%",textAlign:"right" }}>{v}</span></div>)
                 :[["Task",sel.detail.title],["Member",sel.detail.member],["Project",sel.detail.project],["Date",sel.detail.date],["Status",sel.detail.status||"pending"],["Description",sel.detail.desc||"—"]].map(([k,v])=><div key={k} style={{ display:"flex",justifyContent:"space-between",marginBottom:8 }}><span style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{k}</span><span style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,maxWidth:"60%",textAlign:"right" }}>{v}</span></div>)
               }
             </div>
@@ -3698,7 +3726,7 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
                     <>
                       <div style={{ display:"flex",justifyContent:"space-between",marginBottom:8,flexWrap:"wrap",gap:8 }}>
                         <div style={{ display:"flex",gap:22,flexWrap:"wrap" }}>
-                          {[["Phase",project.phase],["Started",project.startDate||project.startDateFmt||"—"],["Due",project.dueFmt]].map(([k,v])=>(
+                          {[["Started",project.startDate||project.startDateFmt||"—"],["Due",project.dueFmt]].map(([k,v])=>(
                             <div key={k}><div style={{ color:C.muted,fontFamily:F,fontSize:10,fontWeight:700,textTransform:"uppercase" }}>{k}</div><div style={{ color:C.text,fontFamily:F,fontSize:13,fontWeight:600,marginTop:2 }}>{v}</div></div>
                           ))}
                           {days!==null&&(
@@ -3874,7 +3902,6 @@ function EditProjectModal({ project, onConfirm, onCancel }){
   const [endISO,setEndISO]     = useState(project.due||"");
   const [projType,setProjType] = useState(project.projType||"business");
   const [value,setValue]       = useState(String(project.value||""));
-  const [phase,setPhase]       = useState(project.phase||"");
   const [status,setStatus]     = useState(project.status||"active");
   const [contacts,setContacts] = useState(project.contacts?.length ? project.contacts : [emptyContact()]);
   const [step,setStep]         = useState(1);
@@ -3901,7 +3928,7 @@ function EditProjectModal({ project, onConfirm, onCancel }){
       name:name.trim(), address:address.trim(), desc:desc.trim(),
       startDateISO:startISO, due:endISO,
       startDate:fmtD(startISO), dueFmt:fmtD(endISO),
-      projType, status, phase:phase||project.phase||"Active",
+      projType, status,
       value:parseFloat(value)||project.value||0,
       location:address.trim().split(",")[0]||"",
       client:{ name:primaryClient.name, company:primaryClient.company||"", phone:primaryClient.phone||"", email:primaryClient.email||"", initials },
@@ -3910,7 +3937,6 @@ function EditProjectModal({ project, onConfirm, onCancel }){
   };
 
   const PROJ_STATUSES=[{v:"active",l:"Active",c:C.green},{v:"quoting",l:"Quoting",c:C.blue},{v:"on-hold",l:"On Hold",c:C.accent},{v:"completed",l:"Completed",c:C.purple}];
-  const PHASES=["Quoting","Planning","Foundation","Framing","Electrical","Plumbing","Finishing","Completed"];
   const STEPS=[["1","Project Info"],["2","Timeline & Type"],["3","Contacts"]];
 
   return(
@@ -3951,15 +3977,8 @@ function EditProjectModal({ project, onConfirm, onCancel }){
               <div><label style={LBL()}>Project Address *</label><input style={INP()} value={address} onChange={e=>{setAddress(e.target.value);setErr("");}}/></div>
               <div><label style={LBL()}>Description <span style={{color:C.muted,fontWeight:400}}>(optional)</span></label>
                 <textarea style={{ ...INP(),resize:"none",lineHeight:1.55 }} rows={3} value={desc} onChange={e=>setDesc(e.target.value)}/></div>
-              <div style={{ display:"flex",gap:12 }}>
-                <div style={{ flex:1 }}><label style={LBL()}>Contract Value</label>
-                  <input style={INP()} type="number" value={value} onChange={e=>setValue(e.target.value)} placeholder="0.00"/>
-                </div>
-                <div style={{ flex:1 }}><label style={LBL()}>Current Phase</label>
-                  <select value={phase} onChange={e=>setPhase(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
-                    {PHASES.map(p=><option key={p} value={p}>{p}</option>)}
-                  </select>
-                </div>
+              <div><label style={LBL()}>Contract Value</label>
+                <input style={INP()} type="number" value={value} onChange={e=>setValue(e.target.value)} placeholder="0.00" onWheel={e=>e.target.blur()}/>
               </div>
               <div><label style={LBL()}>Project Status</label>
                 <div style={{ display:"flex",gap:8,flexWrap:"wrap" }}>
@@ -4098,7 +4117,7 @@ function NewProjectModal({ onConfirm, onCancel }){
       id:newId, name:name.trim(), address:address.trim(), desc:desc.trim(),
       startDateISO:startISO, due:endISO,
       startDate:fmtD(startISO), dueFmt:fmtD(endISO),
-      projType, status:projStatus, progress:0, phase:projStatus.charAt(0).toUpperCase()+projStatus.slice(1),
+      projType, status:projStatus, progress:0,
       value:0, location:address.trim().split(",")[0]||"",
       client:{ name:primaryClient.name, company:primaryClient.company||"", phone:primaryClient.phone||"", email:primaryClient.email||"", initials },
       contacts:validContacts,
@@ -4269,7 +4288,12 @@ function ProjectsList({ onSelect, allProjects, onAddProject, onUpdateProject, on
   const [editingProj,setEditingProj]=useState(null);
   const [confirmPatch,setConfirmPatch]=useState(null); // {proj, patch}
   const [confirmDelete,setConfirmDelete]=useState(null); // project to delete
-  const handleCreate=async(proj)=>{ await onAddProject(proj); setShowNew(false); onSelect(proj); };
+  const handleCreate=async(proj)=>{
+    await onAddProject(proj);
+    setShowNew(false);
+    // Don't navigate yet — onAddProject triggers load() which updates allProjects
+    // The ProjectsList re-renders with real UUIDs, user clicks the project to open it
+  };
   return(
     <div>
       {showNew&&<NewProjectModal onConfirm={handleCreate} onCancel={()=>setShowNew(false)}/>}
@@ -4323,7 +4347,7 @@ function ProjectsList({ onSelect, allProjects, onAddProject, onUpdateProject, on
                     <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:16 }}>{p.name}</div>
                     {p.projType&&<span style={{ background:p.projType==="business"?C.purpleDim:C.blueDim,color:p.projType==="business"?C.purple:C.blue,padding:"2px 8px",borderRadius:4,fontSize:10,fontWeight:700,fontFamily:F }}>{p.projType==="business"?"🏢 Business":"👤 Customer"}</span>}
                   </div>
-                  <div style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{p.client.name} · {p.location||p.address} · Due: {p.dueFmt} · {p.phase}</div>
+                  <div style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{p.client.name} · {p.location||p.address} · Due: {p.dueFmt}</div>
                   {p.desc&&<div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:3,fontStyle:"italic" }}>{p.desc.slice(0,80)}{p.desc.length>80?"…":""}</div>}
                 </div>
                 {/* Right: value + status + edit icon — all on one line */}
@@ -4356,8 +4380,7 @@ function ProjectsList({ onSelect, allProjects, onAddProject, onUpdateProject, on
                 return pct>0?(
                   <div style={{ marginTop:10 }}>
                     <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:5 }}>
-                      <span style={{ color:C.muted,fontFamily:F,fontSize:11 }}>{p.phase}</span>
-                      <div style={{ display:"flex",alignItems:"center",gap:8 }}>
+                                      <div style={{ display:"flex",alignItems:"center",gap:8 }}>
                         {days!==null&&<span style={{ color:overdue?C.red:days<=7?C.accent:C.green,fontFamily:F,fontSize:11,fontWeight:700 }}>{p.status==="completed"?"Done":overdue?`${Math.abs(days)}d overdue`:`${days}d left`}</span>}
                         <span style={{ color:p.status==="completed"?C.green:overdue?C.red:C.accent,fontFamily:F,fontWeight:700,fontSize:12 }}>{pct}%</span>
                       </div>
@@ -4414,7 +4437,7 @@ function DashWidget({ widgetId, type, allProjects, allInvoices, payments, tasks,
               </div>
               <Bar pct={pct} color={ov?C.red:p.status==="completed"?C.green:C.accent}/>
               <div style={{ color:ov?C.red:C.muted,fontFamily:F,fontSize:11,marginTop:4,display:"flex",gap:8 }}>
-                <span>{p.phase||p.status}</span>
+                <span style={{textTransform:"capitalize"}}>{p.status}</span>
                 <span>·</span>
                 <span>Due: {p.dueFmt||"—"}</span>
                 {ov&&<span style={{color:C.red,fontWeight:700}}>⚠ Overdue</span>}
@@ -5962,7 +5985,7 @@ Analyze the following financial data and write a professional Accountant's Repor
 PROJECT: ${project.name}
 Client: ${project.client?.company||project.client?.name||"N/A"}
 Contract Value: ${fmtCurS(metrics.projectValue, currency)}
-Status: ${project.status} | Phase: ${project.phase||"N/A"}
+Status: ${project.status}
 
 INVOICES: Total ${fmtCurS(metrics.totalInvoiced, currency)} (${metrics.invoiceCount} invoices)
   Paid: ${fmtCurS(metrics.totalPaid, currency)} | Overdue: ${fmtCurS(metrics.totalOverdue, currency)} | Pending: ${fmtCurS(metrics.totalPending, currency)}
@@ -6337,9 +6360,11 @@ function AppInner({ session, profile, onLogout }){
   const [tab,setTab]=useState("projects");
   const [project,setProject]=useState(null);
   const [subView,setSubView]=useState("list");
+  const allProjectsRef = React.useRef([]);
   const [teamLog,setTeamLog]=useState([]);
   const { tasks,addTask,updateTask,removeTask }=useTasks();
   const { allProjects, addProject, updateProject, deleteProject, refreshProjects }=useProjects();
+  React.useEffect(()=>{ allProjectsRef.current = allProjects; }, [allProjects]);
   const { log:globalLog, push:pushGlobal }=useGlobalLog();
   const { payments,addPayment,removePayment,updatePayment }=usePayments();
   // ── Lifted global invoices so ALL sections share one source of truth ──
@@ -6347,13 +6372,7 @@ function AppInner({ session, profile, onLogout }){
 
   const goToDetail =p=>{ setProject(p); setSubView("detail"); setTab("projects"); };
 
-  // Keep local project state in sync with allProjects after any refresh
-  useEffect(()=>{
-    if(project && allProjects.length){
-      const fresh = allProjects.find(p=>p.id===project.id);
-      if(fresh) setProject(fresh);
-    }
-  },[allProjects]);
+
   const goToTeam   =()=>setSubView("team");
   const teamBack   =dest=>{ if(dest==="projects"){setSubView("list");setProject(null);}else setSubView("detail"); };
   const detailBack =()=>{ setSubView("list"); setProject(null); };
@@ -6394,14 +6413,12 @@ function AppInner({ session, profile, onLogout }){
 
   const handleAddProject=async(proj)=>{
     await addProject(proj);
-    await pushGlobal({ id:Date.now(), action:`Project "${proj.name}" created`, detail:proj.name, user:profile?.full_name||"User", time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}), icon:"🏗" });
+    try{ await pushGlobal({ id:Date.now(), action:`Project "${proj.name}" created`, detail:proj.name, user:profile?.full_name||"User", time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}), icon:"🏗" }); }catch(_){}
   };
   const handleUpdateProject=async(id,patch)=>{
+    // updateProject now awaits load() — allProjects is fresh when this returns
     await updateProject(id,patch);
-    // Force immediate refresh so allProjects reflects the new data
-    await refreshProjects();
-    const p=allProjects.find(x=>x.id===id);
-    try{ await pushGlobal({ id:Date.now(), action:`Project "${p?.name||id}" updated`, detail:p?.name||"", user:profile?.full_name||"User", time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}), icon:"✏️" }); }catch(_){}
+    try{ await pushGlobal({ id:Date.now(), action:`Project updated`, detail:"", user:profile?.full_name||"User", time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}), icon:"✏️" }); }catch(_){}
   };
 
   const handleDeleteProject=async(proj)=>{
@@ -6435,7 +6452,12 @@ function AppInner({ session, profile, onLogout }){
   const screen=()=>{
     if(tab==="projects"){
       if(subView==="team"&&project)   return <TeamPage project={project} onBack={teamBack} onAddToLog={handleTeamLog} tasks={tasks} updateTask={updateTask}/>;
-      if(subView==="detail"&&project) return <ProjectPage project={project} onBack={detailBack} onOpenTeam={goToTeam} extraLog={[...teamLog,...globalLog.filter(e=>e.detail===project.name)]} payments={payments} addPayment={handleAddPayment} updatePayment={handleUpdatePayment} removePayment={handleRemovePayment} allProjects={allProjects} allInvoices={allInvoices} addInvoice={handleAddInvoice} removeGlobalInvoice={handleRemoveInvoice} updateGlobalInvoice={handleUpdateInvoice} onUpdateProject={async(id,patch)=>{ await handleUpdateProject(id,patch); setProject(p=>({...p,...patch})); }} onLog={pushGlobal} profile={profile}/>;
+      if(subView==="detail"&&project) return <ProjectPage project={project} onBack={detailBack} onOpenTeam={goToTeam} extraLog={[...teamLog,...globalLog.filter(e=>e.detail===project.name)]} payments={payments} addPayment={handleAddPayment} updatePayment={handleUpdatePayment} removePayment={handleRemovePayment} allProjects={allProjects} allInvoices={allInvoices} addInvoice={handleAddInvoice} removeGlobalInvoice={handleRemoveInvoice} updateGlobalInvoice={handleUpdateInvoice} onUpdateProject={async(id,patch)=>{
+                    await handleUpdateProject(id,patch);
+                    // Use ref — always has latest allProjects, no stale closure
+                    const fresh = allProjectsRef.current.find(p=>p.id===id);
+                    if(fresh) setProject(fresh);
+                  }} onLog={pushGlobal} profile={profile}/>;
       return <ProjectsList onSelect={goToDetail} allProjects={allProjects} onAddProject={handleAddProject} onUpdateProject={handleUpdateProject} onDeleteProject={handleDeleteProject}/>;
     }
     if(tab==="dashboard") return <Dashboard
