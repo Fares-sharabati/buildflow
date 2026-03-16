@@ -35,7 +35,24 @@ export const dbProjects = {
     created_by:  _userId,
   }),
 
-  update: (id, patch) => supabase.from('projects').update(patch).eq('id', id).eq('company_id', cid()),
+  update: (id, patch) => {
+    // Map app-shaped patch to DB columns — only send what exists in the schema
+    const dbPatch = {}
+    if (patch.name        !== undefined) dbPatch.name       = patch.name
+    if (patch.address     !== undefined) dbPatch.address    = patch.address
+    if (patch.status      !== undefined) dbPatch.status     = patch.status
+    if (patch.progress    !== undefined) dbPatch.progress   = Number(patch.progress) || 0
+    if (patch.phase       !== undefined) dbPatch.phase      = patch.phase
+    if (patch.location    !== undefined) dbPatch.location   = patch.location
+    if (patch.value       !== undefined) dbPatch.value      = Number(patch.value) || 0
+    if (patch.client      !== undefined) dbPatch.client     = patch.client
+    if (patch.projType    !== undefined) dbPatch.proj_type  = patch.projType
+    if (patch.startDateISO!== undefined) dbPatch.start_date = patch.startDateISO
+    if (patch.due         !== undefined) dbPatch.due_date   = patch.due
+    if (patch.dueFmt      !== undefined) dbPatch.due_fmt    = patch.dueFmt
+    if (patch.desc        !== undefined) dbPatch.description= patch.desc
+    return supabase.from('projects').update(dbPatch).eq('id', id).eq('company_id', cid())
+  },
 
   delete: (id) => supabase.from('projects').delete().eq('id', id).eq('company_id', cid()),
 }

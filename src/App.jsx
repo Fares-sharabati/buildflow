@@ -417,9 +417,10 @@ function useProjects(){
   useEffect(()=>{ load(); const t=setInterval(load,POLL_MS); return()=>clearInterval(t); },[load]);
   return{
     allProjects:projects||[], extraProjects:projects||[], ready:projects!==null,
-    addProject:   async(p)=>{ await dbProjects.add(p); load(); },
-    updateProject:async(id,patch)=>{ await dbProjects.update(id,patch); load(); },
-    deleteProject:async(id)=>{ await dbProjects.delete(id); load(); },
+    addProject:    async(p)=>{ await dbProjects.add(p); load(); },
+    updateProject: async(id,patch)=>{ await dbProjects.update(id,patch); load(); },
+    deleteProject: async(id)=>{ await dbProjects.delete(id); load(); },
+    refreshProjects: load,
   };
 }
 
@@ -6338,13 +6339,21 @@ function AppInner({ session, profile, onLogout }){
   const [subView,setSubView]=useState("list");
   const [teamLog,setTeamLog]=useState([]);
   const { tasks,addTask,updateTask,removeTask }=useTasks();
-  const { allProjects, addProject, updateProject, deleteProject }=useProjects();
+  const { allProjects, addProject, updateProject, deleteProject, refreshProjects }=useProjects();
   const { log:globalLog, push:pushGlobal }=useGlobalLog();
   const { payments,addPayment,removePayment,updatePayment }=usePayments();
   // ── Lifted global invoices so ALL sections share one source of truth ──
   const { allInvoices, ready:invReady, addInvoice, updateInvoice, removeInvoice }=useGlobalInvoices();
 
   const goToDetail =p=>{ setProject(p); setSubView("detail"); setTab("projects"); };
+
+  // Keep local project state in sync with allProjects after any refresh
+  useEffect(()=>{
+    if(project && allProjects.length){
+      const fresh = allProjects.find(p=>p.id===project.id);
+      if(fresh) setProject(fresh);
+    }
+  },[allProjects]);
   const goToTeam   =()=>setSubView("team");
   const teamBack   =dest=>{ if(dest==="projects"){setSubView("list");setProject(null);}else setSubView("detail"); };
   const detailBack =()=>{ setSubView("list"); setProject(null); };
@@ -6389,8 +6398,10 @@ function AppInner({ session, profile, onLogout }){
   };
   const handleUpdateProject=async(id,patch)=>{
     await updateProject(id,patch);
+    // Force immediate refresh so allProjects reflects the new data
+    await refreshProjects();
     const p=allProjects.find(x=>x.id===id);
-    await pushGlobal({ id:Date.now(), action:`Project "${p?.name||id}" updated`, detail:p?.name||"", user:profile?.full_name||"User", time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}), icon:"✏️" });
+    try{ await pushGlobal({ id:Date.now(), action:`Project "${p?.name||id}" updated`, detail:p?.name||"", user:profile?.full_name||"User", time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}), icon:"✏️" }); }catch(_){}
   };
 
   const handleDeleteProject=async(proj)=>{
