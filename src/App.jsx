@@ -409,46 +409,32 @@ function usePayments(){
 function useProjects(){
   const cid = useCompany();
   const [projects,setProjects]=useState(null);
-  const savingRef = React.useRef(false); // pause poll during save
 
+  // load() returns the fresh array so callers can use it directly
+  // without relying on any closure or ref (avoids stale data bugs)
   const load=useCallback(async()=>{
-    if(!cid) return;
-    if(savingRef.current) return; // skip poll while a save is in progress
+    if(!cid) return null;
     const {data,error}=await dbProjects.getAll();
-    if(!error&&data) setProjects(data.map(mapProject));
+    if(!error&&data){
+      const fresh=data.map(mapProject);
+      setProjects(fresh);
+      return fresh;
+    }
+    return null;
   },[cid]);
 
   useEffect(()=>{ load(); const t=setInterval(load,POLL_MS); return()=>clearInterval(t); },[load]);
 
-  const loadFresh=async()=>{
-    // Force load regardless of savingRef - used after save completes
-    if(!cid) return;
-    const {data,error}=await dbProjects.getAll();
-    if(!error&&data) setProjects(data.map(mapProject));
-  };
-
   return{
     allProjects:projects||[], extraProjects:projects||[], ready:projects!==null,
-    addProject: async(p)=>{
-      savingRef.current = true;
-      try{ await dbProjects.add(p); await loadFresh(); }
-      finally{ savingRef.current = false; }
-    },
+    addProject:    async(p)=>{ await dbProjects.add(p); await load(); },
     updateProject: async(id,patch)=>{
-      savingRef.current = true;
-      try{
-        await dbProjects.update(id,patch);
-        // Small delay so Supabase fully commits before we read back
-        await new Promise(r=>setTimeout(r,300));
-        await loadFresh();
-      } finally{ savingRef.current = false; }
+      await dbProjects.update(id,patch);
+      const fresh = await load(); // load() returns the new array directly
+      return fresh ? fresh.find(p=>p.id===id) || null : null;
     },
-    deleteProject: async(id)=>{
-      savingRef.current = true;
-      try{ await dbProjects.delete(id); await loadFresh(); }
-      finally{ savingRef.current = false; }
-    },
-    refreshProjects: loadFresh,
+    deleteProject: async(id)=>{ await dbProjects.delete(id); await load(); },
+    refreshProjects: load,
   };
 }
 
@@ -6360,11 +6346,9 @@ function AppInner({ session, profile, onLogout }){
   const [tab,setTab]=useState("projects");
   const [project,setProject]=useState(null);
   const [subView,setSubView]=useState("list");
-  const allProjectsRef = React.useRef([]);
   const [teamLog,setTeamLog]=useState([]);
   const { tasks,addTask,updateTask,removeTask }=useTasks();
   const { allProjects, addProject, updateProject, deleteProject, refreshProjects }=useProjects();
-  React.useEffect(()=>{ allProjectsRef.current = allProjects; }, [allProjects]);
   const { log:globalLog, push:pushGlobal }=useGlobalLog();
   const { payments,addPayment,removePayment,updatePayment }=usePayments();
   // ── Lifted global invoices so ALL sections share one source of truth ──
@@ -6416,9 +6400,10 @@ function AppInner({ session, profile, onLogout }){
     try{ await pushGlobal({ id:Date.now(), action:`Project "${proj.name}" created`, detail:proj.name, user:profile?.full_name||"User", time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}), icon:"🏗" }); }catch(_){}
   };
   const handleUpdateProject=async(id,patch)=>{
-    // updateProject now awaits load() — allProjects is fresh when this returns
-    await updateProject(id,patch);
+    // updateProject returns the fresh project directly from DB
+    const freshProject = await updateProject(id,patch);
     try{ await pushGlobal({ id:Date.now(), action:`Project updated`, detail:"", user:profile?.full_name||"User", time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}), icon:"✏️" }); }catch(_){}
+    return freshProject;
   };
 
   const handleDeleteProject=async(proj)=>{
@@ -6453,10 +6438,8 @@ function AppInner({ session, profile, onLogout }){
     if(tab==="projects"){
       if(subView==="team"&&project)   return <TeamPage project={project} onBack={teamBack} onAddToLog={handleTeamLog} tasks={tasks} updateTask={updateTask}/>;
       if(subView==="detail"&&project) return <ProjectPage project={project} onBack={detailBack} onOpenTeam={goToTeam} extraLog={[...teamLog,...globalLog.filter(e=>e.detail===project.name)]} payments={payments} addPayment={handleAddPayment} updatePayment={handleUpdatePayment} removePayment={handleRemovePayment} allProjects={allProjects} allInvoices={allInvoices} addInvoice={handleAddInvoice} removeGlobalInvoice={handleRemoveInvoice} updateGlobalInvoice={handleUpdateInvoice} onUpdateProject={async(id,patch)=>{
-                    await handleUpdateProject(id,patch);
-                    // Use ref — always has latest allProjects, no stale closure
-                    const fresh = allProjectsRef.current.find(p=>p.id===id);
-                    if(fresh) setProject(fresh);
+                    const freshProject = await handleUpdateProject(id,patch);
+                    if(freshProject) setProject(freshProject);
                   }} onLog={pushGlobal} profile={profile}/>;
       return <ProjectsList onSelect={goToDetail} allProjects={allProjects} onAddProject={handleAddProject} onUpdateProject={handleUpdateProject} onDeleteProject={handleDeleteProject}/>;
     }
