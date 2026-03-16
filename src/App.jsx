@@ -1733,26 +1733,20 @@ function PlansPanel({ project,onActivity }){
 
 function TeamPanel({ project,onOpenTeamPage }){
   const { members,ready,addMember }=useTeam(project.id);
-  const [showAdd,setShowAdd]=useState(false);
-  const [tmName,setTmName]=useState(""); const [tmRole,setTmRole]=useState(ROLES[0]);
-  const [tmPhone,setTmPhone]=useState(""); const [tmStatus,setTmStatus]=useState("on-site");
-  const [tmErr,setTmErr]=useState("");
-  const MCOLORS_LIST=[C.blue,C.purple,C.green,C.accent,"#f43f5e","#06b6d4","#84cc16"];
+  const [showAddSystem,setShowAddSystem]=useState(false);
 
-  const submitMember=async()=>{
-    if(!tmName.trim()){setTmErr("Name is required");return;}
-    if(!tmPhone.trim()){setTmErr("Phone is required");return;}
-    const color=MCOLORS_LIST[Math.floor(Math.random()*MCOLORS_LIST.length)];
-    const init=tmName.trim().split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();
-    await addMember({ id:`m${Date.now()}`,name:tmName.trim(),role:tmRole,phone:tmPhone.trim(),status:tmStatus,color,init,projId:project.id,projectName:project.name,type:"employee" });
-    setShowAdd(false);
-  };
+  const handleAdd=async(m)=>{ await addMember(m); setShowAddSystem(false); };
 
   if(!ready)return <div style={{ color:C.muted,fontFamily:F,fontSize:12,padding:"14px 0",textAlign:"center" }}>Loading…</div>;
   return(
     <div>
-      {!showAdd&&members.length===0&&<div style={{ color:C.muted,fontFamily:F,fontSize:12,padding:"12px 0",textAlign:"center" }}>No team members yet</div>}
-      {!showAdd&&members.length>0&&(
+      {showAddSystem&&<AddSystemMemberModal project={project} currentMembers={members} onConfirm={handleAdd} onCancel={()=>setShowAddSystem(false)}/>}
+      {members.length===0&&(
+        <div style={{ border:`2px dashed ${C.border}`,borderRadius:9,padding:"20px",textAlign:"center",color:C.muted,fontFamily:F,fontSize:12,marginBottom:12 }}>
+          <div style={{ fontSize:28,marginBottom:6 }}>👷</div>No team members yet
+        </div>
+      )}
+      {members.length>0&&(
         <div style={{ display:"flex",flexDirection:"column",gap:8,marginBottom:12 }}>
           {members.slice(0,4).map(m=>(
             <div key={m.id} style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,padding:"10px 14px",display:"flex",alignItems:"center",gap:12 }}>
@@ -1764,9 +1758,10 @@ function TeamPanel({ project,onOpenTeamPage }){
           {members.length>4&&<div style={{ color:C.muted,fontFamily:F,fontSize:11,textAlign:"center",padding:"4px 0" }}>+{members.length-4} more</div>}
         </div>
       )}
-      <div style={{ display:"flex",gap:8 }}>
-            <button onClick={onOpenTeamPage} style={{ background:"transparent",color:C.text,border:`1px solid ${C.border}`,padding:"9px 16px",borderRadius:7,fontFamily:F,fontWeight:600,fontSize:13,cursor:"pointer" }}>Full Team →</button>
-          </div>
+      <div style={{ display:"flex",gap:8,flexWrap:"wrap" }}>
+        <button onClick={()=>setShowAddSystem(true)} style={{ background:C.green,color:"#000",border:"none",padding:"9px 16px",borderRadius:7,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:6 }}>👷 + Add Member</button>
+        <button onClick={onOpenTeamPage} style={{ background:"transparent",color:C.text,border:`1px solid ${C.border}`,padding:"9px 16px",borderRadius:7,fontFamily:F,fontWeight:600,fontSize:13,cursor:"pointer" }}>Full Team →</button>
+      </div>
     </div>
   );
 }
