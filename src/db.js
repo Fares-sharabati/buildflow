@@ -48,7 +48,7 @@ export const dbProjects = {
     if (patch.startDateISO!== undefined) dbPatch.start_date  = patch.startDateISO
     if (patch.due         !== undefined) dbPatch.due_date    = patch.due
     if (patch.dueFmt      !== undefined) dbPatch.due_fmt     = patch.dueFmt
-    if (patch.desc        !== undefined) dbPatch.description = patch.desc
+    // 'description' column does not exist in projects table — desc is not sent
 
     const SURL = 'https://mghwscmrosxiymtdqvaa.supabase.co'
     const SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1naHdzY21yb3N4aXltdGRxdmFhIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MzI2MTQzNSwiZXhwIjoyMDg4ODM3NDM1fQ.-NoIyr9Peh-IRfny32AdyjvPaZPgY32eAh2CQVgzA1Y'
