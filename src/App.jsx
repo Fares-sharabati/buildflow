@@ -287,12 +287,14 @@ function useFiles(key) {
       if (!alive) return;
       if (!error && data) {
         setFiles(data.map(r => ({
-          id: r.id,
-          name: r.name,
-          size: r.size,
-          url: r.url,
+          id:          r.id,
+          name:        r.name,
+          size:        r.size,
+          url:         r.url,
           storagePath: r.storage_path,
-          uploadedAt: r.uploaded_at ? new Date(r.uploaded_at).toLocaleDateString() : '',
+          uploadedAt:  r.uploaded_at ? new Date(r.uploaded_at).toLocaleDateString() : '',
+          title:       r.title       || '',
+          description: r.description || '',
         })));
       }
       setReady(true);
@@ -309,13 +311,15 @@ function useFiles(key) {
     if (error) { console.error('Upload failed:', error); return; }
     // Save metadata to project_files table
     await dbFiles.add({
-      company_id: cid,
-      project_id: projectId,
+      company_id:  cid,
+      project_id:  projectId,
       type,
-      name: file.name,
-      size: file.size,
-      url: data.publicUrl,
+      name:        file.name,
+      size:        file.size,
+      url:         data.publicUrl,
       storage_path: path,
+      title:       file.title       || '',
+      description: file.description || '',
     });
     bump(v => v + 1);
   };
@@ -522,6 +526,69 @@ function ConfirmDialog({ title,message,children,onConfirm,onCancel,confirmLabel=
           <button onClick={onCancel} style={{ background:"transparent",color:C.muted,border:`1px solid ${C.border}`,padding:"9px 20px",borderRadius:8,fontFamily:F,fontSize:13,cursor:"pointer" }}>Cancel</button>
           <button onClick={onConfirm} style={{ background:color,color:"#fff",border:"none",padding:"9px 20px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer" }}>{confirmLabel}</button>
         </div>
+      </div>
+    </Overlay>
+  );
+}
+
+// ─── Activity Log Detail Modal ────────────────────────────────────────────────
+function ActivityLogModal({ entry, onClose }){
+  if(!entry) return null;
+
+  const iconColors = {
+    '🧾': C.accent, '💰': C.green, '✏️': C.blue, '🗑️': C.red,
+    '🏗': C.purple, '✅': C.green, '👷': C.blue, '📋': C.muted,
+  };
+  const iconBg = iconColors[entry.icon] || C.accent;
+
+  // Full date from createdAt, falling back to short display time
+  const fullDate = entry.createdAt
+    ? new Date(entry.createdAt).toLocaleString('en-US', {
+        weekday:'long', year:'numeric', month:'long',
+        day:'numeric', hour:'numeric', minute:'2-digit', hour12:true
+      })
+    : entry.time || '—';
+
+  const Field = ({ icon, label, value, color }) => value ? (
+    <div style={{ display:"flex",gap:12,alignItems:"flex-start",padding:"11px 14px",background:C.surface,borderRadius:9,border:`1px solid ${C.border}` }}>
+      <div style={{ width:30,textAlign:"center",fontSize:16,flexShrink:0 }}>{icon}</div>
+      <div style={{ flex:1,minWidth:0 }}>
+        <div style={{ color:C.muted,fontFamily:F,fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:2 }}>{label}</div>
+        <div style={{ color:color||C.text,fontFamily:F,fontSize:13,fontWeight:600,wordBreak:"break-word" }}>{value}</div>
+      </div>
+    </div>
+  ) : null;
+
+  return(
+    <Overlay onClose={onClose}>
+      <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,padding:28,width:480,maxWidth:"95vw",boxShadow:"0 24px 60px rgba(0,0,0,.5)" }}>
+
+        {/* Header */}
+        <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:20 }}>
+          <div style={{ display:"flex",alignItems:"center",gap:12 }}>
+            <div style={{ width:44,height:44,borderRadius:12,background:iconBg+"22",border:`1px solid ${iconBg}44`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0 }}>
+              {entry.icon||"📋"}
+            </div>
+            <div>
+              <div style={{ color:C.muted,fontFamily:F,fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.06em",marginBottom:3 }}>Activity Detail</div>
+              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:16,lineHeight:1.3,maxWidth:300 }}>{entry.action||"—"}</div>
+            </div>
+          </div>
+          <button onClick={onClose} style={{ background:"transparent",border:"none",color:C.muted,fontSize:20,cursor:"pointer",lineHeight:1,padding:4,flexShrink:0 }}>✕</button>
+        </div>
+
+        <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
+          <Field icon="👤" label="Performed by"    value={entry.user||"Unknown"} />
+          <Field icon="🕐" label="Date & Time"     value={fullDate} />
+          <Field icon="🏗" label="Related Project" value={entry.detail||null} />
+        </div>
+
+        <button onClick={onClose}
+          style={{ marginTop:20,width:"100%",background:"transparent",border:`1px solid ${C.border}`,color:C.muted,padding:"9px 0",borderRadius:8,fontFamily:F,fontSize:13,cursor:"pointer",transition:"all .15s" }}
+          onMouseEnter={e=>{e.currentTarget.style.borderColor=C.accent;e.currentTarget.style.color=C.text;}}
+          onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.color=C.muted;}}>
+          Close
+        </button>
       </div>
     </Overlay>
   );
@@ -2718,75 +2785,113 @@ function PayReceiptBtn({ receipt }){
 // Payments panel inside project detail
 // ─── Contracts Panel ──────────────────────────────────────────────────────────
 function ContractsPanel({ project, onActivity }){
-  const cid = useCompany();
   const { files, ready, add, remove } = useFiles(`contracts:${project.id}`);
-  const [preview, setPreview] = useState(null);
+  const [preview,    setPreview]    = useState(null);
   const [confirmDel, setConfirmDel] = useState(null);
-  const [uploading, setUploading] = useState(false);
-  const [note, setNote] = useState('');
+  const [showAdd,    setShowAdd]    = useState(false);
+  // form state
+  const [ctTitle,  setCtTitle]  = useState('');
+  const [ctDesc,   setCtDesc]   = useState('');
+  const [ctFile,   setCtFile]   = useState(null);
+  const [ctErr,    setCtErr]    = useState('');
+  const [saving,   setSaving]   = useState(false);
   const fileRef = useRef();
 
-  const handleUpload = async(raw) => {
+  const resetForm = () => { setCtTitle(''); setCtDesc(''); setCtFile(null); setCtErr(''); setSaving(false); };
+
+  const handleFileSelect = (raw) => {
     if(!raw) return;
-    setUploading(true);
-    await add({ name:raw.name, size:raw.size, uploadedAt:new Date().toLocaleDateString(), note:note.trim() }, raw);
-    if(onActivity) onActivity('Contract uploaded: '+raw.name, '📜');
-    setNote('');
-    setUploading(false);
+    setCtFile(raw);
+    // Auto-fill title from filename if empty
+    if(!ctTitle) setCtTitle(raw.name.replace(/\.[^.]+$/, '').replace(/[_-]/g, ' '));
+    setCtErr('');
   };
+
+  const handleSave = async() => {
+    if(!ctTitle.trim()){ setCtErr('Contract title is required'); return; }
+    if(!ctFile){ setCtErr('Please upload a file'); return; }
+    setSaving(true);
+    await add({
+      name:        ctFile.name,
+      size:        ctFile.size,
+      title:       ctTitle.trim(),
+      description: ctDesc.trim(),
+    }, ctFile);
+    if(onActivity) onActivity('Contract added: ' + ctTitle.trim(), '📜');
+    resetForm();
+    setShowAdd(false);
+  };
+
+  const handleDelete = (f) => {
+    remove(f.id);
+    if(onActivity) onActivity('Contract deleted: ' + (f.title||f.name), '🗑️');
+    setConfirmDel(null);
+  };
+
+  if(!ready) return <div style={{ color:C.muted,fontFamily:F,fontSize:12,padding:'16px 0',textAlign:'center' }}>Loading…</div>;
 
   return(
     <div>
       {preview&&<FilePreviewModal file={preview} onClose={()=>setPreview(null)}/>}
       {confirmDel&&(
-        <ConfirmDialog title="Delete Contract?" message={`Delete "${confirmDel.name}"? This cannot be undone.`}
+        <ConfirmDialog
+          title="Delete Contract?"
+          message={`Delete "${confirmDel.title||confirmDel.name}"? This cannot be undone.`}
           confirmLabel="Yes, Delete" variant="delete"
-          onConfirm={()=>{ remove(confirmDel.id); if(onActivity) onActivity('Contract deleted: '+confirmDel.name,'🗑️'); setConfirmDel(null); }}
-          onCancel={()=>setConfirmDel(null)}/>
+          onConfirm={()=>handleDelete(confirmDel)}
+          onCancel={()=>setConfirmDel(null)}>
+          <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:'10px 14px',display:'flex',alignItems:'center',gap:10 }}>
+            <span style={{ fontSize:22 }}>📜</span>
+            <div>
+              <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:13 }}>{confirmDel.title||confirmDel.name}</div>
+              {confirmDel.description&&<div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:2 }}>{confirmDel.description}</div>}
+            </div>
+          </div>
+        </ConfirmDialog>
       )}
-
-      {/* Upload area */}
-      <div style={{ marginBottom:16 }}>
-        <div style={{ display:'flex',gap:10,marginBottom:8 }}>
-          <input value={note} onChange={e=>setNote(e.target.value)} placeholder="Description or notes (optional)"
-            style={{ ...INP(),flex:1,fontSize:12,padding:'8px 12px' }}/>
-          <button onClick={()=>fileRef.current?.click()} disabled={uploading}
-            style={{ background:C.purple,color:'#fff',border:'none',padding:'8px 18px',borderRadius:8,fontFamily:F,fontWeight:700,fontSize:12,cursor:'pointer',flexShrink:0,display:'flex',alignItems:'center',gap:6,opacity:uploading?0.6:1 }}>
-            {uploading ? <><div style={{ width:12,height:12,border:'2px solid #ffffff44',borderTopColor:'#fff',borderRadius:'50%',animation:'spin .7s linear infinite' }}/>Uploading…</> : <>📜 Upload Contract</>}
-          </button>
-        </div>
-        <input ref={fileRef} type="file" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx" style={{ display:'none' }}
-          onChange={e=>{ const f=e.target.files[0]; if(f) handleUpload(f); e.target.value=''; }}/>
-        <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>PDF, images, or Word documents · Max 10MB</div>
-      </div>
 
       {/* File list */}
-      {!ready&&<div style={{ color:C.muted,fontFamily:F,fontSize:12,textAlign:'center',padding:'20px 0' }}>Loading…</div>}
-      {ready&&files.length===0&&(
-        <div style={{ border:`2px dashed ${C.border}`,borderRadius:10,padding:'32px 20px',textAlign:'center',color:C.muted,fontFamily:F,fontSize:13 }}>
-          <div style={{ fontSize:32,marginBottom:8 }}>📜</div>No contracts uploaded yet
+      {!showAdd&&files.length===0&&(
+        <div style={{ border:`2px dashed ${C.border}`,borderRadius:10,padding:'32px 20px',textAlign:'center',color:C.muted,fontFamily:F,fontSize:13,marginBottom:14 }}>
+          <div style={{ fontSize:32,marginBottom:8 }}>📜</div>
+          <div style={{ fontWeight:600,marginBottom:4 }}>No contracts yet</div>
+          <div style={{ fontSize:12 }}>Upload signed contracts, agreements, and legal documents</div>
         </div>
       )}
-      {ready&&files.length>0&&(
-        <div style={{ display:'flex',flexDirection:'column',gap:8 }}>
+      {!showAdd&&files.length>0&&(
+        <div style={{ display:'flex',flexDirection:'column',gap:8,marginBottom:14 }}>
           {files.map(f=>{
-            const isPdf = f.name?.toLowerCase().endsWith('.pdf');
-            const isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(f.name||'');
+            const ext = (f.name||'').split('.').pop().toLowerCase();
+            const isPdf = ext==='pdf';
+            const isImg = ['png','jpg','jpeg','gif','webp'].includes(ext);
+            const fileIcon = isPdf ? '📄' : isImg ? '🖼️' : '📎';
             return(
-              <div key={f.id} style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:'12px 16px',display:'flex',alignItems:'center',gap:12 }}>
-                <div style={{ width:38,height:38,borderRadius:8,background:C.purpleDim,border:`1px solid ${C.purple}44`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:18,flexShrink:0 }}>
-                  {isPdf?'📄':isImg?'🖼️':'📎'}
+              <div key={f.id} style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:'14px 16px',display:'flex',alignItems:'flex-start',gap:12,transition:'border-color .15s' }}
+                onMouseEnter={e=>e.currentTarget.style.borderColor=C.purple+'66'}
+                onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}>
+                {/* File type icon */}
+                <div style={{ width:40,height:40,borderRadius:8,background:C.purpleDim,border:`1px solid ${C.purple}44`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,flexShrink:0,marginTop:1 }}>
+                  {fileIcon}
                 </div>
+                {/* Contract info */}
                 <div style={{ flex:1,minWidth:0 }}>
-                  <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:13,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{f.name}</div>
-                  <div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:2,display:'flex',gap:10 }}>
-                    {f.size&&<span>{(f.size/1024).toFixed(0)} KB</span>}
-                    {f.uploadedAt&&<span>{f.uploadedAt}</span>}
-                    {f.note&&<span style={{ color:C.accent }}>"{f.note}"</span>}
+                  <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:13,marginBottom:2 }}>
+                    {f.title||f.name}
+                  </div>
+                  {f.description&&(
+                    <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginBottom:4,lineHeight:1.4 }}>
+                      {f.description}
+                    </div>
+                  )}
+                  <div style={{ color:C.muted,fontFamily:F,fontSize:11,display:'flex',gap:10,flexWrap:'wrap' }}>
+                    <span>📎 {f.name}</span>
+                    {f.size>0&&<span>{fmtBytes(f.size)}</span>}
+                    {f.uploadedAt&&<span>📅 {f.uploadedAt}</span>}
                   </div>
                 </div>
+                {/* Actions */}
                 <RowActions>
-                  {(f.url||f.dataUrl)&&<RowBtn type="view" onClick={()=>setPreview(f)}>View</RowBtn>}
+                  {f.url&&<RowBtn type="view" onClick={()=>setPreview(f)}>View</RowBtn>}
                   <RowBtn type="delete" onClick={()=>setConfirmDel(f)}>Delete</RowBtn>
                 </RowActions>
               </div>
@@ -2794,6 +2899,63 @@ function ContractsPanel({ project, onActivity }){
           })}
         </div>
       )}
+
+      {/* Add form */}
+      {showAdd
+        ? <InlineFormShell header="📜 Add Contract" accent={C.purple} saveLabel="📜 Save Contract" onSave={handleSave} onCancel={()=>{ resetForm(); setShowAdd(false); }} err={ctErr} saving={saving}>
+
+            {/* File upload */}
+            <div>
+              <label style={LBL()}>Upload File *</label>
+              {ctFile
+                ? <div style={{ background:C.surface,border:`1px solid ${C.green}44`,borderRadius:9,padding:'12px 14px',display:'flex',alignItems:'center',gap:10 }}>
+                    <div style={{ width:40,height:40,background:C.card,borderRadius:6,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,flexShrink:0 }}>📄</div>
+                    <div style={{ flex:1,minWidth:0 }}>
+                      <div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:12 }}>✓ File ready</div>
+                      <div style={{ color:C.text,fontFamily:F,fontSize:11,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{ctFile.name}</div>
+                      <div style={{ color:C.muted,fontFamily:F,fontSize:10,marginTop:1 }}>{fmtBytes(ctFile.size)}</div>
+                    </div>
+                    <button onClick={()=>setCtFile(null)} style={{ background:'transparent',color:C.red,border:`1px solid ${C.red}33`,borderRadius:5,padding:'3px 8px',fontFamily:F,fontSize:11,cursor:'pointer' }}>Remove</button>
+                  </div>
+                : <div
+                    onClick={()=>fileRef.current?.click()}
+                    onDragOver={e=>{ e.preventDefault(); e.currentTarget.style.borderColor=C.purple; e.currentTarget.style.background=C.purpleDim; }}
+                    onDragLeave={e=>{ e.currentTarget.style.borderColor=C.border; e.currentTarget.style.background='transparent'; }}
+                    onDrop={e=>{ e.preventDefault(); e.currentTarget.style.borderColor=C.border; e.currentTarget.style.background='transparent'; const f=e.dataTransfer.files[0]; if(f) handleFileSelect(f); }}
+                    style={{ border:`2px dashed ${C.border}`,borderRadius:9,padding:'22px',textAlign:'center',cursor:'pointer',transition:'all .2s' }}
+                    onMouseEnter={e=>{ e.currentTarget.style.borderColor=C.purple+'88'; e.currentTarget.style.background=C.purpleDim; }}
+                    onMouseLeave={e=>{ e.currentTarget.style.borderColor=C.border; e.currentTarget.style.background='transparent'; }}>
+                    <div style={{ fontSize:28,marginBottom:7 }}>📁</div>
+                    <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:12,marginBottom:3 }}>Drop file or click to browse</div>
+                    <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>PDF · Word · Images · Any format</div>
+                  </div>
+              }
+              <input ref={fileRef} type="file" accept="*" style={{ display:'none' }}
+                onChange={e=>{ const f=e.target.files[0]; if(f) handleFileSelect(f); e.target.value=''; }}/>
+            </div>
+
+            {/* Title */}
+            <div>
+              <label style={LBL()}>Contract Title *</label>
+              <input style={INP()} value={ctTitle} onChange={e=>{ setCtTitle(e.target.value); setCtErr(''); }}
+                placeholder="e.g. Main Construction Agreement, Subcontractor Contract"/>
+            </div>
+
+            {/* Description */}
+            <div>
+              <label style={LBL()}>Description <span style={{ color:C.muted,fontWeight:400 }}>(optional)</span></label>
+              <textarea style={{ ...INP(),resize:'none',lineHeight:1.55 }} rows={3} value={ctDesc}
+                onChange={e=>setCtDesc(e.target.value)}
+                placeholder="Describe the contract scope, parties involved, key terms…"/>
+            </div>
+
+          </InlineFormShell>
+
+        : <button onClick={()=>{ resetForm(); setShowAdd(true); }}
+            style={{ background:C.purple,color:'#fff',border:'none',padding:'10px 22px',borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:'pointer',display:'flex',alignItems:'center',gap:7 }}>
+            📜 + Add Contract
+          </button>
+      }
     </div>
   );
 }
@@ -3351,12 +3513,20 @@ function CalendarPage({ allInvoices,tasks,onAddTask,projectEvents=[],payments=[]
 
 // ─── Project Detail ────────────────────────────────────────────────────────────
 // ─── Module Order hook ────────────────────────────────────────────────────────
-const DEFAULT_MODULE_ORDER = ["invoices","payments","plans","team"];
+const DEFAULT_MODULE_ORDER = ["invoices","payments","plans","contracts","team"];
 
 function useModuleOrder(projectId){
   const key = `moduleorder:${projectId}`;
   const [order,setOrder] = useState(null);
-  useEffect(()=>{ let alive=true; (async()=>{ const r=await storage.get(key); if(!alive)return; setOrder(r?JSON.parse(r.value):DEFAULT_MODULE_ORDER); })(); return()=>{alive=false;}; },[key]);
+  useEffect(()=>{ let alive=true; (async()=>{
+    const r=await storage.get(key);
+    if(!alive)return;
+    if(!r){ setOrder(DEFAULT_MODULE_ORDER); return; }
+    // Merge: keep saved order but append any new modules not yet in saved order
+    const saved=JSON.parse(r.value);
+    const merged=[...saved,...DEFAULT_MODULE_ORDER.filter(id=>!saved.includes(id))];
+    setOrder(merged);
+  })(); return()=>{alive=false;}; },[key]);
   const save = async(next)=>{ setOrder(next); await storage.set(key,JSON.stringify(next)); };
   return { order:order||DEFAULT_MODULE_ORDER, ready:order!==null, setOrder:save };
 }
@@ -3633,6 +3803,7 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
   // Live counts for module subtitles
   const { files:invFiles }=useFiles(`inv:${project.id}`);
   const { files:planFiles }=useFiles(`plans:${project.id}`);
+  const { files:contractFiles }=useFiles(`contracts:${project.id}`);
   const { members:teamMembers }=useTeam(project.id);
   // invCount: all invoices for this project in the global store + local files not yet in global
   const _allProjInv=allInvoices.filter(i=>i.projId===project.id||i.project===project.name);
@@ -3648,7 +3819,7 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
     invoices: { icon:<Ic.Receipt size={22} color={C.accent}/>, title:"Invoices",  color:C.accent, dim:C.accentDim, sub:`${invCount} invoice${invCount!==1?"s":""}`, content:<InvoicesPanel project={project} onActivity={pushLog} onAddGlobalInvoice={addInvoice} onUpdateGlobalInvoice={updateGlobalInvoice} onRemoveGlobalInvoice={removeGlobalInvoice} allInvoices={allInvoices}/> },
     payments: { icon:"💰", title:"Payments",  color:C.green,  dim:C.greenDim,  sub:`${payCount} payment${payCount!==1?"s":""}`, content:<PaymentsPanel project={project} payments={projectPayments} addPayment={handleAddPayment} updatePayment={updatePayment} removePayment={removePayment} allProjects={allProjects} allInvoices={allInvoices} onActivity={pushLog}/> },
     plans:    { icon:"📐", title:"Plans",     color:C.blue,   dim:C.blueDim,   sub:`${planCount} document${planCount!==1?"s":""}`, content:<PlansPanel project={project} onActivity={pushLog}/> },
-    contracts:{ icon:"📜", title:"Contracts", color:C.purple, dim:C.purpleDim, sub:"Official documents",                                 content:<ContractsPanel project={project} onActivity={pushLog}/> },
+    contracts:{ icon:"📜", title:"Contracts", color:C.purple, dim:C.purpleDim, sub:`${contractFiles.length} contract${contractFiles.length!==1?"s":""}`, content:<ContractsPanel project={project} onActivity={pushLog}/> },
     team:     { icon:"👷", title:"Team",      color:C.green,  dim:C.greenDim,  sub:`${teamCount} member${teamCount!==1?"s":""}`, content:<TeamPanel  project={project} onOpenTeamPage={onOpenTeam}/> },
   };
 
@@ -3850,18 +4021,30 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
               <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:12 }}>Activity</span>
               <span style={{ background:C.accentDim,color:C.accent,borderRadius:99,fontSize:10,fontWeight:700,padding:"1px 7px" }}>{mergedLog.length}</span>
             </div>
-            <div>
-              {mergedLog.map((e,i)=>(
-                <div key={e.id} style={{ display:"flex",gap:8,padding:"10px 12px",borderBottom:i<mergedLog.length-1?`1px solid ${C.border}22`:"none",alignItems:"flex-start" }}>
-                  <div style={{ width:26,height:26,background:C.surface,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,flexShrink:0,marginTop:1 }}>{e.icon}</div>
-                  <div style={{ flex:1,minWidth:0 }}>
-                    <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:11,lineHeight:1.3 }}>{e.action}</div>
-                    <div style={{ color:C.muted,fontFamily:F,fontSize:10,marginTop:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{e.detail}</div>
-                    <div style={{ color:"#5a6480",fontSize:9,fontFamily:F,marginTop:3 }}>{e.user} · {e.time}</div>
+            {(()=>{
+              const [activeLogEntry, setActiveLogEntry] = React.useState(null);
+              return(
+                <>
+                  {activeLogEntry&&<ActivityLogModal entry={activeLogEntry} onClose={()=>setActiveLogEntry(null)}/>}
+                  <div>
+                    {mergedLog.map((e,i)=>(
+                      <div key={e.id} onClick={()=>setActiveLogEntry(e)}
+                        style={{ display:"flex",gap:8,padding:"10px 12px",borderBottom:i<mergedLog.length-1?`1px solid ${C.border}22`:"none",alignItems:"flex-start",cursor:"pointer",transition:"background .12s" }}
+                        onMouseEnter={ev=>ev.currentTarget.style.background=C.surface}
+                        onMouseLeave={ev=>ev.currentTarget.style.background="transparent"}>
+                        <div style={{ width:26,height:26,background:C.surface,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,flexShrink:0,marginTop:1 }}>{e.icon}</div>
+                        <div style={{ flex:1,minWidth:0 }}>
+                          <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:11,lineHeight:1.3 }}>{e.action}</div>
+                          <div style={{ color:C.muted,fontFamily:F,fontSize:10,marginTop:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{e.detail}</div>
+                          <div style={{ color:"#5a6480",fontSize:9,fontFamily:F,marginTop:3 }}>{e.user} · {e.time}</div>
+                        </div>
+                        <div style={{ color:C.muted,fontSize:9,flexShrink:0,alignSelf:"center" }}>›</div>
+                      </div>
+                    ))}
                   </div>
-                </div>
-              ))}
-            </div>
+                </>
+              );
+            })()}
           </div>
 
         </div>
@@ -4504,20 +4687,28 @@ function DashWidget({ widgetId, type, allProjects, allInvoices, payments, tasks,
         )}
       </div>
     );
-    if(type==="activity") return(
-      <div>
-        {globalLog.length===0&&<div style={{ color:C.muted,fontFamily:F,fontSize:12,textAlign:"center",padding:"12px 0" }}>No activity yet</div>}
-        {globalLog.slice(0,7).map(e=>(
-          <div key={e.id} style={{ display:"flex",gap:10,alignItems:"flex-start",marginBottom:9,paddingBottom:9,borderBottom:`1px solid ${C.border}22` }}>
-            <div style={{ width:28,height:28,borderRadius:7,background:C.surface,border:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,flexShrink:0 }}>{normIcon(e.icon)}</div>
-            <div style={{ flex:1,minWidth:0 }}>
-              <div style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{e.action}</div>
-              <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>{e.user||"User"} · {e.time||e.detail}</div>
+    if(type==="activity") return(()=>{
+      const [activeLogEntry, setActiveLogEntry] = React.useState(null);
+      return(
+        <div>
+          {activeLogEntry&&<ActivityLogModal entry={activeLogEntry} onClose={()=>setActiveLogEntry(null)}/>}
+          {globalLog.length===0&&<div style={{ color:C.muted,fontFamily:F,fontSize:12,textAlign:"center",padding:"12px 0" }}>No activity yet</div>}
+          {globalLog.slice(0,7).map(e=>(
+            <div key={e.id} onClick={()=>setActiveLogEntry(e)}
+              style={{ display:"flex",gap:10,alignItems:"flex-start",marginBottom:9,paddingBottom:9,borderBottom:`1px solid ${C.border}22`,cursor:"pointer",borderRadius:6,padding:"6px 8px",transition:"background .12s" }}
+              onMouseEnter={ev=>ev.currentTarget.style.background=C.surface}
+              onMouseLeave={ev=>ev.currentTarget.style.background="transparent"}>
+              <div style={{ width:28,height:28,borderRadius:7,background:C.surface,border:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,flexShrink:0 }}>{normIcon(e.icon)}</div>
+              <div style={{ flex:1,minWidth:0 }}>
+                <div style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{e.action}</div>
+                <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>{e.user||"User"} · {e.time||e.detail}</div>
+              </div>
+              <div style={{ color:C.muted,fontSize:11,flexShrink:0,alignSelf:"center" }}>›</div>
             </div>
-          </div>
-        ))}
-      </div>
-    );
+          ))}
+        </div>
+      );
+    })();
     if(type==="calendar") return(()=>{
       const now=new Date(); now.setHours(0,0,0,0);
       // Combine upcoming invoices + tasks + project milestones into one timeline
@@ -5040,13 +5231,8 @@ function TeamGlobal({ allProjects=[], onLog }){
 
   const handleEditUser = async(patch)=>{
     const { id } = editingUser;
-    // Update job_title, phone, status, color in profiles
-    await supabase.from('profiles').update({
-      job_title: patch.job_title,
-      phone:     patch.phone,
-      status:    patch.status,
-      color:     patch.color,
-    }).eq('id', id);
+    // Update non-sensitive profile fields via db.js (keeps DB ops out of App.jsx)
+    await dbProfiles.updateProfile(id, patch);
     if(onLog) onLog({ id:Date.now(), action:`${editingUser.name} updated`, detail:'Team', user:'Admin', time:new Date().toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}), icon:'✏️' });
     setVersion(v=>v+1); setEditingUser(null); setConfirmEdit(null);
   };
@@ -6296,6 +6482,97 @@ Address the contractor as "the Company". Flag overdue amounts if any.`;
 
 
 
+// ─── Activity Log Page ────────────────────────────────────────────────────────
+function ActivityLogPage({ globalLog=[] }){
+  const [activeEntry, setActiveEntry] = useState(null);
+  const [search, setSearch]           = useState('');
+  const [filterIcon, setFilterIcon]   = useState('all');
+
+  const iconFilters = [
+    { v:'all',  l:'All'      },
+    { v:'🏗',   l:'Projects' },
+    { v:'🧾',   l:'Invoices' },
+    { v:'💰',   l:'Payments' },
+    { v:'✅',   l:'Tasks'    },
+    { v:'👷',   l:'Team'     },
+    { v:'✏️',   l:'Edits'    },
+    { v:'🗑️',  l:'Deleted'  },
+  ];
+
+  const filtered = globalLog.filter(e => {
+    const matchSearch = !search ||
+      e.action.toLowerCase().includes(search.toLowerCase()) ||
+      (e.detail||'').toLowerCase().includes(search.toLowerCase()) ||
+      (e.user||'').toLowerCase().includes(search.toLowerCase());
+    const matchIcon = filterIcon === 'all' || e.icon === filterIcon;
+    return matchSearch && matchIcon;
+  });
+
+  return(
+    <div>
+      {activeEntry && <ActivityLogModal entry={activeEntry} onClose={()=>setActiveEntry(null)}/>}
+
+      {/* Page header */}
+      <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:22,flexWrap:"wrap",gap:12 }}>
+        <div>
+          <h2 style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:20,margin:0 }}>Activity Log</h2>
+          <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>{globalLog.length} total events</div>
+        </div>
+      </div>
+
+      {/* Search + filter bar */}
+      <div style={{ display:"flex",gap:10,marginBottom:18,flexWrap:"wrap" }}>
+        <input
+          value={search} onChange={e=>setSearch(e.target.value)}
+          placeholder="Search activity…"
+          style={{ flex:1,minWidth:180,background:C.card,border:`1px solid ${C.border}`,borderRadius:8,padding:"8px 13px",color:C.text,fontFamily:F,fontSize:13,outline:"none" }}
+        />
+        <div style={{ display:"flex",gap:6,flexWrap:"wrap" }}>
+          {iconFilters.map(f=>(
+            <button key={f.v} onClick={()=>setFilterIcon(f.v)}
+              style={{ padding:"7px 12px",borderRadius:7,border:`1px solid ${filterIcon===f.v?C.accent:C.border}`,background:filterIcon===f.v?C.accentDim:"transparent",color:filterIcon===f.v?C.accent:C.muted,fontFamily:F,fontSize:12,fontWeight:filterIcon===f.v?700:500,cursor:"pointer",transition:"all .15s" }}>
+              {f.v!=='all'&&<span style={{marginRight:4}}>{f.v}</span>}{f.l}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Log list */}
+      <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,overflow:"hidden" }}>
+        {filtered.length===0&&(
+          <div style={{ padding:"40px 0",textAlign:"center",color:C.muted,fontFamily:F,fontSize:13 }}>
+            No activity found
+          </div>
+        )}
+        {filtered.map((e,i)=>(
+          <div key={e.id} onClick={()=>setActiveEntry(e)}
+            style={{ display:"flex",gap:12,padding:"13px 18px",borderBottom:i<filtered.length-1?`1px solid ${C.border}22`:"none",alignItems:"flex-start",cursor:"pointer",transition:"background .12s" }}
+            onMouseEnter={ev=>ev.currentTarget.style.background=C.surface}
+            onMouseLeave={ev=>ev.currentTarget.style.background="transparent"}>
+
+            {/* Icon badge */}
+            <div style={{ width:36,height:36,borderRadius:9,background:C.surface,border:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,flexShrink:0,marginTop:1 }}>
+              {e.icon||"📋"}
+            </div>
+
+            {/* Content */}
+            <div style={{ flex:1,minWidth:0 }}>
+              <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:13,lineHeight:1.3,marginBottom:3 }}>{e.action}</div>
+              <div style={{ display:"flex",gap:14,flexWrap:"wrap" }}>
+                {e.detail&&<span style={{ color:C.muted,fontFamily:F,fontSize:11 }}>🏗 {e.detail}</span>}
+                <span style={{ color:C.muted,fontFamily:F,fontSize:11 }}>👤 {e.user||"Unknown"}</span>
+                <span style={{ color:C.muted,fontFamily:F,fontSize:11 }}>🕐 {e.time}</span>
+              </div>
+            </div>
+
+            <div style={{ color:C.muted,fontSize:14,flexShrink:0,alignSelf:"center" }}>›</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 const NAV=[
   { id:"dashboard",  label:"Dashboard",       IcComp: ({c})=><Ic.Dashboard size={15} color={c}/> },
   { id:"projects",   label:"Projects",        IcComp: ({c})=><Ic.Projects  size={15} color={c}/> },
@@ -6308,6 +6585,7 @@ const NAV=[
   { id:"reports",    label:"Reports",         IcComp: ({c})=><Ic.Reports   size={15} color={c}/> },
   { id:"prices",     label:"Price Tracking",  IcComp: ({c})=><Ic.Prices    size={15} color={c}/> },
   { id:"accountant", label:"Accountant",      IcComp: ({c})=><Ic.Accountant size={15} color={c}/> },
+  { id:"activity",   label:"Activity Log",    IcComp: ({c})=><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> },
 ];
 
 export default function App({ session, profile, onLogout }){
@@ -6447,7 +6725,8 @@ function AppInner({ session, profile, onLogout }){
     if(tab==="reports")    return <ReportPage tasks={tasks} allProjects={allProjects} allInvoices={allInvoices}/>;
     if(tab==="prices")     return <PriceTrackingPage/>;
     if(tab==="accountant") return <AccountantPage allProjects={allProjects} allInvoices={allInvoices} payments={payments}/>;
-    if(tab==="users") return <UsersPage currentUser={session.user} profile={profile}/>;
+    if(tab==="users")     return <UsersPage currentUser={session.user} profile={profile}/>;
+    if(tab==="activity")  return <ActivityLogPage globalLog={globalLog}/>;
     return <div style={{ color:C.muted,fontFamily:F,fontSize:14,padding:"40px 0",textAlign:"center" }}>Coming soon…</div>;
   };
 

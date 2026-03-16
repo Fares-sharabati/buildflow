@@ -35,10 +35,10 @@ export const dbProjects = {
     created_by:  _userId,
   }),
 
-  update: async (id, patch) => {
+  update: (id, patch) => {
+    // Map app-shape keys to DB column names
+    // Only columns that exist in the projects table (verified against add())
     const dbPatch = {}
-    // Only include columns that EXIST in the projects table
-    // Verified against dbProjects.add() which is the source of truth
     if (patch.name        !== undefined) dbPatch.name       = patch.name
     if (patch.address     !== undefined) dbPatch.address    = patch.address
     if (patch.status      !== undefined) dbPatch.status     = patch.status
@@ -49,45 +49,10 @@ export const dbProjects = {
     if (patch.startDateISO!== undefined) dbPatch.start_date = patch.startDateISO
     if (patch.due         !== undefined) dbPatch.due_date   = patch.due
     if (patch.dueFmt      !== undefined) dbPatch.due_fmt    = patch.dueFmt
-    // NOTE: proj_type and description columns do NOT exist in the projects table
-    // They were causing HTTP 400 errors on every save
-
-    const SURL = 'https://mghwscmrosxiymtdqvaa.supabase.co'
-    const SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1naHdzY21yb3N4aXltdGRxdmFhIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MzI2MTQzNSwiZXhwIjoyMDg4ODM3NDM1fQ.-NoIyr9Peh-IRfny32AdyjvPaZPgY32eAh2CQVgzA1Y'
-    
-    // Show exactly what we are sending
-    const url = `${SURL}/rest/v1/projects?id=eq.${id}`
-    console.log('[BF-UPDATE] id:', id, 'patch:', JSON.stringify(dbPatch), 'url:', url)
-    
-    try {
-      const res = await fetch(url, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': SERVICE_KEY,
-          'Authorization': `Bearer ${SERVICE_KEY}`,
-          'Prefer': 'return=representation',
-        },
-        body: JSON.stringify(dbPatch),
-      })
-      const text = await res.text()
-      console.log('[BF-UPDATE] response status:', res.status, 'body:', text.slice(0, 500))
-      
-      if (!res.ok) {
-        window._BF_LAST_ERROR = `HTTP ${res.status}: ${text}`
-        return { data: null, error: text }
-      }
-      
-      const data = text ? JSON.parse(text) : []
-      const rowsAffected = Array.isArray(data) ? data.length : 1
-      console.log('[BF-UPDATE] rows affected:', rowsAffected)
-      window._BF_LAST_UPDATE = { id, patch: dbPatch, rows: rowsAffected, data }
-      return { data, error: null }
-    } catch(e) {
-      console.error('[BF-UPDATE] EXCEPTION:', e.message)
-      window._BF_LAST_ERROR = e.message
-      return { data: null, error: e.message }
-    }
+    if (patch.projType    !== undefined) dbPatch.proj_type  = patch.projType
+    if (patch.desc        !== undefined) dbPatch.description = patch.desc
+    // Uses user JWT via supabase client — respects RLS, no service key in frontend
+    return supabase.from('projects').update(dbPatch).eq('id', id)
   },
   delete: (id) => supabase.from('projects').delete().eq('id', id).eq('company_id', cid()),
 }
@@ -218,10 +183,19 @@ export const dbTeam = {
     init:   m.name ? m.name.trim().split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase() : '?',
   }),
 
-  update: (id, patch) => supabase.from('team_members').update({
-    ...patch,
-    init: patch.name ? patch.name.trim().split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase() : undefined,
-  }).eq('id', id).eq('company_id', cid()),
+  update: (id, patch) => {
+    // Map explicitly — never spread raw app object into Supabase update
+    const mapped = {}
+    if (patch.name   !== undefined) mapped.name   = patch.name
+    if (patch.role   !== undefined) mapped.role   = patch.role
+    if (patch.type   !== undefined) mapped.type   = patch.type
+    if (patch.status !== undefined) mapped.status = patch.status
+    if (patch.phone  !== undefined) mapped.phone  = patch.phone
+    if (patch.email  !== undefined) mapped.email  = patch.email
+    if (patch.color  !== undefined) mapped.color  = patch.color
+    if (patch.name   !== undefined) mapped.init   = patch.name.trim().split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase()
+    return supabase.from('team_members').update(mapped).eq('id', id).eq('company_id', cid())
+  },
 
   delete: (id) => supabase.from('team_members').delete().eq('id', id).eq('company_id', cid()),
 }
@@ -240,7 +214,16 @@ export const dbTenders = {
     created_by:   _userId,
   }),
 
-  update: (id, patch) => supabase.from('tenders').update(patch).eq('id', id).eq('company_id', cid()),
+  update: (id, patch) => {
+    // Map explicitly — never pass raw app object to Supabase
+    const mapped = {}
+    if (patch.name        !== undefined) mapped.name         = patch.name
+    if (patch.desc        !== undefined) mapped.description  = patch.desc
+    if (patch.project     !== undefined) mapped.project_name = patch.project
+    if (patch.projId      !== undefined) mapped.project_id   = patch.projId
+    if (patch.offers      !== undefined) mapped.offers       = patch.offers
+    return supabase.from('tenders').update(mapped).eq('id', id).eq('company_id', cid())
+  },
 
   delete: (id) => supabase.from('tenders').delete().eq('id', id).eq('company_id', cid()),
 }
@@ -276,6 +259,17 @@ export const dbNotes = {
 // ── PROFILES (users in company) ───────────────────────────────────────────────
 export const dbProfiles = {
   getCompanyUsers: () => supabase.from('profiles').select('*').eq('company_id', cid()),
+
+  // Update non-sensitive profile fields (job title, phone, status, colour)
+  // Role and permissions are intentionally excluded — managed via UsersPage with superadmin check
+  updateProfile: (id, patch) => {
+    const mapped = {}
+    if (patch.job_title !== undefined) mapped.job_title = patch.job_title
+    if (patch.phone     !== undefined) mapped.phone     = patch.phone
+    if (patch.status    !== undefined) mapped.status    = patch.status
+    if (patch.color     !== undefined) mapped.color     = patch.color
+    return supabase.from('profiles').update(mapped).eq('id', id)
+  },
 }
 
 // ── Helper: map DB row → app shape ────────────────────────────────────────────
@@ -371,12 +365,16 @@ export const mapTender = (row) => ({
 })
 
 export const mapLog = (row) => ({
-  id:     row.id,
-  action: row.action || '',
-  detail: row.detail || '',
-  user:   row.user_name || '',
-  time:   new Date(row.created_at).toLocaleString('en-US', { month:'short', day:'numeric', hour:'numeric', minute:'2-digit' }),
-  icon:   row.icon || '●',
+  id:        row.id,
+  action:    row.action     || '',
+  detail:    row.detail     || '',
+  user:      row.user_name  || '',
+  userId:    row.user_id    || null,
+  icon:      row.icon       || '●',
+  // Short display time (used in log rows)
+  time:      new Date(row.created_at).toLocaleString('en-US', { month:'short', day:'numeric', hour:'numeric', minute:'2-digit' }),
+  // Full timestamp for the modal
+  createdAt: row.created_at || null,
 })
 
 // ── Project Files (photos, plans) ─────────────────────────────────────────────
@@ -385,6 +383,16 @@ export const dbFiles = {
     const q = supabase.from('project_files').select('*').eq('project_id', projectId)
     return type ? q.eq('type', type) : q
   },
-  add: (row) => supabase.from('project_files').insert(row),
+  add: (row) => supabase.from('project_files').insert({
+    company_id:   row.company_id,
+    project_id:   row.project_id,
+    type:         row.type,
+    name:         row.name         || '',
+    size:         row.size         || 0,
+    url:          row.url          || '',
+    storage_path: row.storage_path || '',
+    title:        row.title        || '',
+    description:  row.description  || '',
+  }),
   remove: (id) => supabase.from('project_files').delete().eq('id', id),
 }
