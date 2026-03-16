@@ -4,18 +4,65 @@
 const SUPABASE_URL = 'https://mghwscmrosxiymtdqvaa.supabase.co'
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1naHdzY21yb3N4aXltdGRxdmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyNjE0MzUsImV4cCI6MjA4ODgzNzQzNX0.zq7SAYsAWvO338CCQncnewOR2n2UloKP3AqZaWefaNg'
 
-const getToken = () => { try { return localStorage.getItem('bf_token') } catch { return null } }
-const setToken = (t) => { try { localStorage.setItem('bf_token', t||'') } catch {} }
+const getToken        = () => { try { return localStorage.getItem('bf_token') } catch { return null } }
+const getRefreshToken = () => { try { return localStorage.getItem('bf_refresh') } catch { return null } }
+const setToken        = (t) => { try { localStorage.setItem('bf_token', t||'') } catch {} }
 const setRefreshToken = (t) => { try { localStorage.setItem('bf_refresh', t||'') } catch {} }
 
 let _authListeners = []
 let _currentSession = null
+let _refreshing = false
 const notifyListeners = (event, session) => { _currentSession = session; _authListeners.forEach(fn => fn(event, session)) }
+
+// Refresh the access token using the refresh token
+const refreshAccessToken = async () => {
+  if (_refreshing) return false
+  const rt = getRefreshToken()
+  if (!rt) return false
+  _refreshing = true
+  try {
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY },
+      body: JSON.stringify({ refresh_token: rt }),
+    })
+    if (!res.ok) { _refreshing = false; return false }
+    const data = await res.json()
+    setToken(data.access_token)
+    setRefreshToken(data.refresh_token)
+    _refreshing = false
+    return true
+  } catch { _refreshing = false; return false }
+}
+
+// Auto-refresh if token is expired (JWT exp check)
+const getValidToken = async () => {
+  const token = getToken()
+  if (!token) return null
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]))
+    const expiresAt = payload.exp * 1000
+    // Refresh if within 5 minutes of expiry or already expired
+    if (Date.now() > expiresAt - 5 * 60 * 1000) {
+      const ok = await refreshAccessToken()
+      return ok ? getToken() : token
+    }
+  } catch {}
+  return token
+}
 
 const headers = (extra={}) => ({
   'Content-Type': 'application/json',
   'apikey': SUPABASE_ANON_KEY,
   'Authorization': `Bearer ${getToken() || SUPABASE_ANON_KEY}`,
+  ...extra,
+})
+
+// Headers with fresh token (use for write operations)
+const headersAsync = async (extra={}) => ({
+  'Content-Type': 'application/json',
+  'apikey': SUPABASE_ANON_KEY,
+  'Authorization': `Bearer ${await getValidToken() || SUPABASE_ANON_KEY}`,
   ...extra,
 })
 
@@ -105,7 +152,7 @@ const from = (table) => {
       try {
         const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
           method: 'POST',
-          headers: headers({ 'Prefer': 'return=representation' }),
+          headers: await headersAsync({ 'Prefer': 'return=representation' }),
           body: JSON.stringify(Array.isArray(rows) ? rows : [rows]),
         })
         const data = await res.json()
@@ -118,7 +165,7 @@ const from = (table) => {
       try {
         const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
           method: 'POST',
-          headers: headers({ 'Prefer': 'return=representation,resolution=merge-duplicates' }),
+          headers: await headersAsync({ 'Prefer': 'return=representation,resolution=merge-duplicates' }),
           body: JSON.stringify(Array.isArray(rows) ? rows : [rows]),
         })
         const data = await res.json()
@@ -134,7 +181,7 @@ const from = (table) => {
           _filters.forEach(f => { url += `${f}&` })
           const res = await fetch(url, {
             method: 'PATCH',
-            headers: headers({ 'Prefer': 'return=representation' }),
+            headers: await headersAsync({ 'Prefer': 'return=representation' }),
             body: JSON.stringify(patch),
           })
           const data = await res.json()
@@ -151,7 +198,7 @@ const from = (table) => {
         try {
           let url = `${SUPABASE_URL}/rest/v1/${table}?`
           _filters.forEach(f => { url += `${f}&` })
-          const res = await fetch(url, { method: 'DELETE', headers: headers() })
+          const res = await fetch(url, { method: 'DELETE', headers: await headersAsync() })
           if (!res.ok) { const data = await res.json(); return { error: data } }
           return { error: null }
         } catch (e) { return { error: { message: e.message } } }
