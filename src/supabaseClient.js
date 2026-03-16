@@ -218,10 +218,11 @@ export const supabaseStorage = {
   // Upload a File or Blob. path = e.g. "companyId/photos/projectId/filename.jpg"
   upload: async (bucket, path, file) => {
     try {
+      const token = await getValidToken()
       const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${bucket}/${path}`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${getToken() || SUPABASE_ANON_KEY}`,
+          'Authorization': `Bearer ${token || SUPABASE_ANON_KEY}`,
           'apikey': SUPABASE_ANON_KEY,
           'Content-Type': file.type || 'application/octet-stream',
           'x-upsert': 'true',
@@ -239,10 +240,11 @@ export const supabaseStorage = {
 
   remove: async (bucket, paths) => {
     try {
+      const token = await getValidToken()
       const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${bucket}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${getToken() || SUPABASE_ANON_KEY}`,
+          'Authorization': `Bearer ${token || SUPABASE_ANON_KEY}`,
           'apikey': SUPABASE_ANON_KEY,
           'Content-Type': 'application/json',
         },

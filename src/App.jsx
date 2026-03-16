@@ -754,6 +754,19 @@ const TH = (extra={}) => ({ color:C.muted, fontWeight:700, padding:"12px 16px", 
 /** Standard table data cell style */
 const TD = (extra={}) => ({ padding:"13px 16px", fontFamily:F, fontSize:13, ...extra });
 
+// ── Actions column — shared between <th> and <td> so header and buttons are identical ──
+// Fixed width + center alignment means "Actions" text and button group share the same axis
+const ACT_COL_W    = 140;
+const ACT_COL_CELL = { width:ACT_COL_W, minWidth:ACT_COL_W, maxWidth:ACT_COL_W, padding:0, verticalAlign:"middle" };
+const ACT_COL_INNER = {
+  display:"flex", alignItems:"center", justifyContent:"center",
+  gap:6, width:"100%", padding:"12px 8px", boxSizing:"border-box",
+};
+const ACT_COL_INNER_TH = {
+  ...ACT_COL_INNER,
+  color:C.muted, fontWeight:700, fontSize:12, fontFamily:F,
+};
+
 /** Human-readable invoice number: prefers inv_id / invId over raw UUID */
 const fmtInvId = (inv) => {
   const id = inv?.invId || inv?.iid || inv?.inv_id || inv?.id || "";
@@ -3107,12 +3120,88 @@ function PaymentsPanel({ project, payments, addPayment, updatePayment, removePay
 }
 
 // Global payments page
+// ─── Payment Detail Modal ─────────────────────────────────────────────────────
+function PaymentDetailModal({ payment, onClose, onEdit, onDelete }){
+  if(!payment) return null;
+  const [showReceipt,setShowReceipt] = React.useState(false);
+  const receipt = payment.receipt;
+  const receiptFile = receipt ? { ...receipt, dataUrl: receipt.url||receipt.dataUrl } : null;
+
+  const fields = [
+    { label:'Amount',  value:`$${Number(payment.amount||0).toLocaleString()}`, color:C.green, bold:true },
+    { label:'Date',    value:payment.dateFmt||payment.date||'—',               color:C.text  },
+    { label:'Project', value:payment.project||'—',                             color:C.text  },
+    { label:'Method',  value:payment.method||'—',                              color:C.muted },
+    { label:'Notes',   value:payment.notes||'—',                               color:C.muted },
+  ];
+
+  return(
+    <Overlay onClose={onClose}>
+      {showReceipt&&receiptFile&&<FilePreviewModal file={receiptFile} onClose={()=>setShowReceipt(false)}/>}
+      <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,width:440,maxWidth:'95vw',boxShadow:'0 24px 60px rgba(0,0,0,.5)',display:'flex',flexDirection:'column',overflow:'hidden' }}>
+
+        {/* Header */}
+        <div style={{ padding:'22px 24px 18px',borderBottom:`1px solid ${C.border}`,display:'flex',alignItems:'center',justifyContent:'space-between',gap:12 }}>
+          <div style={{ display:'flex',alignItems:'center',gap:12 }}>
+            <div style={{ width:42,height:42,borderRadius:10,background:C.greenDim,border:`1px solid ${C.green}44`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,flexShrink:0 }}>💰</div>
+            <div>
+              <div style={{ color:C.muted,fontFamily:F,fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',marginBottom:3 }}>Payment</div>
+              <div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:18,lineHeight:1.2 }}>${Number(payment.amount||0).toLocaleString()}</div>
+            </div>
+          </div>
+          <button onClick={onClose} style={{ background:'transparent',border:'none',color:C.muted,fontSize:20,cursor:'pointer',lineHeight:1,padding:4 }}>✕</button>
+        </div>
+
+        {/* Fields */}
+        <div style={{ padding:'18px 24px',display:'flex',flexDirection:'column',gap:10 }}>
+          {fields.map(r=>(
+            <div key={r.label} style={{ display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:16,paddingBottom:10,borderBottom:`1px solid ${C.border}22` }}>
+              <span style={{ color:C.muted,fontFamily:F,fontSize:12,fontWeight:600,flexShrink:0,minWidth:80 }}>{r.label}</span>
+              <span style={{ color:r.color||C.text,fontFamily:F,fontSize:13,fontWeight:r.bold?700:400,textAlign:'right' }}>{r.value}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Receipt file */}
+        {receiptFile&&(
+          <div style={{ padding:'0 24px 14px' }}>
+            <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:'10px 14px',display:'flex',alignItems:'center',gap:10 }}>
+              <span style={{ fontSize:18 }}>🧾</span>
+              <div style={{ flex:1,minWidth:0 }}>
+                <div style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{receipt.name||'Receipt'}</div>
+                {receipt.size>0&&<div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:1 }}>{(receipt.size/1024).toFixed(0)} KB</div>}
+              </div>
+              <div style={{ display:'flex',gap:6,flexShrink:0 }}>
+                <button onClick={()=>setShowReceipt(true)} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}44`,padding:'5px 12px',borderRadius:6,fontFamily:F,fontSize:11,fontWeight:700,cursor:'pointer' }}>👁 View</button>
+                {(receipt.url||receipt.dataUrl)&&<a href={receipt.url||receipt.dataUrl} download={receipt.name||'receipt'} style={{ background:C.accentDim,color:C.accent,border:`1px solid ${C.accentMid}`,padding:'5px 12px',borderRadius:6,fontFamily:F,fontSize:11,fontWeight:700,textDecoration:'none',display:'flex',alignItems:'center' }}>↓ Download</a>}
+              </div>
+            </div>
+          </div>
+        )}
+        {!receiptFile&&(
+          <div style={{ padding:'0 24px 14px' }}>
+            <div style={{ background:C.surface,border:`1px solid ${C.border}33`,borderRadius:9,padding:'10px 14px',color:C.muted,fontFamily:F,fontSize:12,textAlign:'center' }}>No receipt attached</div>
+          </div>
+        )}
+
+        {/* Actions */}
+        <div style={{ padding:'14px 24px 20px',display:'flex',gap:8,justifyContent:'flex-end',borderTop:`1px solid ${C.border}` }}>
+          <button onClick={onClose} style={{ background:'transparent',border:`1px solid ${C.border}`,color:C.muted,padding:'8px 18px',borderRadius:8,fontFamily:F,fontSize:13,cursor:'pointer' }}>Close</button>
+          <button onClick={()=>{ onClose(); onEdit(payment); }} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}44`,padding:'8px 18px',borderRadius:8,fontFamily:F,fontSize:13,fontWeight:700,cursor:'pointer' }}>✏️ Edit</button>
+          <button onClick={()=>{ onClose(); onDelete(payment); }} style={{ background:C.redDim,color:C.red,border:`1px solid ${C.red}44`,padding:'8px 18px',borderRadius:8,fontFamily:F,fontSize:13,fontWeight:700,cursor:'pointer' }}>🗑 Delete</button>
+        </div>
+      </div>
+    </Overlay>
+  );
+}
+
 function PaymentsPage({ payments, allProjects, addPayment, allInvoices, removePayment, updatePayment }){
   const [projFilter,setProjFilter]=useState("all");
   const [showAdd,setShowAdd]=useState(false);
   const [editingPayment,setEditingPayment]=useState(null);
   const [confirmEditPay,setConfirmEditPay]=useState(null);
   const [confirmDelete,setConfirmDelete]=useState(null);
+  const [selectedPayment,setSelectedPayment]=useState(null);
 
   const filtered=useMemo(()=>payments.filter(p=>{
     if(projFilter!=="all"&&String(p.projId)!==projFilter)return false;
@@ -3149,6 +3238,7 @@ function PaymentsPage({ payments, allProjects, addPayment, allInvoices, removePa
           </div>
         </ConfirmDialog>
       )}
+      {selectedPayment&&<PaymentDetailModal payment={selectedPayment} onClose={()=>setSelectedPayment(null)} onEdit={p=>setEditingPayment(p)} onDelete={p=>setConfirmDelete(p)}/>}
       <PageHeader icon="💳" title="Payments" subtitle="Track all client payments across projects"
         action={<Btn variant="success" size="md" onClick={()=>setShowAdd(true)}>+ Record Payment</Btn>}/>
       <div style={{ display:"flex",gap:12,marginBottom:24,flexWrap:"wrap" }}>
@@ -3167,23 +3257,24 @@ function PaymentsPage({ payments, allProjects, addPayment, allInvoices, removePa
           ?<EmptyState icon="💰" title="No payments recorded yet" sub="Record your first payment above"/>
           :<table style={{ width:"100%",borderCollapse:"collapse",fontFamily:F,fontSize:13 }}>
             <thead><tr style={{ borderBottom:`1px solid ${C.border}`,background:C.surface }}>
-              {["Date","Project","Amount","Method","Invoice Ref","Notes","Receipt",""].map(h=><th key={h} style={TH()}>{h}</th>)}
+              {["Date","Project","Amount","Method","Notes"].map(h=><th key={h} style={TH()}>{h}</th>)}
+              <th style={ACT_COL_CELL}><div style={ACT_COL_INNER_TH}>Actions</div></th>
             </tr></thead>
             <tbody>{filtered.map((p,i)=>(
-              <tr key={p.id} style={{ borderBottom:i<filtered.length-1?`1px solid ${C.border}22`:"none",transition:"background .12s" }}
+              <tr key={p.id}
+                onClick={e=>{ if(e.target.closest('[data-norow]')) return; setSelectedPayment(p); }}
+                style={{ borderBottom:i<filtered.length-1?`1px solid ${C.border}22`:"none",transition:"background .12s",cursor:"pointer" }}
                 onMouseEnter={e=>e.currentTarget.style.background=C.surface} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
                 <td style={TD({color:C.muted})}>{p.dateFmt}</td>
                 <td style={TD({color:C.text,fontWeight:600})}>{p.project}</td>
                 <td style={TD({color:C.green,fontWeight:700})}>${p.amount.toLocaleString()}</td>
                 <td style={TD({color:C.muted})}>{p.method}</td>
-                <td style={TD({color:C.accent,fontWeight:700,fontSize:12})}>{resolveInvRef(p.invRef,allInvoices)}</td>
                 <td style={TD({color:C.muted,maxWidth:140,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"})}>{p.notes||"—"}</td>
-                <td style={TD()}>{p.receipt?<PayReceiptBtn receipt={p.receipt}/>:"—"}</td>
-                <td style={TD()}>
-                  <RowActions>
-                    <RowBtn type="edit" onClick={()=>setEditingPayment(p)}>Edit</RowBtn>
-                    <RowBtn type="delete" onClick={()=>setConfirmDelete(p)}>Delete</RowBtn>
-                  </RowActions>
+                <td style={ACT_COL_CELL} data-norow>
+                  <div style={ACT_COL_INNER}>
+                    <RowBtn type="edit" onClick={e=>{ e.stopPropagation(); setEditingPayment(p); }}>Edit</RowBtn>
+                    <RowBtn type="delete" onClick={e=>{ e.stopPropagation(); setConfirmDelete(p); }}>Delete</RowBtn>
+                  </div>
                 </td>
               </tr>
             ))}</tbody>
@@ -5077,6 +5168,77 @@ function AddGlobalInvoiceModal({ allProjects, allInvoices=[], onConfirm, onCance
   );
 }
 
+// ─── Invoice Detail Modal ─────────────────────────────────────────────────────
+function InvoiceDetailModal({ inv, onClose, onEdit, onDelete, onViewFile }){
+  if(!inv) return null;
+  const st = INV_ST.find(s=>s.v===(inv.status||inv.invoiceStatus))||INV_ST[0];
+  const rows = [
+    { label:'Invoice #',    value: fmtInvId(inv),                              color: C.accent },
+    { label:'Project',      value: inv.project||'—',                           color: C.text   },
+    { label:'Client',       value: inv.client||inv.supplier||'—',              color: C.text   },
+    { label:'Amount',       value: `${inv.currency||'AED'} ${Number(inv.amount||0).toLocaleString()}`, color: C.text, bold:true },
+    { label:'Due Date',     value: inv.dueFmt||inv.dueDate||'—',               color: (inv.status||inv.invoiceStatus)==='overdue'?C.red:C.muted },
+    { label:'Invoice Date', value: inv.invDate||'—',                           color: C.muted  },
+    { label:'Notes',         value: inv.desc||'—',                              color: C.muted  },
+  ].filter(r=>r.value&&r.value!=='—'||r.label==='Description');
+
+  return(
+    <Overlay onClose={onClose}>
+      <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,width:480,maxWidth:'95vw',boxShadow:'0 24px 60px rgba(0,0,0,.5)',display:'flex',flexDirection:'column',overflow:'hidden' }}>
+
+        {/* Header */}
+        <div style={{ padding:'22px 24px 18px',borderBottom:`1px solid ${C.border}`,display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:12 }}>
+          <div style={{ display:'flex',alignItems:'center',gap:12 }}>
+            <div style={{ width:42,height:42,borderRadius:10,background:C.accentDim,border:`1px solid ${C.accentMid}`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,flexShrink:0 }}>🧾</div>
+            <div>
+              <div style={{ color:C.muted,fontFamily:F,fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',marginBottom:3 }}>Invoice</div>
+              <div style={{ color:C.accent,fontFamily:F,fontWeight:700,fontSize:18,lineHeight:1.2 }}>{fmtInvId(inv)}</div>
+            </div>
+          </div>
+          <div style={{ display:'flex',alignItems:'center',gap:8,flexShrink:0 }}>
+            <span style={{ background:st.c+'22',color:st.c,border:`1px solid ${st.c}55`,padding:'4px 12px',borderRadius:6,fontFamily:F,fontSize:12,fontWeight:700 }}>{st.l}</span>
+            <button onClick={onClose} style={{ background:'transparent',border:'none',color:C.muted,fontSize:20,cursor:'pointer',lineHeight:1,padding:4 }}>✕</button>
+          </div>
+        </div>
+
+        {/* Fields */}
+        <div style={{ padding:'18px 24px',display:'flex',flexDirection:'column',gap:10 }}>
+          {rows.map(r=>(
+            <div key={r.label} style={{ display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:16,paddingBottom:10,borderBottom:`1px solid ${C.border}22` }}>
+              <span style={{ color:C.muted,fontFamily:F,fontSize:12,fontWeight:600,flexShrink:0,minWidth:100 }}>{r.label}</span>
+              <span style={{ color:r.color||C.text,fontFamily:F,fontSize:13,fontWeight:r.bold?700:400,textAlign:'right',wordBreak:'break-word' }}>{r.value}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* File attachment — view inline using existing FilePreviewModal */}
+        {inv.dataUrl&&(
+          <div style={{ padding:'0 24px 14px' }}>
+            <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:'10px 14px',display:'flex',alignItems:'center',gap:10 }}>
+              <span style={{ fontSize:18 }}>📎</span>
+              <div style={{ flex:1,minWidth:0 }}>
+                <div style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{inv.name||'Invoice File'}</div>
+                {inv.size>0&&<div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:1 }}>{(inv.size/1024).toFixed(0)} KB</div>}
+              </div>
+              <div style={{ display:'flex',gap:6,flexShrink:0 }}>
+                <button onClick={()=>onViewFile(inv)} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}44`,padding:'5px 12px',borderRadius:6,fontFamily:F,fontSize:11,fontWeight:700,cursor:'pointer' }}>👁 View</button>
+                <a href={inv.dataUrl} download={inv.name||'invoice'} style={{ background:C.accentDim,color:C.accent,border:`1px solid ${C.accentMid}`,padding:'5px 12px',borderRadius:6,fontFamily:F,fontSize:11,fontWeight:700,textDecoration:'none',display:'flex',alignItems:'center' }}>↓ Download</a>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Actions */}
+        <div style={{ padding:'14px 24px 20px',display:'flex',gap:8,justifyContent:'flex-end',borderTop:`1px solid ${C.border}` }}>
+          <button onClick={onClose} style={{ background:'transparent',border:`1px solid ${C.border}`,color:C.muted,padding:'8px 18px',borderRadius:8,fontFamily:F,fontSize:13,cursor:'pointer' }}>Close</button>
+          <button onClick={()=>{ onClose(); onEdit(inv); }} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}44`,padding:'8px 18px',borderRadius:8,fontFamily:F,fontSize:13,fontWeight:700,cursor:'pointer' }}>✏️ Edit</button>
+          <button onClick={()=>{ onClose(); onDelete(inv); }} style={{ background:C.redDim,color:C.red,border:`1px solid ${C.red}44`,padding:'8px 18px',borderRadius:8,fontFamily:F,fontSize:13,fontWeight:700,cursor:'pointer' }}>🗑 Delete</button>
+        </div>
+      </div>
+    </Overlay>
+  );
+}
+
 function InvoicingPage({ allProjects=[], allInvoices=[], addInvoice, updateInvoice, removeInvoice }){
   const ready=allInvoices!==undefined;
   const [projFilter,setProjFilter]=useState("all");
@@ -5087,6 +5249,7 @@ function InvoicingPage({ allProjects=[], allInvoices=[], addInvoice, updateInvoi
   const [confirmDelete,setConfirmDelete]=useState(null);
   const [confirmEdit,setConfirmEdit]=useState(null); // {invoice, patch}
   const [previewInv,setPreviewInv]=useState(null);
+  const [selectedInv,setSelectedInv]=useState(null);
 
   const filtered=useMemo(()=>allInvoices.filter(inv=>{
     if(projFilter!=="all"&&inv.project!==projFilter)return false;
@@ -5112,6 +5275,7 @@ function InvoicingPage({ allProjects=[], allInvoices=[], addInvoice, updateInvoi
   return(
     <div>
       {previewInv&&<FilePreviewModal file={previewInv} onClose={()=>setPreviewInv(null)}/>}
+      {selectedInv&&<InvoiceDetailModal inv={selectedInv} onClose={()=>setSelectedInv(null)} onEdit={inv=>setEditing(inv)} onDelete={inv=>setConfirmDelete(inv)} onViewFile={inv=>{ setSelectedInv(null); setPreviewInv(inv); }}/>}
       {showAdd&&<AddGlobalInvoiceModal allProjects={allProjects} allInvoices={allInvoices} onConfirm={async inv=>{await addInvoice(inv);setShowAdd(false);}} onCancel={()=>setShowAdd(false)}/>}
       {editing&&<EditInvoiceModal invoice={editing} allProjects={allProjects}
         onConfirm={patch=>setConfirmEdit({invoice:editing,patch})}
@@ -5175,27 +5339,30 @@ function InvoicingPage({ allProjects=[], allInvoices=[], addInvoice, updateInvoi
           ?<EmptyState icon="🧾" title="No invoices match your filters" sub="Try clearing your filters"/>
           :<table style={{ width:"100%",borderCollapse:"collapse",fontFamily:F,fontSize:13 }}>
             <thead><tr style={{ borderBottom:`1px solid ${C.border}`,background:C.surface }}>
-              {["Invoice #","Project","Client","Amount","Due Date","Status",""].map(h=><th key={h} style={TH()}>{h}</th>)}
+              {["Invoice #","Project","Client","Amount","Due Date","Status"].map(h=><th key={h} style={TH()}>{h}</th>)}
+              <th style={ACT_COL_CELL}><div style={ACT_COL_INNER_TH}>Actions</div></th>
             </tr></thead>
             <tbody>{filtered.map((inv,i)=>{
               const st=INV_ST.find(s=>s.v===(inv.status||inv.invoiceStatus))||INV_ST[0];
               return(
-                <tr key={inv.id} style={{ borderBottom:i<filtered.length-1?`1px solid ${C.border}22`:"none",transition:"background .15s" }}
+                <tr key={inv.id}
+                  onClick={e=>{ if(e.target.closest('[data-norow]')) return; setSelectedInv(inv); }}
+                  style={{ borderBottom:i<filtered.length-1?`1px solid ${C.border}22`:"none",transition:"background .15s",cursor:"pointer" }}
                   onMouseEnter={e=>e.currentTarget.style.background=C.surface} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
                   <td style={TD({color:C.accent,fontWeight:700})}>{fmtInvId(inv)}</td>
                   <td style={TD({color:C.text,fontWeight:600})}>{inv.project||"—"}</td>
                   <td style={TD({color:C.muted})}>{inv.client||"—"}</td>
                   <td style={TD({color:C.text,fontWeight:700})}>${Number(inv.amount||0).toLocaleString()}</td>
                   <td style={TD({color:(inv.status||inv.invoiceStatus)==="overdue"?C.red:C.muted})}>{inv.dueFmt||inv.dueDate||"—"}</td>
-                  <td style={TD()}>
-                    <button onClick={()=>cycleStatus(inv)} title="Click to cycle status" style={{ background:st.c+"22",color:st.c,border:`1px solid ${st.c}55`,padding:"4px 10px",borderRadius:5,fontFamily:F,fontSize:12,fontWeight:700,cursor:"pointer" }}>{st.l}</button>
+                  <td style={TD()} data-norow>
+                    <button onClick={e=>{ e.stopPropagation(); cycleStatus(inv); }} title="Click to cycle status" style={{ background:st.c+"22",color:st.c,border:`1px solid ${st.c}55`,padding:"4px 10px",borderRadius:5,fontFamily:F,fontSize:12,fontWeight:700,cursor:"pointer" }}>{st.l}</button>
                   </td>
-                  <td style={TD()}>
-                    <RowActions>
-                      {inv.dataUrl&&<RowBtn type="view" onClick={()=>setPreviewInv(inv)}>View</RowBtn>}
-                      <RowBtn type="edit" onClick={()=>setEditing(inv)}>Edit</RowBtn>
-                      <RowBtn type="delete" onClick={()=>setConfirmDelete(inv)}>Delete</RowBtn>
-                    </RowActions>
+                  <td style={ACT_COL_CELL} data-norow>
+                    <div style={ACT_COL_INNER}>
+                      {inv.dataUrl&&<RowBtn type="view" onClick={e=>{ e.stopPropagation(); setPreviewInv(inv); }}>View</RowBtn>}
+                      <RowBtn type="edit" onClick={e=>{ e.stopPropagation(); setEditing(inv); }}>Edit</RowBtn>
+                      <RowBtn type="delete" onClick={e=>{ e.stopPropagation(); setConfirmDelete(inv); }}>Delete</RowBtn>
+                    </div>
                   </td>
                 </tr>
               );

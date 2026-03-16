@@ -261,7 +261,7 @@ export const dbProfiles = {
   getCompanyUsers: () => supabase.from('profiles').select('*').eq('company_id', cid()),
 
   // Update non-sensitive profile fields (job title, phone, status, colour)
-  // Role and permissions are intentionally excluded — managed via UsersPage with superadmin check
+  // Role and permissions intentionally excluded here — those use dedicated methods below
   updateProfile: (id, patch) => {
     const mapped = {}
     if (patch.job_title !== undefined) mapped.job_title = patch.job_title
@@ -270,6 +270,14 @@ export const dbProfiles = {
     if (patch.color     !== undefined) mapped.color     = patch.color
     return supabase.from('profiles').update(mapped).eq('id', id)
   },
+
+  // Update tab permissions for a user — RLS enforces only superadmins can do this
+  updatePermissions: (userId, permissions) =>
+    supabase.from('profiles').update({ permissions }).eq('id', userId),
+
+  // Update role for a user — RLS enforces only superadmins can do this
+  updateRole: (userId, role) =>
+    supabase.from('profiles').update({ role }).eq('id', userId),
 }
 
 // ── Helper: map DB row → app shape ────────────────────────────────────────────

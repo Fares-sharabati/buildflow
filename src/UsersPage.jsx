@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { useState, useEffect } from 'react'
 import { supabase } from './supabaseClient'
+import { dbProfiles } from './db.js'
 
 const F = `'Inter','Segoe UI',sans-serif`
 const C = {
@@ -61,7 +62,7 @@ export default function UsersPage({ currentUser, profile }) {
   }
 
   const updatePermissions = async (userId, perms) => {
-    const { error } = await supabase.from('profiles').update({ permissions: perms }).eq('id', userId)
+    const { error } = await dbProfiles.updatePermissions(userId, perms)
     if (!error) {
       setUsers(prev => prev.map(u => u.id === userId ? { ...u, permissions: perms } : u))
       setSaved(userId)
@@ -70,7 +71,7 @@ export default function UsersPage({ currentUser, profile }) {
   }
 
   const updateRole = async (userId, role) => {
-    const { error } = await supabase.from('profiles').update({ role }).eq('id', userId)
+    const { error } = await dbProfiles.updateRole(userId, role)
     if (!error) {
       setUsers(prev => prev.map(u => u.id === userId ? { ...u, role } : u))
       setSaved(userId)
