@@ -55,6 +55,7 @@ const Ic = {
   Warning: ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>,
   Receipt: ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><line x1="16" y1="8" x2="8" y2="8"/><line x1="16" y1="12" x2="8" y2="12"/><line x1="11" y1="16" x2="8" y2="16"/></svg>,
   Photo:   ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>,
+  Pen:     ({size=14,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>,
   Note:    ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>,
   // ── Nav icons ─────────────────────────────────────────────────────────────────
   Dashboard: ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>,
@@ -566,10 +567,11 @@ function InlineFormShell({ header,accent,saveLabel="Save",onSave,onCancel,err,sa
         <button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:20,cursor:"pointer",lineHeight:1 }}>✕</button>
       </div>
       {children}
-      {err&&<div style={{ color:C.red,fontFamily:F,fontSize:12,marginTop:10 }}>{err}</div>}
+      {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"8px 12px",color:C.red,fontFamily:F,fontSize:12,marginTop:10 }}>⚠ {err}</div>}
       <div style={{ display:"flex",gap:10,marginTop:16,justifyContent:"flex-end" }}>
-        <button onClick={onCancel} style={{ background:"transparent",color:C.muted,border:`1px solid ${C.border}`,padding:"8px 18px",borderRadius:8,fontFamily:F,fontSize:13,cursor:"pointer" }}>Cancel</button>
-        <button onClick={onSave} disabled={saving} style={{ background:saving?"transparent":accent||C.accent,color:saving?accent||C.accent:"#000",border:saving?`1px solid ${accent||C.accent}44`:"none",padding:"8px 20px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer" }}>
+        <button onClick={onCancel} disabled={saving} style={{ background:"transparent",color:C.muted,border:`1px solid ${C.border}`,padding:"8px 18px",borderRadius:8,fontFamily:F,fontSize:13,cursor:saving?"not-allowed":"pointer",opacity:saving?0.5:1 }}>Cancel</button>
+        <button onClick={saving?undefined:onSave} disabled={saving} style={{ background:saving?"transparent":accent||C.accent,color:saving?accent||C.accent:"#000",border:saving?`1px solid ${accent||C.accent}44`:"none",padding:"8px 20px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:saving?"not-allowed":"pointer",display:"flex",alignItems:"center",gap:8,minWidth:100,justifyContent:"center" }}>
+          {saving&&<div style={{ width:13,height:13,border:`2px solid ${accent||C.accent}44`,borderTopColor:accent||C.accent,borderRadius:"50%",animation:"spin .7s linear infinite" }}/>}
           {saving?"Saving…":saveLabel}
         </button>
       </div>
@@ -589,17 +591,17 @@ function InlineFormShell({ header,accent,saveLabel="Save",onSave,onCancel,err,sa
  */
 function RowBtn({ type, onClick, children }){
   const cfg = {
-    edit:    { bg:()=>C.blueDim,       color:()=>C.blue,  border:()=>`1px solid ${C.blue}44`,  label:"Edit",   icon:"✏️" },
-    delete:  { bg:()=>"transparent",   color:()=>C.red,   border:()=>`1px solid ${C.red}33`,   label:"Delete", icon:null },
-    view:    { bg:()=>"transparent",   color:()=>C.blue,  border:()=>`1px solid ${C.blue}33`,  label:"View",   icon:null },
-    receipt: { bg:()=>C.greenDim,      color:()=>C.green, border:()=>`1px solid ${C.green}44`, label:"Receipt",icon:null },
+    edit:    { bg:()=>C.blueDim,       color:()=>C.blue,  border:()=>`1px solid ${C.blue}44`,  label:"Edit",    icon:<Ic.Pen size={11}/> },
+    delete:  { bg:()=>"transparent",   color:()=>C.red,   border:()=>`1px solid ${C.red}33`,   label:"Delete",  icon:null },
+    view:    { bg:()=>"transparent",   color:()=>C.blue,  border:()=>`1px solid ${C.blue}33`,  label:"View",    icon:null },
+    receipt: { bg:()=>C.greenDim,      color:()=>C.green, border:()=>`1px solid ${C.green}44`, label:"Receipt", icon:null },
   }[type]||{ bg:()=>C.surface, color:()=>C.muted, border:()=>`1px solid ${C.border}`, label:"", icon:null };
   return(
     <button onClick={onClick}
       style={{ background:cfg.bg(), color:cfg.color(), border:cfg.border(),
         padding:"4px 10px", borderRadius:6, fontFamily:F, fontSize:11, fontWeight:700,
         cursor:"pointer", display:"inline-flex", alignItems:"center", gap:4, whiteSpace:"nowrap" }}>
-      {cfg.icon&&<span style={{fontSize:10,lineHeight:1}}>{cfg.icon}</span>}
+      {cfg.icon}
       {children||cfg.label}
     </button>
   );
@@ -637,9 +639,11 @@ function Btn({ onClick, disabled, variant="primary", color, size="md", children,
 }
 
 /** Metric stat card used in page header stat rows */
-function StatCard({ label, value, sub, color }){
+function StatCard({ label, value, sub, color, onClick }){
   return(
-    <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:10, padding:"18px 22px", flex:1, minWidth:130 }}>
+    <div onClick={onClick} style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:10, padding:"18px 22px", flex:1, minWidth:130, cursor:onClick?"pointer":"default", transition:"border-color .18s" }}
+      onMouseEnter={e=>{ if(onClick) e.currentTarget.style.borderColor=(color||C.accent)+"88"; }}
+      onMouseLeave={e=>{ if(onClick) e.currentTarget.style.borderColor=C.border; }}>
       <div style={{ color:C.muted, fontSize:11, fontFamily:F, fontWeight:700, textTransform:"uppercase", letterSpacing:"0.05em", marginBottom:6 }}>{label}</div>
       <div style={{ color:color||C.text, fontSize:26, fontFamily:F, fontWeight:700, lineHeight:1 }}>{value}</div>
       {sub&&<div style={{ color:C.muted, fontSize:12, fontFamily:F, marginTop:5 }}>{sub}</div>}
@@ -879,13 +883,20 @@ function InvModal({ pending,onConfirm,onCancel }){
 
 function FilePreviewModal({ file,onClose }){
   if(!file)return null;
-  const dataUrl = file.url||file.dataUrl||"";
+  const fileUrl = file.url||file.dataUrl||"";
   const name    = file.name||"Document";
-  const isImg   = dataUrl.startsWith("data:image");
-  const isPdf   = dataUrl.startsWith("data:application/pdf") || name.toLowerCase().endsWith(".pdf");
-  const canInline = isImg||isPdf;
   const ext     = name.split(".").pop().toLowerCase();
+  const isStorageUrl = fileUrl.startsWith("https://");
+  const isImg   = isStorageUrl
+    ? ["jpg","jpeg","png","gif","webp","bmp","tiff","svg"].includes(ext)
+    : fileUrl.startsWith("data:image");
+  const isPdf   = isStorageUrl
+    ? ext==="pdf"
+    : fileUrl.startsWith("data:application/pdf") || name.toLowerCase().endsWith(".pdf");
+  const canInline = isImg||isPdf;
   const typeLabel = isPdf?"PDF":isImg?"Image":ext.toUpperCase()||"Document";
+  // For storage URLs, use directly; for base64 blobs, use as-is
+  const dataUrl = fileUrl;
 
   return(
     <Overlay onClose={onClose}>
@@ -1109,7 +1120,7 @@ function AddInvoiceFormModal({ project, onConfirm, onCancel, allInvoices=[] }){
             </div>
             {/* Amount + Currency */}
             <div style={{ display:"flex",gap:14 }}>
-              <div style={{ flex:2 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setErr("");}} placeholder="0.00"/></div>
+              <div style={{ flex:2 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setErr("");}} onWheel={e=>e.target.blur()} placeholder="0.00"/></div>
               <div style={{ flex:1 }}><label style={LBL()}>Currency</label>
                 <select value={currency} onChange={e=>setCurrency(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
                   {["AED","USD","SAR","EUR","GBP","QAR","KWD"].map(c=><option key={c} value={c}>{c}</option>)}
@@ -1170,6 +1181,7 @@ function AddInvoiceFormModal({ project, onConfirm, onCancel, allInvoices=[] }){
 
 // ─── Module Panels ─────────────────────────────────────────────────────────────
 function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobalInvoice, onUpdateGlobalInvoice, allInvoices=[] }){
+  const cid = useCompany();
   // ─── SINGLE SOURCE OF TRUTH: global store only (no useFiles for invoices) ───
   const [preview,setPreview]     = useState(null);
   const [mode,setMode]           = useState("list"); // "list" | "add" | "edit"
@@ -1257,10 +1269,17 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
     try{
       const fmt = dueDate ? new Date(dueDate+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}) : "—";
       const invId = invNum.trim() || nextInvId(allInvoices);
+      // Upload file to storage if attached
+      let fileUrl = docFile?.url||docFile?.dataUrl||null;
+      let filePath = null;
+      if(docFile?._rawFile && cid){
+        const uploaded = await uploadFile(docFile._rawFile, 'invoices', cid);
+        if(uploaded){ fileUrl = uploaded.url; filePath = uploaded.path; }
+      }
       const invObj = {
         id: String(Date.now()), invId,
         name: docFile?.name||`${invId}.pdf`, size: docFile?.size||0,
-        dataUrl: docFile?.url||docFile?.dataUrl||null, url: docFile?.url||docFile?.dataUrl||null, icon: "receipt",
+        dataUrl: fileUrl, url: fileUrl, storagePath: filePath, icon: "receipt",
         invoiceStatus:status, status,
         desc: desc||invId,
         amount: parseFloat(amount), dueDate:fmt, dueDateISO:dueDate,
@@ -1272,8 +1291,9 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
         projId: project.id,
       };
       if(onAddGlobalInvoice) await onAddGlobalInvoice(invObj);
-      if(onActivity) onActivity("Invoice "+invId+" added","inv");
+      resetForm();
       setMode("list");
+      try{ if(onActivity) onActivity("Invoice "+invId+" added","inv"); } catch(_){}
     } catch(e){ setFormErr("Save failed: "+e.message); }
     finally{ setSaving(false); }
   };
@@ -1286,6 +1306,13 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
     try{
       const fmt = dueDate ? new Date(dueDate+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}) : "—";
       const displayId = invNum.trim()||editTarget.invId||editTarget.id;
+      // Upload new file if one was attached
+      let fileUrl = docFile?.url||docFile?.dataUrl||null;
+      let filePath = docFile?.storagePath||null;
+      if(docFile?._rawFile && cid){
+        const uploaded = await uploadFile(docFile._rawFile, 'invoices', cid);
+        if(uploaded){ fileUrl = uploaded.url; filePath = uploaded.path; }
+      }
       const patch = {
         invId: displayId,
         supplier: supplier.trim()||"—",
@@ -1293,11 +1320,12 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
         due: dueDate, dueFmt:fmt, dueDate:fmt, dueDateISO:dueDate,
         amount: parseFloat(amount), currency,
         desc, status, invoiceStatus:status,
-        ...(docFile ? {dataUrl:docFile.dataUrl,name:docFile.name,size:docFile.size} : {}),
+        ...(docFile ? {dataUrl:fileUrl,url:fileUrl,storagePath:filePath,name:docFile.name,size:docFile.size} : {}),
       };
       if(onUpdateGlobalInvoice) await onUpdateGlobalInvoice(editTarget.id, patch);
-      if(onActivity) onActivity("Invoice "+displayId+" updated","edit");
+      resetForm();
       setMode("list"); setEditTarget(null);
+      try{ if(onActivity) onActivity("Invoice "+displayId+" updated","edit"); } catch(_){}
     } catch(e){ setFormErr("Save failed: "+e.message); }
     finally{ setSaving(false); }
   };
@@ -1310,7 +1338,8 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
   };
 
   // ─── Shared doc attachment widget ──────────────────────────────────────────
-  const DocZone = () => docFile
+  // ─── renderDocZone / renderFormBody: plain functions (not components) to avoid remount scroll ──
+  const renderDocZone = () => docFile
     ? <div style={{ background:C.surface,border:`1px solid ${C.green}44`,borderRadius:9,padding:"12px 14px" }}>
         {aiRunning&&<div style={{ color:C.purple,fontFamily:F,fontSize:11,marginBottom:8,display:"flex",alignItems:"center",gap:7 }}><div style={{ width:10,height:10,border:"2px solid",borderColor:C.purple,borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Extracting…</div>}
         {aiNote&&!aiRunning&&<div style={{ color:aiNote.startsWith("AI")?C.green:C.muted,fontFamily:F,fontSize:11,marginBottom:8,padding:"6px 9px",background:aiNote.startsWith("AI")?C.greenDim:"transparent",borderRadius:5 }}>{aiNote}</div>}
@@ -1335,8 +1364,8 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
         <div style={{ color:C.purple,fontFamily:F,fontSize:11,display:"flex",alignItems:"center",justifyContent:"center",gap:4 }}><Ic.Bot size={12} color={C.purple}/> AI will auto-extract invoice data</div>
       </div>;
 
-  // ─── Shared form body ──────────────────────────────────────────────────────
-  const FormBody = () => (<>
+  // ─── renderFormBody: call as {renderFormBody()} not {renderFormBody()} to avoid remount ──
+  const renderFormBody = () => (<>
     <div style={{ display:"flex",gap:12 }}>
       <div style={{ flex:2 }}><label style={LBL()}>Supplier / Company</label><input style={INP()} value={supplier} onChange={e=>setSupplier(e.target.value)} placeholder="e.g. Gulf Steel Co."/></div>
       <div style={{ flex:1 }}><label style={LBL()}>Invoice #</label><input style={INP()} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="INV-001"/></div>
@@ -1346,7 +1375,7 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
       <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><input style={{...INP(),colorScheme:"dark"}} type="date" value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
     </div>
     <div style={{ display:"flex",gap:12 }}>
-      <div style={{ flex:2 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setFormErr("");}} placeholder="0.00"/></div>
+      <div style={{ flex:2 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setFormErr("");}} onWheel={e=>e.target.blur()} placeholder="0.00"/></div>
       <div style={{ flex:1 }}><label style={LBL()}>Currency</label><select value={currency} onChange={e=>setCurrency(e.target.value)} style={{...INP(),cursor:"pointer"}}>{["AED","USD","SAR","EUR","GBP","QAR","KWD"].map(c=><option key={c}>{c}</option>)}</select></div>
     </div>
     <div><label style={LBL()}>Description / Notes</label><textarea style={{...INP(),resize:"none"}} rows={2} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="Scope or summary"/></div>
@@ -1355,7 +1384,7 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
     </div>
     <div>
       <label style={LBL()}>Document <span style={{color:C.muted,fontWeight:400}}>(optional — AI auto-extracts)</span></label>
-      <DocZone/>
+      {renderDocZone()}
       <input ref={fileRef} type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.doc,.docx,.xls,.xlsx" style={{ display:"none" }} onChange={e=>{const f=e.target.files[0];if(f)handleDoc(f);e.target.value="";}}/>
     </div>
   </>);
@@ -1413,14 +1442,14 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
       {/* Add form */}
       {mode==="add"&&(
         <InlineFormShell header="New Invoice" accent={C.accent} saveLabel="Save Invoice" onSave={submitAdd} onCancel={()=>{setMode("list");resetForm();}} err={formErr} saving={saving}>
-          <FormBody/>
+          {renderFormBody()}
         </InlineFormShell>
       )}
 
       {/* Edit form */}
       {mode==="edit"&&(
         <InlineFormShell header={`Edit Invoice — ${editTarget?.invId||editTarget?.id||""}`} accent={C.blue} saveLabel="Save Changes" onSave={submitEdit} onCancel={()=>{setMode("list");setEditTarget(null);resetForm();}} err={formErr} saving={saving}>
-          <FormBody/>
+          {renderFormBody()}
         </InlineFormShell>
       )}
 
@@ -2228,6 +2257,7 @@ function UploadOfferModal({ tenderId, onConfirm, onCancel }){
 // ─── TENDERS PAGE ──────────────────────────────────────────────────────────────
 function TendersPage({ allProjects=[] }){
   const { tenders,ready,addTender,removeTender,addOffer,removeOffer }=useTenders();
+  const [previewFile, setPreviewFile] = useState(null);
   const [showAddMat,setShowAddMat]=useState(false);
   const [addingOffer,setAddingOffer]=useState(null);
   const [analyses,setAnalyses]=useState({});
@@ -2274,7 +2304,7 @@ function TendersPage({ allProjects=[] }){
   return(
     <div>
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
-
+      {previewFile&&<FilePreviewModal file={previewFile} onClose={()=>setPreviewFile(null)}/>}
       {confirmDelTender&&(
         <ConfirmDialog title="Delete Tender?"
           message={`Delete "${confirmDelTender.name}" and all its offers? This cannot be undone.`}
@@ -2359,7 +2389,12 @@ function TendersPage({ allProjects=[] }){
                             <td style={{ color:C.text,padding:"10px 12px",maxWidth:140,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{o.quality||"—"}</td>
                             <td style={{ color:C.muted,padding:"10px 12px",whiteSpace:"nowrap" }}>{o.delivery||"—"}</td>
                             <td style={{ color:C.muted,padding:"10px 12px",maxWidth:140,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{o.notes||"—"}</td>
-                            <td style={{ padding:"10px 12px" }}><RowBtn type="delete" onClick={()=>setConfirmDelOffer({tenderId:tender.id,offerId:o.id,tenderName:tender.name,supplierName:o.supplier,price:o.price})}>Delete</RowBtn></td>
+                            <td style={{ padding:"10px 12px" }}>
+                              <RowActions>
+                                {(o.url||o.dataUrl)&&<RowBtn type="view" onClick={()=>setPreviewFile({url:o.url||o.dataUrl,name:o.fileName||o.supplier+' offer',size:o.fileSize})}>View</RowBtn>}
+                                <RowBtn type="delete" onClick={()=>setConfirmDelOffer({tenderId:tender.id,offerId:o.id,tenderName:tender.name,supplierName:o.supplier,price:o.price})}>Delete</RowBtn>
+                              </RowActions>
+                            </td>
                           </tr>
                         );
                       })}</tbody>
@@ -2502,7 +2537,7 @@ function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
             </select>
           </div>
           <div style={{ display:"flex",gap:12 }}>
-            <div style={{ flex:1 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" placeholder="0.00" value={amount} onChange={e=>{setAmount(e.target.value);setErr("");}}/></div>
+            <div style={{ flex:1 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" placeholder="0.00" value={amount} onWheel={e=>e.target.blur()} onChange={e=>{setAmount(e.target.value);setErr("");}}/></div>
             <div style={{ flex:1 }}><label style={LBL()}>Payment Date *</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
           </div>
           <div><label style={LBL()}>Payment Method</label>
@@ -2612,7 +2647,7 @@ function EditPaymentModal({ payment, allProjects, allInvoices, onConfirm, onCanc
               </select>
             </div>
             <div style={{ display:"flex",gap:12 }}>
-              <div style={{ flex:1 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" placeholder="0.00" value={amount} onChange={e=>{setAmount(e.target.value);setErr("");}}/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" placeholder="0.00" value={amount} onWheel={e=>e.target.blur()} onChange={e=>{setAmount(e.target.value);setErr("");}}/></div>
               <div style={{ flex:1 }}><label style={LBL()}>Payment Date *</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
             </div>
             <div><label style={LBL()}>Payment Method</label>
@@ -2675,7 +2710,91 @@ function PayReceiptBtn({ receipt }){
   </>);
 }
 // Payments panel inside project detail
+// ─── Contracts Panel ──────────────────────────────────────────────────────────
+function ContractsPanel({ project, onActivity }){
+  const cid = useCompany();
+  const { files, ready, add, remove } = useFiles(`contracts:${project.id}`);
+  const [preview, setPreview] = useState(null);
+  const [confirmDel, setConfirmDel] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [note, setNote] = useState('');
+  const fileRef = useRef();
+
+  const handleUpload = async(raw) => {
+    if(!raw) return;
+    setUploading(true);
+    await add({ name:raw.name, size:raw.size, uploadedAt:new Date().toLocaleDateString(), note:note.trim() }, raw);
+    if(onActivity) onActivity('Contract uploaded: '+raw.name, '📜');
+    setNote('');
+    setUploading(false);
+  };
+
+  return(
+    <div>
+      {preview&&<FilePreviewModal file={preview} onClose={()=>setPreview(null)}/>}
+      {confirmDel&&(
+        <ConfirmDialog title="Delete Contract?" message={`Delete "${confirmDel.name}"? This cannot be undone.`}
+          confirmLabel="Yes, Delete" variant="delete"
+          onConfirm={()=>{ remove(confirmDel.id); if(onActivity) onActivity('Contract deleted: '+confirmDel.name,'🗑️'); setConfirmDel(null); }}
+          onCancel={()=>setConfirmDel(null)}/>
+      )}
+
+      {/* Upload area */}
+      <div style={{ marginBottom:16 }}>
+        <div style={{ display:'flex',gap:10,marginBottom:8 }}>
+          <input value={note} onChange={e=>setNote(e.target.value)} placeholder="Description or notes (optional)"
+            style={{ ...INP(),flex:1,fontSize:12,padding:'8px 12px' }}/>
+          <button onClick={()=>fileRef.current?.click()} disabled={uploading}
+            style={{ background:C.purple,color:'#fff',border:'none',padding:'8px 18px',borderRadius:8,fontFamily:F,fontWeight:700,fontSize:12,cursor:'pointer',flexShrink:0,display:'flex',alignItems:'center',gap:6,opacity:uploading?0.6:1 }}>
+            {uploading ? <><div style={{ width:12,height:12,border:'2px solid #ffffff44',borderTopColor:'#fff',borderRadius:'50%',animation:'spin .7s linear infinite' }}/>Uploading…</> : <>📜 Upload Contract</>}
+          </button>
+        </div>
+        <input ref={fileRef} type="file" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx" style={{ display:'none' }}
+          onChange={e=>{ const f=e.target.files[0]; if(f) handleUpload(f); e.target.value=''; }}/>
+        <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>PDF, images, or Word documents · Max 10MB</div>
+      </div>
+
+      {/* File list */}
+      {!ready&&<div style={{ color:C.muted,fontFamily:F,fontSize:12,textAlign:'center',padding:'20px 0' }}>Loading…</div>}
+      {ready&&files.length===0&&(
+        <div style={{ border:`2px dashed ${C.border}`,borderRadius:10,padding:'32px 20px',textAlign:'center',color:C.muted,fontFamily:F,fontSize:13 }}>
+          <div style={{ fontSize:32,marginBottom:8 }}>📜</div>No contracts uploaded yet
+        </div>
+      )}
+      {ready&&files.length>0&&(
+        <div style={{ display:'flex',flexDirection:'column',gap:8 }}>
+          {files.map(f=>{
+            const isPdf = f.name?.toLowerCase().endsWith('.pdf');
+            const isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(f.name||'');
+            return(
+              <div key={f.id} style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:'12px 16px',display:'flex',alignItems:'center',gap:12 }}>
+                <div style={{ width:38,height:38,borderRadius:8,background:C.purpleDim,border:`1px solid ${C.purple}44`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:18,flexShrink:0 }}>
+                  {isPdf?'📄':isImg?'🖼️':'📎'}
+                </div>
+                <div style={{ flex:1,minWidth:0 }}>
+                  <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:13,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{f.name}</div>
+                  <div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:2,display:'flex',gap:10 }}>
+                    {f.size&&<span>{(f.size/1024).toFixed(0)} KB</span>}
+                    {f.uploadedAt&&<span>{f.uploadedAt}</span>}
+                    {f.note&&<span style={{ color:C.accent }}>"{f.note}"</span>}
+                  </div>
+                </div>
+                <RowActions>
+                  {(f.url||f.dataUrl)&&<RowBtn type="view" onClick={()=>setPreview(f)}>View</RowBtn>}
+                  <RowBtn type="delete" onClick={()=>setConfirmDel(f)}>Delete</RowBtn>
+                </RowActions>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+
 function PaymentsPanel({ project, payments, addPayment, updatePayment, removePayment, allProjects, allInvoices, onActivity }){
+  const cid = useCompany();
   const [showAdd,setShowAdd]=useState(false);
   const [editingPayment,setEditingPayment]=useState(null);
   const [confirmEditPay,setConfirmEditPay]=useState(null);
@@ -2705,12 +2824,18 @@ function PaymentsPanel({ project, payments, addPayment, updatePayment, removePay
     setPaySaving(true);
     try{
       const fmtD=d=>new Date(d+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
-      const payObj={ id:`pay-${Date.now()}`,projId:project.id,project:project.name,amount:parseFloat(payAmount),date:payDate,dateFmt:fmtD(payDate),method:payMethod,invRef:payInvRef||null,notes:payNotes.trim(),receipt:payReceipt||null,recordedAt:new Date().toLocaleDateString() };
-      await Promise.resolve(addPayment(payObj));
-      if(onActivity) onActivity(`Payment $${parseFloat(payAmount).toLocaleString()} recorded`,"💰");
+      // Upload receipt to storage if attached
+      let receiptData = payReceipt ? { name:payReceipt.name, size:payReceipt.size, url:payReceipt.dataUrl } : null;
+      if(payReceipt?._rawFile && cid){
+        const uploaded = await uploadFile(payReceipt._rawFile, 'receipts', cid);
+        if(uploaded) receiptData = { name:payReceipt.name, size:payReceipt.size, url:uploaded.url, path:uploaded.path };
+      }
+      const payObj={ id:`pay-${Date.now()}`,projId:project.id,project:project.name,amount:parseFloat(payAmount),date:payDate,dateFmt:fmtD(payDate),method:payMethod,invRef:payInvRef||null,notes:payNotes.trim(),receipt:receiptData||null,recordedAt:new Date().toLocaleDateString() };
+      if(addPayment) await addPayment(payObj);
       setPayAmount(""); setPayDate(""); setPayMethod(PAYMENT_METHODS[0]);
       setPayInvRef(""); setPayNotes(""); setPayReceipt(null); setPayErr("");
       setShowAdd(false);
+      try{ if(onActivity) onActivity(`Payment $${parseFloat(payAmount).toLocaleString()} recorded`,"💰"); } catch(_){}
     } catch(e){
       setPayErr("Save failed: "+e.message);
     } finally {
@@ -2860,8 +2985,8 @@ function PaymentsPage({ payments, allProjects, addPayment, allInvoices, removePa
         action={<Btn variant="success" size="md" onClick={()=>setShowAdd(true)}>+ Record Payment</Btn>}/>
       <div style={{ display:"flex",gap:12,marginBottom:24,flexWrap:"wrap" }}>
         <StatCard label="Total Received"  value={"$"+total.toLocaleString()}         sub={`${payments.length} transactions`} color={C.green}/>
-        <StatCard label="This Month"      value={"$"+thisMonth.toLocaleString()}      sub="current month"                     color={C.blue}/>
-        <StatCard label="Transactions"    value={payments.length}                     sub="all time"                          color={C.purple}/>
+        <StatCard label="This Month"      value={"$"+thisMonth.toLocaleString()}      sub="current month"                     color={C.blue}   onClick={()=>setProjFilter("all")}/>
+        <StatCard label="Transactions"    value={payments.length}                     sub="all time"                          color={C.purple} onClick={()=>setProjFilter("all")}/>
       </div>
       <div style={{ display:"flex",gap:10,marginBottom:20,flexWrap:"wrap" }}>
         <select value={projFilter} onChange={e=>setProjFilter(e.target.value)} style={{ ...INP(),width:"auto",padding:"8px 14px",borderRadius:8,cursor:"pointer" }}>
@@ -3299,7 +3424,7 @@ function usePhotoComments(projectId){
   useEffect(()=>{ let alive=true; (async()=>{ const r=await storage.get(key); if(alive)setMap(r?JSON.parse(r.value):{}); })(); return()=>{alive=false;}; },[key]);
   const save=async(next)=>{ setMap(next); await storage.set(key,JSON.stringify(next)); };
   const addComment=(photoId,text,author)=>{
-    const c={ id:`c${Date.now()}`,text:text.trim(),author:author||"Jordan Blake",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}) };
+    const c={ id:`c${Date.now()}`,text:text.trim(),author:author||"You",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}) };
     const next={...(map||{}),[photoId]:[...((map||{})[photoId]||[]),c]};
     save(next);
   };
@@ -3420,7 +3545,7 @@ function PhotoCard({ photo, comments, onOpen, onDelete }){
         {/* overlay buttons */}
         <div style={{ position:"absolute",top:6,right:6,display:"flex",gap:5,opacity:0,transition:"opacity .18s" }} className="photo-actions">
           <button onClick={e=>{e.stopPropagation();onOpen(photo);}} style={{ background:"rgba(0,0,0,.65)",color:"#fff",border:"none",borderRadius:5,width:28,height:28,fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center" }} title="View & comment">💬</button>
-          <button onClick={e=>{e.stopPropagation();onDelete(photo.id);}} style={{ background:"rgba(200,50,50,.8)",color:"#fff",border:"none",borderRadius:5,width:28,height:28,fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center" }} title="Delete">×</button>
+          <button onClick={e=>{e.stopPropagation();onDelete(photo.id,'confirm');}} style={{ background:"rgba(200,50,50,.8)",color:"#fff",border:"none",borderRadius:5,width:28,height:28,fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center" }} title="Delete">×</button>
         </div>
         {/* comment count badge */}
         {comments.length>0&&(
@@ -3451,7 +3576,7 @@ function PhotoCard({ photo, comments, onOpen, onDelete }){
 }
 
 // ─── Project Detail Page ───────────────────────────────────────────────────────
-function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPayment,updatePayment,removePayment,allProjects=[],allInvoices=[],addInvoice,removeGlobalInvoice,updateGlobalInvoice,onUpdateProject,onLog }){ 
+function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPayment,updatePayment,removePayment,allProjects=[],allInvoices=[],addInvoice,removeGlobalInvoice,updateGlobalInvoice,onUpdateProject,onLog,profile }){ 
   const [contactOpen,setContactOpen] = useState(false);
   const [editingProject,setEditingProject] = useState(false);
   const [confirmProjectPatch,setConfirmProjectPatch] = useState(null);
@@ -3475,6 +3600,7 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
   };
   const mergedLog= useMemo(()=>[...extraLog.filter(e=>!log.find(l=>l.id===e.id)),...log].sort((a,b)=>(b.id||0)-(a.id||0)),[extraLog,log]);
   const saveNote = ()=>{ if(!noteText.trim())return; const n={id:Date.now(),text:noteText.trim(),author:profile?.full_name||"User",time:new Date().toLocaleDateString()}; setNotes(p=>[n,...p]); pushLog("Note added","📝"); setNoteText(""); };
+  const [confirmDelPhoto, setConfirmDelPhoto] = useState(null);
   const uploadPhotos = async(files)=>{
     for(const f of Array.from(files)){
       await addPhoto({name:f.name,size:f.size}, f);
@@ -3516,6 +3642,7 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
     invoices: { icon:<Ic.Receipt size={22} color={C.accent}/>, title:"Invoices",  color:C.accent, dim:C.accentDim, sub:`${invCount} invoice${invCount!==1?"s":""}`, content:<InvoicesPanel project={project} onActivity={pushLog} onAddGlobalInvoice={addInvoice} onUpdateGlobalInvoice={updateGlobalInvoice} onRemoveGlobalInvoice={removeGlobalInvoice} allInvoices={allInvoices}/> },
     payments: { icon:"💰", title:"Payments",  color:C.green,  dim:C.greenDim,  sub:`${payCount} payment${payCount!==1?"s":""}`, content:<PaymentsPanel project={project} payments={projectPayments} addPayment={handleAddPayment} updatePayment={updatePayment} removePayment={removePayment} allProjects={allProjects} allInvoices={allInvoices} onActivity={pushLog}/> },
     plans:    { icon:"📐", title:"Plans",     color:C.blue,   dim:C.blueDim,   sub:`${planCount} document${planCount!==1?"s":""}`, content:<PlansPanel project={project} onActivity={pushLog}/> },
+    contracts:{ icon:"📜", title:"Contracts", color:C.purple, dim:C.purpleDim, sub:"Official documents",                                 content:<ContractsPanel project={project} onActivity={pushLog}/> },
     team:     { icon:"👷", title:"Team",      color:C.green,  dim:C.greenDim,  sub:`${teamCount} member${teamCount!==1?"s":""}`, content:<TeamPanel  project={project} onOpenTeamPage={onOpenTeam}/> },
   };
 
@@ -3639,6 +3766,12 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
 
           {/* Photos */}
           <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"20px 22px" }}>
+            {confirmDelPhoto&&(
+              <ConfirmDialog title="Delete Photo?" message="Are you sure you want to delete this photo? This cannot be undone."
+                confirmLabel="Yes, Delete" variant="delete"
+                onConfirm={()=>{ removePhoto(confirmDelPhoto); if(lightboxPhoto?.id===confirmDelPhoto)setLightboxPhoto(null); setConfirmDelPhoto(null); }}
+                onCancel={()=>setConfirmDelPhoto(null)}/>
+            )}
             {/* Lightbox */}
             {lightboxPhoto&&(
               <PhotoCommentModal
@@ -3672,7 +3805,7 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
                       photo={p}
                       comments={getComments(p.id)}
                       onOpen={setLightboxPhoto}
-                      onDelete={id=>{ removePhoto(id); if(lightboxPhoto?.id===id)setLightboxPhoto(null); }}
+                      onDelete={(id,mode)=>{ if(mode==='confirm') setConfirmDelPhoto(id); else { removePhoto(id); if(lightboxPhoto?.id===id)setLightboxPhoto(null); } }}
                     />
                   </div>
                 ))}
@@ -3934,6 +4067,7 @@ function NewProjectModal({ onConfirm, onCancel }){
   const [startISO,setStartISO]=useState("");
   const [endISO,setEndISO]=useState("");
   const [projType,setProjType]=useState("business");
+  const [projStatus,setProjStatus]=useState("active");
   const [contacts,setContacts]=useState([emptyContact()]);
   const [step,setStep]=useState(1); // 1=info, 2=timeline&type, 3=contacts
   const [err,setErr]=useState("");
@@ -3963,7 +4097,7 @@ function NewProjectModal({ onConfirm, onCancel }){
       id:newId, name:name.trim(), address:address.trim(), desc:desc.trim(),
       startDateISO:startISO, due:endISO,
       startDate:fmtD(startISO), dueFmt:fmtD(endISO),
-      projType, status:"quoting", progress:0, phase:"Quoting",
+      projType, status:projStatus, progress:0, phase:projStatus.charAt(0).toUpperCase()+projStatus.slice(1),
       value:0, location:address.trim().split(",")[0]||"",
       client:{ name:primaryClient.name, company:primaryClient.company||"", phone:primaryClient.phone||"", email:primaryClient.email||"", initials },
       contacts:validContacts,
@@ -4057,6 +4191,14 @@ function NewProjectModal({ onConfirm, onCancel }){
                       <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>{sub}</div>
                       <div style={{ width:16,height:16,borderRadius:"50%",border:`2px solid ${projType===v?v==="business"?C.purple:C.blue:C.border}`,background:projType===v?v==="business"?C.purple:C.blue:"transparent",marginTop:10,display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,color:"#000",fontWeight:700 }}>{projType===v&&"✓"}</div>
                     </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label style={{ ...LBL(),marginBottom:12 }}>Initial Status</label>
+                <div style={{ display:"flex",gap:8 }}>
+                  {[{v:"active",l:"Active",c:C.green},{v:"quoting",l:"Quoting",c:C.blue},{v:"on-hold",l:"On Hold",c:C.accent},{v:"completed",l:"Completed",c:C.purple}].map(s=>(
+                    <button key={s.v} onClick={()=>setProjStatus(s.v)} style={{ flex:1,padding:"9px 0",borderRadius:7,cursor:"pointer",fontFamily:F,fontSize:12,fontWeight:700,border:projStatus===s.v?`2px solid ${s.c}`:`1px solid ${C.border}`,background:projStatus===s.v?s.c+"22":"transparent",color:projStatus===s.v?s.c:C.muted,transition:"all .15s" }}>{s.l}</button>
                   ))}
                 </div>
               </div>
@@ -4246,78 +4388,133 @@ function DashWidget({ widgetId, type, allProjects, allInvoices, payments, tasks,
   const [showPicker,setShowPicker]=useState(false);
   const wt=WIDGET_TYPES.find(w=>w.id===type)||WIDGET_TYPES[0];
 
+  // Normalise activity log icons — some entries use codes instead of emoji
+  const iconMap = { "inv":"🧾","del":"🗑️","edit":"✏️","PAY":"💰","pay":"💰","🏗":"🏗","log":"📋" };
+  const normIcon = (ic) => (ic && ic.length <= 4 && iconMap[ic]) ? iconMap[ic] : (ic||"📋");
+
   const renderContent=()=>{
     if(type==="projects") return(
       <div>
-        {allProjects.filter(p=>p.status==="active").length===0&&<div style={{ color:C.muted,fontFamily:F,fontSize:12,padding:"12px 0" }}>No active projects</div>}
-        {allProjects.filter(p=>p.status==="active").map(p=>{
+        {allProjects.filter(p=>p.status==="active").length===0&&(
+          <div style={{ color:C.muted,fontFamily:F,fontSize:12,padding:"12px 0",textAlign:"center" }}>
+            No active projects<br/><span style={{ fontSize:10 }}>Create one in the Projects tab</span>
+          </div>
+        )}
+        {allProjects.filter(p=>p.status==="active").slice(0,5).map(p=>{
           const pct=calcProgress(p); const days=daysRemaining(p); const ov=days!==null&&days<0;
           return(
-            <div key={p.id} onClick={()=>onSelect&&onSelect(p)} style={{ marginBottom:12,cursor:"pointer",padding:"10px 12px",borderRadius:8,transition:"background .15s",border:`1px solid ${C.border}22` }}
-              onMouseEnter={e=>e.currentTarget.style.background=C.surface} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-              <div style={{ display:"flex",justifyContent:"space-between",marginBottom:6 }}>
-                <span style={{ color:C.text,fontFamily:F,fontSize:13,fontWeight:600 }}>{p.name}</span>
-                <span style={{ color:ov?C.red:C.muted,fontFamily:F,fontSize:11 }}>{pct}%</span>
+            <div key={p.id} onClick={()=>onSelect&&onSelect(p)}
+              style={{ marginBottom:10,cursor:"pointer",padding:"10px 12px",borderRadius:8,transition:"background .15s",border:`1px solid ${C.border}33` }}
+              onMouseEnter={e=>e.currentTarget.style.background=C.surface}
+              onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+              <div style={{ display:"flex",justifyContent:"space-between",marginBottom:5 }}>
+                <span style={{ color:C.text,fontFamily:F,fontSize:13,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",maxWidth:"70%" }}>{p.name}</span>
+                <span style={{ color:ov?C.red:C.muted,fontFamily:F,fontSize:11,flexShrink:0 }}>{pct}%</span>
               </div>
               <Bar pct={pct} color={ov?C.red:p.status==="completed"?C.green:C.accent}/>
-              <div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:4 }}>{p.phase} · Due: {p.dueFmt}{ov?<span style={{color:C.red}}> ⚠ Overdue</span>:""}</div>
+              <div style={{ color:ov?C.red:C.muted,fontFamily:F,fontSize:11,marginTop:4,display:"flex",gap:8 }}>
+                <span>{p.phase||p.status}</span>
+                <span>·</span>
+                <span>Due: {p.dueFmt||"—"}</span>
+                {ov&&<span style={{color:C.red,fontWeight:700}}>⚠ Overdue</span>}
+              </div>
             </div>
           );
         })}
+        {allProjects.filter(p=>p.status==="active").length>5&&(
+          <div onClick={()=>onSelect&&onSelect("projects")} style={{ color:C.accent,fontFamily:F,fontSize:11,cursor:"pointer",textAlign:"center",paddingTop:4 }}>
+            +{allProjects.filter(p=>p.status==="active").length-5} more → View all
+          </div>
+        )}
       </div>
     );
     if(type==="invoices") return(
       <div>
-        {allInvoices.slice(0,5).map(inv=>{
-          const st=INV_ST.find(s=>s.v===(inv.status||inv.invoiceStatus))||INV_ST[0];
-          return(
-            <div key={inv.id} style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10,paddingBottom:10,borderBottom:`1px solid ${C.border}22` }}>
-              <div><div style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600 }}>{inv.id||inv.invId}</div><div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>{inv.project||inv.client||"—"}</div></div>
-              <div style={{ textAlign:"right" }}><div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:13 }}>${Number(inv.amount||0).toLocaleString()}</div><span style={{ background:st.c+"22",color:st.c,padding:"2px 7px",borderRadius:4,fontSize:10,fontWeight:700,fontFamily:F }}>{st.l}</span></div>
-            </div>
-          );
-        })}
-        {allInvoices.length===0&&<div style={{ color:C.muted,fontFamily:F,fontSize:12 }}>No invoices yet</div>}
+        {(() => {
+          // Sort: overdue first, then pending, then paid
+          const order = { overdue:0, pending:1, paid:2 };
+          const sorted = [...allInvoices].sort((a,b)=>{
+            const as = a.status||a.invoiceStatus||"pending";
+            const bs = b.status||b.invoiceStatus||"pending";
+            return (order[as]??1)-(order[bs]??1);
+          }).slice(0,6);
+          if(sorted.length===0) return <div style={{ color:C.muted,fontFamily:F,fontSize:12,textAlign:"center",padding:"12px 0" }}>No invoices yet</div>;
+          return sorted.map(inv=>{
+            const st=INV_ST.find(s=>s.v===(inv.status||inv.invoiceStatus))||INV_ST[0];
+            return(
+              <div key={inv.id} onClick={()=>onSelect&&onSelect("invoicing")}
+                style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:9,paddingBottom:9,borderBottom:`1px solid ${C.border}22`,cursor:"pointer",borderRadius:6,padding:"6px 8px",transition:"background .12s" }}
+                onMouseEnter={e=>e.currentTarget.style.background=C.surface}
+                onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+                <div style={{ minWidth:0,flex:1 }}>
+                  <div style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{inv.invId||inv.id}</div>
+                  <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>{inv.project||inv.client||"—"}</div>
+                </div>
+                <div style={{ textAlign:"right",flexShrink:0,marginLeft:8 }}>
+                  <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:13 }}>${Number(inv.amount||0).toLocaleString()}</div>
+                  <span style={{ background:st.c+"22",color:st.c,padding:"2px 7px",borderRadius:4,fontSize:10,fontWeight:700,fontFamily:F }}>{st.l}</span>
+                </div>
+              </div>
+            );
+          });
+        })()}
       </div>
     );
     if(type==="payments") return(
       <div>
-        {payments.slice(-5).reverse().map(p=>(
-          <div key={p.id} style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10,paddingBottom:10,borderBottom:`1px solid ${C.border}22` }}>
-            <div><div style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600 }}>{p.project}</div><div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>{p.dateFmt} · {p.method}</div></div>
-            <div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:13 }}>${p.amount.toLocaleString()}</div>
+        {payments.length===0&&<div style={{ color:C.muted,fontFamily:F,fontSize:12,textAlign:"center",padding:"12px 0" }}>No payments yet</div>}
+        {[...payments].sort((a,b)=>new Date(b.date||0)-new Date(a.date||0)).slice(0,5).map(p=>(
+          <div key={p.id} onClick={()=>onSelect&&onSelect("payments")}
+            style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:9,paddingBottom:9,borderBottom:`1px solid ${C.border}22`,cursor:"pointer",borderRadius:6,padding:"6px 8px",transition:"background .12s" }}
+            onMouseEnter={e=>e.currentTarget.style.background=C.surface}
+            onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+            <div style={{ minWidth:0,flex:1 }}>
+              <div style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{p.project||"—"}</div>
+              <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>{p.dateFmt||p.date} · {p.method}</div>
+            </div>
+            <div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:13,flexShrink:0,marginLeft:8 }}>${Number(p.amount||0).toLocaleString()}</div>
           </div>
         ))}
-        {payments.length===0&&<div style={{ color:C.muted,fontFamily:F,fontSize:12 }}>No payments yet</div>}
       </div>
     );
     if(type==="tasks") return(
       <div>
-        {tasks.filter(t=>t.status==="pending").slice(0,5).map(t=>(
-          <div key={t.id} style={{ display:"flex",alignItems:"flex-start",gap:10,marginBottom:10,paddingBottom:10,borderBottom:`1px solid ${C.border}22` }}>
-            <div style={{ width:7,height:7,borderRadius:"50%",background:C.accent,marginTop:5,flexShrink:0 }}/>
-            <div style={{ flex:1,minWidth:0 }}>
-              <div style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600 }}>{t.title}</div>
-              <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>{t.member} · {t.project}</div>
+        {tasks.filter(t=>t.status==="pending").length===0&&<div style={{ color:C.muted,fontFamily:F,fontSize:12,textAlign:"center",padding:"12px 0" }}>No pending tasks</div>}
+        {tasks.filter(t=>t.status==="pending").slice(0,6).map(t=>{
+          const isOverdue = t.date && new Date(t.date+"T00:00:00") < new Date();
+          return(
+            <div key={t.id} onClick={()=>onSelect&&onSelect("tasks")}
+              style={{ display:"flex",alignItems:"flex-start",gap:10,marginBottom:9,paddingBottom:9,borderBottom:`1px solid ${C.border}22`,cursor:"pointer",borderRadius:6,padding:"6px 8px",transition:"background .12s" }}
+              onMouseEnter={e=>e.currentTarget.style.background=C.surface}
+              onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+              <div style={{ width:7,height:7,borderRadius:"50%",background:isOverdue?C.red:C.accent,marginTop:5,flexShrink:0 }}/>
+              <div style={{ flex:1,minWidth:0 }}>
+                <div style={{ color:isOverdue?C.red:C.text,fontFamily:F,fontSize:12,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{t.title}</div>
+                <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>{t.member} · {t.project}</div>
+              </div>
+              <div style={{ color:isOverdue?C.red:C.muted,fontFamily:F,fontSize:10,flexShrink:0 }}>{t.date||"—"}</div>
             </div>
-            <div style={{ color:C.muted,fontFamily:F,fontSize:10,flexShrink:0 }}>{t.date}</div>
+          );
+        })}
+        {tasks.filter(t=>t.status==="pending").length>6&&(
+          <div onClick={()=>onSelect&&onSelect("tasks")} style={{ color:C.accent,fontFamily:F,fontSize:11,cursor:"pointer",textAlign:"center",paddingTop:4 }}>
+            +{tasks.filter(t=>t.status==="pending").length-6} more → View all
           </div>
-        ))}
-        {tasks.filter(t=>t.status==="pending").length===0&&<div style={{ color:C.muted,fontFamily:F,fontSize:12 }}>No pending tasks</div>}
+        )}
       </div>
     );
     if(type==="activity") return(
       <div>
-        {globalLog.slice(0,6).map(e=>(
-          <div key={e.id} style={{ display:"flex",gap:10,alignItems:"flex-start",marginBottom:10,paddingBottom:10,borderBottom:`1px solid ${C.border}22` }}>
-            <div style={{ fontSize:16,flexShrink:0,lineHeight:1.3 }}>{e.icon}</div>
+        {globalLog.length===0&&<div style={{ color:C.muted,fontFamily:F,fontSize:12,textAlign:"center",padding:"12px 0" }}>No activity yet</div>}
+        {globalLog.slice(0,7).map(e=>(
+          <div key={e.id} style={{ display:"flex",gap:10,alignItems:"flex-start",marginBottom:9,paddingBottom:9,borderBottom:`1px solid ${C.border}22` }}>
+            <div style={{ width:28,height:28,borderRadius:7,background:C.surface,border:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,flexShrink:0 }}>{normIcon(e.icon)}</div>
             <div style={{ flex:1,minWidth:0 }}>
-              <div style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600 }}>{e.action}</div>
-              <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>{e.user} · {e.time}</div>
+              <div style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{e.action}</div>
+              <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>{e.user||"User"} · {e.time||e.detail}</div>
             </div>
           </div>
         ))}
-        {globalLog.length===0&&<div style={{ color:C.muted,fontFamily:F,fontSize:12 }}>No activity yet</div>}
       </div>
     );
     if(type==="calendar") return(()=>{
@@ -4395,40 +4592,70 @@ function DashWidget({ widgetId, type, allProjects, allInvoices, payments, tasks,
 function Dashboard({ onSelect, allProjects=[], allInvoices=[], payments=[], tasks=[], globalLog=[] }){
   const [widget1,setWidget1]=useState(()=>{ try{ return localStorage.getItem("bf_w1")||"projects"; }catch{ return "projects"; } });
   const [widget2,setWidget2]=useState(()=>{ try{ return localStorage.getItem("bf_w2")||"invoices"; }catch{ return "invoices"; } });
+  const { members:teamMembers } = useAllMembers(allProjects);
 
   const setW1=t=>{ setWidget1(t); try{ localStorage.setItem("bf_w1",t); }catch{} };
   const setW2=t=>{ setWidget2(t); try{ localStorage.setItem("bf_w2",t); }catch{} };
 
-  const activeCount=allProjects.filter(p=>p.status==="active").length;
-  const outstanding=allInvoices.filter(i=>i.status!=="paid").reduce((s,i)=>s+Number(i.amount||0),0);
-  const onSite=2; // static demo value
+  const now = new Date();
+  const activeCount    = allProjects.filter(p=>p.status==="active").length;
+  const outstanding    = allInvoices.filter(i=>(i.status||i.invoiceStatus)!=="paid").reduce((s,i)=>s+Number(i.amount||0),0);
+  const onSiteCount    = teamMembers.filter(m=>m.status==="on-site").length;
+  const pendingTasks   = tasks.filter(t=>t.status!=="done").length;
+  const overdueInvCount= allInvoices.filter(i=>(i.status||i.invoiceStatus)==="overdue").length;
 
-  const now=new Date();
-  const h=now.getHours(); const gr=h<12?"Good morning":h<17?"Good afternoon":"Good evening";
+  const thisMonthRevenue = payments.filter(p=>{
+    if(!p.date) return false;
+    const d = new Date(p.date+"T12:00:00");
+    return d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear();
+  }).reduce((s,p)=>s+Number(p.amount||0),0);
+
+  // Format currency: show full number if under 10k, else Xk
+  const fmtMoney = (n) => n>=1000 ? "$"+Math.round(n/1000)+"k" : "$"+Math.round(n).toLocaleString();
+
+  const h=now.getHours();
+  const gr=h<12?"Good morning":h<17?"Good afternoon":"Good evening";
   const dayName=now.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});
 
   return(
     <div>
       <div style={{ marginBottom:28 }}>
         <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginBottom:4 }}>{dayName}</div>
-        <h2 style={{ color:C.text,fontFamily:F,fontSize:24,fontWeight:700,margin:0 }}>{gr}, Jordan 👷</h2>
+        <h2 style={{ color:C.text,fontFamily:F,fontSize:24,fontWeight:700,margin:0 }}>{gr} 👷</h2>
       </div>
+
+      {/* Overdue alert banner */}
+      {overdueInvCount>0&&(
+        <div onClick={()=>onSelect&&onSelect("invoicing")} style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:10,padding:"12px 18px",marginBottom:20,display:"flex",alignItems:"center",gap:10,cursor:"pointer" }}>
+          <span style={{ fontSize:18 }}>⚠️</span>
+          <div style={{ flex:1 }}>
+            <div style={{ color:C.red,fontFamily:F,fontWeight:700,fontSize:13 }}>{overdueInvCount} overdue invoice{overdueInvCount!==1?"s":""}</div>
+            <div style={{ color:C.muted,fontFamily:F,fontSize:12 }}>Click to view and follow up</div>
+          </div>
+          <span style={{ color:C.red,fontFamily:F,fontSize:12 }}>→</span>
+        </div>
+      )}
+
       {/* Stats row */}
       <div style={{ display:"flex",gap:12,marginBottom:24,flexWrap:"wrap" }}>
         {[
-          ["Active Projects",activeCount,"Currently in progress",C.blue],
-          ["Revenue (This Month)","$"+Math.round(payments.filter(p=>{ if(!p.date)return false; const d=new Date(p.date+"T12:00:00"); return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear(); }).reduce((s,p)=>s+p.amount,0)/1000)+"k","Payments received",C.green],
-          ["Outstanding","$"+Math.round(outstanding/1000)+"k",`${allInvoices.filter(i=>i.status!=="paid").length} unpaid invoices`,C.accent],
-          ["Team On Site",onSite,"Today",C.purple],
-        ].map(([l,v,s,c])=>(
-          <div key={l} style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:10,padding:"18px 22px",flex:1,minWidth:130 }}>
-            <div style={{ color:C.muted,fontSize:11,fontFamily:F,marginBottom:6 }}>{l}</div>
+          ["Active Projects",  activeCount,          `${allProjects.filter(p=>p.status==="quoting").length} quoting`,  C.blue,   "projects" ],
+          ["Revenue This Month", fmtMoney(thisMonthRevenue), "Payments received",                                       C.green,  "payments" ],
+          ["Outstanding",       fmtMoney(outstanding),       `${allInvoices.filter(i=>(i.status||i.invoiceStatus)!=="paid").length} unpaid invoices`, C.accent,"invoicing"],
+          ["Pending Tasks",     pendingTasks,         "Across all projects",                                             C.purple, "tasks"    ],
+        ].map(([l,v,s,c,tab])=>(
+          <div key={l} onClick={()=>onSelect&&onSelect(tab)}
+            style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:10,padding:"18px 22px",flex:1,minWidth:130,cursor:"pointer",transition:"border-color .18s" }}
+            onMouseEnter={e=>e.currentTarget.style.borderColor=c+"88"}
+            onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}>
+            <div style={{ color:C.muted,fontSize:11,fontFamily:F,marginBottom:6,textTransform:"uppercase",letterSpacing:"0.05em" }}>{l}</div>
             <div style={{ color:c,fontSize:26,fontFamily:F,fontWeight:700,lineHeight:1 }}>{v}</div>
             <div style={{ color:C.muted,fontSize:12,fontFamily:F,marginTop:4 }}>{s}</div>
           </div>
         ))}
       </div>
-      {/* Customizable widgets */}
+
+      {/* Widgets */}
       <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:16 }}>
         <DashWidget widgetId="w1" type={widget1} allProjects={allProjects} allInvoices={allInvoices} payments={payments} tasks={tasks} globalLog={globalLog} onSelect={onSelect} onChangeType={setW1}/>
         <DashWidget widgetId="w2" type={widget2} allProjects={allProjects} allInvoices={allInvoices} payments={payments} tasks={tasks} globalLog={globalLog} onSelect={onSelect} onChangeType={setW2}/>
@@ -4495,7 +4722,7 @@ function EditInvoiceModal({ invoice, allProjects, onConfirm, onCancel }){
           <div><label style={LBL()}>Client / Company</label><input style={INP()} value={client} onChange={e=>setClient(e.target.value)} placeholder="Client name"/></div>
           <div><label style={LBL()}>Description</label><textarea style={{ ...INP(),resize:"none" }} rows={2} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="Invoice description"/></div>
           <div style={{ display:"flex",gap:12 }}>
-            <div style={{ flex:1 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setErr("");}} placeholder="0.00"/></div>
+            <div style={{ flex:1 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setErr("");}} onWheel={e=>e.target.blur()} placeholder="0.00"/></div>
             <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={due} onChange={e=>setDue(e.target.value)}/></div>
           </div>
           <div><label style={LBL()}>Status</label>
@@ -4632,7 +4859,7 @@ function AddGlobalInvoiceModal({ allProjects, allInvoices=[], onConfirm, onCance
             <div><label style={LBL()}>Description</label><textarea style={{ ...INP(),resize:"none" }} rows={2} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="What is this invoice for?"/></div>
             {/* Amount + Currency + Due */}
             <div style={{ display:"flex",gap:12 }}>
-              <div style={{ flex:2 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setErr("");}} placeholder="0.00"/></div>
+              <div style={{ flex:2 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setErr("");}} onWheel={e=>e.target.blur()} placeholder="0.00"/></div>
               <div style={{ flex:1 }}><label style={LBL()}>Currency</label>
                 <select value={currency} onChange={e=>setCurrency(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
                   {CURRENCIES.map(c=><option key={c}>{c}</option>)}
@@ -4662,6 +4889,7 @@ function InvoicingPage({ allProjects=[], allInvoices=[], addInvoice, updateInvoi
   const ready=allInvoices!==undefined;
   const [projFilter,setProjFilter]=useState("all");
   const [clientFilter,setClientFilter]=useState("all");
+  const [statusFilter,setStatusFilter]=useState("all");
   const [showAdd,setShowAdd]=useState(false);
   const [editing,setEditing]=useState(null);
   const [confirmDelete,setConfirmDelete]=useState(null);
@@ -4671,8 +4899,9 @@ function InvoicingPage({ allProjects=[], allInvoices=[], addInvoice, updateInvoi
   const filtered=useMemo(()=>allInvoices.filter(inv=>{
     if(projFilter!=="all"&&inv.project!==projFilter)return false;
     if(clientFilter!=="all"&&inv.client!==clientFilter)return false;
+    if(statusFilter!=="all"&&(inv.status||inv.invoiceStatus||"pending")!==statusFilter)return false;
     return true;
-  }),[allInvoices,projFilter,clientFilter]);
+  }),[allInvoices,projFilter,clientFilter,statusFilter]);
 
   const projects=useMemo(()=>[...new Set(allInvoices.map(i=>i.project).filter(Boolean))],[allInvoices]);
   const clients =useMemo(()=>[...new Set(allInvoices.map(i=>i.client).filter(Boolean))]  ,[allInvoices]);
@@ -4728,10 +4957,10 @@ function InvoicingPage({ allProjects=[], allInvoices=[], addInvoice, updateInvoi
 
       {/* Stats */}
       <div style={{ display:"flex",gap:12,marginBottom:24,flexWrap:"wrap" }}>
-        <StatCard label="Outstanding"   value={"$"+(outstanding/1000).toFixed(0)+"k"}  sub={`${filtered.filter(i=>i.status!=="paid").length} invoices`}        color={C.blue}/>
-        <StatCard label="Overdue"       value={"$"+(overdue/1000).toFixed(0)+"k"}       sub="Needs follow-up"                                                    color={C.red}/>
-        <StatCard label="Collected"     value={"$"+(paid/1000).toFixed(0)+"k"}          sub={`${filtered.filter(i=>i.status==="paid").length} paid`}             color={C.green}/>
-        <StatCard label="Total Invoices" value={filtered.length}                         sub="All statuses"                                                       color={C.purple}/>
+        <StatCard label="Outstanding"   value={"$"+(outstanding/1000).toFixed(0)+"k"}  sub={`${filtered.filter(i=>i.status!=="paid").length} invoices`}        color={C.blue}   onClick={()=>setStatusFilter("pending")}/>
+        <StatCard label="Overdue"       value={"$"+(overdue/1000).toFixed(0)+"k"}       sub="Needs follow-up"                                                    color={C.red}    onClick={()=>setStatusFilter("overdue")}/>
+        <StatCard label="Collected"     value={"$"+(paid/1000).toFixed(0)+"k"}          sub={`${filtered.filter(i=>i.status==="paid").length} paid`}             color={C.green}  onClick={()=>setStatusFilter("paid")}/>
+        <StatCard label="Total Invoices" value={filtered.length}                         sub="All statuses"                                                       color={C.purple} onClick={()=>setStatusFilter("all")}/>
       </div>
 
       {/* Filters */}
@@ -5687,19 +5916,28 @@ function AccountantPage({ allProjects=[], allInvoices=[], payments=[] }){
   // ── Live financial metrics ──────────────────────────────────────────────
   const metrics = useMemo(()=>{
     if(!project) return null;
-    const projInvoices = allInvoices.filter(i=>i.projId===project.id||i.project===project.name);
-    const projPayments = payments.filter(p=>p.projId===project.id||p.project===project.name);
+    // Match by both ID and name for robustness across data sources
+    const projInvoices = allInvoices.filter(i=>
+      String(i.projId)===String(project.id) || i.project===project.name
+    );
+    const projPayments = payments.filter(p=>
+      String(p.projId)===String(project.id) || p.project===project.name
+    );
 
-    const totalInvoiced  = projInvoices.reduce((s,i)=>s+Number(i.amount||0),0);
-    const totalPaid      = projInvoices.filter(i=>(i.status||i.invoiceStatus)==="paid").reduce((s,i)=>s+Number(i.amount||0),0);
-    const totalOverdue   = projInvoices.filter(i=>(i.status||i.invoiceStatus)==="overdue").reduce((s,i)=>s+Number(i.amount||0),0);
-    const totalPending   = projInvoices.filter(i=>(i.status||i.invoiceStatus)==="pending").reduce((s,i)=>s+Number(i.amount||0),0);
-    const totalReceived  = projPayments.reduce((s,p)=>s+Number(p.amount||0),0);
-    const projectValue   = Number(project.value||0);
-    const remainToReceive= Math.max(0, projectValue - totalReceived);
-    const remainToPayInv = Math.max(0, totalInvoiced - totalPaid);
-    const grossProfit    = projectValue - totalInvoiced;
-    const netBalance     = totalReceived - totalPaid;
+    const totalInvoiced   = projInvoices.reduce((s,i)=>s+Number(i.amount||0),0);
+    const totalPaid       = projInvoices.filter(i=>(i.status||i.invoiceStatus)==="paid").reduce((s,i)=>s+Number(i.amount||0),0);
+    const totalOverdue    = projInvoices.filter(i=>(i.status||i.invoiceStatus)==="overdue").reduce((s,i)=>s+Number(i.amount||0),0);
+    const totalPending    = projInvoices.filter(i=>(i.status||i.invoiceStatus)==="pending").reduce((s,i)=>s+Number(i.amount||0),0);
+    const totalReceived   = projPayments.reduce((s,p)=>s+Number(p.amount||0),0);
+    const projectValue    = Number(project.value||0);
+    // Remaining to collect from client = contract value minus what's been paid
+    const remainToReceive = projectValue - totalReceived;
+    // Remaining to pay on invoices = total invoiced minus what's already paid
+    const remainToPayInv  = totalInvoiced - totalPaid;
+    // Gross profit = contract value minus total cost (invoices)
+    const grossProfit     = projectValue - totalInvoiced;
+    // Net cash position = cash received minus cash paid out on invoices
+    const netBalance      = totalReceived - totalPaid;
 
     return{
       project, projectValue, totalInvoiced, totalPaid, totalOverdue, totalPending,
@@ -6186,10 +6424,12 @@ function AppInner({ session, profile, onLogout }){
   const screen=()=>{
     if(tab==="projects"){
       if(subView==="team"&&project)   return <TeamPage project={project} onBack={teamBack} onAddToLog={handleTeamLog} tasks={tasks} updateTask={updateTask}/>;
-      if(subView==="detail"&&project) return <ProjectPage project={project} onBack={detailBack} onOpenTeam={goToTeam} extraLog={[...teamLog,...globalLog.filter(e=>e.detail===project.name)]} payments={payments} addPayment={handleAddPayment} updatePayment={handleUpdatePayment} removePayment={handleRemovePayment} allProjects={allProjects} allInvoices={allInvoices} addInvoice={handleAddInvoice} removeGlobalInvoice={handleRemoveInvoice} updateGlobalInvoice={handleUpdateInvoice} onUpdateProject={async(id,patch)=>{ await handleUpdateProject(id,patch); setProject(p=>({...p,...patch})); }} onLog={pushGlobal}/>;
+      if(subView==="detail"&&project) return <ProjectPage project={project} onBack={detailBack} onOpenTeam={goToTeam} extraLog={[...teamLog,...globalLog.filter(e=>e.detail===project.name)]} payments={payments} addPayment={handleAddPayment} updatePayment={handleUpdatePayment} removePayment={handleRemovePayment} allProjects={allProjects} allInvoices={allInvoices} addInvoice={handleAddInvoice} removeGlobalInvoice={handleRemoveInvoice} updateGlobalInvoice={handleUpdateInvoice} onUpdateProject={async(id,patch)=>{ await handleUpdateProject(id,patch); setProject(p=>({...p,...patch})); }} onLog={pushGlobal} profile={profile}/>;
       return <ProjectsList onSelect={goToDetail} allProjects={allProjects} onAddProject={handleAddProject} onUpdateProject={handleUpdateProject} onDeleteProject={handleDeleteProject}/>;
     }
-    if(tab==="dashboard") return <Dashboard onSelect={goToDetail} allProjects={allProjects} allInvoices={allInvoices} payments={payments} tasks={tasks} globalLog={globalLog}/>;
+    if(tab==="dashboard") return <Dashboard
+        onSelect={item => { if(item && typeof item === 'object') goToDetail(item); else if(typeof item === 'string') switchTab(item); }}
+        allProjects={allProjects} allInvoices={allInvoices} payments={payments} tasks={tasks} globalLog={globalLog}/>;
     if(tab==="invoicing")  return <InvoicingPage allProjects={allProjects} allInvoices={allInvoices} addInvoice={handleAddInvoice} updateInvoice={handleUpdateInvoice} removeInvoice={handleRemoveInvoice}/>;
     if(tab==="team")       return <TeamGlobal allProjects={allProjects} onLog={pushGlobal}/>;
     if(tab==="calendar")   return <CalendarPage allInvoices={allInvoices} tasks={tasks} onAddTask={addTask} projectEvents={projectMilestoneEvents} payments={payments} allProjects={allProjects}/>;
@@ -6215,6 +6455,8 @@ function AppInner({ session, profile, onLogout }){
         input[type="date"]{color-scheme:${isDark?"dark":"light"}}
         @keyframes spin{to{transform:rotate(360deg)}}
         @keyframes bounce{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
+        input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+        input[type=number]{-moz-appearance:textfield}
       `}</style>
 
       {/* Sidebar */}
