@@ -409,29 +409,20 @@ function usePayments(){
 function useProjects(){
   const cid = useCompany();
   const [projects,setProjects]=useState(null);
-
-  // load() returns the fresh array so callers can use it directly
-  // without relying on any closure or ref (avoids stale data bugs)
   const load=useCallback(async()=>{
-    if(!cid) return null;
+    if(!cid) return;
     const {data,error}=await dbProjects.getAll();
-    if(!error&&data){
-      const fresh=data.map(mapProject);
-      setProjects(fresh);
-      return fresh;
-    }
-    return null;
+    if(!error&&data) setProjects(data.map(mapProject));
   },[cid]);
-
   useEffect(()=>{ load(); const t=setInterval(load,POLL_MS); return()=>clearInterval(t); },[load]);
-
   return{
     allProjects:projects||[], extraProjects:projects||[], ready:projects!==null,
     addProject:    async(p)=>{ await dbProjects.add(p); await load(); },
     updateProject: async(id,patch)=>{
+      // Write to DB
       await dbProjects.update(id,patch);
-      const fresh = await load(); // load() returns the new array directly
-      return fresh ? fresh.find(p=>p.id===id) || null : null;
+      // Patch local state immediately — DO NOT reload (causes race condition)
+      setProjects(prev => prev ? prev.map(p => p.id===id ? {...p,...patch} : p) : prev);
     },
     deleteProject: async(id)=>{ await dbProjects.delete(id); await load(); },
     refreshProjects: load,
@@ -3676,6 +3667,11 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
 
       {/* Back button */}
       <button onClick={onBack} style={{ background:"transparent",border:`1px solid ${C.border}`,color:C.muted,padding:"7px 16px",borderRadius:7,fontFamily:F,fontSize:13,cursor:"pointer",display:"inline-flex",alignItems:"center",gap:6,marginBottom:20 }} onMouseEnter={e=>{e.currentTarget.style.color=C.text;}} onMouseLeave={e=>{e.currentTarget.style.color=C.muted;}}>← Back to Projects</button>
+      <div style={{ background:"#1a0a2e",border:"2px solid #a855f7",borderRadius:8,padding:"10px 16px",marginBottom:16,fontFamily:"monospace",fontSize:12 }}>
+        <div style={{ color:"#a855f7",fontWeight:"bold",marginBottom:4 }}>🔧 DEBUG</div>
+        <div style={{ color:"#e8eaf0" }}>ID: <b style={{color: String(project.id).length>20?"#22c55e":"#ef4444"}}>{String(project.id)}</b> {String(project.id).length>20?"✅ UUID":"❌ TEMP ID"}</div>
+        <div style={{ color:"#e8eaf0" }}>Status: <b style={{color:"#f59e0b"}}>{project.status}</b> | Value: <b style={{color:"#f59e0b"}}>{project.value}</b></div>
+      </div>
 
       {/* Top outer row: main content + narrow activity log */}
       <div style={{ display:"flex",gap:16,alignItems:"flex-start" }}>
@@ -6400,10 +6396,9 @@ function AppInner({ session, profile, onLogout }){
     try{ await pushGlobal({ id:Date.now(), action:`Project "${proj.name}" created`, detail:proj.name, user:profile?.full_name||"User", time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}), icon:"🏗" }); }catch(_){}
   };
   const handleUpdateProject=async(id,patch)=>{
-    // updateProject returns the fresh project directly from DB
-    const freshProject = await updateProject(id,patch);
+    // updateProject now awaits load() — allProjects is fresh when this returns
+    await updateProject(id,patch);
     try{ await pushGlobal({ id:Date.now(), action:`Project updated`, detail:"", user:profile?.full_name||"User", time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}), icon:"✏️" }); }catch(_){}
-    return freshProject;
   };
 
   const handleDeleteProject=async(proj)=>{
@@ -6438,8 +6433,10 @@ function AppInner({ session, profile, onLogout }){
     if(tab==="projects"){
       if(subView==="team"&&project)   return <TeamPage project={project} onBack={teamBack} onAddToLog={handleTeamLog} tasks={tasks} updateTask={updateTask}/>;
       if(subView==="detail"&&project) return <ProjectPage project={project} onBack={detailBack} onOpenTeam={goToTeam} extraLog={[...teamLog,...globalLog.filter(e=>e.detail===project.name)]} payments={payments} addPayment={handleAddPayment} updatePayment={handleUpdatePayment} removePayment={handleRemovePayment} allProjects={allProjects} allInvoices={allInvoices} addInvoice={handleAddInvoice} removeGlobalInvoice={handleRemoveInvoice} updateGlobalInvoice={handleUpdateInvoice} onUpdateProject={async(id,patch)=>{
-                    const freshProject = await handleUpdateProject(id,patch);
-                    if(freshProject) setProject(freshProject);
+                    await handleUpdateProject(id,patch);
+                    // Functional update: React guarantees prev is always current state
+                    // No closures, no refs, no reload — this cannot be stale
+                    setProject(prev => prev && prev.id===id ? {...prev,...patch} : prev);
                   }} onLog={pushGlobal} profile={profile}/>;
       return <ProjectsList onSelect={goToDetail} allProjects={allProjects} onAddProject={handleAddProject} onUpdateProject={handleUpdateProject} onDeleteProject={handleDeleteProject}/>;
     }
