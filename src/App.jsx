@@ -3667,11 +3667,6 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
 
       {/* Back button */}
       <button onClick={onBack} style={{ background:"transparent",border:`1px solid ${C.border}`,color:C.muted,padding:"7px 16px",borderRadius:7,fontFamily:F,fontSize:13,cursor:"pointer",display:"inline-flex",alignItems:"center",gap:6,marginBottom:20 }} onMouseEnter={e=>{e.currentTarget.style.color=C.text;}} onMouseLeave={e=>{e.currentTarget.style.color=C.muted;}}>← Back to Projects</button>
-      <div style={{ background:"#1a0a2e",border:"2px solid #a855f7",borderRadius:8,padding:"10px 16px",marginBottom:16,fontFamily:"monospace",fontSize:12 }}>
-        <div style={{ color:"#a855f7",fontWeight:"bold",marginBottom:4 }}>🔧 DEBUG</div>
-        <div style={{ color:"#e8eaf0" }}>ID: <b style={{color: String(project.id).length>20?"#22c55e":"#ef4444"}}>{String(project.id)}</b> {String(project.id).length>20?"✅ UUID":"❌ TEMP ID"}</div>
-        <div style={{ color:"#e8eaf0" }}>Status: <b style={{color:"#f59e0b"}}>{project.status}</b> | Value: <b style={{color:"#f59e0b"}}>{project.value}</b></div>
-      </div>
 
       {/* Top outer row: main content + narrow activity log */}
       <div style={{ display:"flex",gap:16,alignItems:"flex-start" }}>

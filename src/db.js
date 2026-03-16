@@ -37,18 +37,20 @@ export const dbProjects = {
 
   update: async (id, patch) => {
     const dbPatch = {}
-    if (patch.name        !== undefined) dbPatch.name        = patch.name
-    if (patch.address     !== undefined) dbPatch.address     = patch.address
-    if (patch.status      !== undefined) dbPatch.status      = patch.status
-    if (patch.progress    !== undefined) dbPatch.progress    = Number(patch.progress) || 0
-    if (patch.location    !== undefined) dbPatch.location    = patch.location
-    if (patch.value       !== undefined) dbPatch.value       = Number(patch.value) || 0
-    if (patch.client      !== undefined) dbPatch.client      = patch.client
-    if (patch.projType    !== undefined) dbPatch.proj_type   = patch.projType
-    if (patch.startDateISO!== undefined) dbPatch.start_date  = patch.startDateISO
-    if (patch.due         !== undefined) dbPatch.due_date    = patch.due
-    if (patch.dueFmt      !== undefined) dbPatch.due_fmt     = patch.dueFmt
-    // 'description' column does not exist in projects table — desc is not sent
+    // Only include columns that EXIST in the projects table
+    // Verified against dbProjects.add() which is the source of truth
+    if (patch.name        !== undefined) dbPatch.name       = patch.name
+    if (patch.address     !== undefined) dbPatch.address    = patch.address
+    if (patch.status      !== undefined) dbPatch.status     = patch.status
+    if (patch.progress    !== undefined) dbPatch.progress   = Number(patch.progress) || 0
+    if (patch.location    !== undefined) dbPatch.location   = patch.location
+    if (patch.value       !== undefined) dbPatch.value      = Number(patch.value) || 0
+    if (patch.client      !== undefined) dbPatch.client     = patch.client
+    if (patch.startDateISO!== undefined) dbPatch.start_date = patch.startDateISO
+    if (patch.due         !== undefined) dbPatch.due_date   = patch.due
+    if (patch.dueFmt      !== undefined) dbPatch.due_fmt    = patch.dueFmt
+    // NOTE: proj_type and description columns do NOT exist in the projects table
+    // They were causing HTTP 400 errors on every save
 
     const SURL = 'https://mghwscmrosxiymtdqvaa.supabase.co'
     const SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1naHdzY21yb3N4aXltdGRxdmFhIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MzI2MTQzNSwiZXhwIjoyMDg4ODM3NDM1fQ.-NoIyr9Peh-IRfny32AdyjvPaZPgY32eAh2CQVgzA1Y'
