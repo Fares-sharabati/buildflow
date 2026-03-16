@@ -1921,10 +1921,119 @@ function DeleteConfirmModal({ member, taskCount, onConfirm, onCancel }){
   );
 }
 
+// ─── Add System Member to Project Modal ───────────────────────────────────────
+function AddSystemMemberModal({ project, currentMembers, onConfirm, onCancel }){
+  const { allProjects } = useProjects();
+  const { members:systemMembers } = useAllMembers(allProjects);
+  const [selected, setSelected] = React.useState(new Set());
+  const [saving, setSaving] = React.useState(false);
+
+  // Filter out members already assigned to this project
+  const currentNames = new Set(currentMembers.map(m => m.name));
+  const available = systemMembers.filter(m => !currentNames.has(m.name));
+
+  const toggle = (id) => setSelected(prev => {
+    const next = new Set(prev);
+    next.has(id) ? next.delete(id) : next.add(id);
+    return next;
+  });
+
+  const handleAdd = async() => {
+    if(selected.size === 0) return;
+    setSaving(true);
+    const toAdd = available.filter(m => selected.has(m.id));
+    for(const m of toAdd){
+      await onConfirm({
+        name:   m.name,
+        role:   m.role  || 'Team Member',
+        phone:  m.phone || '',
+        email:  m.email || '',
+        status: m.status|| 'on-site',
+        color:  m.color || '#3b82f6',
+        init:   m.init  || '?',
+        type:   m.type  || 'employee',
+        projId: project.id,
+      });
+    }
+    setSaving(false);
+    onCancel();
+  };
+
+  return(
+    <Overlay onClose={onCancel}>
+      <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,width:480,maxWidth:'95vw',maxHeight:'85vh',display:'flex',flexDirection:'column',boxShadow:'0 24px 60px rgba(0,0,0,.5)' }}>
+
+        {/* Header */}
+        <div style={{ padding:'22px 24px 18px',borderBottom:`1px solid ${C.border}`,display:'flex',alignItems:'center',justifyContent:'space-between',flexShrink:0 }}>
+          <div>
+            <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}>👷 Add Member to Project</div>
+            <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>Select one or more members to assign to <strong style={{color:C.accent}}>{project.name}</strong></div>
+          </div>
+          <button onClick={onCancel} style={{ background:'transparent',border:'none',color:C.muted,fontSize:20,cursor:'pointer',lineHeight:1,padding:4 }}>✕</button>
+        </div>
+
+        {/* Member list */}
+        <div style={{ flex:1,overflowY:'auto',padding:'14px 24px' }}>
+          {available.length===0&&(
+            <div style={{ textAlign:'center',padding:'40px 0',color:C.muted,fontFamily:F,fontSize:13 }}>
+              <div style={{ fontSize:32,marginBottom:8 }}>✅</div>
+              All system members are already on this project
+            </div>
+          )}
+          {available.map(m=>{
+            const isSelected = selected.has(m.id);
+            return(
+              <div key={m.id} onClick={()=>toggle(m.id)}
+                style={{ display:'flex',alignItems:'center',gap:14,padding:'12px 14px',borderRadius:10,marginBottom:8,cursor:'pointer',
+                  background:isSelected?C.greenDim:'transparent',
+                  border:`1px solid ${isSelected?C.green+'55':C.border}`,
+                  transition:'all .15s' }}
+                onMouseEnter={e=>{ if(!isSelected)e.currentTarget.style.background=C.surface; }}
+                onMouseLeave={e=>{ if(!isSelected)e.currentTarget.style.background='transparent'; }}>
+                {/* Avatar */}
+                <div style={{ width:40,height:40,borderRadius:'50%',background:(m.color||C.blue)+'22',border:`2px solid ${(m.color||C.blue)}55`,display:'flex',alignItems:'center',justifyContent:'center',color:m.color||C.blue,fontFamily:F,fontWeight:700,fontSize:14,flexShrink:0 }}>
+                  {m.init}
+                </div>
+                {/* Info */}
+                <div style={{ flex:1,minWidth:0 }}>
+                  <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:14 }}>{m.name}</div>
+                  <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2,display:'flex',gap:10 }}>
+                    <span>{m.role}</span>
+                    {m.email&&<span>{m.email}</span>}
+                  </div>
+                </div>
+                {/* Checkbox */}
+                <div style={{ width:22,height:22,borderRadius:6,border:`2px solid ${isSelected?C.green:C.border}`,background:isSelected?C.green:'transparent',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'all .15s' }}>
+                  {isSelected&&<span style={{ color:'#000',fontSize:13,fontWeight:700 }}>✓</span>}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Footer */}
+        <div style={{ padding:'14px 24px 20px',borderTop:`1px solid ${C.border}`,display:'flex',gap:8,justifyContent:'space-between',alignItems:'center',flexShrink:0 }}>
+          <span style={{ color:C.muted,fontFamily:F,fontSize:12 }}>
+            {selected.size===0?'No members selected':`${selected.size} member${selected.size!==1?'s':''} selected`}
+          </span>
+          <div style={{ display:'flex',gap:8 }}>
+            <button onClick={onCancel} style={{ background:'transparent',border:`1px solid ${C.border}`,color:C.muted,padding:'8px 18px',borderRadius:8,fontFamily:F,fontSize:13,cursor:'pointer' }}>Cancel</button>
+            <button onClick={handleAdd} disabled={selected.size===0||saving}
+              style={{ background:selected.size>0?C.green:'transparent',color:selected.size>0?'#000':C.muted,border:`1px solid ${selected.size>0?C.green:C.border}`,padding:'8px 20px',borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:selected.size>0?'pointer':'default',transition:'all .15s',opacity:saving?0.6:1 }}>
+              {saving?'Adding…':'✓ Add to Project'}
+            </button>
+          </div>
+        </div>
+      </div>
+    </Overlay>
+  );
+}
+
 function TeamPage({ project,onBack,onAddToLog,tasks=[],updateTask }){
   const { members,ready,addMember,removeMember,updateMember }=useTeam(project.id);
   const { allProjects }=useProjects();
-  const [showAdd,setShowAdd]   = useState(false);
+  const [showAdd,setShowAdd]         = useState(false);
+  const [showAddSystem,setShowAddSystem] = useState(false);
   const [editing,setEditing]   = useState(null);
   const [deleting,setDeleting] = useState(null);
   const [confirmEditData,setConfirmEditData] = useState(null); // {member, patch}
@@ -1961,6 +2070,7 @@ function TeamPage({ project,onBack,onAddToLog,tasks=[],updateTask }){
   return(
     <div>
       {showAdd  && <AddMemberModal project={project} onConfirm={handleAdd} onCancel={()=>setShowAdd(false)}/>}
+      {showAddSystem && <AddSystemMemberModal project={project} currentMembers={members} onConfirm={handleAdd} onCancel={()=>setShowAddSystem(false)}/>}
       {editing  && <EditMemberModal member={editing} allProjects={allProjects}
           onConfirm={patch=>{ setConfirmEditData({member:editing,patch}); setEditing(null); }}
           onCancel={()=>setEditing(null)}/>}
@@ -2027,16 +2137,22 @@ function TeamPage({ project,onBack,onAddToLog,tasks=[],updateTask }){
 
       {/* Members list */}
       <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:14,padding:"20px 24px" }}>
-        <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:18 }}>
-          <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:16 }}>👷 Project Team</span>
-          <span style={{ background:C.greenDim,color:C.green,padding:"3px 10px",borderRadius:99,fontSize:12,fontWeight:700,fontFamily:F }}>{members.length} members</span>
+        <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:18,flexWrap:"wrap",gap:10 }}>
+          <div style={{ display:"flex",alignItems:"center",gap:10 }}>
+            <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:16 }}>👷 Project Team</span>
+            <span style={{ background:C.greenDim,color:C.green,padding:"3px 10px",borderRadius:99,fontSize:12,fontWeight:700,fontFamily:F }}>{members.length} members</span>
+          </div>
+          <button onClick={()=>setShowAddSystem(true)}
+            style={{ background:C.green,color:"#000",border:"none",padding:"8px 18px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:7 }}>
+            👷 + Add Member to Project
+          </button>
         </div>
 
         {!ready&&<div style={{ color:C.muted,fontFamily:F,fontSize:13,padding:"24px 0",textAlign:"center" }}>Loading…</div>}
 
         {ready&&members.length===0&&(
           <div style={{ border:`2px dashed ${C.border}`,borderRadius:10,padding:"40px 20px",textAlign:"center",color:C.muted,fontFamily:F,fontSize:13 }}>
-            <div style={{ fontSize:36,marginBottom:10 }}>👷</div>No team members yet — they're managed via Supabase
+            <div style={{ fontSize:36,marginBottom:10 }}>👷</div>No team members yet — click "Add Member to Project" to assign someone
           </div>
         )}
 
