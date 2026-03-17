@@ -5089,6 +5089,7 @@ function useGlobalInvoices(){
 }
 
 function EditInvoiceModal({ invoice, allProjects, onConfirm, onCancel }){
+  const cid = useCompany();
   const [project,setProject]   = useState(invoice.project||"");
   const [client,setClient]     = useState(invoice.client||"");
   const [desc,setDesc]         = useState(invoice.desc||"");
@@ -5096,16 +5097,39 @@ function EditInvoiceModal({ invoice, allProjects, onConfirm, onCancel }){
   const [due,setDue]           = useState(invoice.due||"");
   const [status,setStatus]     = useState(invoice.status||invoice.invoiceStatus||"pending");
   const [err,setErr]           = useState("");
+  // File state — pre-fill from existing invoice attachment
+  const [docFile,setDocFile]   = useState(
+    invoice.dataUrl||invoice.name
+      ? { name:invoice.name||"invoice", size:invoice.size||0, dataUrl:invoice.dataUrl||null }
+      : null
+  );
+  const fileRef = useRef();
 
-  const submit=()=>{
+  const handleFile=async(raw)=>{
+    if(raw.size>5*1024*1024){ setErr("File too large (max 5 MB)"); return; }
+    const du=await new Promise(r=>{const rd=new FileReader();rd.onload=e=>r(e.target.result);rd.readAsDataURL(raw);});
+    setDocFile({ name:raw.name, size:raw.size, dataUrl:du, _rawFile:raw });
+    setErr("");
+  };
+
+  const submit=async()=>{
     if(!amount||isNaN(parseFloat(amount))){ setErr("Amount is required"); return; }
     const fmt=due?new Date(due+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):"—";
-    onConfirm({ project, client, desc, amount:parseFloat(amount), due, dueFmt:fmt, status, invoiceStatus:status });
+    // Upload new file to Storage if selected, otherwise keep existing dataUrl
+    let fileUrl  = docFile?.dataUrl||null;
+    let fileName = docFile?.name||null;
+    let fileSize = docFile?.size||0;
+    if(docFile?._rawFile && cid){
+      const uploaded = await uploadFile(docFile._rawFile, 'invoices', cid);
+      if(uploaded){ fileUrl = uploaded.url; fileName = docFile.name; fileSize = docFile.size; }
+    }
+    onConfirm({ project, client, desc, amount:parseFloat(amount), due, dueFmt:fmt,
+      status, invoiceStatus:status, dataUrl:fileUrl, name:fileName, size:fileSize });
   };
 
   return(
     <Overlay onClose={onCancel}>
-      <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,padding:28,width:480 }}>
+      <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,padding:28,width:500,maxHeight:"92vh",overflowY:"auto" }}>
         <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20 }}>
           <div>
             <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}>✏️ Edit Invoice</div>
@@ -5131,6 +5155,36 @@ function EditInvoiceModal({ invoice, allProjects, onConfirm, onCancel }){
             <div style={{ display:"flex",gap:8 }}>
               {INV_ST.map(s=><button key={s.v} onClick={()=>setStatus(s.v)} style={{ flex:1,padding:"9px 0",borderRadius:7,cursor:"pointer",fontFamily:F,fontSize:12,fontWeight:700,border:status===s.v?`2px solid ${s.c}`:`1px solid ${C.border}`,background:status===s.v?s.c+"22":"transparent",color:status===s.v?s.c:C.muted,transition:"all .15s" }}>{s.l}</button>)}
             </div>
+          </div>
+          {/* File attachment */}
+          <div>
+            <label style={LBL()}>Invoice File <span style={{ fontWeight:400,color:C.muted }}>(optional — replaces existing)</span></label>
+            {docFile
+              ?<div style={{ background:C.surface,border:`1px solid ${C.accent}44`,borderRadius:9,padding:"12px 14px",display:"flex",alignItems:"center",gap:10 }}>
+                  <div style={{ width:38,height:38,background:C.card,borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0 }}>
+                    {docFile.dataUrl?.startsWith("data:image")||docFile.name?.match(/\.(png|jpg|jpeg|webp|gif)$/i)?"🖼️":"📄"}
+                  </div>
+                  <div style={{ flex:1,minWidth:0 }}>
+                    <div style={{ color:C.accent,fontFamily:F,fontWeight:700,fontSize:12 }}>✓ Attached</div>
+                    <div style={{ color:C.text,fontFamily:F,fontSize:11,marginTop:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{docFile.name}</div>
+                    {docFile.size>0&&<div style={{ color:C.muted,fontFamily:F,fontSize:10,marginTop:1 }}>{fmtBytes(docFile.size)}</div>}
+                  </div>
+                  <button onClick={()=>setDocFile(null)} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,borderRadius:6,padding:"4px 8px",fontFamily:F,fontSize:12,cursor:"pointer" }}>Remove</button>
+                </div>
+              :<div onClick={()=>fileRef.current.click()}
+                  onDragOver={e=>{e.preventDefault();e.currentTarget.style.borderColor=C.accent;e.currentTarget.style.background=C.accentDim;}}
+                  onDragLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}}
+                  onDrop={e=>{e.preventDefault();e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";const f=e.dataTransfer.files[0];if(f)handleFile(f);}}
+                  style={{ border:`2px dashed ${C.border}`,borderRadius:9,padding:"18px 16px",textAlign:"center",cursor:"pointer",transition:"all .2s" }}
+                  onMouseEnter={e=>{e.currentTarget.style.borderColor=C.accent+"88";e.currentTarget.style.background=C.accentDim;}}
+                  onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}}>
+                  <div style={{ fontSize:24,marginBottom:5 }}>📎</div>
+                  <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:12,marginBottom:2 }}>Drop file or click to browse</div>
+                  <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>PDF · Images · Word · Any format</div>
+                </div>
+            }
+            <input ref={fileRef} type="file" accept="*" style={{ display:"none" }}
+              onChange={e=>{const f=e.target.files[0];if(f)handleFile(f);e.target.value="";}}/> 
           </div>
         </div>
         <div style={{ display:"flex",gap:10,marginTop:22 }}>
