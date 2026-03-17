@@ -2811,17 +2811,25 @@ function EditPaymentModal({ payment, allProjects, allInvoices, onConfirm, onCanc
   const handleFile=async(raw)=>{
     if(raw.size>5*1024*1024){ setErr("File too large (max 5MB)"); return; }
     const du=await new Promise(r=>{const rd=new FileReader();rd.onload=e=>r(e.target.result);rd.readAsDataURL(raw);});
-    setReceipt({ name:raw.name, size:raw.size, dataUrl:du });
+    setReceipt({ name:raw.name, size:raw.size, dataUrl:du, _rawFile:raw });
   };
 
-  const submit=()=>{
+  const cid = useCompany();
+
+  const submit=async()=>{
     if(!amount||isNaN(parseFloat(amount))){ setErr("Payment amount is required"); return; }
     if(!date){ setErr("Payment date is required"); return; }
+    // Upload new receipt to Storage if a raw file was selected
+    let receiptData = receipt || null;
+    if(receipt?._rawFile && cid){
+      const uploaded = await uploadFile(receipt._rawFile, 'receipts', cid);
+      if(uploaded) receiptData = { name:receipt.name, size:receipt.size, url:uploaded.url, path:uploaded.path };
+    }
     onConfirm({
       ...payment,
       projId, project:proj?.name||payment.project||"",
       amount:parseFloat(amount), date, dateFmt:fmtDate(date),
-      method, invRef:invRef||null, notes:notes.trim(), receipt:receipt||null,
+      method, invRef:invRef||null, notes:notes.trim(), receipt:receiptData,
     });
   };
 

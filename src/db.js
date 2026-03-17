@@ -128,6 +128,7 @@ export const dbPayments = {
     if (patch.date !== undefined)     mapped.date         = patch.date
     if (patch.invoice !== undefined)  mapped.invoice_ref  = patch.invoice
     if (patch.notes !== undefined)    mapped.notes        = patch.notes
+    if (patch.receipt !== undefined)  mapped.receipt_data = patch.receipt
     return supabase.from('payments').update(mapped).eq('id', id).eq('company_id', cid())
   },
 
