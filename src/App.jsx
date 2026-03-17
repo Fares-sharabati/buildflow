@@ -3232,9 +3232,8 @@ function PaymentsPanel({ project, payments, addPayment, updatePayment, removePay
 
 // Global payments page
 // ─── Payment Detail Modal ─────────────────────────────────────────────────────
-function PaymentDetailModal({ payment, onClose, onEdit, onDelete }){
+function PaymentDetailModal({ payment, onClose, onEdit, onDelete, onViewReceipt }){
   if(!payment) return null;
-  const [showReceipt,setShowReceipt] = React.useState(false);
   const receipt = payment.receipt;
   const receiptFile = receipt ? { ...receipt, dataUrl: receipt.url||receipt.dataUrl } : null;
 
@@ -3248,7 +3247,6 @@ function PaymentDetailModal({ payment, onClose, onEdit, onDelete }){
 
   return(
     <Overlay onClose={onClose}>
-      {showReceipt&&receiptFile&&<FilePreviewModal file={receiptFile} onClose={()=>setShowReceipt(false)}/>}
       <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,width:440,maxWidth:'95vw',boxShadow:'0 24px 60px rgba(0,0,0,.5)',display:'flex',flexDirection:'column',overflow:'hidden' }}>
 
         {/* Header */}
@@ -3273,7 +3271,7 @@ function PaymentDetailModal({ payment, onClose, onEdit, onDelete }){
           ))}
         </div>
 
-        {/* Receipt file */}
+        {/* Receipt file — View delegates to parent so FilePreviewModal renders outside this Overlay */}
         {receiptFile&&(
           <div style={{ padding:'0 24px 14px' }}>
             <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:'10px 14px',display:'flex',alignItems:'center',gap:10 }}>
@@ -3283,7 +3281,7 @@ function PaymentDetailModal({ payment, onClose, onEdit, onDelete }){
                 {receipt.size>0&&<div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:1 }}>{(receipt.size/1024).toFixed(0)} KB</div>}
               </div>
               <div style={{ display:'flex',gap:6,flexShrink:0 }}>
-                <button onClick={()=>setShowReceipt(true)} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}44`,padding:'5px 12px',borderRadius:6,fontFamily:F,fontSize:11,fontWeight:700,cursor:'pointer' }}>👁 View</button>
+                <button onClick={()=>onViewReceipt(receiptFile)} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}44`,padding:'5px 12px',borderRadius:6,fontFamily:F,fontSize:11,fontWeight:700,cursor:'pointer' }}>👁 View</button>
                 {(receipt.url||receipt.dataUrl)&&<a href={receipt.url||receipt.dataUrl} download={receipt.name||'receipt'} style={{ background:C.accentDim,color:C.accent,border:`1px solid ${C.accentMid}`,padding:'5px 12px',borderRadius:6,fontFamily:F,fontSize:11,fontWeight:700,textDecoration:'none',display:'flex',alignItems:'center' }}>↓ Download</a>}
               </div>
             </div>
@@ -3313,6 +3311,7 @@ function PaymentsPage({ payments, allProjects, addPayment, allInvoices, removePa
   const [confirmEditPay,setConfirmEditPay]=useState(null);
   const [confirmDelete,setConfirmDelete]=useState(null);
   const [selectedPayment,setSelectedPayment]=useState(null);
+  const [previewReceipt,setPreviewReceipt]=useState(null);
 
   const filtered=useMemo(()=>payments.filter(p=>{
     if(projFilter!=="all"&&String(p.projId)!==projFilter)return false;
@@ -3349,7 +3348,8 @@ function PaymentsPage({ payments, allProjects, addPayment, allInvoices, removePa
           </div>
         </ConfirmDialog>
       )}
-      {selectedPayment&&<PaymentDetailModal payment={selectedPayment} onClose={()=>setSelectedPayment(null)} onEdit={p=>setEditingPayment(p)} onDelete={p=>setConfirmDelete(p)}/>}
+      {previewReceipt&&<FilePreviewModal file={previewReceipt} onClose={()=>setPreviewReceipt(null)}/>}
+      {selectedPayment&&<PaymentDetailModal payment={selectedPayment} onClose={()=>setSelectedPayment(null)} onEdit={p=>setEditingPayment(p)} onDelete={p=>setConfirmDelete(p)} onViewReceipt={f=>{ setSelectedPayment(null); setPreviewReceipt(f); }}/>}
       <PageHeader icon="💳" title="Payments" subtitle="Track all client payments across projects"
         action={<Btn variant="success" size="md" onClick={()=>setShowAdd(true)}>+ Record Payment</Btn>}/>
       <div style={{ display:"flex",gap:12,marginBottom:24,flexWrap:"wrap" }}>
