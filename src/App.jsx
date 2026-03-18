@@ -69,7 +69,59 @@ const Ic = {
   Reports:   ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
   Prices:    ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>,
   Accountant:({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><line x1="16" y1="8" x2="8" y2="8"/><line x1="16" y1="12" x2="8" y2="12"/><line x1="11" y1="16" x2="8" y2="16"/></svg>,
+  // ── Module icons ───────────────────────────────────────────────────────────
+  Blueprint: ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>,
+  Contract:  ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><path d="M8 9h1"/><path d="M12 21v-4"/><path d="M9 21h6"/></svg>,
+  // ── General purpose ────────────────────────────────────────────────────────
+  Building:  ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M9 3v18"/><path d="M3 9h6"/><path d="M3 15h6"/><path d="M12 9h9"/><path d="M12 15h9"/></svg>,
+  Person:    ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>,
+  MapPin:    ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M12 2a7 7 0 0 1 7 7c0 4.9-7 13-7 13S5 13.9 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>,
+  Comment:   ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>,
+  Eye:       ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>,
+  Clock:     ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
+  Upload:    ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>,
+  Download:  ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><polyline points="8 17 12 21 16 17"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"/></svg>,
+  Settings:  ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>,
+  Sun:       ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>,
+  Moon:      ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>,
+  List:      ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>,
+  BarChart:  ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/><line x1="2" y1="20" x2="22" y2="20"/></svg>,
+  TrendUp:   ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>,
+  TrendDown: ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>,
+  Wrench:    ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>,
+  Truck:     ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>,
+  Inbox:     ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><polyline points="22 13 16 13 14 16 10 16 8 13 2 13"/><path d="M5.45 5.11L2 13v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-7.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>,
 };
+
+// ─── LogIcon: renders activity log icon strings as SVG components ─────────────
+function LogIcon({ ic, size=14, color }){
+  const c = color||"currentColor";
+  const map = {
+    "inv":  <Ic.Receipt  size={size} color={c}/>,
+    "🧾":   <Ic.Receipt  size={size} color={c}/>,
+    "del":  <Ic.Delete   size={size} color={c}/>,
+    "🗑️":  <Ic.Delete   size={size} color={c}/>,
+    "🗑":   <Ic.Delete   size={size} color={c}/>,
+    "edit": <Ic.Pen      size={size} color={c}/>,
+    "✏️":  <Ic.Pen      size={size} color={c}/>,
+    "✏":   <Ic.Pen      size={size} color={c}/>,
+    "PAY":  <Ic.Payments size={size} color={c}/>,
+    "pay":  <Ic.Payments size={size} color={c}/>,
+    "💰":   <Ic.Payments size={size} color={c}/>,
+    "💳":   <Ic.Payments size={size} color={c}/>,
+    "🏗":   <Ic.Projects size={size} color={c}/>,
+    "log":  <Ic.List     size={size} color={c}/>,
+    "📋":   <Ic.List     size={size} color={c}/>,
+    "👷":   <Ic.Team     size={size} color={c}/>,
+    "📐":   <Ic.Blueprint size={size} color={c}/>,
+    "📜":   <Ic.Contract size={size} color={c}/>,
+    "📷":   <Ic.Photo    size={size} color={c}/>,
+    "📝":   <Ic.Note     size={size} color={c}/>,
+    "📅":   <Ic.Calendar size={size} color={c}/>,
+    "●":    <Ic.List     size={size} color={c}/>,
+  };
+  return map[ic] || <Ic.List size={size} color={c}/>;
+}
 
 // ─── Storage wrapper ───────────────────────────────────────────────────────────
 const storage = {
@@ -181,12 +233,17 @@ function fmtCur(n, cur="AED", dec=2){
 }
 function fmtCurS(n, cur="AED"){ return fmtCur(n, cur, 0); }
 
-// Unified invoice number generator — always sequential across the whole system
+// Unified invoice number generator — sequential, clean #NNN format
 function nextInvId(allInvoices=[]){
   const max = Math.max(0, ...allInvoices.map(i=>{
-    return parseInt(String(i.id||i.invId||"").replace(/[^0-9]/g,""))||0;
+    const raw = String(i.invId||i.iid||"");
+    // Only count clean short IDs like #001, INV-001, or plain numbers <= 9999
+    if(/^#(\d{1,4})$/.test(raw))  return parseInt(raw.slice(1));
+    if(/^INV-(\d+)$/i.test(raw))  return parseInt(raw.replace(/[^0-9]/g,""));
+    if(/^\d{1,4}$/.test(raw))     return parseInt(raw);
+    return 0; // skip timestamps / UUIDs
   }));
-  return "INV-"+String(max+1).padStart(3,"0");
+  return "#"+String(max+1).padStart(3,"0");
 }
 
 const F = `'Inter','Segoe UI',sans-serif`;
@@ -508,6 +565,42 @@ function Overlay({ children, onClose }){
   );
 }
 
+// ─── DateInput — consistent calendar picker for all date fields ──────────────
+// Wraps native <input type="date"> with a visible calendar button.
+// Props mirror a normal input: value, onChange, style, placeholder, required.
+// onChange fires with a synthetic event so existing handlers work unchanged.
+function DateInput({ value, onChange, style={}, placeholder, required, disabled }){
+  const ref = React.useRef();
+  const open = () => { try{ ref.current?.showPicker(); }catch{ ref.current?.focus(); } };
+  return(
+    <div style={{ position:"relative", display:"flex", alignItems:"center" }}>
+      <input
+        ref={ref}
+        type="date"
+        value={value||""}
+        onChange={onChange}
+        required={required}
+        disabled={disabled}
+        placeholder={placeholder}
+        style={{ ...style, paddingRight:38, colorScheme:"dark", width:"100%" }}
+      />
+      <button
+        type="button"
+        onClick={open}
+        disabled={disabled}
+        tabIndex={-1}
+        style={{ position:"absolute", right:8, background:"transparent", border:"none",
+          cursor:disabled?"default":"pointer", padding:"2px 4px", lineHeight:1,
+          color:C.muted, fontSize:15, display:"flex", alignItems:"center",
+          opacity:disabled?0.4:0.75, transition:"opacity .15s" }}
+        onMouseEnter={e=>{ if(!disabled) e.currentTarget.style.opacity="1"; }}
+        onMouseLeave={e=>{ e.currentTarget.style.opacity=disabled?"0.4":"0.75"; }}
+        aria-label="Open calendar"
+      ><Ic.Calendar size={13} color={C.muted}/></button>
+    </div>
+  );
+}
+
 /** Reusable confirmation dialog */
 function ConfirmDialog({ title,message,children,onConfirm,onCancel,confirmLabel="Confirm",variant="delete" }){
   const color = variant==="delete"?C.red : variant==="edit"?C.blue : C.accent;
@@ -516,7 +609,7 @@ function ConfirmDialog({ title,message,children,onConfirm,onCancel,confirmLabel=
       <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,padding:32,width:420,maxWidth:"95vw" }}>
         <div style={{ display:"flex",alignItems:"center",gap:12,marginBottom:16 }}>
           <div style={{ width:40,height:40,borderRadius:10,background:color+"1a",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0 }}>
-            {variant==="delete"?"🗑️":variant==="edit"?"✏️":"⚠️"}
+            {variant==="delete"?<Ic.Delete size={13}/>:variant==="edit"?<Ic.Pen size={13}/>:<Ic.Warning size={13}/>}
           </div>
           <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}>{title}</div>
         </div>
@@ -567,7 +660,7 @@ function ActivityLogModal({ entry, onClose }){
         <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:20 }}>
           <div style={{ display:"flex",alignItems:"center",gap:12 }}>
             <div style={{ width:44,height:44,borderRadius:12,background:iconBg+"22",border:`1px solid ${iconBg}44`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0 }}>
-              {entry.icon||"📋"}
+              <LogIcon ic={entry.icon||"log"} size={13} color={C.muted}/>
             </div>
             <div>
               <div style={{ color:C.muted,fontFamily:F,fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.06em",marginBottom:3 }}>Activity Detail</div>
@@ -578,9 +671,9 @@ function ActivityLogModal({ entry, onClose }){
         </div>
 
         <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
-          <Field icon="👤" label="Performed by"    value={entry.user||"Unknown"} />
-          <Field icon="🕐" label="Date & Time"     value={fullDate} />
-          <Field icon="🏗" label="Related Project" value={entry.detail||null} />
+          <Field icon={<Ic.Person size={13} color={C.muted}/>} label="Performed by"    value={entry.user||"Unknown"} />
+          <Field icon={<Ic.Clock size={13} color={C.muted}/>} label="Date & Time"     value={fullDate} />
+          <Field icon={<Ic.Projects size={13} color={C.muted}/>} label="Related Project" value={entry.detail||null} />
         </div>
 
         <button onClick={onClose}
@@ -640,7 +733,7 @@ function InlineFormShell({ header,accent,saveLabel="Save",onSave,onCancel,err,sa
         <button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:20,cursor:"pointer",lineHeight:1 }}>✕</button>
       </div>
       {children}
-      {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"8px 12px",color:C.red,fontFamily:F,fontSize:12,marginTop:10 }}>⚠ {err}</div>}
+      {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"8px 12px",color:C.red,fontFamily:F,fontSize:12,marginTop:10 }}><Ic.Warning size={12} color={C.red} style={{marginRight:5,verticalAlign:"middle"}}/>{err}</div>}
       <div style={{ display:"flex",gap:10,marginTop:16,justifyContent:"flex-end" }}>
         <button onClick={onCancel} disabled={saving} style={{ background:"transparent",color:C.muted,border:`1px solid ${C.border}`,padding:"8px 18px",borderRadius:8,fontFamily:F,fontSize:13,cursor:saving?"not-allowed":"pointer",opacity:saving?0.5:1 }}>Cancel</button>
         <button onClick={saving?undefined:onSave} disabled={saving} style={{ background:saving?"transparent":accent||C.accent,color:saving?accent||C.accent:"#000",border:saving?`1px solid ${accent||C.accent}44`:"none",padding:"8px 20px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:saving?"not-allowed":"pointer",display:"flex",alignItems:"center",gap:8,minWidth:100,justifyContent:"center" }}>
@@ -738,7 +831,7 @@ function PageHeader({ icon, title, subtitle, action }){
 }
 
 /** Consistent empty state for tables and lists */
-function EmptyState({ icon="📭", title="Nothing here yet", sub, style:xs={} }){
+function EmptyState({ icon=<Ic.Inbox size={36} color={C.muted}/>, title="Nothing here yet", sub, style:xs={} }){
   return(
     <div style={{ padding:"52px 20px", textAlign:"center", color:C.muted, fontFamily:F, ...xs }}>
       {icon&&<div style={{ fontSize:36, marginBottom:10 }}>{icon}</div>}
@@ -767,22 +860,49 @@ const ACT_COL_INNER_TH = {
   color:C.muted, fontWeight:700, fontSize:12, fontFamily:F,
 };
 
-/** Human-readable invoice number: prefers inv_id / invId over raw UUID */
-const fmtInvId = (inv) => {
-  const id = inv?.invId || inv?.iid || inv?.inv_id || inv?.id || "";
-  // If it looks like a UUID (8-4-4-4-12 hex), fall back to "INV-???"
-  if(/^[0-9a-f]{8}-[0-9a-f]{4}-/i.test(id)) return "INV-???";
-  return id || "—";
+/** Human-readable invoice number — always returns clean #NNN.
+ *  If invId is already clean (#NNN / INV-NNN / plain ≤4-digit), uses it.
+ *  Otherwise falls back to the invoice's 1-based position in allInvoices
+ *  (sorted ascending by created_at / id so order is stable).
+ *  Pass allInvoices whenever available to guarantee no "INV-???" fallback.
+ */
+const fmtInvId = (inv, allInvoices=[]) => {
+  const raw = String(inv?.invId || inv?.iid || inv?.inv_id || "");
+  // Already a clean short ID
+  if(/^#\d+$/.test(raw))        return raw;
+  if(/^INV-\d+$/i.test(raw))    return raw.toUpperCase();
+  if(/^\d{1,4}$/.test(raw))     return "#"+raw.padStart(3,"0");
+
+  // Bad invId (UUID / 13-digit timestamp / empty) — derive from position
+  if(allInvoices.length > 0){
+    // Sort by id (Supabase UUIDs sort chronologically, timestamps do too)
+    const sorted = [...allInvoices].sort((a,b)=>{
+      const ai = String(a.id||a.invId||"");
+      const bi = String(b.id||b.invId||"");
+      return ai < bi ? -1 : ai > bi ? 1 : 0;
+    });
+    const pos = sorted.findIndex(i => i.id === inv?.id || i.invId === inv?.invId);
+    if(pos >= 0) return "#"+String(pos+1).padStart(3,"0");
+  }
+
+  // Last resort: hash invId / id into a stable short number
+  const fallback = String(inv?.invId || inv?.id || "");
+  if(fallback){
+    let h = 0;
+    for(let i=0; i<fallback.length; i++) h = (h*31 + fallback.charCodeAt(i)) & 0x7fffffff;
+    return "#"+String((h % 9000) + 1000); // 4-digit stable hash, never "???"
+  }
+  return "#000";
 };
 
 /** Resolve a stored invRef to a human-readable invoice number */
 const resolveInvRef = (invRef, allInvoices=[]) => {
   if(!invRef) return "—";
-  // If it already looks human-readable (INV-xxx), return it
-  if(!/^[0-9a-f]{8}-/i.test(invRef)) return invRef;
-  // It's a UUID — look up the invoice
-  const inv = allInvoices.find(i => i.id === invRef || i.invId === invRef);
-  return inv ? fmtInvId(inv) : invRef;
+  // Already a clean display number (#001, INV-001, short text)
+  if(/^#\d+$/.test(invRef) || /^INV-\d+$/i.test(invRef)) return invRef;
+  // Looks like a UUID or raw ID — try to look up by id or invId
+  const inv = allInvoices.find(i => i.id === invRef || i.invId === invRef || String(i.id) === invRef);
+  return inv ? fmtInvId(inv,allInvoices) : invRef;
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -800,7 +920,7 @@ function ContactModal({ client,onClose }){
           <div style={{ width:52,height:52,borderRadius:"50%",background:C.accentDim,border:`2px solid ${C.accentMid}`,display:"flex",alignItems:"center",justifyContent:"center",color:C.accent,fontFamily:F,fontWeight:800,fontSize:18,flexShrink:0 }}>{client.initials}</div>
           <div><div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:16 }}>{client.name}</div><div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2 }}>{client.company}</div></div>
         </div>
-        {[["📞","Phone",client.phone],["✉️","Email",client.email]].map(([icon,lbl,val])=>(
+        {[[<Ic.Phone size={14} color={C.muted}/>, "Phone", client.phone],[<Ic.Email size={14} color={C.muted}/>, "Email", client.email]].map(([icon,lbl,val])=>(
           <div key={lbl} style={{ display:"flex",alignItems:"center",gap:12,marginBottom:14 }}>
             <div style={{ width:36,height:36,background:C.surface,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,flexShrink:0 }}>{icon}</div>
             <div><div style={{ color:C.muted,fontFamily:F,fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:.8 }}>{lbl}</div><div style={{ color:C.text,fontFamily:F,fontSize:13,fontWeight:600,marginTop:2 }}>{val}</div></div>
@@ -865,7 +985,7 @@ function InvModal({ pending,onConfirm,onCancel }){
       if(result.description) setDesc(result.description);
       setAiNote("OK AI extracted data from your file — please review and correct if needed.");
     } else {
-      setAiNote("⚠️ Could not extract data automatically. Please fill in the fields manually.");
+      setAiNote("Could not extract data automatically. Please fill in the fields manually.");
     }
     setStep("review"); setExtracting(false);
   };
@@ -878,7 +998,7 @@ function InvModal({ pending,onConfirm,onCancel }){
         <div style={{ padding:"22px 26px 0",flexShrink:0 }}>
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16 }}>
             <div>
-              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}>🧾 Add Invoice</div>
+              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}><Ic.Receipt size={16} color={C.text} style={{marginRight:7,verticalAlign:"middle"}}/> Add Invoice</div>
               <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2 }}>{pending.name}</div>
             </div>
             <button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:20,cursor:"pointer" }}>✕</button>
@@ -903,14 +1023,14 @@ function InvModal({ pending,onConfirm,onCancel }){
           {step==="upload"&&(
             <div style={{ paddingBottom:8 }}>
               <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:12,padding:"28px 20px",textAlign:"center",marginBottom:16 }}>
-                <div style={{ fontSize:40,marginBottom:10 }}>🧾</div>
+                <Ic.Receipt size={40} color={C.muted} style={{marginBottom:10}}/>
                 <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:15,marginBottom:6 }}>{pending.name}</div>
                 <div style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{pending.size?(pending.size/1024).toFixed(1)+" KB":""}</div>
                 {pending.dataUrl?.startsWith("data:image")&&<img src={pending.dataUrl} alt="" style={{ maxWidth:"100%",maxHeight:180,objectFit:"contain",borderRadius:8,marginTop:12,border:`1px solid ${C.border}` }}/>}
               </div>
               <div style={{ background:"linear-gradient(135deg,#a78bfa08,#3b82f608)",border:`1px solid ${C.purple}33`,borderRadius:10,padding:"16px 18px" }}>
                 <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:8 }}>
-                  <span style={{ fontSize:18 }}>🤖</span>
+                  <Ic.Bot size={18} color={C.purple}/>
                   <span style={{ color:C.purple,fontFamily:F,fontWeight:700,fontSize:13 }}>AI Invoice Extraction</span>
                 </div>
                 <div style={{ color:C.muted,fontFamily:F,fontSize:12,lineHeight:1.6 }}>Click below to automatically extract supplier name, invoice number, dates, amount, and description from your file.</div>
@@ -924,11 +1044,11 @@ function InvModal({ pending,onConfirm,onCancel }){
               <div style={{ display:"flex",flexDirection:"column",gap:12 }}>
                 <div style={{ display:"flex",gap:12 }}>
                   <div style={{ flex:2 }}><label style={LBL()}>Supplier / Company Name</label><input style={INP()} value={supplier} onChange={e=>setSupplier(e.target.value)} placeholder="e.g. Gulf Steel Co."/></div>
-                  <div style={{ flex:1 }}><label style={LBL()}>Invoice #</label><input style={INP()} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="INV-001"/></div>
+                  <div style={{ flex:1 }}><label style={LBL()}>Invoice #</label><input style={INP()} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="#001"/></div>
                 </div>
                 <div style={{ display:"flex",gap:12 }}>
-                  <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
-                  <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
+                  <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><DateInput style={INP()} value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
+                  <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><DateInput style={INP()} value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
                 </div>
                 <div style={{ display:"flex",gap:12 }}>
                   <div style={{ flex:2 }}><label style={LBL()}>Total Amount</label><input style={INP()} type="number" value={amount} onChange={e=>setAmount(e.target.value)} placeholder="0.00"/></div>
@@ -953,7 +1073,7 @@ function InvModal({ pending,onConfirm,onCancel }){
             ?<>
               <button onClick={onCancel} style={{ background:"transparent",color:C.muted,border:`1px solid ${C.border}`,padding:"11px 18px",borderRadius:8,fontFamily:F,fontSize:13,cursor:"pointer" }}>Cancel</button>
               <button onClick={runExtract} disabled={extracting} style={{ background:C.purple,color:"#fff",border:"none",padding:"11px 28px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:8,opacity:extracting?.7:1 }}>
-                {extracting?<><div style={{ width:14,height:14,border:"2px solid #fff",borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Extracting…</>:<>🤖 Extract with AI</>}
+                {extracting?<><div style={{ width:14,height:14,border:"2px solid #fff",borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Extracting…</>:<><Ic.Bot size={13} color="#fff" style={{marginRight:4}}/> Extract with AI</>}
               </button>
             </>
             :<>
@@ -1118,7 +1238,7 @@ function AddTaskModal({ onConfirm,onCancel,allMembers,allProjects=[] }){
               {allProjects.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}
             </select>
           </div>
-          <div><label style={LBL()}>Due Date *</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
+          <div><label style={LBL()}>Due Date *</label><DateInput style={INP()} value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
         </div>
         <div style={{ display:"flex",gap:10,marginTop:22 }}>
           <button onClick={submit} style={{ flex:1,background:C.accent,color:"#000",border:"none",padding:"12px 0",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer" }}>Assign Task</button>
@@ -1147,7 +1267,7 @@ function AddInvoiceFormModal({ project, onConfirm, onCancel, allInvoices=[] }){
     const du=raw.size<5*1024*1024?await new Promise(r=>{const rd=new FileReader();rd.onload=e=>r(e.target.result);rd.readAsDataURL(raw);}):null;
     setDocFile({name:raw.name,size:raw.size,dataUrl:du,_rawFile:raw});
     if(du){
-      setAiRunning(true); setAiNote("🤖 Reading document with AI…");
+      setAiRunning(true); setAiNote("Reading with AI…");
       const result=await aiExtractInvoice({name:raw.name,size:raw.size,dataUrl:du});
       if(result){
         if(result.supplierName&&!supplier)setSupplier(result.supplierName);
@@ -1184,7 +1304,7 @@ function AddInvoiceFormModal({ project, onConfirm, onCancel, allInvoices=[] }){
         <div style={{ padding:"22px 28px 18px",borderBottom:`1px solid ${C.border}`,flexShrink:0 }}>
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center" }}>
             <div>
-              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}>🧾 Add Invoice</div>
+              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}><Ic.Receipt size={16} color={C.text} style={{marginRight:7,verticalAlign:"middle"}}/> Add Invoice</div>
               <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2 }}>{project.name}</div>
             </div>
             <button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:22,cursor:"pointer" }}>✕</button>
@@ -1192,17 +1312,17 @@ function AddInvoiceFormModal({ project, onConfirm, onCancel, allInvoices=[] }){
         </div>
         {/* Body */}
         <div style={{ flex:1,overflowY:"auto",padding:"22px 28px" }}>
-          {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:8,padding:"9px 14px",color:C.red,fontFamily:F,fontSize:12,marginBottom:16 }}>⚠ {err}</div>}
+          {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:8,padding:"9px 14px",color:C.red,fontFamily:F,fontSize:12,marginBottom:16 }}><Ic.Warning size={12} color={C.red} style={{marginRight:5,verticalAlign:"middle"}}/>{err}</div>}
           <div style={{ display:"flex",flexDirection:"column",gap:15 }}>
             {/* Supplier + Invoice # */}
             <div style={{ display:"flex",gap:14 }}>
               <div style={{ flex:2 }}><label style={LBL()}>Supplier / Company</label><input style={INP()} value={supplier} onChange={e=>setSupplier(e.target.value)} placeholder="e.g. Gulf Steel Co."/></div>
-              <div style={{ flex:1 }}><label style={LBL()}>Invoice #</label><input style={INP()} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="INV-001"/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Invoice #</label><input style={INP()} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="#001"/></div>
             </div>
             {/* Dates */}
             <div style={{ display:"flex",gap:14 }}>
-              <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
-              <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><DateInput style={INP()} value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><DateInput style={INP()} value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
             </div>
             {/* Amount + Currency */}
             <div style={{ display:"flex",gap:14 }}>
@@ -1229,7 +1349,7 @@ function AddInvoiceFormModal({ project, onConfirm, onCancel, allInvoices=[] }){
                     {aiRunning&&<div style={{ color:C.purple,fontFamily:F,fontSize:12,marginBottom:8,display:"flex",alignItems:"center",gap:8 }}><div style={{ width:12,height:12,border:"2px solid",borderColor:C.purple,borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Extracting with AI…</div>}
                     {aiNote&&!aiRunning&&<div style={{ color:aiNote.startsWith("OK")?C.green:C.muted,fontFamily:F,fontSize:11,marginBottom:10,padding:"8px 10px",background:aiNote.startsWith("OK")?C.greenDim:C.surface,borderRadius:6,border:`1px solid ${aiNote.startsWith("OK")?C.green+"33":C.border}` }}>{aiNote}</div>}
                     <div style={{ display:"flex",alignItems:"center",gap:10 }}>
-                      <div style={{ width:42,height:42,background:C.card,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0 }}>{docFile.url ? !docFile.url.includes(".pdf") : docFile.dataUrl?.startsWith("data:image")?"🖼️":"📄"}</div>
+                      <div style={{ width:42,height:42,background:C.card,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>{docFile.url ? (!docFile.url.includes(".pdf")?<Ic.Image size={20} color={C.muted}/>:<Ic.File size={20} color={C.muted}/>) : docFile.dataUrl?.startsWith("data:image")?<Ic.Image size={20} color={C.muted}/>:<Ic.File size={20} color={C.muted}/>}</div>
                       <div style={{ flex:1,minWidth:0 }}>
                         <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:13,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{docFile.name}</div>
                         <div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:2 }}>{docFile.size?(docFile.size/1024).toFixed(1)+" KB":""}</div>
@@ -1245,10 +1365,10 @@ function AddInvoiceFormModal({ project, onConfirm, onCancel, allInvoices=[] }){
                     style={{ border:`2px dashed ${C.border}`,borderRadius:10,padding:"28px 20px",textAlign:"center",cursor:"pointer",transition:"all .2s" }}
                     onMouseEnter={e=>{e.currentTarget.style.borderColor=C.accent+"88";e.currentTarget.style.background=C.accentDim;}}
                     onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}}>
-                    <div style={{ fontSize:32,marginBottom:8 }}>📎</div>
+                    <div style={{ fontSize:0 }}><Ic.Attach size={32} color={C.muted} style={{marginBottom:8}}/></div>
                     <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:13,marginBottom:4 }}>Drop document or click to browse</div>
                     <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>PDF · Images · Screenshots · Word docs · Any format</div>
-                    <div style={{ color:C.purple,fontFamily:F,fontSize:11,marginTop:6,display:"flex",alignItems:"center",justifyContent:"center",gap:4 }}>🤖 AI will auto-extract invoice data from your file</div>
+                    <div style={{ color:C.purple,fontFamily:F,fontSize:11,marginTop:6,display:"flex",alignItems:"center",justifyContent:"center",gap:4 }}><Ic.Bot size={11} color={C.purple} style={{marginRight:4}}/> AI will auto-extract from your file</div>
                   </div>
               }
               <input ref={fileRef} type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.bmp,.tiff,.doc,.docx,.xls,.xlsx,.txt,.csv" style={{ display:"none" }} onChange={e=>{const f=e.target.files[0];if(f)handleDocFile(f);e.target.value="";}}/>
@@ -1269,7 +1389,8 @@ function AddInvoiceFormModal({ project, onConfirm, onCancel, allInvoices=[] }){
 function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobalInvoice, onUpdateGlobalInvoice, allInvoices=[] }){
   const cid = useCompany();
   // ─── SINGLE SOURCE OF TRUTH: global store only (no useFiles for invoices) ───
-  const [preview,setPreview]     = useState(null);
+  const [selectedInv,setSelectedInv] = useState(null);  // invoice detail modal
+  const [previewFile,setPreviewFile] = useState(null);  // file viewer (separate overlay)
   const [mode,setMode]           = useState("list"); // "list" | "add" | "edit"
   const [editTarget,setEditTarget] = useState(null); // invoice being edited
   const [confirmDel,setConfirmDel] = useState(null);
@@ -1454,11 +1575,11 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
   const renderFormBody = () => (<>
     <div style={{ display:"flex",gap:12 }}>
       <div style={{ flex:2 }}><label style={LBL()}>Supplier / Company</label><input style={INP()} value={supplier} onChange={e=>setSupplier(e.target.value)} placeholder="e.g. Gulf Steel Co."/></div>
-      <div style={{ flex:1 }}><label style={LBL()}>Invoice #</label><input style={INP()} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="INV-001"/></div>
+      <div style={{ flex:1 }}><label style={LBL()}>Invoice #</label><input style={INP()} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="#001"/></div>
     </div>
     <div style={{ display:"flex",gap:12 }}>
-      <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><input style={{...INP(),colorScheme:"dark"}} type="date" value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
-      <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><input style={{...INP(),colorScheme:"dark"}} type="date" value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
+      <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><DateInput style={INP()} value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
+      <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><DateInput style={INP()} value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
     </div>
     <div style={{ display:"flex",gap:12 }}>
       <div style={{ flex:2 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setFormErr("");}} onWheel={e=>e.target.blur()} placeholder="0.00"/></div>
@@ -1477,7 +1598,17 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
 
   return(
     <div>
-      {preview&&<FilePreviewModal file={preview} onClose={()=>setPreview(null)}/>}
+      {/* Invoice detail modal — reuses same component as InvoicingPage */}
+      {previewFile&&<FilePreviewModal file={previewFile} onClose={()=>setPreviewFile(null)}/>}
+      {selectedInv&&(
+        <InvoiceDetailModal
+          inv={selectedInv}
+          onClose={()=>setSelectedInv(null)}
+          onEdit={inv=>{ setSelectedInv(null); openEdit(inv); }}
+          onDelete={inv=>{ setSelectedInv(null); setConfirmDel(inv); }}
+          onViewFile={inv=>{ setSelectedInv(null); setPreviewFile({...inv,dataUrl:inv.dataUrl||inv.url}); }}
+        />
+      )}
 
       {confirmDel&&(
         <ConfirmDialog title="Delete Invoice?"
@@ -1504,18 +1635,19 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
               {["Invoice #","Supplier","Amount","Due Date","Status",""].map(h=><th key={h} style={TH({padding:"9px 12px",fontSize:11})}>{h}</th>)}
             </tr></thead>
             <tbody>{rows.map((row,i)=>{ const st=INV_ST.find(s=>s.v===row.st)||INV_ST[0]; return(
-              <tr key={row.id} style={{ borderBottom:i<rows.length-1?`1px solid ${C.border}22`:"none",transition:"background .12s" }}
+              <tr key={row.id}
+                onClick={e=>{ if(e.target.closest('[data-norow]')) return; setSelectedInv(row); }}
+                style={{ borderBottom:i<rows.length-1?`1px solid ${C.border}22`:"none",transition:"background .12s",cursor:"pointer" }}
                 onMouseEnter={e=>e.currentTarget.style.background=C.bg} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                <td style={TD({color:C.accent,fontWeight:700,fontSize:11,whiteSpace:"nowrap",padding:"9px 12px"})}>{fmtInvId(row)}</td>
+                <td style={TD({color:C.accent,fontWeight:700,fontSize:11,whiteSpace:"nowrap",padding:"9px 12px"})}>{fmtInvId(row,allInvoices)}</td>
                 <td style={TD({color:C.text,maxWidth:110,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontSize:11,padding:"9px 12px"})}>{row.supplier||row.desc||"—"}</td>
                 <td style={TD({color:C.text,fontWeight:700,whiteSpace:"nowrap",padding:"9px 12px"})}>{row.amount?`$${Number(row.amount).toLocaleString()}`:"—"}</td>
                 <td style={TD({color:row.st==="overdue"?C.red:C.muted,fontSize:11,whiteSpace:"nowrap",padding:"9px 12px"})}>{row.dd||"—"}</td>
-                <td style={TD({padding:"9px 12px"})}><button onClick={()=>cycle(row)} style={{ background:st.c+"22",color:st.c,border:`1px solid ${st.c}55`,padding:"3px 9px",borderRadius:5,fontFamily:F,fontSize:11,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap" }}>{st.l}</button></td>
-                <td style={TD({padding:"9px 12px"})}>
+                <td style={TD({padding:"9px 12px"})} data-norow><button onClick={e=>{ e.stopPropagation(); cycle(row); }} style={{ background:st.c+"22",color:st.c,border:`1px solid ${st.c}55`,padding:"3px 9px",borderRadius:5,fontFamily:F,fontSize:11,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap" }}>{st.l}</button></td>
+                <td style={TD({padding:"9px 12px"})} data-norow>
                   <RowActions>
-                    {(row.url||row.dataUrl)&&<RowBtn type="view" onClick={()=>setPreview(row)}>View</RowBtn>}
-                    <RowBtn type="edit" onClick={()=>openEdit(row)}>Edit</RowBtn>
-                    <RowBtn type="delete" onClick={()=>setConfirmDel(row)}>Delete</RowBtn>
+                    <RowBtn type="edit" onClick={e=>{ e.stopPropagation(); openEdit(row); }}>Edit</RowBtn>
+                    <RowBtn type="delete" onClick={e=>{ e.stopPropagation(); setConfirmDel(row); }}>Delete</RowBtn>
                   </RowActions>
                 </td>
               </tr>);})}
@@ -1576,14 +1708,14 @@ function AddPlanFormModal({ project, onConfirm, onCancel }){
         <div style={{ padding:"22px 28px 18px",borderBottom:`1px solid ${C.border}`,flexShrink:0 }}>
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center" }}>
             <div>
-              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}>📐 Add Plan / Document</div>
+              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}><Ic.Blueprint size={16} color={C.blue} style={{marginRight:7,verticalAlign:"middle"}}/> Add Plan / Document</div>
               <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2 }}>{project.name}</div>
             </div>
             <button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:22,cursor:"pointer" }}>✕</button>
           </div>
         </div>
         <div style={{ flex:1,overflowY:"auto",padding:"22px 28px" }}>
-          {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:8,padding:"9px 14px",color:C.red,fontFamily:F,fontSize:12,marginBottom:16 }}>⚠ {err}</div>}
+          {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:8,padding:"9px 14px",color:C.red,fontFamily:F,fontSize:12,marginBottom:16 }}><Ic.Warning size={12} color={C.red} style={{marginRight:5,verticalAlign:"middle"}}/>{err}</div>}
           <div style={{ display:"flex",flexDirection:"column",gap:16 }}>
             {/* File upload first — primary action */}
             <div>
@@ -1593,10 +1725,10 @@ function AddPlanFormModal({ project, onConfirm, onCancel }){
                     <div style={{ display:"flex",alignItems:"center",gap:10 }}>
                       {docFile.url ? !docFile.url.includes(".pdf") : docFile.dataUrl?.startsWith("data:image")
                         ?<img src={docFile.dataUrl} alt="" style={{ width:52,height:52,objectFit:"cover",borderRadius:6,border:`1px solid ${C.border}`,flexShrink:0 }}/>
-                        :<div style={{ width:52,height:52,background:C.card,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,flexShrink:0 }}>📄</div>
+                        :<div style={{ width:52,height:52,background:C.card,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}><Ic.File size={24} color={C.muted}/></div>
                       }
                       <div style={{ flex:1,minWidth:0 }}>
-                        <div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:13 }}>✓ File uploaded</div>
+                        <div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:13 }}><Ic.Check size={12} color={C.green} style={{marginRight:4}}/> File uploaded</div>
                         <div style={{ color:C.text,fontFamily:F,fontSize:12,marginTop:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{docFile.name}</div>
                         <div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:1 }}>{docFile.size?(docFile.size/1024).toFixed(1)+" KB":""}</div>
                       </div>
@@ -1610,7 +1742,7 @@ function AddPlanFormModal({ project, onConfirm, onCancel }){
                     style={{ border:`2px dashed ${C.border}`,borderRadius:12,padding:"36px 20px",textAlign:"center",cursor:"pointer",transition:"all .2s" }}
                     onMouseEnter={e=>{e.currentTarget.style.borderColor=C.blue+"88";e.currentTarget.style.background=C.blueDim;}}
                     onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}}>
-                    <div style={{ fontSize:38,marginBottom:10 }}>📁</div>
+                    <Ic.Folder size={38} color={C.muted} style={{marginBottom:10}}/>
                     <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:14,marginBottom:5 }}>Drop file here or click to browse</div>
                     <div style={{ color:C.muted,fontFamily:F,fontSize:12 }}>PDF · CAD (.dwg .dxf) · Images · Word · Excel · Any format</div>
                   </div>
@@ -1635,7 +1767,7 @@ function AddPlanFormModal({ project, onConfirm, onCancel }){
         </div>
         <div style={{ padding:"18px 28px",borderTop:`1px solid ${C.border}`,flexShrink:0,display:"flex",gap:10,justifyContent:"flex-end" }}>
           <button onClick={onCancel} style={{ background:"transparent",color:C.muted,border:`1px solid ${C.border}`,padding:"11px 20px",borderRadius:8,fontFamily:F,fontSize:13,cursor:"pointer" }}>Cancel</button>
-          <button onClick={submit} style={{ background:C.blue,color:"#fff",border:"none",padding:"11px 32px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer" }}>📐 Save Document</button>
+          <button onClick={submit} style={{ background:C.blue,color:"#fff",border:"none",padding:"11px 32px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer" }}><Ic.Blueprint size={13} color="#fff" style={{marginRight:5}}/> Save Document</button>
         </div>
       </div>
     </Overlay>
@@ -1690,7 +1822,7 @@ function PlansPanel({ project,onActivity }){
       {!showAdd&&files.length>0&&(
         <div style={{ display:"flex",flexDirection:"column",gap:7,marginBottom:14 }}>{files.map(f=>(
           <div key={f.id} style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:7,padding:"10px 14px",display:"flex",alignItems:"center",gap:10 }}>
-            {f.dataUrl?.startsWith("data:image")?<img src={f.dataUrl} alt="" style={{ width:40,height:40,objectFit:"cover",borderRadius:5,border:`1px solid ${C.border}`,flexShrink:0 }}/>:<div style={{ width:40,height:40,background:C.card,borderRadius:5,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0 }}>{f.icon||"📄"}</div>}
+            {f.dataUrl?.startsWith("data:image")?<img src={f.dataUrl} alt="" style={{ width:40,height:40,objectFit:"cover",borderRadius:5,border:`1px solid ${C.border}`,flexShrink:0 }}/>:<div style={{ width:40,height:40,background:C.card,borderRadius:5,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0 }}><Ic.File size={20} color={C.muted}/></div>}
             <div style={{ flex:1,minWidth:0 }}><div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:12,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{f.displayTitle||f.name}</div><div style={{ color:C.muted,fontFamily:F,fontSize:10,marginTop:2 }}>{fmtBytes(f.size)} · {f.uploadedAt}{f.notes&&<span> · {f.notes.slice(0,40)}</span>}</div></div>
             <Badge status={f.badgeStatus}/>
             <RowBtn type="view" onClick={()=>setPreview(f)}>View</RowBtn>
@@ -1699,18 +1831,18 @@ function PlansPanel({ project,onActivity }){
         ))}</div>
       )}
       {showAdd
-        ?<InlineFormShell header="📐 Add Plan / Document" accent={C.blue} saveLabel="📐 Save Document" onSave={submitPlan} onCancel={()=>setShowAdd(false)} err={planErr}>
+        ?<InlineFormShell header="Add Plan / Document" accent={C.blue} saveLabel="Save Document" onSave={submitPlan} onCancel={()=>setShowAdd(false)} err={planErr}>
             {/* File upload */}
             <div>
               <label style={LBL()}>Upload File *</label>
               {planFile
                 ?<div style={{ background:C.surface,border:`1px solid ${C.green}44`,borderRadius:9,padding:"12px 14px",display:"flex",alignItems:"center",gap:10 }}>
-                    {planFile.dataUrl?.startsWith("data:image")?<img src={planFile.dataUrl} alt="" style={{ width:40,height:40,objectFit:"cover",borderRadius:6,flexShrink:0 }}/>:<div style={{ width:40,height:40,background:C.card,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0 }}>📄</div>}
-                    <div style={{ flex:1,minWidth:0 }}><div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:12 }}>✓ File ready</div><div style={{ color:C.text,fontFamily:F,fontSize:11,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{planFile.name}</div></div>
+                    {planFile.dataUrl?.startsWith("data:image")?<img src={planFile.dataUrl} alt="" style={{ width:40,height:40,objectFit:"cover",borderRadius:6,flexShrink:0 }}/>:<div style={{ width:40,height:40,background:C.card,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}><Ic.File size={20} color={C.muted}/></div>}
+                    <div style={{ flex:1,minWidth:0 }}><div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:12 }}><Ic.Check size={12} color={C.green} style={{marginRight:4}}/> File ready</div><div style={{ color:C.text,fontFamily:F,fontSize:11,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{planFile.name}</div></div>
                     <button onClick={()=>setPlanFile(null)} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,borderRadius:5,padding:"3px 8px",fontFamily:F,fontSize:11,cursor:"pointer" }}>Remove</button>
                   </div>
                 :<div onClick={()=>planFileRef.current.click()} onDragOver={e=>{e.preventDefault();e.currentTarget.style.borderColor=C.blue;e.currentTarget.style.background=C.blueDim;}} onDragLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}} onDrop={e=>{e.preventDefault();e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";const f=e.dataTransfer.files[0];if(f)handlePlanFile(f);}} style={{ border:`2px dashed ${C.border}`,borderRadius:9,padding:"22px",textAlign:"center",cursor:"pointer",transition:"all .2s" }} onMouseEnter={e=>{e.currentTarget.style.borderColor=C.blue+"88";e.currentTarget.style.background=C.blueDim;}} onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}}>
-                    <div style={{ fontSize:28,marginBottom:7 }}>📁</div>
+                    <Ic.Folder size={28} color={C.muted} style={{marginBottom:7}}/>
                     <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:12,marginBottom:3 }}>Drop file or click to browse</div>
                     <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>PDF · CAD · Images · Word · Excel · Any format</div>
                   </div>
@@ -1725,7 +1857,7 @@ function PlansPanel({ project,onActivity }){
             </div>
             <div><label style={LBL()}>Notes <span style={{color:C.muted,fontWeight:400}}>(optional)</span></label><textarea style={{ ...INP(),resize:"none" }} rows={2} value={planNotes} onChange={e=>setPlanNotes(e.target.value)} placeholder="Version info, revision notes…"/></div>
           </InlineFormShell>
-        :<button onClick={()=>{ setPlanTitle("");setPlanCat("drawing");setPlanNotes("");setPlanFile(null);setPlanErr("");setShowAdd(true); }} style={{ background:C.blue,color:"#fff",border:"none",padding:"10px 22px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:7 }}>📐 + Add Plan / Document</button>
+        :<button onClick={()=>{ setPlanTitle("");setPlanCat("drawing");setPlanNotes("");setPlanFile(null);setPlanErr("");setShowAdd(true); }} style={{ background:C.blue,color:"#fff",border:"none",padding:"10px 22px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:7 }}><Ic.Blueprint size={14} color="#fff"/> Add Plan / Document</button>
       }
     </div>
   );
@@ -1743,7 +1875,8 @@ function TeamPanel({ project,onOpenTeamPage }){
       {showAddSystem&&<AddSystemMemberModal project={project} currentMembers={members} onConfirm={handleAdd} onCancel={()=>setShowAddSystem(false)}/>}
       {members.length===0&&(
         <div style={{ border:`2px dashed ${C.border}`,borderRadius:9,padding:"20px",textAlign:"center",color:C.muted,fontFamily:F,fontSize:12,marginBottom:12 }}>
-          <div style={{ fontSize:28,marginBottom:6 }}>👷</div>No team members yet
+          <Ic.Team size={28} color={C.muted} style={{marginBottom:6}}/>
+              No team members yet
         </div>
       )}
       {members.length>0&&(
@@ -1759,7 +1892,7 @@ function TeamPanel({ project,onOpenTeamPage }){
         </div>
       )}
       <div style={{ display:"flex",gap:8,flexWrap:"wrap" }}>
-        <button onClick={()=>setShowAddSystem(true)} style={{ background:C.green,color:"#000",border:"none",padding:"9px 16px",borderRadius:7,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:6 }}>👷 + Add Member</button>
+        <button onClick={()=>setShowAddSystem(true)} style={{ background:C.green,color:"#000",border:"none",padding:"9px 16px",borderRadius:7,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:6 }}><><Ic.Team size={14} color="#000" style={{marginRight:5}}/> Add Member</></button>
         <button onClick={onOpenTeamPage} style={{ background:"transparent",color:C.text,border:`1px solid ${C.border}`,padding:"9px 16px",borderRadius:7,fontFamily:F,fontWeight:600,fontSize:13,cursor:"pointer" }}>Full Team →</button>
       </div>
     </div>
@@ -1808,13 +1941,13 @@ function EditMemberModal({ member, allProjects, onConfirm, onCancel }){
         {/* Header */}
         <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:22 }}>
           <div>
-            <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}>✏️ Edit Team Member</div>
+            <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}><Ic.Pen size={15} color={C.accent} style={{marginRight:8,verticalAlign:"middle"}}/> Edit Team Member</div>
             <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>Update information for <strong style={{color:C.accent}}>{member.name}</strong></div>
           </div>
           <button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:20,cursor:"pointer" }}>✕</button>
         </div>
 
-        {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"9px 14px",color:C.red,fontFamily:F,fontSize:12,marginBottom:16 }}>⚠ {err}</div>}
+        {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"9px 14px",color:C.red,fontFamily:F,fontSize:12,marginBottom:16 }}><Ic.Warning size={12} color={C.red} style={{marginRight:5,verticalAlign:"middle"}}/>{err}</div>}
 
         <div style={{ display:"flex",flexDirection:"column",gap:14 }}>
           {/* Name */}
@@ -1888,13 +2021,13 @@ function DeleteConfirmModal({ member, taskCount, onConfirm, onCancel }){
     <Overlay onClose={onCancel}>
       <div style={{ background:C.card,border:`1px solid ${C.red}44`,borderRadius:16,padding:32,width:420 }}>
         {/* Icon */}
-        <div style={{ width:56,height:56,borderRadius:"50%",background:C.redDim,border:`2px solid ${C.red}44`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,margin:"0 auto 20px" }}>🗑️</div>
+        <div style={{ width:56,height:56,borderRadius:"50%",background:C.redDim,border:`2px solid ${C.red}44`,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 20px" }}><Ic.Delete size={24} color={C.red}/></div>
 
         <div style={{ textAlign:"center",marginBottom:20 }}>
           <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18,marginBottom:8 }}>Remove Team Member?</div>
           <div style={{ color:C.muted,fontFamily:F,fontSize:13,lineHeight:1.6 }}>
             You are about to remove <strong style={{color:C.text}}>{member.name}</strong> ({member.role}) from this project.
-            {taskCount>0&&<span style={{display:"block",marginTop:8,color:C.accent}}>⚠️ They have <strong>{taskCount} assigned task{taskCount!==1?"s":""}</strong> that will be unassigned.</span>}
+            {taskCount>0&&<span style={{display:"block",marginTop:8,color:C.accent}}><Ic.Warning size={13} color={C.accent} style={{marginRight:4,verticalAlign:"middle"}}/>They have <strong>{taskCount} assigned task{taskCount!==1?"s":""}</strong> that will be unassigned.</span>}
           </div>
         </div>
 
@@ -1961,7 +2094,7 @@ function AddSystemMemberModal({ project, currentMembers, onConfirm, onCancel }){
         {/* Header */}
         <div style={{ padding:'22px 24px 18px',borderBottom:`1px solid ${C.border}`,display:'flex',alignItems:'center',justifyContent:'space-between',flexShrink:0 }}>
           <div>
-            <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}>👷 Add Member to Project</div>
+            <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}><Ic.Team size={15} color={C.accent} style={{marginRight:8,verticalAlign:"middle"}}/> Add Member to Project</div>
             <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>Select one or more members to assign to <strong style={{color:C.accent}}>{project.name}</strong></div>
           </div>
           <button onClick={onCancel} style={{ background:'transparent',border:'none',color:C.muted,fontSize:20,cursor:'pointer',lineHeight:1,padding:4 }}>✕</button>
@@ -1971,7 +2104,7 @@ function AddSystemMemberModal({ project, currentMembers, onConfirm, onCancel }){
         <div style={{ flex:1,overflowY:'auto',padding:'14px 24px' }}>
           {available.length===0&&(
             <div style={{ textAlign:'center',padding:'40px 0',color:C.muted,fontFamily:F,fontSize:13 }}>
-              <div style={{ fontSize:32,marginBottom:8 }}>✅</div>
+              <Ic.Check size={32} color={C.green} style={{marginBottom:8}}/>
               All system members are already on this project
             </div>
           )}
@@ -2114,7 +2247,7 @@ function TeamPage({ project,onBack,onAddToLog,tasks=[],updateTask }){
               <h1 style={{ color:C.text,fontFamily:F,fontSize:22,fontWeight:700,margin:0 }}>{project.name}</h1>
               <Badge status={project.status}/>
             </div>
-            <div style={{ color:C.muted,fontFamily:F,fontSize:13,marginLeft:14 }}>📍 {project.address}</div>
+            <div style={{ color:C.muted,fontFamily:F,fontSize:13,marginLeft:14 }}><Ic.MapPin size={13} color={C.muted} style={{marginRight:4,verticalAlign:"middle"}}/> {project.address}</div>
           </div>
 
         </div>
@@ -2134,12 +2267,12 @@ function TeamPage({ project,onBack,onAddToLog,tasks=[],updateTask }){
       <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:14,padding:"20px 24px" }}>
         <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:18,flexWrap:"wrap",gap:10 }}>
           <div style={{ display:"flex",alignItems:"center",gap:10 }}>
-            <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:16 }}>👷 Project Team</span>
+            <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:16 }}><Ic.Team size={16} color={C.text} style={{marginRight:6,verticalAlign:"middle"}}/> Project Team</span>
             <span style={{ background:C.greenDim,color:C.green,padding:"3px 10px",borderRadius:99,fontSize:12,fontWeight:700,fontFamily:F }}>{members.length} members</span>
           </div>
           <button onClick={()=>setShowAddSystem(true)}
             style={{ background:C.green,color:"#000",border:"none",padding:"8px 18px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:7 }}>
-            👷 + Add Member to Project
+            <><Ic.Team size={13} color="#000" style={{marginRight:5}}/> Add Member to Project</>
           </button>
         </div>
 
@@ -2147,7 +2280,8 @@ function TeamPage({ project,onBack,onAddToLog,tasks=[],updateTask }){
 
         {ready&&members.length===0&&(
           <div style={{ border:`2px dashed ${C.border}`,borderRadius:10,padding:"40px 20px",textAlign:"center",color:C.muted,fontFamily:F,fontSize:13 }}>
-            <div style={{ fontSize:36,marginBottom:10 }}>👷</div>No team members yet — click "Add Member to Project" to assign someone
+            <Ic.Team size={36} color={C.muted} style={{marginBottom:10}}/>
+No team members yet — click "Add Member to Project" to assign someone
           </div>
         )}
 
@@ -2167,9 +2301,9 @@ function TeamPage({ project,onBack,onAddToLog,tasks=[],updateTask }){
                   <div style={{ flex:1,minWidth:0 }}>
                     <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:15 }}>{m.name}</div>
                     <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3,display:"flex",gap:14,flexWrap:"wrap" }}>
-                      <span>🔨 {m.role}</span>
-                      {m.phone&&<span>📞 {m.phone}</span>}
-                      {m.email&&<span>✉️ {m.email}</span>}
+                      <span><Ic.Wrench size={11} color={C.muted} style={{marginRight:3,verticalAlign:"middle"}}/>{m.role}</span>
+                      {m.phone&&<span><Ic.Phone size={11} color={C.muted} style={{marginRight:3,verticalAlign:"middle"}}/>{m.phone}</span>}
+                      {m.email&&<span><Ic.Email size={11} color={C.muted} style={{marginRight:3,verticalAlign:"middle"}}/>{m.email}</span>}
                       {tc>0&&<span style={{ color:C.blue }}>{tc} task{tc!==1?"s":""}</span>}
                     </div>
                   </div>
@@ -2185,12 +2319,12 @@ function TeamPage({ project,onBack,onAddToLog,tasks=[],updateTask }){
                     <button onClick={()=>setEditing(m)} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}44`,padding:"7px 14px",borderRadius:7,fontFamily:F,fontSize:12,fontWeight:700,cursor:"pointer",display:"flex",alignItems:"center",gap:5,transition:"all .15s" }}
                       onMouseEnter={e=>{e.currentTarget.style.background=C.blue;e.currentTarget.style.color="#fff";}}
                       onMouseLeave={e=>{e.currentTarget.style.background=C.blueDim;e.currentTarget.style.color=C.blue;}}>
-                      ✏️ Edit
+                      <Ic.Pen size={12} color={C.blue} style={{marginRight:4}}/> Edit
                     </button>
                     <button onClick={()=>setDeleting(m)} style={{ background:C.redDim,color:C.red,border:`1px solid ${C.red}44`,padding:"7px 14px",borderRadius:7,fontFamily:F,fontSize:12,fontWeight:700,cursor:"pointer",display:"flex",alignItems:"center",gap:5,transition:"all .15s" }}
                       onMouseEnter={e=>{e.currentTarget.style.background=C.red;e.currentTarget.style.color="#fff";}}
                       onMouseLeave={e=>{e.currentTarget.style.background=C.redDim;e.currentTarget.style.color=C.red;}}>
-                      🗑 Delete
+                      <Ic.Delete size={12} color={C.red} style={{marginRight:4}}/> Delete
                     </button>
                   </div>
                 </div>
@@ -2228,7 +2362,7 @@ function TasksPage({ tasks,addTask,updateTask,removeTask,allProjects=[] }){
     <div>
       {showAdd&&<AddTaskModal onConfirm={t=>{addTask(t);setShowAdd(false);}} onCancel={()=>setShowAdd(false)} allMembers={allMembers} allProjects={allProjects}/>}
 
-      <PageHeader icon="✅" title="Task Management" subtitle="Assign and track work across your team"
+      <PageHeader icon={<Ic.Tasks size={22} color={C.green}/>} title="Task Management" subtitle="Assign and track work across your team"
         action={<Btn variant="primary" onClick={()=>setShowAdd(true)}>+ Assign Task</Btn>}/>
 
       <div style={{ display:"flex",gap:12,marginBottom:20,flexWrap:"wrap" }}>
@@ -2335,7 +2469,7 @@ function UploadOfferModal({ tenderId, onConfirm, onCancel }){
       if(result.notes)     setNotes(result.notes);
       setAiNote("OK AI extracted data — review and edit before saving.");
     } else {
-      setAiNote("⚠️ Could not auto-extract. Please fill in the details manually.");
+      setAiNote("Could not auto-extract. Please fill in the details manually.");
     }
     setStep("review");
   };
@@ -2351,7 +2485,7 @@ function UploadOfferModal({ tenderId, onConfirm, onCancel }){
         <div style={{ padding:"22px 26px 0",flexShrink:0 }}>
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16 }}>
             <div>
-              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}>📤 Upload Supplier Offer</div>
+              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}><Ic.Upload size={15} color={C.accent} style={{marginRight:7,verticalAlign:"middle"}}/> Upload Supplier Offer</div>
               <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2 }}>Upload any document, image or screenshot</div>
             </div>
             <button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:20,cursor:"pointer" }}>✕</button>
@@ -2379,7 +2513,7 @@ function UploadOfferModal({ tenderId, onConfirm, onCancel }){
             <div style={{ paddingBottom:8 }}>
               <div onClick={()=>dropRef.current.click()} onDragOver={e=>{e.preventDefault();}} onDrop={e=>{e.preventDefault();const f=e.dataTransfer.files[0];if(f)handleFile(f);}}
                 style={{ border:`2px dashed ${C.accent}55`,borderRadius:12,padding:"44px 20px",textAlign:"center",cursor:"pointer",background:C.accentDim,transition:"all .2s",marginBottom:16 }}>
-                <div style={{ fontSize:40,marginBottom:10 }}>📎</div>
+                <Ic.Attach size={40} color={C.muted} style={{marginBottom:10}}/>
                 <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:15,marginBottom:6 }}>Drop offer document here</div>
                 <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginBottom:12 }}>PDF · Images · Screenshots · Word docs</div>
                 <div style={{ display:"inline-block",background:C.accent,color:"#000",padding:"9px 22px",borderRadius:7,fontFamily:F,fontWeight:700,fontSize:13 }}>Browse Files</div>
@@ -2388,7 +2522,7 @@ function UploadOfferModal({ tenderId, onConfirm, onCancel }){
               <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:10,padding:"14px 16px" }}>
                 <div style={{ color:C.muted,fontFamily:F,fontSize:11,fontWeight:700,textTransform:"uppercase",letterSpacing:.8,marginBottom:8 }}>Supported formats</div>
                 <div style={{ display:"flex",gap:8,flexWrap:"wrap" }}>
-                  {["📄 PDF","🖼️ Images","📧 Email screenshots","💬 Message screenshots","📝 Word docs"].map(t=>(
+                  {["PDF","Images","Email screenshots","Message screenshots","Word docs"].map(t=>(
                     <span key={t} style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:4,padding:"3px 9px",color:C.muted,fontFamily:F,fontSize:11 }}>{t}</span>
                   ))}
                 </div>
@@ -2399,7 +2533,7 @@ function UploadOfferModal({ tenderId, onConfirm, onCancel }){
           {/* Step: extracting */}
           {step==="extracting"&&(
             <div style={{ paddingBottom:8,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"40px 0" }}>
-              <div style={{ width:60,height:60,borderRadius:"50%",background:C.purpleDim,border:`2px solid ${C.purple}44`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,marginBottom:16 }}>🤖</div>
+              <div style={{ width:60,height:60,borderRadius:"50%",background:C.purpleDim,border:`2px solid ${C.purple}44`,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:16 }}><Ic.Bot size={28} color={C.purple}/></div>
               <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:16,marginBottom:8 }}>Analysing document…</div>
               <div style={{ color:C.muted,fontFamily:F,fontSize:13,marginBottom:20 }}>Extracting supplier, price, delivery & specs</div>
               <div style={{ display:"flex",gap:6 }}>
@@ -2413,7 +2547,7 @@ function UploadOfferModal({ tenderId, onConfirm, onCancel }){
             <div style={{ paddingBottom:8 }}>
               {aiNote&&<div style={{ background:aiNote.startsWith("OK")?C.greenDim:C.accentDim,border:`1px solid ${aiNote.startsWith("OK")?C.green+"44":C.accent+"44"}`,borderRadius:8,padding:"9px 13px",color:aiNote.startsWith("OK")?C.green:C.accent,fontFamily:F,fontSize:12,marginBottom:14 }}>{aiNote}</div>}
               {file&&<div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,padding:"10px 14px",marginBottom:14,display:"flex",alignItems:"center",gap:10 }}>
-                <span style={{ fontSize:18 }}>{file.dataUrl?.startsWith("data:image")?"🖼️":"📄"}</span>
+                {file.dataUrl?.startsWith("data:image")?<Ic.Image size={18} color={C.muted}/>:<Ic.File size={18} color={C.muted}/>}
                 <div style={{ flex:1,minWidth:0 }}>
                   <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:12,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{file.name}</div>
                   <div style={{ color:C.muted,fontFamily:F,fontSize:10,marginTop:1 }}>{file.size?(file.size/1024).toFixed(1)+" KB":""}</div>
@@ -2604,7 +2738,7 @@ function TendersPage({ allProjects=[] }){
                   {tender.offers.length>=2&&(
                     <Btn variant="ghost" disabled={isAnalysing} onClick={()=>runAnalysis(tender)}
                       style={{ color:isAnalysing?C.purple:"#fff", background:isAnalysing?"transparent":C.purple, border:`1px solid ${C.purple}44` }}>
-                      {isAnalysing?<><div style={{ width:13,height:13,border:`2px solid ${C.purple}`,borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Analysing…</>:"🤖 AI Analysis"}
+                      {isAnalysing?<><div style={{ width:13,height:13,border:`2px solid ${C.purple}`,borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Analysing…</>:"AI Analysis"}
                     </Btn>
                   )}
                 </div>
@@ -2612,7 +2746,7 @@ function TendersPage({ allProjects=[] }){
                 {analysis&&(
                   <div style={{ background:"linear-gradient(135deg,#a78bfa08,#3b82f608)",border:`1px solid ${C.purple}33`,borderRadius:12,padding:"20px 22px" }}>
                     <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:16 }}>
-                      <div style={{ width:30,height:30,borderRadius:8,background:C.purpleDim,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16 }}>🤖</div>
+                      <div style={{ width:30,height:30,borderRadius:8,background:C.purpleDim,display:"flex",alignItems:"center",justifyContent:"center" }}><Ic.Bot size={16} color={C.purple}/></div>
                       <span style={{ color:C.purple,fontFamily:F,fontWeight:700,fontSize:15 }}>AI Analysis</span>
                       <span style={{ color:C.muted,fontFamily:F,fontSize:11,marginLeft:"auto" }}>Scored on price, quality & delivery</span>
                     </div>
@@ -2626,7 +2760,7 @@ function TendersPage({ allProjects=[] }){
                       <SLabel>Rankings</SLabel>
                       <div style={{ display:"flex",flexDirection:"column",gap:8 }}>
                         {analysis.ranked.map(r=>{
-                          const medal=r.rank===1?"🥇":r.rank===2?"🥈":"🥉";
+                          const medal=r.rank===1?"#1":r.rank===2?"#2":"#3";
                           const bc=r.rank===1?C.green:r.rank===2?C.accent:C.muted;
                           return(
                             <div key={r.id} style={{ display:"flex",alignItems:"center",gap:12,background:r.rank===1?C.green+"0d":C.surface,border:`1px solid ${r.rank===1?C.green+"44":C.border}`,borderRadius:9,padding:"12px 16px" }}>
@@ -2636,7 +2770,7 @@ function TendersPage({ allProjects=[] }){
                                 <div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:2,display:"flex",gap:12,flexWrap:"wrap" }}>
                                   <span style={{ color:C.accent,fontWeight:700 }}>${r.price.toLocaleString()}</span>
                                   <span>{r.quality}</span>
-                                  <span>🚚 {r.delivery}</span>
+                                  <span style={{display:"inline-flex",alignItems:"center",gap:3}}><Ic.Truck size={11} color={C.muted}/> {r.delivery}</span>
                                 </div>
                               </div>
                               <div style={{ display:"flex",flexDirection:"column",gap:3,alignItems:"flex-end",flexShrink:0 }}>
@@ -2720,13 +2854,13 @@ function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
       <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:18,width:600,maxHeight:"93vh",display:"flex",flexDirection:"column",overflow:"hidden",boxShadow:"0 24px 60px rgba(0,0,0,.5)" }}>
         <div style={{ padding:"22px 28px 18px",borderBottom:`1px solid ${C.border}`,flexShrink:0,display:"flex",justifyContent:"space-between",alignItems:"center" }}>
           <div>
-            <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}>💰 Record Payment</div>
+            <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}><Ic.Payments size={15} color={C.green} style={{marginRight:7,verticalAlign:"middle"}}/> Record Payment</div>
             <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2 }}>Record a payment received from the client</div>
           </div>
           <button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:22,cursor:"pointer" }}>✕</button>
         </div>
         <div style={{ flex:1,overflowY:"auto",padding:"22px 28px" }}>
-        {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"9px 12px",color:C.red,fontFamily:F,fontSize:12,marginBottom:14 }}>⚠ {err}</div>}
+        {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"9px 12px",color:C.red,fontFamily:F,fontSize:12,marginBottom:14 }}><Ic.Warning size={12} color={C.red} style={{marginRight:5,verticalAlign:"middle"}}/>{err}</div>}
         <div style={{ display:"flex",flexDirection:"column",gap:14 }}>
           <div><label style={LBL()}>Project</label>
             <select value={projId} onChange={e=>setProjId(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
@@ -2735,7 +2869,7 @@ function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
           </div>
           <div style={{ display:"flex",gap:12 }}>
             <div style={{ flex:1 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" placeholder="0.00" value={amount} onWheel={e=>e.target.blur()} onChange={e=>{setAmount(e.target.value);setErr("");}}/></div>
-            <div style={{ flex:1 }}><label style={LBL()}>Payment Date *</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
+            <div style={{ flex:1 }}><label style={LBL()}>Payment Date *</label><DateInput style={INP()} value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
           </div>
           <div><label style={LBL()}>Payment Method</label>
             <select value={method} onChange={e=>setMethod(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
@@ -2745,7 +2879,7 @@ function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
           <div><label style={LBL()}>Related Invoice <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
             <select value={invRef} onChange={e=>setInvRef(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
               <option value="">— None —</option>
-              {projInvoices.map(i=><option key={i.id||i.invId} value={fmtInvId(i)}>{fmtInvId(i)} · ${Number(i.amount).toLocaleString()}</option>)}
+              {projInvoices.map(i=><option key={i.id||i.invId} value={fmtInvId(i,allInvoices)}>{fmtInvId(i,allInvoices)} · ${Number(i.amount).toLocaleString()}</option>)}
             </select>
           </div>
           <div><label style={LBL()}>Notes <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
@@ -2757,9 +2891,9 @@ function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
             {receipt
               ?<div style={{ background:C.surface,border:`1px solid ${C.green}44`,borderRadius:10,padding:"14px 16px" }}>
                   <div style={{ display:"flex",alignItems:"center",gap:10 }}>
-                    <div style={{ width:42,height:42,background:C.card,borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0 }}>{receipt.url||receipt.dataUrl?.startsWith("data:image")?"🖼️":"📄"}</div>
+                    <div style={{ width:42,height:42,background:C.card,borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>{receipt.url||receipt.dataUrl?.startsWith("data:image")?<Ic.Image size={22} color={C.muted}/>:<Ic.File size={22} color={C.muted}/>}</div>
                     <div style={{ flex:1,minWidth:0 }}>
-                      <div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:12 }}>✓ File attached</div>
+                      <div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:12 }}><Ic.Check size={12} color={C.green} style={{marginRight:4}}/> File attached</div>
                       <div style={{ color:C.text,fontFamily:F,fontSize:11,marginTop:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{receipt.name}</div>
                     </div>
                     <button onClick={()=>setReceipt(null)} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,borderRadius:6,padding:"4px 8px",fontFamily:F,fontSize:12,cursor:"pointer" }}>Remove</button>
@@ -2773,7 +2907,7 @@ function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
                   style={{ border:`2px dashed ${C.border}`,borderRadius:10,padding:"24px 20px",textAlign:"center",cursor:"pointer",transition:"all .2s" }}
                   onMouseEnter={e=>{e.currentTarget.style.borderColor=C.green+"88";e.currentTarget.style.background=C.greenDim;}}
                   onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}}>
-                  <div style={{ fontSize:28,marginBottom:7 }}>📎</div>
+                  <div style={{ fontSize:0 }}><Ic.Attach size={28} color={C.muted} style={{marginBottom:7}}/></div>
                   <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:13,marginBottom:3 }}>Drop receipt or click to browse</div>
                   <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>PDF · Images · Screenshots · Any format</div>
                 </div>
@@ -2784,7 +2918,7 @@ function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
         </div>
         <div style={{ padding:"18px 28px",borderTop:`1px solid ${C.border}`,flexShrink:0,display:"flex",gap:10,justifyContent:"flex-end" }}>
           <button onClick={onCancel} style={{ background:"transparent",color:C.muted,border:`1px solid ${C.border}`,padding:"11px 20px",borderRadius:8,fontFamily:F,fontSize:13,cursor:"pointer" }}>Cancel</button>
-          <button onClick={submit} style={{ background:C.green,color:"#fff",border:"none",padding:"11px 32px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer" }}>💰 Save Payment</button>
+          <button onClick={submit} style={{ background:C.green,color:"#fff",border:"none",padding:"11px 32px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer" }}><Ic.Payments size={14} color="#fff" style={{marginRight:6}}/> Save Payment</button>
         </div>
       </div>
     </Overlay>
@@ -2838,13 +2972,13 @@ function EditPaymentModal({ payment, allProjects, allInvoices, onConfirm, onCanc
       <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:18,width:600,maxHeight:"93vh",display:"flex",flexDirection:"column",overflow:"hidden",boxShadow:"0 24px 60px rgba(0,0,0,.5)" }}>
         <div style={{ padding:"22px 28px 18px",borderBottom:`1px solid ${C.border}`,flexShrink:0,display:"flex",justifyContent:"space-between",alignItems:"center" }}>
           <div>
-            <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}>✏️ Edit Payment</div>
+            <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}><Ic.Pen size={15} color={C.accent} style={{marginRight:7,verticalAlign:"middle"}}/> Edit Payment</div>
             <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2 }}>Update payment information</div>
           </div>
           <button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:22,cursor:"pointer" }}>✕</button>
         </div>
         <div style={{ flex:1,overflowY:"auto",padding:"22px 28px" }}>
-          {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"9px 12px",color:C.red,fontFamily:F,fontSize:12,marginBottom:14 }}>⚠ {err}</div>}
+          {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"9px 12px",color:C.red,fontFamily:F,fontSize:12,marginBottom:14 }}><Ic.Warning size={12} color={C.red} style={{marginRight:5,verticalAlign:"middle"}}/>{err}</div>}
           <div style={{ display:"flex",flexDirection:"column",gap:14 }}>
             <div><label style={LBL()}>Project</label>
               <select value={projId} onChange={e=>setProjId(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
@@ -2853,7 +2987,7 @@ function EditPaymentModal({ payment, allProjects, allInvoices, onConfirm, onCanc
             </div>
             <div style={{ display:"flex",gap:12 }}>
               <div style={{ flex:1 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" placeholder="0.00" value={amount} onWheel={e=>e.target.blur()} onChange={e=>{setAmount(e.target.value);setErr("");}}/></div>
-              <div style={{ flex:1 }}><label style={LBL()}>Payment Date *</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Payment Date *</label><DateInput style={INP()} value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
             </div>
             <div><label style={LBL()}>Payment Method</label>
               <select value={method} onChange={e=>setMethod(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
@@ -2863,7 +2997,7 @@ function EditPaymentModal({ payment, allProjects, allInvoices, onConfirm, onCanc
             <div><label style={LBL()}>Related Invoice <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
               <select value={invRef} onChange={e=>setInvRef(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
                 <option value="">— None —</option>
-                {projInvoices.map(i=><option key={i.id||i.invId} value={fmtInvId(i)}>{fmtInvId(i)} · ${Number(i.amount).toLocaleString()}</option>)}
+                {projInvoices.map(i=><option key={i.id||i.invId} value={fmtInvId(i,allInvoices)}>{fmtInvId(i,allInvoices)} · ${Number(i.amount).toLocaleString()}</option>)}
               </select>
             </div>
             <div><label style={LBL()}>Notes <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
@@ -2874,14 +3008,14 @@ function EditPaymentModal({ payment, allProjects, allInvoices, onConfirm, onCanc
               {receipt
                 ?<div style={{ background:C.surface,border:`1px solid ${C.green}44`,borderRadius:10,padding:"14px 16px" }}>
                     <div style={{ display:"flex",alignItems:"center",gap:10 }}>
-                      <div style={{ width:42,height:42,background:C.card,borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0 }}>{receipt.url||receipt.dataUrl?.startsWith("data:image")?"🖼️":"📄"}</div>
+                      <div style={{ width:42,height:42,background:C.card,borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>{receipt.url||receipt.dataUrl?.startsWith("data:image")?<Ic.Image size={22} color={C.muted}/>:<Ic.File size={22} color={C.muted}/>}</div>
                       <div style={{ flex:1,minWidth:0 }}>
-                        <div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:12 }}>✓ Attached</div>
+                        <div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:12 }}><Ic.Check size={12} color={C.green} style={{marginRight:4}}/> Attached</div>
                         <div style={{ color:C.text,fontFamily:F,fontSize:11,marginTop:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{receipt.name}</div>
                       </div>
                       <button onClick={()=>setReceipt(null)} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,borderRadius:6,padding:"4px 8px",fontFamily:F,fontSize:12,cursor:"pointer" }}>Remove</button>
                     </div>
-                    {receipt.url||receipt.dataUrl?.startsWith("data:image")&&<img src={receipt.url||receipt.dataUrl} alt="" style={{ maxWidth:"100%",maxHeight:160,objectFit:"contain",borderRadius:8,marginTop:10,border:`1px solid ${C.border}` }}/>}
+                    {(receipt.url||receipt.dataUrl?.startsWith("data:image"))&&<img src={receipt.url||receipt.dataUrl} alt="" style={{ maxWidth:"100%",maxHeight:160,objectFit:"contain",borderRadius:8,marginTop:10,border:`1px solid ${C.border}` }}/>}
                   </div>
                 :<div onClick={()=>fileRef.current.click()}
                     onDragOver={e=>{e.preventDefault();e.currentTarget.style.borderColor=C.green;e.currentTarget.style.background=C.greenDim;}}
@@ -2890,7 +3024,7 @@ function EditPaymentModal({ payment, allProjects, allInvoices, onConfirm, onCanc
                     style={{ border:`2px dashed ${C.border}`,borderRadius:10,padding:"22px 20px",textAlign:"center",cursor:"pointer",transition:"all .2s" }}
                     onMouseEnter={e=>{e.currentTarget.style.borderColor=C.green+"88";e.currentTarget.style.background=C.greenDim;}}
                     onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}}>
-                    <div style={{ fontSize:28,marginBottom:6 }}>📎</div>
+                    <div style={{ fontSize:0 }}><Ic.Attach size={28} color={C.muted} style={{marginBottom:6}}/></div>
                     <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:12,marginBottom:2 }}>Drop file or click to browse</div>
                     <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>PDF · Images · Screenshots</div>
                   </div>
@@ -2973,7 +3107,7 @@ function ContractsPanel({ project, onActivity }){
           onConfirm={()=>handleDelete(confirmDel)}
           onCancel={()=>setConfirmDel(null)}>
           <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:'10px 14px',display:'flex',alignItems:'center',gap:10 }}>
-            <span style={{ fontSize:22 }}>📜</span>
+            <Ic.Contract size={22} color={C.muted}/>
             <div>
               <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:13 }}>{confirmDel.title||confirmDel.name}</div>
               {confirmDel.description&&<div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:2 }}>{confirmDel.description}</div>}
@@ -2985,7 +3119,7 @@ function ContractsPanel({ project, onActivity }){
       {/* File list */}
       {!showAdd&&files.length===0&&(
         <div style={{ border:`2px dashed ${C.border}`,borderRadius:10,padding:'32px 20px',textAlign:'center',color:C.muted,fontFamily:F,fontSize:13,marginBottom:14 }}>
-          <div style={{ fontSize:32,marginBottom:8 }}>📜</div>
+          <Ic.Contract size={32} color={C.muted} style={{marginBottom:8}}/>
           <div style={{ fontWeight:600,marginBottom:4 }}>No contracts yet</div>
           <div style={{ fontSize:12 }}>Upload signed contracts, agreements, and legal documents</div>
         </div>
@@ -2996,7 +3130,7 @@ function ContractsPanel({ project, onActivity }){
             const ext = (f.name||'').split('.').pop().toLowerCase();
             const isPdf = ext==='pdf';
             const isImg = ['png','jpg','jpeg','gif','webp'].includes(ext);
-            const fileIcon = isPdf ? '📄' : isImg ? '🖼️' : '📎';
+            const fileIcon = isPdf ? <Ic.File size={18} color={C.purple}/> : isImg ? <Ic.Image size={18} color={C.purple}/> : <Ic.Attach size={18} color={C.purple}/>;
             return(
               <div key={f.id} style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:'14px 16px',display:'flex',alignItems:'flex-start',gap:12,transition:'border-color .15s' }}
                 onMouseEnter={e=>e.currentTarget.style.borderColor=C.purple+'66'}
@@ -3016,9 +3150,9 @@ function ContractsPanel({ project, onActivity }){
                     </div>
                   )}
                   <div style={{ color:C.muted,fontFamily:F,fontSize:11,display:'flex',gap:10,flexWrap:'wrap' }}>
-                    <span>📎 {f.name}</span>
+                    <span style={{display:"inline-flex",alignItems:"center",gap:3}}><Ic.Attach size={11} color={C.muted}/> {f.name}</span>
                     {f.size>0&&<span>{fmtBytes(f.size)}</span>}
-                    {f.uploadedAt&&<span>📅 {f.uploadedAt}</span>}
+                    {f.uploadedAt&&<span style={{display:"inline-flex",alignItems:"center",gap:3}}><Ic.Calendar size={11} color={C.muted}/> {f.uploadedAt}</span>}
                   </div>
                 </div>
                 {/* Actions */}
@@ -3034,16 +3168,16 @@ function ContractsPanel({ project, onActivity }){
 
       {/* Add form */}
       {showAdd
-        ? <InlineFormShell header="📜 Add Contract" accent={C.purple} saveLabel="📜 Save Contract" onSave={handleSave} onCancel={()=>{ resetForm(); setShowAdd(false); }} err={ctErr} saving={saving}>
+        ? <InlineFormShell header="Add Contract" accent={C.purple} saveLabel="Save Contract" onSave={handleSave} onCancel={()=>{ resetForm(); setShowAdd(false); }} err={ctErr} saving={saving}>
 
             {/* File upload */}
             <div>
               <label style={LBL()}>Upload File *</label>
               {ctFile
                 ? <div style={{ background:C.surface,border:`1px solid ${C.green}44`,borderRadius:9,padding:'12px 14px',display:'flex',alignItems:'center',gap:10 }}>
-                    <div style={{ width:40,height:40,background:C.card,borderRadius:6,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,flexShrink:0 }}>📄</div>
+                    <div style={{ width:40,height:40,background:C.card,borderRadius:6,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0 }}><Ic.File size={20} color={C.muted}/></div>
                     <div style={{ flex:1,minWidth:0 }}>
-                      <div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:12 }}>✓ File ready</div>
+                      <div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:12 }}><Ic.Check size={12} color={C.green} style={{marginRight:4}}/> File ready</div>
                       <div style={{ color:C.text,fontFamily:F,fontSize:11,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{ctFile.name}</div>
                       <div style={{ color:C.muted,fontFamily:F,fontSize:10,marginTop:1 }}>{fmtBytes(ctFile.size)}</div>
                     </div>
@@ -3057,7 +3191,7 @@ function ContractsPanel({ project, onActivity }){
                     style={{ border:`2px dashed ${C.border}`,borderRadius:9,padding:'22px',textAlign:'center',cursor:'pointer',transition:'all .2s' }}
                     onMouseEnter={e=>{ e.currentTarget.style.borderColor=C.purple+'88'; e.currentTarget.style.background=C.purpleDim; }}
                     onMouseLeave={e=>{ e.currentTarget.style.borderColor=C.border; e.currentTarget.style.background='transparent'; }}>
-                    <div style={{ fontSize:28,marginBottom:7 }}>📁</div>
+                    <Ic.Folder size={28} color={C.muted} style={{marginBottom:7}}/>
                     <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:12,marginBottom:3 }}>Drop file or click to browse</div>
                     <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>PDF · Word · Images · Any format</div>
                   </div>
@@ -3085,7 +3219,7 @@ function ContractsPanel({ project, onActivity }){
 
         : <button onClick={()=>{ resetForm(); setShowAdd(true); }}
             style={{ background:C.purple,color:'#fff',border:'none',padding:'10px 22px',borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:'pointer',display:'flex',alignItems:'center',gap:7 }}>
-            📜 + Add Contract
+            <><Ic.Contract size={13} color="#fff" style={{marginRight:5}}/> Add Contract</>
           </button>
       }
     </div>
@@ -3201,7 +3335,7 @@ function PaymentsPanel({ project, payments, addPayment, updatePayment, removePay
         ?<InlineFormShell header="Record Payment" accent={C.green} saveLabel="Save Payment" onSave={submitPay} onCancel={()=>setShowAdd(false)} err={payErr} saving={paySaving}>
             <div style={{ display:"flex",gap:12 }}>
               <div style={{ flex:1 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" placeholder="0.00" value={payAmount} onChange={e=>{setPayAmount(e.target.value);setPayErr("");}}/></div>
-              <div style={{ flex:1 }}><label style={LBL()}>Payment Date *</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={payDate} onChange={e=>{setPayDate(e.target.value);setPayErr("");}}/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Payment Date *</label><DateInput style={INP()} value={payDate} onChange={e=>{setPayDate(e.target.value);setPayErr("");}}/></div>
             </div>
             <div><label style={LBL()}>Payment Method</label>
               <select value={payMethod} onChange={e=>setPayMethod(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
@@ -3211,7 +3345,7 @@ function PaymentsPanel({ project, payments, addPayment, updatePayment, removePay
             <div><label style={LBL()}>Related Invoice <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
               <select value={payInvRef} onChange={e=>setPayInvRef(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
                 <option value="">— None —</option>
-                {projInvoices.map(i=><option key={i.id||i.invId} value={fmtInvId(i)}>{fmtInvId(i)} · ${Number(i.amount).toLocaleString()}</option>)}
+                {projInvoices.map(i=><option key={i.id||i.invId} value={fmtInvId(i,allInvoices)}>{fmtInvId(i,allInvoices)} · ${Number(i.amount).toLocaleString()}</option>)}
               </select>
             </div>
             <div><label style={LBL()}>Notes <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label><textarea style={{ ...INP(),resize:"none" }} rows={2} value={payNotes} onChange={e=>setPayNotes(e.target.value)} placeholder="Reference number, comments…"/></div>
@@ -3219,12 +3353,12 @@ function PaymentsPanel({ project, payments, addPayment, updatePayment, removePay
               <label style={LBL()}>Attach Receipt <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
               {payReceipt
                 ?<div style={{ background:C.surface,border:`1px solid ${C.green}44`,borderRadius:9,padding:"12px 14px",display:"flex",alignItems:"center",gap:10 }}>
-                    <div style={{ width:34,height:34,background:C.card,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,flexShrink:0 }}>{payReceipt.dataUrl?.startsWith("data:image")?"🖼️":"📄"}</div>
-                    <div style={{ flex:1,minWidth:0 }}><div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:12 }}>✓ Attached</div><div style={{ color:C.text,fontFamily:F,fontSize:11,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{payReceipt.name}</div></div>
+                    <div style={{ width:34,height:34,background:C.card,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,flexShrink:0 }}>{payReceipt.dataUrl?.startsWith("data:image")?<Ic.Image size={16} color={C.muted}/>:<Ic.File size={16} color={C.muted}/>}</div>
+                    <div style={{ flex:1,minWidth:0 }}><div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:12 }}><Ic.Check size={12} color={C.green} style={{marginRight:4}}/> Attached</div><div style={{ color:C.text,fontFamily:F,fontSize:11,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{payReceipt.name}</div></div>
                     <button onClick={()=>setPayReceipt(null)} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,borderRadius:5,padding:"3px 8px",fontFamily:F,fontSize:11,cursor:"pointer" }}>Remove</button>
                   </div>
                 :<div onClick={()=>payFileRef.current.click()} onDragOver={e=>{e.preventDefault();e.currentTarget.style.borderColor=C.green;e.currentTarget.style.background=C.greenDim;}} onDragLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}} onDrop={e=>{e.preventDefault();e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";const f=e.dataTransfer.files[0];if(f)handlePayFile(f);}} style={{ border:`2px dashed ${C.border}`,borderRadius:9,padding:"18px",textAlign:"center",cursor:"pointer",transition:"all .2s" }} onMouseEnter={e=>{e.currentTarget.style.borderColor=C.green+"88";e.currentTarget.style.background=C.greenDim;}} onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}}>
-                    <div style={{ fontSize:22,marginBottom:5 }}>📎</div>
+                    <Ic.Attach size={22} color={C.muted} style={{marginBottom:5}}/>
                     <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:12,marginBottom:2 }}>Drop receipt or click to browse</div>
                     <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>PDF · Images · Screenshots</div>
                   </div>
@@ -3260,7 +3394,7 @@ function PaymentDetailModal({ payment, onClose, onEdit, onDelete, onViewReceipt 
         {/* Header */}
         <div style={{ padding:'22px 24px 18px',borderBottom:`1px solid ${C.border}`,display:'flex',alignItems:'center',justifyContent:'space-between',gap:12 }}>
           <div style={{ display:'flex',alignItems:'center',gap:12 }}>
-            <div style={{ width:42,height:42,borderRadius:10,background:C.greenDim,border:`1px solid ${C.green}44`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,flexShrink:0 }}>💰</div>
+            <div style={{ width:42,height:42,borderRadius:10,background:C.greenDim,border:`1px solid ${C.green}44`,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0 }}><Ic.Payments size={20} color={C.green}/></div>
             <div>
               <div style={{ color:C.muted,fontFamily:F,fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',marginBottom:3 }}>Payment</div>
               <div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:18,lineHeight:1.2 }}>${Number(payment.amount||0).toLocaleString()}</div>
@@ -3283,13 +3417,13 @@ function PaymentDetailModal({ payment, onClose, onEdit, onDelete, onViewReceipt 
         {receiptFile&&(
           <div style={{ padding:'0 24px 14px' }}>
             <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:'10px 14px',display:'flex',alignItems:'center',gap:10 }}>
-              <span style={{ fontSize:18 }}>🧾</span>
+              <Ic.Receipt size={18} color={C.muted}/>
               <div style={{ flex:1,minWidth:0 }}>
                 <div style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{receipt.name||'Receipt'}</div>
                 {receipt.size>0&&<div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:1 }}>{(receipt.size/1024).toFixed(0)} KB</div>}
               </div>
               <div style={{ display:'flex',gap:6,flexShrink:0 }}>
-                <button onClick={()=>onViewReceipt(receiptFile)} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}44`,padding:'5px 12px',borderRadius:6,fontFamily:F,fontSize:11,fontWeight:700,cursor:'pointer' }}>👁 View</button>
+                <button onClick={()=>onViewReceipt(receiptFile)} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}44`,padding:'5px 12px',borderRadius:6,fontFamily:F,fontSize:11,fontWeight:700,cursor:'pointer' }}><Ic.Eye size={12} color={C.blue} style={{marginRight:4,verticalAlign:"middle"}}/> View</button>
                 {(receipt.url||receipt.dataUrl)&&<a href={receipt.url||receipt.dataUrl} download={receipt.name||'receipt'} style={{ background:C.accentDim,color:C.accent,border:`1px solid ${C.accentMid}`,padding:'5px 12px',borderRadius:6,fontFamily:F,fontSize:11,fontWeight:700,textDecoration:'none',display:'flex',alignItems:'center' }}>↓ Download</a>}
               </div>
             </div>
@@ -3304,8 +3438,8 @@ function PaymentDetailModal({ payment, onClose, onEdit, onDelete, onViewReceipt 
         {/* Actions */}
         <div style={{ padding:'14px 24px 20px',display:'flex',gap:8,justifyContent:'flex-end',borderTop:`1px solid ${C.border}` }}>
           <button onClick={onClose} style={{ background:'transparent',border:`1px solid ${C.border}`,color:C.muted,padding:'8px 18px',borderRadius:8,fontFamily:F,fontSize:13,cursor:'pointer' }}>Close</button>
-          <button onClick={()=>{ onClose(); onEdit(payment); }} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}44`,padding:'8px 18px',borderRadius:8,fontFamily:F,fontSize:13,fontWeight:700,cursor:'pointer' }}>✏️ Edit</button>
-          <button onClick={()=>{ onClose(); onDelete(payment); }} style={{ background:C.redDim,color:C.red,border:`1px solid ${C.red}44`,padding:'8px 18px',borderRadius:8,fontFamily:F,fontSize:13,fontWeight:700,cursor:'pointer' }}>🗑 Delete</button>
+          <button onClick={()=>{ onClose(); onEdit(payment); }} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}44`,padding:'8px 18px',borderRadius:8,fontFamily:F,fontSize:13,fontWeight:700,cursor:'pointer' }}><Ic.Pen size={12} color={C.blue} style={{marginRight:4,verticalAlign:"middle"}}/> Edit</button>
+          <button onClick={()=>{ onClose(); onDelete(payment); }} style={{ background:C.redDim,color:C.red,border:`1px solid ${C.red}44`,padding:'8px 18px',borderRadius:8,fontFamily:F,fontSize:13,fontWeight:700,cursor:'pointer' }}><Ic.Delete size={12} color={C.red} style={{marginRight:4,verticalAlign:"middle"}}/> Delete</button>
         </div>
       </div>
     </Overlay>
@@ -3358,7 +3492,7 @@ function PaymentsPage({ payments, allProjects, addPayment, allInvoices, removePa
       )}
       {previewReceipt&&<FilePreviewModal file={previewReceipt} onClose={()=>setPreviewReceipt(null)}/>}
       {selectedPayment&&<PaymentDetailModal payment={selectedPayment} onClose={()=>setSelectedPayment(null)} onEdit={p=>setEditingPayment(p)} onDelete={p=>setConfirmDelete(p)} onViewReceipt={f=>{ setSelectedPayment(null); setPreviewReceipt(f); }}/>}
-      <PageHeader icon="💳" title="Payments" subtitle="Track all client payments across projects"
+      <PageHeader icon={<Ic.Payments size={22} color={C.green}/>} title="Payments" subtitle="Track all client payments across projects"
         action={<Btn variant="success" size="md" onClick={()=>setShowAdd(true)}>+ Record Payment</Btn>}/>
       <div style={{ display:"flex",gap:12,marginBottom:24,flexWrap:"wrap" }}>
         <StatCard label="Total Received"  value={"$"+total.toLocaleString()}         sub={`${payments.length} transactions`} color={C.green}/>
@@ -3373,7 +3507,7 @@ function PaymentsPage({ payments, allProjects, addPayment, allInvoices, removePa
       </div>
       <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,overflow:"hidden" }}>
         {filtered.length===0
-          ?<EmptyState icon="💰" title="No payments recorded yet" sub="Record your first payment above"/>
+          ?<EmptyState icon={<Ic.Payments size={36} color={C.muted}/>} title="No payments recorded yet" sub="Record your first payment above"/>
           :<table style={{ width:"100%",borderCollapse:"collapse",fontFamily:F,fontSize:13 }}>
             <thead><tr style={{ borderBottom:`1px solid ${C.border}`,background:C.surface }}>
               {["Date","Project","Amount","Method","Notes"].map(h=><th key={h} style={TH()}>{h}</th>)}
@@ -3442,8 +3576,8 @@ function ReportPage({ tasks, allProjects, allInvoices }){
         <SLabel>Report Configuration</SLabel>
         <div style={{ display:"flex",gap:16,flexWrap:"wrap",alignItems:"flex-end" }}>
           <div style={{ flex:2,minWidth:200 }}><label style={LBL()}>Project</label><select value={projId||""} onChange={e=>{setProjId(e.target.value);setReport(null);}} style={{ ...INP(),cursor:"pointer" }}>{(allProjects||[]).map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></div>
-          <div style={{ flex:1,minWidth:140 }}><label style={LBL()}>From</label><input type="date" value={from} onChange={e=>{setFrom(e.target.value);setReport(null);}} style={{ ...INP(),colorScheme:"dark" }}/></div>
-          <div style={{ flex:1,minWidth:140 }}><label style={LBL()}>To</label><input type="date" value={to} onChange={e=>{setTo(e.target.value);setReport(null);}} style={{ ...INP(),colorScheme:"dark" }}/></div>
+          <div style={{ flex:1,minWidth:140 }}><label style={LBL()}>From</label><DateInput style={INP()} value={from} onChange={e=>{setFrom(e.target.value);setReport(null);}}/></div>
+          <div style={{ flex:1,minWidth:140 }}><label style={LBL()}>To</label><DateInput style={INP()} value={to} onChange={e=>{setTo(e.target.value);setReport(null);}}/></div>
           <button onClick={generate} disabled={generating} style={{ background:generating?"transparent":C.accent,color:generating?C.accent:"#000",border:generating?`1px solid ${C.accent}44`:"none",padding:"10px 28px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",gap:8,flexShrink:0,height:40 }}>
             {generating?<><div style={{ width:15,height:15,border:"2px solid #f59e0b44",borderTopColor:C.accent,borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Generating…</>:"Generate Report"}
           </button>
@@ -3466,7 +3600,7 @@ function ReportPage({ tasks, allProjects, allInvoices }){
               <div>
                 <div style={{ color:C.muted,fontFamily:F,fontSize:11,fontWeight:700,textTransform:"uppercase",letterSpacing:1,marginBottom:6 }}>Project Report</div>
                 <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:24 }}>{report.project.name}</div>
-                <div style={{ color:C.muted,fontFamily:F,fontSize:13,marginTop:4 }}>📍 {report.project.address}</div>
+                <div style={{ color:C.muted,fontFamily:F,fontSize:13,marginTop:4 }}><Ic.MapPin size={12} color={C.muted} style={{marginRight:4,verticalAlign:"middle"}}/> {report.project.address}</div>
               </div>
               <div style={{ textAlign:"right" }}>
                 <div style={{ color:C.muted,fontFamily:F,fontSize:11,fontWeight:700,textTransform:"uppercase" }}>Reporting Period</div>
@@ -3492,7 +3626,7 @@ function ReportPage({ tasks, allProjects, allInvoices }){
           {/* Invoices */}
           {report.invoices.length>0&&(
             <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"20px 24px" }}>
-              <SLabel>🧾 Invoices in Period</SLabel>
+              <SLabel><Ic.Receipt size={11} color={C.muted} style={{marginRight:4,verticalAlign:"middle"}}/> Invoices in Period</SLabel>
               <table style={{ width:"100%",borderCollapse:"collapse",fontFamily:F,fontSize:13 }}>
                 <thead><tr style={{ borderBottom:`1px solid ${C.border}` }}>{["Invoice","Description","Amount","Due","Status"].map(h=><th key={h} style={{ color:C.muted,fontSize:11,fontWeight:700,padding:"7px 10px",textAlign:"left" }}>{h}</th>)}</tr></thead>
                 <tbody>{report.invoices.map((inv,i)=>(
@@ -3507,7 +3641,7 @@ function ReportPage({ tasks, allProjects, allInvoices }){
               </table>
             </div>
           )}
-          {report.invoices.length===0&&<div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"20px 24px",color:C.muted,fontFamily:F,fontSize:13 }}>🧾 No invoices in this period.</div>}
+          {report.invoices.length===0&&<div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"20px 24px",color:C.muted,fontFamily:F,fontSize:13 }}><Ic.Receipt size={13} color={C.muted} style={{marginRight:4}}/> No invoices in this period.</div>}
 
           {/* Tasks */}
           {report.tasks.length>0&&(
@@ -3518,8 +3652,8 @@ function ReportPage({ tasks, allProjects, allInvoices }){
                   <div key={t.id} style={{ display:"flex",alignItems:"center",gap:12,background:C.surface,borderRadius:8,padding:"10px 14px" }}>
                     <div style={{ width:8,height:8,borderRadius:"50%",background:t.status==="done"?C.green:C.accent,flexShrink:0 }}/>
                     <div style={{ flex:1 }}><span style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:13 }}>{t.title}</span>{t.desc&&<span style={{ color:C.muted,fontFamily:F,fontSize:11,marginLeft:8 }}>{t.desc}</span>}</div>
-                    <span style={{ color:C.muted,fontFamily:F,fontSize:12 }}>👤 {t.member}</span>
-                    <span style={{ color:C.muted,fontFamily:F,fontSize:12 }}>📅 {t.date}</span>
+                    <span style={{ color:C.muted,fontFamily:F,fontSize:12,display:"inline-flex",alignItems:"center",gap:3 }}><Ic.Person size={11} color={C.muted}/> {t.member}</span>
+                    <span style={{ color:C.muted,fontFamily:F,fontSize:12,display:"inline-flex",alignItems:"center",gap:3 }}><Ic.Calendar size={11} color={C.muted}/> {t.date}</span>
                     <Badge status={t.status}/>
                   </div>
                 ))}
@@ -3530,7 +3664,7 @@ function ReportPage({ tasks, allProjects, allInvoices }){
           {/* Notes */}
           {report.notes.length>0&&(
             <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"20px 24px" }}>
-              <SLabel>📝 Notes & Updates</SLabel>
+              <SLabel><Ic.Note size={11} color={C.muted} style={{marginRight:4,verticalAlign:"middle"}}/> Notes & Updates</SLabel>
               <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
                 {report.notes.map(n=>(
                   <div key={n.id} style={{ borderLeft:`3px solid ${C.accent}`,paddingLeft:14,paddingTop:4,paddingBottom:4 }}>
@@ -3545,7 +3679,7 @@ function ReportPage({ tasks, allProjects, allInvoices }){
           {/* Team */}
           {report.members.length>0&&(
             <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"20px 24px" }}>
-              <SLabel>👷 Team</SLabel>
+              <SLabel><Ic.Team size={11} color={C.muted} style={{marginRight:4,verticalAlign:"middle"}}/> Team</SLabel>
               <div style={{ display:"flex",flexWrap:"wrap",gap:10 }}>
                 {report.members.map(m=>(
                   <div key={m.id} style={{ display:"flex",alignItems:"center",gap:10,background:C.surface,borderRadius:8,padding:"10px 14px" }}>
@@ -3561,7 +3695,7 @@ function ReportPage({ tasks, allProjects, allInvoices }){
           {/* Activity Log */}
           {report.logs.length>0&&(
             <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"20px 24px" }}>
-              <SLabel>🕐 Activity Log</SLabel>
+              <SLabel><Ic.Clock size={11} color={C.muted} style={{marginRight:4,verticalAlign:"middle"}}/> Activity Log</SLabel>
               <div style={{ display:"flex",flexDirection:"column",gap:7 }}>
                 {report.logs.map(e=>(
                   <div key={e.id} style={{ display:"flex",alignItems:"center",gap:12,padding:"8px 12px",background:C.surface,borderRadius:7 }}>
@@ -3624,11 +3758,11 @@ function CalendarPage({ allInvoices,tasks,onAddTask,projectEvents=[],payments=[]
             </div>
             <div style={{ background:C.surface,borderRadius:8,padding:"14px 16px" }}>
               {sel.type==="invoice"
-                ?[["Invoice",sel.detail.id||sel.detail.invId],["Project",sel.detail.project||"—"],["Description",sel.detail.desc||"—"],["Amount",`$${Number(sel.detail.amount||0).toLocaleString()}`],["Due",sel.detail.dueFmt||sel.detail.due||"—"],["Status",sel.detail.status||sel.detail.invoiceStatus||"—"]].map(([k,v])=><div key={k} style={{ display:"flex",justifyContent:"space-between",marginBottom:8 }}><span style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{k}</span><span style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600 }}>{v}</span></div>)
+                ?[["Invoice",fmtInvId(sel.detail,allInvoices)],["Project",sel.detail.project||"—"],["Description",sel.detail.desc||"—"],["Amount",`$${Number(sel.detail.amount||0).toLocaleString()}`],["Due",sel.detail.dueFmt||sel.detail.due||"—"],["Status",sel.detail.status||sel.detail.invoiceStatus||"—"]].map(([k,v])=><div key={k} style={{ display:"flex",justifyContent:"space-between",marginBottom:8 }}><span style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{k}</span><span style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600 }}>{v}</span></div>)
                 :sel.type==="payment"
                 ?[["Project",sel.detail.project||"—"],["Amount",`$${Number(sel.detail.amount||0).toLocaleString()}`],["Date",sel.detail.dateFmt||sel.detail.date||"—"],["Method",sel.detail.method||"—"],["Invoice Ref",sel.detail.invRef||"—"],["Notes",sel.detail.notes||"—"]].map(([k,v])=><div key={k} style={{ display:"flex",justifyContent:"space-between",marginBottom:8 }}><span style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{k}</span><span style={{ color:k==="Amount"?C.green:C.text,fontFamily:F,fontSize:12,fontWeight:600,maxWidth:"60%",textAlign:"right" }}>{v}</span></div>)
                 :sel.type==="project"
-                ?[["Project",sel.detail.name],["Client",sel.detail.client?.name||"—"],["Start",sel.detail.startDate||"—"],["Due",sel.detail.dueFmt||"—"],["Status",sel.detail.status||"—"],["Type",sel.detail.projType==="business"?"🏢 Business":sel.detail.projType==="customer"?"👤 Customer":"—"]].map(([k,v])=><div key={k} style={{ display:"flex",justifyContent:"space-between",marginBottom:8 }}><span style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{k}</span><span style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,maxWidth:"60%",textAlign:"right" }}>{v}</span></div>)
+                ?[["Project",sel.detail.name],["Client",sel.detail.client?.name||"—"],["Start",sel.detail.startDate||"—"],["Due",sel.detail.dueFmt||"—"],["Status",sel.detail.status||"—"],["Type",sel.detail.projType==="business"?"Business":sel.detail.projType==="customer"?"Customer":"—"]].map(([k,v])=><div key={k} style={{ display:"flex",justifyContent:"space-between",marginBottom:8 }}><span style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{k}</span><span style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,maxWidth:"60%",textAlign:"right" }}>{v}</span></div>)
                 :[["Task",sel.detail.title],["Member",sel.detail.member],["Project",sel.detail.project],["Date",sel.detail.date],["Status",sel.detail.status||"pending"],["Description",sel.detail.desc||"—"]].map(([k,v])=><div key={k} style={{ display:"flex",justifyContent:"space-between",marginBottom:8 }}><span style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{k}</span><span style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,maxWidth:"60%",textAlign:"right" }}>{v}</span></div>)
               }
             </div>
@@ -3643,7 +3777,7 @@ function CalendarPage({ allInvoices,tasks,onAddTask,projectEvents=[],payments=[]
 
       <div style={{ display:"flex",gap:10,marginBottom:20,flexWrap:"wrap",alignItems:"center" }}>
         <div style={{ display:"flex",background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:4,gap:3 }}>
-          {[["all","All"],["invoices","Invoices"],["team","Tasks"],["projects","Projects"],["payments","💰 Payments"]].map(([v,l])=><button key={v} onClick={()=>setFilter(v)} style={{ background:filter===v?C.accentDim:"transparent",color:filter===v?C.accent:C.muted,border:filter===v?`1px solid ${C.accentMid}`:"1px solid transparent",borderRadius:6,padding:"7px 14px",fontFamily:F,fontSize:12,fontWeight:700,cursor:"pointer" }}>{l}</button>)}
+          {[["all","All"],["invoices","Invoices"],["team","Tasks"],["projects","Projects"],["payments","Payments"]].map(([v,l])=><button key={v} onClick={()=>setFilter(v)} style={{ background:filter===v?C.accentDim:"transparent",color:filter===v?C.accent:C.muted,border:filter===v?`1px solid ${C.accentMid}`:"1px solid transparent",borderRadius:6,padding:"7px 14px",fontFamily:F,fontSize:12,fontWeight:700,cursor:"pointer" }}>{l}</button>)}
         </div>
         <div style={{ display:"flex",background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:4,gap:3 }}>
           {[["month","Month"],["week","Week"],["day","Day"]].map(([v,l])=><button key={v} onClick={()=>setView(v)} style={{ background:view===v?C.blueDim:"transparent",color:view===v?C.blue:C.muted,border:view===v?`1px solid ${C.blue}44`:"1px solid transparent",borderRadius:6,padding:"7px 14px",fontFamily:F,fontSize:12,fontWeight:700,cursor:"pointer" }}>{l}</button>)}
@@ -3695,7 +3829,7 @@ function CalendarPage({ allInvoices,tasks,onAddTask,projectEvents=[],payments=[]
       {view==="day"&&(
         <div>
           <div style={{ display:"flex",alignItems:"center",gap:10,marginBottom:16 }}>
-            <input type="date" value={dayDate} onChange={e=>setDayDate(e.target.value)} style={{ ...INP(),width:"auto",colorScheme:"dark" }}/>
+            <DateInput style={{ ...INP(),width:"auto" }} value={dayDate} onChange={e=>setDayDate(e.target.value)}/>
             {dayDate&&<span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:15 }}>{new Date(dayDate+"T12:00:00").toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric"})}</span>}
           </div>
           <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:14,padding:"20px 24px" }}>
@@ -3861,7 +3995,7 @@ function PhotoCommentModal({ photo, comments, onAddComment, onEditComment, onDel
         <div style={{ width:300,flexShrink:0,display:"flex",flexDirection:"column",background:C.card,borderLeft:`1px solid ${C.border}` }}>
           {/* Header */}
           <div style={{ padding:"16px 18px",borderBottom:`1px solid ${C.border}`,flexShrink:0 }}>
-            <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:14 }}>💬 Comments</div>
+            <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:14 }}><Ic.Comment size={14} color={C.text} style={{marginRight:6,verticalAlign:"middle"}}/> Comments</div>
             <div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:2 }}>{comments.length} comment{comments.length!==1?"s":""}</div>
           </div>
 
@@ -3869,7 +4003,7 @@ function PhotoCommentModal({ photo, comments, onAddComment, onEditComment, onDel
           <div style={{ flex:1,overflowY:"auto",padding:"12px 14px",display:"flex",flexDirection:"column",gap:10 }}>
             {comments.length===0&&(
               <div style={{ textAlign:"center",padding:"30px 10px",color:C.muted,fontFamily:F,fontSize:12 }}>
-                <div style={{ fontSize:28,marginBottom:8 }}>💬</div>
+                <Ic.Comment size={28} color={C.muted} style={{marginBottom:8}}/>
                 No comments yet — add the first one below
               </div>
             )}
@@ -3908,7 +4042,7 @@ function PhotoCommentModal({ photo, comments, onAddComment, onEditComment, onDel
               onKeyDown={e=>{ if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();submit();} }}
               placeholder="Write a comment… (Enter to send)" rows={3}
               style={{ ...INP(),resize:"none",fontSize:12,lineHeight:1.5,marginBottom:8 }}/>
-            <button onClick={submit} disabled={!text.trim()} style={{ width:"100%",background:text.trim()?C.accent:C.border,color:text.trim()?"#000":C.muted,border:"none",padding:"9px 0",borderRadius:7,fontFamily:F,fontWeight:700,fontSize:12,cursor:text.trim()?"pointer":"default",transition:"all .15s" }}>💬 Add Comment</button>
+            <button onClick={submit} disabled={!text.trim()} style={{ width:"100%",background:text.trim()?C.accent:C.border,color:text.trim()?"#000":C.muted,border:"none",padding:"9px 0",borderRadius:7,fontFamily:F,fontWeight:700,fontSize:12,cursor:text.trim()?"pointer":"default",transition:"all .15s" }}><Ic.Comment size={12} color="#000" style={{marginRight:5}}/> Add Comment</button>
           </div>
         </div>
       </div>
@@ -3930,13 +4064,13 @@ function PhotoCard({ photo, comments, onOpen, onDelete }){
           onMouseEnter={e=>e.currentTarget.style.transform="scale(1.04)"} onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"}/>
         {/* overlay buttons */}
         <div style={{ position:"absolute",top:6,right:6,display:"flex",gap:5,opacity:0,transition:"opacity .18s" }} className="photo-actions">
-          <button onClick={e=>{e.stopPropagation();onOpen(photo);}} style={{ background:"rgba(0,0,0,.65)",color:"#fff",border:"none",borderRadius:5,width:28,height:28,fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center" }} title="View & comment">💬</button>
+          <button onClick={e=>{e.stopPropagation();onOpen(photo);}} style={{ background:"rgba(0,0,0,.65)",color:"#fff",border:"none",borderRadius:5,width:28,height:28,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center" }} title="View & comment"><Ic.Comment size={14} color="#fff"/></button>
           <button onClick={e=>{e.stopPropagation();onDelete(photo.id,'confirm');}} style={{ background:"rgba(200,50,50,.8)",color:"#fff",border:"none",borderRadius:5,width:28,height:28,fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center" }} title="Delete">×</button>
         </div>
         {/* comment count badge */}
         {comments.length>0&&(
           <div style={{ position:"absolute",bottom:6,right:7,background:"rgba(0,0,0,.7)",color:"#fff",borderRadius:99,padding:"2px 7px",fontFamily:F,fontSize:10,fontWeight:700,display:"flex",alignItems:"center",gap:3 }}>
-            💬 {comments.length}
+            <><Ic.Comment size={12} color="#fff" style={{marginRight:3}}/> {comments.length}</>
           </div>
         )}
       </div>
@@ -3962,12 +4096,117 @@ function PhotoCard({ photo, comments, onOpen, onDelete }){
 }
 
 // ─── Project Detail Page ───────────────────────────────────────────────────────
+// ─── Notes Modal ──────────────────────────────────────────────────────────────
+function NotesModal({ notes, noteText, setNoteText, onSave, onClose }){
+  const textRef = React.useRef();
+  React.useEffect(()=>{ textRef.current?.focus(); },[]);
+
+  return(
+    <Overlay onClose={onClose}>
+      <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,
+        width:560,maxWidth:"95vw",maxHeight:"85vh",
+        display:"flex",flexDirection:"column",overflow:"hidden",
+        boxShadow:"0 24px 60px rgba(0,0,0,.5)" }}>
+
+        {/* Header */}
+        <div style={{ padding:"20px 24px 16px",borderBottom:`1px solid ${C.border}`,
+          display:"flex",alignItems:"center",justifyContent:"space-between",flexShrink:0 }}>
+          <div style={{ display:"flex",alignItems:"center",gap:10 }}>
+            <div style={{ width:36,height:36,borderRadius:9,background:C.accentDim,
+              border:`1px solid ${C.accentMid}`,display:"flex",alignItems:"center",justifyContent:"center" }}>
+              <Ic.Note size={18} color={C.accent}/>
+            </div>
+            <div>
+              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:16 }}>Project Notes</div>
+              <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:1 }}>
+                {notes.length} note{notes.length!==1?"s":""}
+              </div>
+            </div>
+          </div>
+          <button onClick={onClose} style={{ background:"transparent",border:"none",
+            color:C.muted,fontSize:20,cursor:"pointer",lineHeight:1,padding:4 }}>✕</button>
+        </div>
+
+        {/* Notes list */}
+        <div style={{ flex:1,overflowY:"auto",padding:"16px 24px",display:"flex",flexDirection:"column",gap:10 }}>
+          {notes.length===0&&(
+            <div style={{ textAlign:"center",padding:"40px 0",color:C.muted,fontFamily:F,fontSize:13 }}>
+              <Ic.Note size={32} color={C.muted} style={{marginBottom:10,opacity:.4}}/>
+              <div>No notes yet — add your first note below</div>
+            </div>
+          )}
+          {notes.map(n=>(
+            <div key={n.id} style={{ background:C.surface,border:`1px solid ${C.border}`,
+              borderRadius:10,padding:"12px 16px",borderLeft:`3px solid ${C.accent}` }}>
+              <div style={{ color:C.text,fontFamily:F,fontSize:13,lineHeight:1.6,marginBottom:6 }}>{n.text}</div>
+              <div style={{ color:C.muted,fontFamily:F,fontSize:11,display:"flex",gap:12 }}>
+                <span><Ic.Person size={10} color={C.muted} style={{marginRight:3,verticalAlign:"middle"}}/>{n.author}</span>
+                <span><Ic.Clock size={10} color={C.muted} style={{marginRight:3,verticalAlign:"middle"}}/>{n.time}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Add note */}
+        <div style={{ padding:"14px 24px 20px",borderTop:`1px solid ${C.border}`,flexShrink:0 }}>
+          <textarea
+            ref={textRef}
+            value={noteText}
+            onChange={e=>setNoteText(e.target.value)}
+            onKeyDown={e=>{ if((e.metaKey||e.ctrlKey)&&e.key==="Enter"){ onSave(); } }}
+            placeholder="Write a note… (Ctrl+Enter to save)"
+            rows={3}
+            style={{ width:"100%",boxSizing:"border-box",resize:"none",
+              background:C.surface,border:`1px solid ${C.border}`,
+              borderRadius:9,padding:"10px 14px",fontSize:13,color:C.text,
+              fontFamily:F,lineHeight:1.55,outline:"none",marginBottom:10 }}
+          />
+          <div style={{ display:"flex",gap:8,justifyContent:"flex-end" }}>
+            <button onClick={onClose}
+              style={{ background:"transparent",border:`1px solid ${C.border}`,
+                color:C.muted,padding:"9px 20px",borderRadius:8,fontFamily:F,fontSize:13,cursor:"pointer" }}>
+              Close
+            </button>
+            <button onClick={onSave} disabled={!noteText.trim()}
+              style={{ background:noteText.trim()?C.accent:"transparent",
+                color:noteText.trim()?"#000":C.muted,
+                border:`1px solid ${noteText.trim()?C.accent:C.border}`,
+                padding:"9px 24px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,
+                cursor:noteText.trim()?"pointer":"default",transition:"all .15s" }}>
+              <Ic.Check size={12} color={noteText.trim()?"#000":C.muted} style={{marginRight:5}}/> Save Note
+            </button>
+          </div>
+        </div>
+      </div>
+    </Overlay>
+  );
+}
+
 function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPayment,updatePayment,removePayment,allProjects=[],allInvoices=[],addInvoice,removeGlobalInvoice,updateGlobalInvoice,onUpdateProject,onLog,profile }){ 
   const [contactOpen,setContactOpen] = useState(false);
   const [editingProject,setEditingProject] = useState(false);
   const [confirmProjectPatch,setConfirmProjectPatch] = useState(null);
   const [noteText,setNoteText]       = useState("");
   const [notes,setNotes]             = useState([]);
+  const [showNotesModal,setShowNotesModal] = useState(false);
+
+  // Load notes from DB on mount and when project changes
+  useEffect(()=>{
+    let alive = true;
+    (async()=>{
+      const { data, error } = await dbNotes.getByProject(project.id);
+      if(!alive || error || !data) return;
+      setNotes(data.map(r=>({
+        id:     r.id,
+        text:   r.text   || "",
+        author: r.author || "User",
+        time:   r.created_at
+          ? new Date(r.created_at).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})
+          : "",
+      })));
+    })();
+    return ()=>{ alive = false; };
+  }, [project.id]);
   const [log,setLog]                 = useState([]);
   const photoRef                     = useRef();
   const dragOver                     = useRef(null);
@@ -3985,7 +4224,25 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
     if(onLog) onLog(entry);
   };
   const mergedLog= useMemo(()=>[...extraLog.filter(e=>!log.find(l=>l.id===e.id)),...log].sort((a,b)=>(b.id||0)-(a.id||0)),[extraLog,log]);
-  const saveNote = ()=>{ if(!noteText.trim())return; const n={id:Date.now(),text:noteText.trim(),author:profile?.full_name||"User",time:new Date().toLocaleDateString()}; setNotes(p=>[n,...p]); pushLog("Note added","📝"); setNoteText(""); };
+  const saveNote = async()=>{
+    const text = noteText.trim();
+    if(!text) return;
+    setNoteText("");                              // clear immediately for UX
+    const { data, error } = await dbNotes.add(project.id, text);
+    if(!error){
+      // Re-fetch to get DB id + created_at timestamp
+      const { data:rows } = await dbNotes.getByProject(project.id);
+      if(rows) setNotes(rows.map(r=>({
+        id:     r.id,
+        text:   r.text   || "",
+        author: r.author || "User",
+        time:   r.created_at
+          ? new Date(r.created_at).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})
+          : "",
+      })));
+    }
+    pushLog("Note added","📝");
+  };
   const [confirmDelPhoto, setConfirmDelPhoto] = useState(null);
   const uploadPhotos = async(files)=>{
     for(const f of Array.from(files)){
@@ -4026,16 +4283,19 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
 
   // Module definitions — rendered in persisted order
   const MODULE_DEFS = {
-    invoices: { icon:<Ic.Receipt size={22} color={C.accent}/>, title:"Invoices",  color:C.accent, dim:C.accentDim, sub:`${invCount} invoice${invCount!==1?"s":""}`, content:<InvoicesPanel project={project} onActivity={pushLog} onAddGlobalInvoice={addInvoice} onUpdateGlobalInvoice={updateGlobalInvoice} onRemoveGlobalInvoice={removeGlobalInvoice} allInvoices={allInvoices}/> },
-    payments: { icon:"💰", title:"Payments",  color:C.green,  dim:C.greenDim,  sub:`${payCount} payment${payCount!==1?"s":""}`, content:<PaymentsPanel project={project} payments={projectPayments} addPayment={handleAddPayment} updatePayment={updatePayment} removePayment={removePayment} allProjects={allProjects} allInvoices={allInvoices} onActivity={pushLog}/> },
-    plans:    { icon:"📐", title:"Plans",     color:C.blue,   dim:C.blueDim,   sub:`${planCount} document${planCount!==1?"s":""}`, content:<PlansPanel project={project} onActivity={pushLog}/> },
-    contracts:{ icon:"📜", title:"Contracts", color:C.purple, dim:C.purpleDim, sub:`${contractFiles.length} contract${contractFiles.length!==1?"s":""}`, content:<ContractsPanel project={project} onActivity={pushLog}/> },
-    team:     { icon:"👷", title:"Team",      color:C.green,  dim:C.greenDim,  sub:`${teamCount} member${teamCount!==1?"s":""}`, content:<TeamPanel  project={project} onOpenTeamPage={onOpenTeam}/> },
+    invoices: { icon:<Ic.Receipt   size={22} color={C.accent}/>, title:"Invoices",  color:C.accent, dim:C.accentDim, sub:`${invCount} invoice${invCount!==1?"s":""}`, content:<InvoicesPanel project={project} onActivity={pushLog} onAddGlobalInvoice={addInvoice} onUpdateGlobalInvoice={updateGlobalInvoice} onRemoveGlobalInvoice={removeGlobalInvoice} allInvoices={allInvoices}/> },
+    payments: { icon:<Ic.Payments  size={22} color={C.green}/>,  title:"Payments",  color:C.green,  dim:C.greenDim,  sub:`${payCount} payment${payCount!==1?"s":""}`, content:<PaymentsPanel project={project} payments={projectPayments} addPayment={handleAddPayment} updatePayment={updatePayment} removePayment={removePayment} allProjects={allProjects} allInvoices={allInvoices} onActivity={pushLog}/> },
+    plans:    { icon:<Ic.Blueprint size={22} color={C.blue}/>,   title:"Plans",     color:C.blue,   dim:C.blueDim,   sub:`${planCount} document${planCount!==1?"s":""}`, content:<PlansPanel project={project} onActivity={pushLog}/> },
+    contracts:{ icon:<Ic.Contract  size={22} color={C.purple}/>, title:"Contracts", color:C.purple, dim:C.purpleDim, sub:`${contractFiles.length} contract${contractFiles.length!==1?"s":""}`, content:<ContractsPanel project={project} onActivity={pushLog}/> },
+    team:     { icon:<Ic.Team      size={22} color={C.green}/>,  title:"Team",      color:C.green,  dim:C.greenDim,  sub:`${teamCount} member${teamCount!==1?"s":""}`, content:<TeamPanel  project={project} onOpenTeamPage={onOpenTeam}/> },
   };
 
   return(
     <div>
       {contactOpen&&<ContactModal client={project.client} onClose={()=>setContactOpen(false)}/>}
+      {showNotesModal&&<NotesModal notes={notes} noteText={noteText} setNoteText={setNoteText}
+        onSave={()=>{ saveNote(); }}
+        onClose={()=>setShowNotesModal(false)}/>}
       {editingProject&&<EditProjectModal project={project} onConfirm={patch=>{ setEditingProject(false); setConfirmProjectPatch(patch); }} onCancel={()=>setEditingProject(false)}/>}
       {confirmProjectPatch&&(
         <ConfirmDialog
@@ -4063,15 +4323,15 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
                   <div style={{ width:4,height:28,background:C.accent,borderRadius:2,flexShrink:0 }}/>
                   <h1 style={{ color:C.text,fontFamily:F,fontSize:22,fontWeight:700,margin:0 }}>{project.name}</h1>
                   <Badge status={project.status}/>
-                  {project.projType&&<span style={{ background:project.projType==="business"?C.purpleDim:C.blueDim,color:project.projType==="business"?C.purple:C.blue,padding:"3px 10px",borderRadius:4,fontSize:11,fontWeight:700,fontFamily:F }}>{project.projType==="business"?"🏢 Business":"👤 Customer"}</span>}
+                  {project.projType&&<span style={{ background:project.projType==="business"?C.purpleDim:C.blueDim,color:project.projType==="business"?C.purple:C.blue,padding:"3px 10px",borderRadius:4,fontSize:11,fontWeight:700,fontFamily:F }}>{project.projType==="business"?"Business":"Customer"}</span>}
                 </div>
-                <div style={{ color:C.muted,fontFamily:F,fontSize:13,marginLeft:14 }}>📍 {project.address}</div>
+                <div style={{ color:C.muted,fontFamily:F,fontSize:13,marginLeft:14 }}><Ic.MapPin size={13} color={C.muted} style={{marginRight:4,verticalAlign:"middle"}}/> {project.address}</div>
                 {project.desc&&<div style={{ color:C.muted,fontFamily:F,fontSize:12,marginLeft:14,marginTop:6,fontStyle:"italic",lineHeight:1.55 }}>{project.desc}</div>}
               </div>
               <div style={{ display:"flex",gap:12,alignItems:"center",flexShrink:0,flexWrap:"wrap" }}>
                 <div><div style={{ color:C.muted,fontFamily:F,fontSize:10,fontWeight:700 }}>CONTRACT VALUE</div><div style={{ color:C.accent,fontFamily:F,fontWeight:700,fontSize:20 }}>${project.value.toLocaleString()}</div></div>
-                <Btn variant="primary" size="lg" onClick={()=>setContactOpen(true)}>👤 Contact</Btn>
-                <Btn variant="secondary" size="lg" onClick={()=>setEditingProject(true)}>✏️ Edit Project</Btn>
+                <Btn variant="primary" size="lg" onClick={()=>setContactOpen(true)}><Ic.Person size={14} color="#000" style={{marginRight:5,verticalAlign:"middle"}}/> Contact</Btn>
+                <Btn variant="secondary" size="lg" onClick={()=>setEditingProject(true)}><Ic.Pen size={13} color={C.muted} style={{marginRight:5,verticalAlign:"middle"}}/> Edit Project</Btn>
               </div>
             </div>
             {project.status!=="quoting"&&(
@@ -4118,8 +4378,8 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
                         <span style={{ marginLeft:"auto",background:i===0?C.greenDim:C.accentDim,color:i===0?C.green:C.accent,padding:"2px 7px",borderRadius:4,fontSize:10,fontWeight:700,fontFamily:F }}>{ct.role}</span>
                       </div>
                       <div style={{ display:"flex",gap:10,flexWrap:"wrap" }}>
-                        {ct.phone&&<a href={`tel:${ct.phone}`} style={{ color:C.muted,fontFamily:F,fontSize:11,textDecoration:"none",display:"flex",alignItems:"center",gap:4 }}>📞 {ct.phone}</a>}
-                        {ct.email&&<a href={`mailto:${ct.email}`} style={{ color:C.muted,fontFamily:F,fontSize:11,textDecoration:"none",display:"flex",alignItems:"center",gap:4 }}>✉️ {ct.email}</a>}
+                        {ct.phone&&<a href={`tel:${ct.phone}`} style={{ color:C.muted,fontFamily:F,fontSize:11,textDecoration:"none",display:"flex",alignItems:"center",gap:4 }}><Ic.Phone size={11} color={C.muted}/> {ct.phone}</a>}
+                        {ct.email&&<a href={`mailto:${ct.email}`} style={{ color:C.muted,fontFamily:F,fontSize:11,textDecoration:"none",display:"flex",alignItems:"center",gap:4 }}><Ic.Email size={11} color={C.muted}/> {ct.email}</a>}
                       </div>
                     </div>
                   ))}
@@ -4172,19 +4432,20 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
             )}
             <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16 }}>
               <div style={{ display:"flex",alignItems:"center",gap:10 }}>
-                <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:15 }}>📷 Photos</span>
+                <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:15 }}><Ic.Photo size={15} color={C.text} style={{marginRight:6,verticalAlign:"middle"}}/> Photos</span>
                 <span style={{ background:C.surface,color:C.muted,border:`1px solid ${C.border}`,borderRadius:99,padding:"2px 9px",fontSize:10,fontFamily:F,fontWeight:700 }}>{photos.length}</span>
               </div>
               <div style={{ display:"flex",alignItems:"center",gap:8 }}>
                 <span style={{ color:C.muted,fontFamily:F,fontSize:10 }}>Click a photo to comment</span>
-                <button onClick={()=>photoRef.current.click()} style={{ background:C.accentDim,color:C.accent,border:`1px solid ${C.accentMid}`,padding:"7px 14px",borderRadius:6,fontFamily:F,fontWeight:700,fontSize:12,cursor:"pointer",display:"flex",alignItems:"center",gap:5 }}>📷 Upload</button>
+                <button onClick={()=>photoRef.current.click()} style={{ background:C.accentDim,color:C.accent,border:`1px solid ${C.accentMid}`,padding:"7px 14px",borderRadius:6,fontFamily:F,fontWeight:700,fontSize:12,cursor:"pointer",display:"flex",alignItems:"center",gap:5 }}><Ic.Photo size={13} color={C.accent} style={{marginRight:5}}/> Upload</button>
                 <input ref={photoRef} type="file" accept="image/*" multiple style={{ display:"none" }} onChange={e=>uploadPhotos(e.target.files)}/>
               </div>
             </div>
             {/* CSS for photo action buttons hover */}
             <style>{".photo-card:hover .photo-actions { opacity: 1 !important; }"}</style>
             {photos.length===0
-              ?<div onClick={()=>photoRef.current.click()} style={{ border:`2px dashed ${C.border}`,borderRadius:10,padding:"44px 20px",textAlign:"center",cursor:"pointer",color:C.muted,fontFamily:F,fontSize:13,transition:"all .2s" }} onMouseEnter={e=>{e.currentTarget.style.borderColor=C.accent+"88";e.currentTarget.style.color=C.accent;}} onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.color=C.muted;}}><div style={{ fontSize:36,marginBottom:10 }}>📷</div>No photos yet — click to upload</div>
+              ?<div onClick={()=>photoRef.current.click()} style={{ border:`2px dashed ${C.border}`,borderRadius:10,padding:"44px 20px",textAlign:"center",cursor:"pointer",color:C.muted,fontFamily:F,fontSize:13,transition:"all .2s" }} onMouseEnter={e=>{e.currentTarget.style.borderColor=C.accent+"88";e.currentTarget.style.color=C.accent;}} onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.color=C.muted;}}><Ic.Photo size={36} color={C.muted} style={{marginBottom:10}}/>
+No photos yet — click to upload</div>
               :<div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:14 }}>
                 {photos.map(p=>(
                   <div key={p.id} className="photo-card">
@@ -4208,9 +4469,13 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
 
           {/* Notes panel */}
           <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"16px 16px",display:"flex",flexDirection:"column",gap:10 }}>
-            <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center" }}>
-              <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:13 }}>📝 Notes</span>
-              <span style={{ background:C.accentDim,color:C.accent,padding:"1px 6px",borderRadius:99,fontSize:10,fontWeight:700 }}>{notes.length}</span>
+            <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",cursor:"pointer" }}
+              onClick={()=>setShowNotesModal(true)}>
+              <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:13 }}><Ic.Note size={15} color={C.text} style={{marginRight:6,verticalAlign:"middle"}}/> Notes</span>
+              <div style={{ display:"flex",alignItems:"center",gap:6 }}>
+                <span style={{ background:C.accentDim,color:C.accent,padding:"1px 6px",borderRadius:99,fontSize:10,fontWeight:700 }}>{notes.length}</span>
+                <span style={{ color:C.muted,fontSize:11,fontFamily:F }}>Expand ›</span>
+              </div>
             </div>
             <textarea value={noteText} onChange={e=>setNoteText(e.target.value)} onKeyDown={e=>{if((e.metaKey||e.ctrlKey)&&e.key==="Enter")saveNote();}} placeholder="Write a note…" rows={3} style={{ resize:"none",background:C.surface,border:`1px solid ${C.border}`,borderRadius:7,padding:"8px 10px",fontSize:12,color:C.text,fontFamily:F,lineHeight:1.5,outline:"none",width:"100%",boxSizing:"border-box" }}/>
             <button onClick={saveNote} style={{ background:C.accent,color:"#000",border:"none",padding:"7px 0",borderRadius:6,fontFamily:F,fontWeight:700,fontSize:12,cursor:"pointer" }}>Save</button>
@@ -4316,7 +4581,7 @@ function EditProjectModal({ project, onConfirm, onCancel }){
         <div style={{ padding:"24px 28px 0",flexShrink:0 }}>
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20 }}>
             <div>
-              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}>✏️ Edit Project</div>
+              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}><Ic.Pen size={15} color={C.accent} style={{marginRight:7,verticalAlign:"middle"}}/> Edit Project</div>
               <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2 }}>Update information for <strong style={{color:C.accent}}>{project.name}</strong></div>
             </div>
             <button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:20,cursor:"pointer",lineHeight:1 }}>✕</button>
@@ -4366,22 +4631,22 @@ function EditProjectModal({ project, onConfirm, onCancel }){
               <div>
                 <label style={{ ...LBL(),marginBottom:12 }}>Project Timeline</label>
                 <div style={{ display:"flex",gap:14 }}>
-                  <div style={{ flex:1 }}><label style={LBL()}>Starting Date</label><input type="date" value={startISO} onChange={e=>setStartISO(e.target.value)} style={{ ...INP(),colorScheme:"dark" }}/></div>
-                  <div style={{ flex:1 }}><label style={LBL()}>Expected Finish Date</label><input type="date" value={endISO} onChange={e=>setEndISO(e.target.value)} style={{ ...INP(),colorScheme:"dark" }}/></div>
+                  <div style={{ flex:1 }}><label style={LBL()}>Starting Date</label><DateInput style={INP()} value={startISO} onChange={e=>setStartISO(e.target.value)}/></div>
+                  <div style={{ flex:1 }}><label style={LBL()}>Expected Finish Date</label><DateInput style={INP()} value={endISO} onChange={e=>setEndISO(e.target.value)}/></div>
                 </div>
                 {startISO&&endISO&&(()=>{
                   const diff=Math.round((new Date(endISO)-new Date(startISO))/(1000*60*60*24));
                   const weeks=Math.round(diff/7);
                   return diff>0&&<div style={{ marginTop:10,background:C.green+"0d",border:`1px solid ${C.green}33`,borderRadius:7,padding:"8px 12px",color:C.green,fontFamily:F,fontSize:12 }}>Duration: <strong>{diff} days</strong> ({weeks} weeks)</div>;
                 })()}
-                {startISO&&endISO&&new Date(endISO)<=new Date(startISO)&&<div style={{ marginTop:10,background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"8px 12px",color:C.red,fontFamily:F,fontSize:12 }}>⚠️ End date must be after start date</div>}
+                {startISO&&endISO&&new Date(endISO)<=new Date(startISO)&&<div style={{ marginTop:10,background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"8px 12px",color:C.red,fontFamily:F,fontSize:12 }}>End date must be after start date</div>}
               </div>
               <div>
                 <label style={{ ...LBL(),marginBottom:12 }}>Project Type</label>
                 <div style={{ display:"flex",gap:12 }}>
-                  {[["business","🏢","Business","For a company or organization"],["customer","👤","Customer","For an individual client"]].map(([v,ic,l,sub])=>(
+                  {[["business","Business","For a company or organization"],["customer","Customer","For an individual client"]].map(([v,ic,l,sub])=>(
                     <div key={v} onClick={()=>setProjType(v)} style={{ flex:1,border:`2px solid ${projType===v?v==="business"?C.purple:C.blue:C.border}`,borderRadius:12,padding:"16px 18px",cursor:"pointer",background:projType===v?v==="business"?C.purpleDim:C.blueDim:"transparent",transition:"all .15s" }}>
-                      <div style={{ fontSize:24,marginBottom:8 }}>{ic}</div>
+                      <div style={{ marginBottom:8 }}>{v==="business"?<Ic.Building size={24} color={C.text}/>:<Ic.Person size={24} color={C.text}/>}</div>
                       <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:14 }}>{l}</div>
                       <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>{sub}</div>
                       <div style={{ width:16,height:16,borderRadius:"50%",border:`2px solid ${projType===v?v==="business"?C.purple:C.blue:C.border}`,background:projType===v?v==="business"?C.purple:C.blue:"transparent",marginTop:10,display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,color:"#000",fontWeight:700 }}>{projType===v&&"✓"}</div>
@@ -4458,6 +4723,7 @@ function NewProjectModal({ onConfirm, onCancel }){
   const [endISO,setEndISO]=useState("");
   const [projType,setProjType]=useState("business");
   const [projStatus,setProjStatus]=useState("active");
+  const [value,setValue]=useState("");
   const [contacts,setContacts]=useState([emptyContact()]);
   const [step,setStep]=useState(1); // 1=info, 2=timeline&type, 3=contacts
   const [err,setErr]=useState("");
@@ -4488,7 +4754,7 @@ function NewProjectModal({ onConfirm, onCancel }){
       startDateISO:startISO, due:endISO,
       startDate:fmtD(startISO), dueFmt:fmtD(endISO),
       projType, status:projStatus, progress:0,
-      value:0, location:address.trim().split(",")[0]||"",
+      value:parseFloat(value)||0, location:address.trim().split(",")[0]||"",
       client:{ name:primaryClient.name, company:primaryClient.company||"", phone:primaryClient.phone||"", email:primaryClient.email||"", initials },
       contacts:validContacts,
     };
@@ -4504,7 +4770,7 @@ function NewProjectModal({ onConfirm, onCancel }){
         <div style={{ padding:"24px 28px 0",flexShrink:0 }}>
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20 }}>
             <div>
-              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}>🏗 New Project</div>
+              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}><Ic.Projects size={16} color={C.text} style={{marginRight:7,verticalAlign:"middle"}}/> New Project</div>
               <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2 }}>Fill in the details to create your project</div>
             </div>
             <button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:20,cursor:"pointer",lineHeight:1 }}>✕</button>
@@ -4545,6 +4811,10 @@ function NewProjectModal({ onConfirm, onCancel }){
                 <label style={LBL()}>Project Description <span style={{ color:C.muted,fontWeight:400 }}>(optional)</span></label>
                 <textarea style={{ ...INP(),resize:"none",lineHeight:1.55 }} rows={3} placeholder="Brief overview of scope, objectives, or special requirements…" value={desc} onChange={e=>setDesc(e.target.value)}/>
               </div>
+              <div>
+                <label style={LBL()}>Contract Value <span style={{ color:C.muted,fontWeight:400 }}>(optional)</span></label>
+                <input style={INP()} type="number" value={value} onChange={e=>setValue(e.target.value)} placeholder="0.00" onWheel={e=>e.target.blur()}/>
+              </div>
             </div>
           )}
 
@@ -4556,27 +4826,27 @@ function NewProjectModal({ onConfirm, onCancel }){
                 <div style={{ display:"flex",gap:14 }}>
                   <div style={{ flex:1 }}>
                     <label style={LBL()}>Starting Date</label>
-                    <input type="date" value={startISO} onChange={e=>setStartISO(e.target.value)} style={{ ...INP(),colorScheme:"dark" }}/>
+                    <DateInput style={INP()} value={startISO} onChange={e=>setStartISO(e.target.value)}/>
                   </div>
                   <div style={{ flex:1 }}>
                     <label style={LBL()}>Expected Finish Date</label>
-                    <input type="date" value={endISO} onChange={e=>setEndISO(e.target.value)} style={{ ...INP(),colorScheme:"dark" }}/>
+                    <DateInput style={INP()} value={endISO} onChange={e=>setEndISO(e.target.value)}/>
                   </div>
                 </div>
                 {startISO&&endISO&&(()=>{
                   const diff=Math.round((new Date(endISO)-new Date(startISO))/(1000*60*60*24));
                   const weeks=Math.round(diff/7);
-                  return diff>0&&<div style={{ marginTop:10,background:C.green+"0d",border:`1px solid ${C.green}33`,borderRadius:7,padding:"8px 12px",color:C.green,fontFamily:F,fontSize:12 }}>📅 Project duration: <strong>{diff} days</strong> ({weeks} weeks)</div>;
+                  return diff>0&&<div style={{ marginTop:10,background:C.green+"0d",border:`1px solid ${C.green}33`,borderRadius:7,padding:"8px 12px",color:C.green,fontFamily:F,fontSize:12 }}><Ic.Calendar size={13} color={C.green} style={{marginRight:4,verticalAlign:"middle"}}/> Project duration: <strong>{diff} days</strong> ({weeks} weeks)</div>;
                 })()}
-                {startISO&&endISO&&new Date(endISO)<=new Date(startISO)&&<div style={{ marginTop:10,background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"8px 12px",color:C.red,fontFamily:F,fontSize:12 }}>⚠️ End date must be after start date</div>}
+                {startISO&&endISO&&new Date(endISO)<=new Date(startISO)&&<div style={{ marginTop:10,background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"8px 12px",color:C.red,fontFamily:F,fontSize:12 }}>End date must be after start date</div>}
               </div>
 
               <div>
                 <label style={{ ...LBL(),marginBottom:12 }}>Project Type</label>
                 <div style={{ display:"flex",gap:12 }}>
-                  {[["business","🏢","Business","For a company or organization"],["customer","👤","Customer","For an individual client"]].map(([v,ic,l,sub])=>(
+                  {[["business","Business","For a company or organization"],["customer","Customer","For an individual client"]].map(([v,ic,l,sub])=>(
                     <div key={v} onClick={()=>setProjType(v)} style={{ flex:1,border:`2px solid ${projType===v?v==="business"?C.purple:C.blue:C.border}`,borderRadius:12,padding:"16px 18px",cursor:"pointer",background:projType===v?v==="business"?C.purpleDim:C.blueDim:"transparent",transition:"all .15s" }}>
-                      <div style={{ fontSize:24,marginBottom:8 }}>{ic}</div>
+                      <div style={{ marginBottom:8 }}>{v==="business"?<Ic.Building size={24} color={C.text}/>:<Ic.Person size={24} color={C.text}/>}</div>
                       <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:14 }}>{l}</div>
                       <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>{sub}</div>
                       <div style={{ width:16,height:16,borderRadius:"50%",border:`2px solid ${projType===v?v==="business"?C.purple:C.blue:C.border}`,background:projType===v?v==="business"?C.purple:C.blue:"transparent",marginTop:10,display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,color:"#000",fontWeight:700 }}>{projType===v&&"✓"}</div>
@@ -4643,7 +4913,7 @@ function NewProjectModal({ onConfirm, onCancel }){
           <div style={{ display:"flex",gap:10 }}>
             {step<3
               ?<button onClick={goNext} style={{ background:C.accent,color:"#000",border:"none",padding:"11px 28px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer" }}>Continue →</button>
-              :<button onClick={handleCreate} style={{ background:C.green,color:"#fff",border:"none",padding:"11px 28px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",gap:7 }}>🏗 Create Project</button>
+              :<button onClick={handleCreate} style={{ background:C.green,color:"#fff",border:"none",padding:"11px 28px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",gap:7 }}><Ic.Projects size={14} color="#fff" style={{marginRight:6,verticalAlign:"middle"}}/> Create Project</button>
             }
           </div>
         </div>
@@ -4687,7 +4957,7 @@ function ProjectsList({ onSelect, allProjects, onAddProject, onUpdateProject, on
           onCancel={()=>setConfirmDelete(null)}>
           <div style={{ background:C.surface,border:`1px solid ${C.red}33`,borderRadius:9,padding:"12px 16px" }}>
             <div style={{ display:"flex",alignItems:"center",gap:10 }}>
-              <div style={{ width:36,height:36,background:C.redDim,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0 }}>🏗</div>
+              <div style={{ width:36,height:36,background:C.redDim,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}><Ic.Projects size={18} color={C.red}/></div>
               <div>
                 <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:14 }}>{confirmDelete.name}</div>
                 <div style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{confirmDelete.client?.name} · {confirmDelete.location||""}</div>
@@ -4702,7 +4972,7 @@ function ProjectsList({ onSelect, allProjects, onAddProject, onUpdateProject, on
           <h2 style={{ color:C.text,fontSize:20,fontFamily:F,fontWeight:700,margin:0 }}>Projects</h2>
           <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>{allProjects.length} projects total</div>
         </div>
-        <button onClick={()=>setShowNew(true)} style={{ background:C.accent,color:"#000",border:"none",padding:"10px 20px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:7 }}>🏗 + New Project</button>
+        <button onClick={()=>setShowNew(true)} style={{ background:C.accent,color:"#000",border:"none",padding:"10px 20px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:7 }}><Ic.Plus size={13} color="#000" style={{marginRight:5,verticalAlign:"middle"}}/> New Project</button>
       </div>
       <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
         {allProjects.map(p=>(
@@ -4715,7 +4985,7 @@ function ProjectsList({ onSelect, allProjects, onAddProject, onUpdateProject, on
                 <div style={{ flex:1,minWidth:0 }}>
                   <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:3,flexWrap:"wrap" }}>
                     <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:16 }}>{p.name}</div>
-                    {p.projType&&<span style={{ background:p.projType==="business"?C.purpleDim:C.blueDim,color:p.projType==="business"?C.purple:C.blue,padding:"2px 8px",borderRadius:4,fontSize:10,fontWeight:700,fontFamily:F }}>{p.projType==="business"?"🏢 Business":"👤 Customer"}</span>}
+                    {p.projType&&<span style={{ background:p.projType==="business"?C.purpleDim:C.blueDim,color:p.projType==="business"?C.purple:C.blue,padding:"2px 8px",borderRadius:4,fontSize:10,fontWeight:700,fontFamily:F }}>{p.projType==="business"?"Business":"Customer"}</span>}
                   </div>
                   <div style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{p.client.name} · {p.location||p.address} · Due: {p.dueFmt}</div>
                   {p.desc&&<div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:3,fontStyle:"italic" }}>{p.desc.slice(0,80)}{p.desc.length>80?"…":""}</div>}
@@ -4730,7 +5000,7 @@ function ProjectsList({ onSelect, allProjects, onAddProject, onUpdateProject, on
                     style={{ background:"transparent",color:C.muted,border:`1px solid ${C.border}`,borderRadius:6,width:28,height:28,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,cursor:"pointer",flexShrink:0,transition:"all .15s",lineHeight:1 }}
                     onMouseEnter={e=>{e.currentTarget.style.color=C.accent;e.currentTarget.style.borderColor=C.accent+"66";e.currentTarget.style.background=C.accentDim;}}
                     onMouseLeave={e=>{e.currentTarget.style.color=C.muted;e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}}>
-                    ✏️
+                    <Ic.Pen size={13} color={C.muted}/>
                   </button>
                   <button
                     onClick={e=>{e.stopPropagation();setConfirmDelete(p);}}
@@ -4738,7 +5008,7 @@ function ProjectsList({ onSelect, allProjects, onAddProject, onUpdateProject, on
                     style={{ background:"transparent",color:C.muted,border:`1px solid ${C.border}`,borderRadius:6,width:28,height:28,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,cursor:"pointer",flexShrink:0,transition:"all .15s",lineHeight:1 }}
                     onMouseEnter={e=>{e.currentTarget.style.color=C.red;e.currentTarget.style.borderColor=C.red+"66";e.currentTarget.style.background=C.redDim;}}
                     onMouseLeave={e=>{e.currentTarget.style.color=C.muted;e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}}>
-                    🗑️
+                    <Ic.Delete size={13} color={C.red}/>
                   </button>
                   <span style={{ color:C.muted,fontSize:18,lineHeight:1 }}>›</span>
                 </div>
@@ -4770,12 +5040,12 @@ function ProjectsList({ onSelect, allProjects, onAddProject, onUpdateProject, on
 // ─── Dashboard ─────────────────────────────────────────────────────────────────
 // ─── Dashboard widget types ───────────────────────────────────────────────────
 const WIDGET_TYPES = [
-  { id:"projects",   label:"Project Progress",    icon:"🏗" },
-  { id:"invoices",   label:"Recent Invoices",     icon:"🧾" },
-  { id:"payments",   label:"Recent Payments",     icon:"💰" },
-  { id:"tasks",      label:"Upcoming Tasks",      icon:"✅" },
-  { id:"activity",   label:"Activity Log",        icon:"📋" },
-  { id:"calendar",   label:"Upcoming Events",     icon:"📅" },
+  { id:"projects",   label:"Project Progress",    icon:"projects" },
+  { id:"invoices",   label:"Recent Invoices",     icon:"invoices" },
+  { id:"payments",   label:"Recent Payments",     icon:"payments" },
+  { id:"tasks",      label:"Upcoming Tasks",      icon:"tasks" },
+  { id:"activity",   label:"Activity Log",        icon:"activity" },
+  { id:"calendar",   label:"Upcoming Events",     icon:"calendar" },
 ];
 
 function DashWidget({ widgetId, type, allProjects, allInvoices, payments, tasks, globalLog, onSelect, onChangeType }){
@@ -4783,8 +5053,8 @@ function DashWidget({ widgetId, type, allProjects, allInvoices, payments, tasks,
   const wt=WIDGET_TYPES.find(w=>w.id===type)||WIDGET_TYPES[0];
 
   // Normalise activity log icons — some entries use codes instead of emoji
-  const iconMap = { "inv":"🧾","del":"🗑️","edit":"✏️","PAY":"💰","pay":"💰","🏗":"🏗","log":"📋" };
-  const normIcon = (ic) => (ic && ic.length <= 4 && iconMap[ic]) ? iconMap[ic] : (ic||"📋");
+  const iconMap = { "inv":"inv","del":"del","edit":"edit","PAY":"PAY","pay":"pay","log":"log" };
+  const normIcon = (ic) => ic||"log";
 
   const renderContent=()=>{
     if(type==="projects") return(
@@ -4810,7 +5080,7 @@ function DashWidget({ widgetId, type, allProjects, allInvoices, payments, tasks,
                 <span style={{textTransform:"capitalize"}}>{p.status}</span>
                 <span>·</span>
                 <span>Due: {p.dueFmt||"—"}</span>
-                {ov&&<span style={{color:C.red,fontWeight:700}}>⚠ Overdue</span>}
+                {ov&&<span style={{color:C.red,fontWeight:700}}><Ic.Warning size={11} color={C.red} style={{marginRight:3,verticalAlign:"middle"}}/>Overdue</span>}
               </div>
             </div>
           );
@@ -4841,7 +5111,7 @@ function DashWidget({ widgetId, type, allProjects, allInvoices, payments, tasks,
                 onMouseEnter={e=>e.currentTarget.style.background=C.surface}
                 onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
                 <div style={{ minWidth:0,flex:1 }}>
-                  <div style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{inv.invId||inv.id}</div>
+                  <div style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{fmtInvId(inv,allInvoices)}</div>
                   <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>{inv.project||inv.client||"—"}</div>
                 </div>
                 <div style={{ textAlign:"right",flexShrink:0,marginLeft:8 }}>
@@ -4925,14 +5195,14 @@ function DashWidget({ widgetId, type, allProjects, allInvoices, payments, tasks,
       const events=[];
       allInvoices.filter(i=>i.due&&(i.status||i.invoiceStatus)!=="paid").forEach(inv=>{
         const d=new Date(inv.due+"T00:00:00"); if(isNaN(d))return;
-        events.push({ id:inv.id,date:d,icon:"🧾",label:`Invoice ${inv.id||inv.invId}`,sub:inv.project+` · $${Number(inv.amount||0).toLocaleString()}`,color:C.accent });
+        events.push({ id:inv.id,date:d,icon:"inv",label:`Invoice ${fmtInvId(inv)}`,sub:inv.project+` · $${Number(inv.amount||0).toLocaleString()}`,color:C.accent });
       });
       tasks.filter(t=>t.date&&t.status!=="done").forEach(t=>{
         const d=new Date(t.date+"T00:00:00"); if(isNaN(d))return;
-        events.push({ id:"t"+t.id,date:d,icon:"✅",label:t.title,sub:t.member+" · "+t.project,color:C.blue });
+        events.push({ id:"t"+t.id,date:d,icon:"tasks",label:t.title,sub:t.member+" · "+t.project,color:C.blue });
       });
       allProjects.forEach(p=>{
-        if(p.due){ const d=new Date(p.due+"T00:00:00"); if(!isNaN(d)&&d>=now) events.push({ id:"pd"+p.id,date:d,icon:"🏗",label:p.name+" due",sub:p.client?.name||"",color:C.purple }); }
+        if(p.due){ const d=new Date(p.due+"T00:00:00"); if(!isNaN(d)&&d>=now) events.push({ id:"pd"+p.id,date:d,icon:"projects",label:p.name+" due",sub:p.client?.name||"",color:C.purple }); }
       });
       events.sort((a,b)=>a.date-b.date);
       const upcoming=events.slice(0,6);
@@ -4973,7 +5243,7 @@ function DashWidget({ widgetId, type, allProjects, allInvoices, payments, tasks,
           <span style={{ fontSize:16 }}>{wt.icon}</span>
           <span style={{ color:C.text,fontFamily:F,fontSize:13,fontWeight:700,textTransform:"uppercase",letterSpacing:.5 }}>{wt.label}</span>
         </div>
-        <button onClick={()=>setShowPicker(p=>!p)} title="Change widget" style={{ background:"transparent",border:`1px solid ${C.border}`,borderRadius:6,padding:"3px 9px",color:C.muted,fontFamily:F,fontSize:11,cursor:"pointer" }}>⚙ Customize</button>
+        <button onClick={()=>setShowPicker(p=>!p)} title="Change widget" style={{ background:"transparent",border:`1px solid ${C.border}`,borderRadius:6,padding:"3px 9px",color:C.muted,fontFamily:F,fontSize:11,cursor:"pointer" }}><Ic.Settings size={12} color={C.muted} style={{marginRight:4}}/> Customize</button>
       </div>
       {showPicker&&(
         <div style={{ position:"absolute",top:54,right:18,zIndex:200,background:C.card,border:`1px solid ${C.border}`,borderRadius:10,padding:"10px",boxShadow:"0 8px 32px rgba(0,0,0,.35)",minWidth:200 }}>
@@ -5023,13 +5293,13 @@ function Dashboard({ onSelect, allProjects=[], allInvoices=[], payments=[], task
     <div>
       <div style={{ marginBottom:28 }}>
         <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginBottom:4 }}>{dayName}</div>
-        <h2 style={{ color:C.text,fontFamily:F,fontSize:24,fontWeight:700,margin:0 }}>{gr} 👷</h2>
+        <h2 style={{ color:C.text,fontFamily:F,fontSize:24,fontWeight:700,margin:0 }}>{gr}</h2>
       </div>
 
       {/* Overdue alert banner */}
       {overdueInvCount>0&&(
         <div onClick={()=>onSelect&&onSelect("invoicing")} style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:10,padding:"12px 18px",marginBottom:20,display:"flex",alignItems:"center",gap:10,cursor:"pointer" }}>
-          <span style={{ fontSize:18 }}>⚠️</span>
+          <Ic.Warning size={18} color={C.accent}/>
           <div style={{ flex:1 }}>
             <div style={{ color:C.red,fontFamily:F,fontWeight:700,fontSize:13 }}>{overdueInvCount} overdue invoice{overdueInvCount!==1?"s":""}</div>
             <div style={{ color:C.muted,fontFamily:F,fontSize:12 }}>Click to view and follow up</div>
@@ -5132,12 +5402,12 @@ function EditInvoiceModal({ invoice, allProjects, onConfirm, onCancel }){
       <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,padding:28,width:500,maxHeight:"92vh",overflowY:"auto" }}>
         <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20 }}>
           <div>
-            <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}>✏️ Edit Invoice</div>
-            <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2 }}>{invoice.id||invoice.invId}</div>
+            <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}><Ic.Pen size={15} color={C.accent} style={{marginRight:7,verticalAlign:"middle"}}/> Edit Invoice</div>
+            <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2 }}>{fmtInvId(invoice)}</div>
           </div>
           <button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:20,cursor:"pointer" }}>✕</button>
         </div>
-        {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"9px 12px",color:C.red,fontFamily:F,fontSize:12,marginBottom:14 }}>⚠ {err}</div>}
+        {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"9px 12px",color:C.red,fontFamily:F,fontSize:12,marginBottom:14 }}><Ic.Warning size={12} color={C.red} style={{marginRight:5,verticalAlign:"middle"}}/>{err}</div>}
         <div style={{ display:"flex",flexDirection:"column",gap:13 }}>
           <div><label style={LBL()}>Project</label>
             <select value={project} onChange={e=>setProject(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
@@ -5149,7 +5419,7 @@ function EditInvoiceModal({ invoice, allProjects, onConfirm, onCancel }){
           <div><label style={LBL()}>Description</label><textarea style={{ ...INP(),resize:"none" }} rows={2} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="Invoice description"/></div>
           <div style={{ display:"flex",gap:12 }}>
             <div style={{ flex:1 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setErr("");}} onWheel={e=>e.target.blur()} placeholder="0.00"/></div>
-            <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={due} onChange={e=>setDue(e.target.value)}/></div>
+            <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><DateInput style={INP()} value={due} onChange={e=>setDue(e.target.value)}/></div>
           </div>
           <div><label style={LBL()}>Status</label>
             <div style={{ display:"flex",gap:8 }}>
@@ -5162,10 +5432,10 @@ function EditInvoiceModal({ invoice, allProjects, onConfirm, onCancel }){
             {docFile
               ?<div style={{ background:C.surface,border:`1px solid ${C.accent}44`,borderRadius:9,padding:"12px 14px",display:"flex",alignItems:"center",gap:10 }}>
                   <div style={{ width:38,height:38,background:C.card,borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0 }}>
-                    {docFile.dataUrl?.startsWith("data:image")||docFile.name?.match(/\.(png|jpg|jpeg|webp|gif)$/i)?"🖼️":"📄"}
+                    {docFile.dataUrl?.startsWith("data:image")||docFile.name?.match(/\.(png|jpg|jpeg|webp|gif)$/i)?<Ic.Image size={18} color={C.muted}/>:<Ic.File size={18} color={C.muted}/>}
                   </div>
                   <div style={{ flex:1,minWidth:0 }}>
-                    <div style={{ color:C.accent,fontFamily:F,fontWeight:700,fontSize:12 }}>✓ Attached</div>
+                    <div style={{ color:C.accent,fontFamily:F,fontWeight:700,fontSize:12 }}><Ic.Check size={12} color={C.green} style={{marginRight:4}}/> Attached</div>
                     <div style={{ color:C.text,fontFamily:F,fontSize:11,marginTop:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{docFile.name}</div>
                     {docFile.size>0&&<div style={{ color:C.muted,fontFamily:F,fontSize:10,marginTop:1 }}>{fmtBytes(docFile.size)}</div>}
                   </div>
@@ -5178,7 +5448,7 @@ function EditInvoiceModal({ invoice, allProjects, onConfirm, onCancel }){
                   style={{ border:`2px dashed ${C.border}`,borderRadius:9,padding:"18px 16px",textAlign:"center",cursor:"pointer",transition:"all .2s" }}
                   onMouseEnter={e=>{e.currentTarget.style.borderColor=C.accent+"88";e.currentTarget.style.background=C.accentDim;}}
                   onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}}>
-                  <div style={{ fontSize:24,marginBottom:5 }}>📎</div>
+                  <div style={{ fontSize:0 }}><Ic.Attach size={24} color={C.muted} style={{marginBottom:5}}/></div>
                   <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:12,marginBottom:2 }}>Drop file or click to browse</div>
                   <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>PDF · Images · Word · Any format</div>
                 </div>
@@ -5222,7 +5492,7 @@ function AddGlobalInvoiceModal({ allProjects, allInvoices=[], onConfirm, onCance
     if(raw.size>5*1024*1024){ setErr("File too large (max 5 MB)"); return; }
     const du=await new Promise(r=>{const rd=new FileReader();rd.onload=e=>r(e.target.result);rd.readAsDataURL(raw);});
     const f={name:raw.name,size:raw.size,dataUrl:du};
-    setDocFile(f); setAiRunning(true); setAiNote("🤖 Reading with AI…"); setErr("");
+    setDocFile(f); setAiRunning(true); setAiNote("Reading with AI…"); setErr("");
     const res=await aiExtractInvoice(f);
     if(res){
       if(res.supplierName&&!supplier) setSupplier(res.supplierName);
@@ -5232,8 +5502,8 @@ function AddGlobalInvoiceModal({ allProjects, allInvoices=[], onConfirm, onCance
       if(res.amount&&!amount)         setAmount(String(res.amount));
       if(res.currency)                setCurrency(res.currency);
       if(res.description&&!desc)      setDesc(res.description);
-      setAiNote("✅ AI extracted — review and edit below");
-    } else { setAiNote("⚠️ Could not extract — fill in manually"); }
+      setAiNote("Fields extracted — review and edit below");
+    } else { setAiNote("Could not extract — fill in manually"); }
     setAiRunning(false);
   };
 
@@ -5256,7 +5526,7 @@ function AddGlobalInvoiceModal({ allProjects, allInvoices=[], onConfirm, onCance
         <div style={{ padding:"22px 28px 18px",borderBottom:`1px solid ${C.border}`,flexShrink:0 }}>
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center" }}>
             <div>
-              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}>🧾 New Invoice</div>
+              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}><Ic.Receipt size={16} color={C.text} style={{marginRight:7,verticalAlign:"middle"}}/> New Invoice</div>
               <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2 }}>
                 Auto number: <span style={{ color:C.accent,fontWeight:700 }}>{invNum}</span>
               </div>
@@ -5278,26 +5548,26 @@ function AddGlobalInvoiceModal({ allProjects, allInvoices=[], onConfirm, onCance
                 </div>
               : docFile
               ? <div style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:8 }}>
-                  <span style={{ fontSize:16 }}>📄</span>
+                  <Ic.File size={16} color={C.muted}/>
                   <span style={{ color:C.green,fontFamily:F,fontSize:12,fontWeight:600 }}>{docFile.name}</span>
                   <button onClick={e=>{e.stopPropagation();setDocFile(null);setAiNote("");}} style={{ background:"transparent",border:"none",color:C.muted,cursor:"pointer",fontSize:14 }}>✕</button>
                 </div>
               : <div>
                   <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:13,marginBottom:2 }}>
-                    📎 Upload Invoice PDF or Image <span style={{ color:C.muted,fontWeight:400 }}>(optional)</span>
+                    Upload Invoice PDF or Image <span style={{ color:C.muted,fontWeight:400 }}>(optional)</span>
                   </div>
-                  <div style={{ color:C.purple,fontFamily:F,fontSize:11 }}>🤖 AI will auto-fill fields from your file</div>
+                  <div style={{ color:C.purple,fontFamily:F,fontSize:11,display:"flex",alignItems:"center",gap:4 }}><Ic.Bot size={11} color={C.purple}/> AI will auto-fill fields from your file</div>
                 </div>
             }
           </div>
-          {aiNote&&<div style={{ background:aiNote.startsWith("OK")?C.greenDim:aiNote.startsWith("🤖")?C.purpleDim:C.accentDim,border:`1px solid ${aiNote.startsWith("OK")?C.green+"44":aiNote.startsWith("🤖")?C.purple+"44":C.accent+"44"}`,borderRadius:7,padding:"8px 12px",color:aiNote.startsWith("OK")?C.green:aiNote.startsWith("🤖")?C.purple:C.accent,fontFamily:F,fontSize:12,marginBottom:12 }}>{aiNote}</div>}
-          {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"9px 12px",color:C.red,fontFamily:F,fontSize:12,marginBottom:12 }}>⚠ {err}</div>}
+          {aiNote&&<div style={{ background:aiNote.startsWith("OK")?C.greenDim:aiNote.endsWith("…")?C.purpleDim:C.accentDim,border:`1px solid ${aiNote.startsWith("OK")?C.green+"44":aiNote.endsWith("…")?C.purple+"44":C.accent+"44"}`,borderRadius:7,padding:"8px 12px",color:aiNote.startsWith("OK")?C.green:aiNote.endsWith("…")?C.purple:C.accent,fontFamily:F,fontSize:12,marginBottom:12 }}>{aiNote}</div>}
+          {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"9px 12px",color:C.red,fontFamily:F,fontSize:12,marginBottom:12 }}><Ic.Warning size={12} color={C.red} style={{marginRight:5,verticalAlign:"middle"}}/>{err}</div>}
 
           <div style={{ display:"flex",flexDirection:"column",gap:13 }}>
             {/* Invoice # + Date */}
             <div style={{ display:"flex",gap:12 }}>
-              <div style={{ flex:1 }}><label style={LBL()}>Invoice # *</label><input style={INP()} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="INV-001"/></div>
-              <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Invoice # *</label><input style={INP()} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="#001"/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><DateInput style={INP()} value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
             </div>
             {/* Project */}
             <div><label style={LBL()}>Project *</label>
@@ -5321,7 +5591,7 @@ function AddGlobalInvoiceModal({ allProjects, allInvoices=[], onConfirm, onCance
                   {CURRENCIES.map(c=><option key={c}>{c}</option>)}
                 </select>
               </div>
-              <div style={{ flex:1.5 }}><label style={LBL()}>Due Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={due} onChange={e=>setDue(e.target.value)}/></div>
+              <div style={{ flex:1.5 }}><label style={LBL()}>Due Date</label><DateInput style={INP()} value={due} onChange={e=>setDue(e.target.value)}/></div>
             </div>
             {/* Status */}
             <div><label style={LBL()}>Status</label>
@@ -5346,7 +5616,7 @@ function InvoiceDetailModal({ inv, onClose, onEdit, onDelete, onViewFile }){
   if(!inv) return null;
   const st = INV_ST.find(s=>s.v===(inv.status||inv.invoiceStatus))||INV_ST[0];
   const rows = [
-    { label:'Invoice #',    value: fmtInvId(inv),                              color: C.accent },
+    { label:'Invoice #',    value: fmtInvId(inv,allInvoices),                              color: C.accent },
     { label:'Project',      value: inv.project||'—',                           color: C.text   },
     { label:'Client',       value: inv.client||inv.supplier||'—',              color: C.text   },
     { label:'Amount',       value: `${inv.currency||'AED'} ${Number(inv.amount||0).toLocaleString()}`, color: C.text, bold:true },
@@ -5362,10 +5632,10 @@ function InvoiceDetailModal({ inv, onClose, onEdit, onDelete, onViewFile }){
         {/* Header */}
         <div style={{ padding:'22px 24px 18px',borderBottom:`1px solid ${C.border}`,display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:12 }}>
           <div style={{ display:'flex',alignItems:'center',gap:12 }}>
-            <div style={{ width:42,height:42,borderRadius:10,background:C.accentDim,border:`1px solid ${C.accentMid}`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,flexShrink:0 }}>🧾</div>
+            <div style={{ width:42,height:42,borderRadius:10,background:C.accentDim,border:`1px solid ${C.accentMid}`,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0 }}><Ic.Receipt size={20} color={C.accent}/></div>
             <div>
               <div style={{ color:C.muted,fontFamily:F,fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',marginBottom:3 }}>Invoice</div>
-              <div style={{ color:C.accent,fontFamily:F,fontWeight:700,fontSize:18,lineHeight:1.2 }}>{fmtInvId(inv)}</div>
+              <div style={{ color:C.accent,fontFamily:F,fontWeight:700,fontSize:18,lineHeight:1.2 }}>{fmtInvId(inv,allInvoices)}</div>
             </div>
           </div>
           <div style={{ display:'flex',alignItems:'center',gap:8,flexShrink:0 }}>
@@ -5388,13 +5658,13 @@ function InvoiceDetailModal({ inv, onClose, onEdit, onDelete, onViewFile }){
         {inv.dataUrl&&(
           <div style={{ padding:'0 24px 14px' }}>
             <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:'10px 14px',display:'flex',alignItems:'center',gap:10 }}>
-              <span style={{ fontSize:18 }}>📎</span>
+              <Ic.Attach size={18} color={C.muted}/>
               <div style={{ flex:1,minWidth:0 }}>
                 <div style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{inv.name||'Invoice File'}</div>
                 {inv.size>0&&<div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:1 }}>{(inv.size/1024).toFixed(0)} KB</div>}
               </div>
               <div style={{ display:'flex',gap:6,flexShrink:0 }}>
-                <button onClick={()=>onViewFile(inv)} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}44`,padding:'5px 12px',borderRadius:6,fontFamily:F,fontSize:11,fontWeight:700,cursor:'pointer' }}>👁 View</button>
+                <button onClick={()=>onViewFile(inv)} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}44`,padding:'5px 12px',borderRadius:6,fontFamily:F,fontSize:11,fontWeight:700,cursor:'pointer' }}><Ic.Eye size={12} color={C.blue} style={{marginRight:4,verticalAlign:"middle"}}/> View</button>
                 <a href={inv.dataUrl} download={inv.name||'invoice'} style={{ background:C.accentDim,color:C.accent,border:`1px solid ${C.accentMid}`,padding:'5px 12px',borderRadius:6,fontFamily:F,fontSize:11,fontWeight:700,textDecoration:'none',display:'flex',alignItems:'center' }}>↓ Download</a>
               </div>
             </div>
@@ -5404,8 +5674,8 @@ function InvoiceDetailModal({ inv, onClose, onEdit, onDelete, onViewFile }){
         {/* Actions */}
         <div style={{ padding:'14px 24px 20px',display:'flex',gap:8,justifyContent:'flex-end',borderTop:`1px solid ${C.border}` }}>
           <button onClick={onClose} style={{ background:'transparent',border:`1px solid ${C.border}`,color:C.muted,padding:'8px 18px',borderRadius:8,fontFamily:F,fontSize:13,cursor:'pointer' }}>Close</button>
-          <button onClick={()=>{ onClose(); onEdit(inv); }} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}44`,padding:'8px 18px',borderRadius:8,fontFamily:F,fontSize:13,fontWeight:700,cursor:'pointer' }}>✏️ Edit</button>
-          <button onClick={()=>{ onClose(); onDelete(inv); }} style={{ background:C.redDim,color:C.red,border:`1px solid ${C.red}44`,padding:'8px 18px',borderRadius:8,fontFamily:F,fontSize:13,fontWeight:700,cursor:'pointer' }}>🗑 Delete</button>
+          <button onClick={()=>{ onClose(); onEdit(inv); }} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}44`,padding:'8px 18px',borderRadius:8,fontFamily:F,fontSize:13,fontWeight:700,cursor:'pointer' }}><Ic.Pen size={12} color={C.blue} style={{marginRight:4,verticalAlign:"middle"}}/> Edit</button>
+          <button onClick={()=>{ onClose(); onDelete(inv); }} style={{ background:C.redDim,color:C.red,border:`1px solid ${C.red}44`,padding:'8px 18px',borderRadius:8,fontFamily:F,fontSize:13,fontWeight:700,cursor:'pointer' }}><Ic.Delete size={12} color={C.red} style={{marginRight:4,verticalAlign:"middle"}}/> Delete</button>
         </div>
       </div>
     </Overlay>
@@ -5461,7 +5731,7 @@ function InvoicingPage({ allProjects=[], allInvoices=[], addInvoice, updateInvoi
           onConfirm={async()=>{ await updateInvoice(confirmEdit.invoice.id,confirmEdit.patch); setConfirmEdit(null); setEditing(null); }}
           onCancel={()=>setConfirmEdit(null)}>
           <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:"10px 14px",display:"flex",justifyContent:"space-between" }}>
-            <span style={{ color:C.accent,fontFamily:F,fontWeight:700 }}>{confirmEdit.invoice.id||confirmEdit.invoice.invId}</span>
+            <span style={{ color:C.accent,fontFamily:F,fontWeight:700 }}>{fmtInvId(confirmEdit.invoice,allInvoices)}</span>
             <span style={{ color:C.text,fontFamily:F,fontWeight:700 }}>${Number(confirmEdit.patch.amount||confirmEdit.invoice.amount||0).toLocaleString()}</span>
           </div>
         </ConfirmDialog>
@@ -5469,19 +5739,19 @@ function InvoicingPage({ allProjects=[], allInvoices=[], addInvoice, updateInvoi
       {confirmDelete&&(
         <ConfirmDialog
           title="Delete Invoice?"
-          message={`Are you sure you want to delete invoice "${confirmDelete.id||confirmDelete.invId}"? This action cannot be undone.`}
+          message={`Are you sure you want to delete invoice "${fmtInvId(confirmDelete,allInvoices)}"? This action cannot be undone.`}
           confirmLabel="Yes, Delete" variant="delete"
           onConfirm={async()=>{ await removeInvoice(confirmDelete.id); setConfirmDelete(null); }}
           onCancel={()=>setConfirmDelete(null)}>
           <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:"10px 14px",display:"flex",justifyContent:"space-between",alignItems:"center" }}>
-            <span style={{ color:C.accent,fontFamily:F,fontWeight:700 }}>{confirmDelete.id||confirmDelete.invId}</span>
+            <span style={{ color:C.accent,fontFamily:F,fontWeight:700 }}>{fmtInvId(confirmDelete,allInvoices)}</span>
             <span style={{ color:C.text,fontFamily:F,fontWeight:700 }}>${Number(confirmDelete.amount||0).toLocaleString()}</span>
           </div>
         </ConfirmDialog>
       )}
 
       {/* Header */}
-      <PageHeader icon="🧾" title="Invoices" subtitle="All invoices across every project"
+      <PageHeader icon={<Ic.Receipt size={22} color={C.accent}/>} title="Invoices" subtitle="All invoices across every project"
         action={<Btn variant="primary" onClick={()=>setShowAdd(true)}>+ New Invoice</Btn>}/>
 
       {/* Stats */}
@@ -5509,7 +5779,7 @@ function InvoicingPage({ allProjects=[], allInvoices=[], addInvoice, updateInvoi
       {/* Table */}
       <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,overflow:"hidden" }}>
         {filtered.length===0
-          ?<EmptyState icon="🧾" title="No invoices match your filters" sub="Try clearing your filters"/>
+          ?<EmptyState icon={<Ic.Receipt size={36} color={C.muted}/>} title="No invoices match your filters" sub="Try clearing your filters"/>
           :<table style={{ width:"100%",borderCollapse:"collapse",fontFamily:F,fontSize:13 }}>
             <thead><tr style={{ borderBottom:`1px solid ${C.border}`,background:C.surface }}>
               {["Invoice #","Project","Client","Amount","Due Date","Status"].map(h=><th key={h} style={TH()}>{h}</th>)}
@@ -5522,7 +5792,7 @@ function InvoicingPage({ allProjects=[], allInvoices=[], addInvoice, updateInvoi
                   onClick={e=>{ if(e.target.closest('[data-norow]')) return; setSelectedInv(inv); }}
                   style={{ borderBottom:i<filtered.length-1?`1px solid ${C.border}22`:"none",transition:"background .15s",cursor:"pointer" }}
                   onMouseEnter={e=>e.currentTarget.style.background=C.surface} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                  <td style={TD({color:C.accent,fontWeight:700})}>{fmtInvId(inv)}</td>
+                  <td style={TD({color:C.accent,fontWeight:700})}>{fmtInvId(inv,allInvoices)}</td>
                   <td style={TD({color:C.text,fontWeight:600})}>{inv.project||"—"}</td>
                   <td style={TD({color:C.muted})}>{inv.client||"—"}</td>
                   <td style={TD({color:C.text,fontWeight:700})}>${Number(inv.amount||0).toLocaleString()}</td>
@@ -5601,7 +5871,7 @@ function TeamGlobal({ allProjects=[], onLog }){
         <Overlay onClose={()=>setEditingUser(null)}>
           <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,padding:28,width:460 }} onClick={e=>e.stopPropagation()}>
             <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20 }}>
-              <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}>✏️ Edit Team Member</span>
+              <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}><Ic.Pen size={14} color={C.accent} style={{marginRight:7,verticalAlign:"middle"}}/> Edit Team Member</span>
               <button onClick={()=>setEditingUser(null)} style={{ background:'none',border:'none',color:C.muted,fontSize:20,cursor:'pointer' }}>✕</button>
             </div>
             <EditUserForm user={editingUser} onSave={patch=>setConfirmEdit({patch})} onCancel={()=>setEditingUser(null)} COLORS={COLORS}/>
@@ -5618,7 +5888,7 @@ function TeamGlobal({ allProjects=[], onLog }){
       {/* Header */}
       <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24,flexWrap:'wrap',gap:12 }}>
         <div>
-          <h2 style={{ color:C.text,fontSize:20,fontFamily:F,fontWeight:700,margin:0 }}>👥 Team</h2>
+          <h2 style={{ color:C.text,fontSize:20,fontFamily:F,fontWeight:700,margin:0 }}><Ic.Team size={20} color={C.text} style={{marginRight:8,verticalAlign:"middle"}}/> Team</h2>
           <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>{users.length} members · managed via User Management</div>
         </div>
       </div>
@@ -5646,7 +5916,7 @@ function TeamGlobal({ allProjects=[], onLog }){
       {/* Member cards */}
       {filtered.length===0&&(
         <div style={{ background:C.card,border:`2px dashed ${C.border}`,borderRadius:12,padding:'48px 20px',textAlign:'center',color:C.muted,fontFamily:F,fontSize:13 }}>
-          <div style={{ fontSize:36,marginBottom:10 }}>👥</div>
+          <Ic.Team size={36} color={C.muted} style={{marginBottom:10}}/>
           {users.length===0 ? 'No team members yet — add users via Supabase then set their details here' : 'No members match your filter'}
         </div>
       )}
@@ -5670,9 +5940,9 @@ function TeamGlobal({ allProjects=[], onLog }){
                     <Badge status={u.status||'on-site'}/>
                   </div>
                   <div style={{ color:C.muted,fontFamily:F,fontSize:12,display:'flex',gap:14,flexWrap:'wrap' }}>
-                    {u.role&&<span>🔨 {u.role}</span>}
-                    {u.phone&&<span>📞 {u.phone}</span>}
-                    <span>✉️ {u.email}</span>
+                    {u.role&&<span style={{display:"inline-flex",alignItems:"center",gap:3}}><Ic.Wrench size={11} color={C.muted}/> {u.role}</span>}
+                    {u.phone&&<span style={{display:"inline-flex",alignItems:"center",gap:3}}><Ic.Phone size={11} color={C.muted}/> {u.phone}</span>}
+                    <span style={{display:"inline-flex",alignItems:"center",gap:3}}><Ic.Email size={11} color={C.muted}/> {u.email}</span>
                   </div>
                 </div>
                 {/* Task summary */}
@@ -5694,7 +5964,7 @@ function TeamGlobal({ allProjects=[], onLog }){
                 <div style={{ padding:'10px 20px 14px',borderTop:`1px solid ${C.border}22`,background:C.surface }}>
                   {userProjects.length>0&&(
                     <div style={{ display:'flex',gap:6,flexWrap:'wrap',marginBottom:activeTasks.length>0?8:0 }}>
-                      <span style={{ color:C.muted,fontFamily:F,fontSize:11,marginRight:4,alignSelf:'center' }}>🏗</span>
+                      <Ic.Projects size={11} color={C.muted} style={{marginRight:4,alignSelf:"center"}}/>
                       {userProjects.map(p=>(
                         <span key={p} style={{ background:C.accentDim,color:C.accent,border:`1px solid ${C.accentMid}`,borderRadius:99,padding:'2px 10px',fontFamily:F,fontSize:11,fontWeight:600 }}>{p}</span>
                       ))}
@@ -5763,10 +6033,10 @@ function EditUserForm({ user, onSave, onCancel, COLORS }){
 
 // ─── Price Tracking Page ───────────────────────────────────────────────────────
 const MATERIALS = [
-  { id:"steel",    name:"Structural Steel",  unit:"per tonne",   icon:"🔩", color:"#94a3b8", base:780,   seed:[770,775,768,780,792,785,780],  desc:"Hot-rolled structural sections (I-beams, channels)" },
-  { id:"concrete", name:"Ready-Mix Concrete",unit:"per m³",      icon:"🏗", color:"#a78bfa", base:95,    seed:[90,92,91,93,96,94,95],         desc:"C30 standard grade, delivered to site" },
+  { id:"steel",    name:"Structural Steel",  unit:"per tonne",   icon:"steel", color:"#94a3b8", base:780,   seed:[770,775,768,780,792,785,780],  desc:"Hot-rolled structural sections (I-beams, channels)" },
+  { id:"concrete", name:"Ready-Mix Concrete",unit:"per m³",      icon:"concrete", color:"#a78bfa", base:95,    seed:[90,92,91,93,96,94,95],         desc:"C30 standard grade, delivered to site" },
   { id:"cement",   name:"Portland Cement",   unit:"per 50 kg bag",icon:"🪨",color:"#f59e0b", base:28,    seed:[27,27.5,28,27.8,28.5,28,28],   desc:"OPC Grade 42.5, bulk & bagged" },
-  { id:"copper",   name:"Copper",            unit:"per tonne",   icon:"🔶", color:"#f97316", base:9400,  seed:[9100,9250,9200,9400,9500,9450,9400], desc:"Copper cathode, LME grade A" },
+  { id:"copper",   name:"Copper",            unit:"per tonne",   icon:"copper", color:"#f97316", base:9400,  seed:[9100,9250,9200,9400,9500,9450,9400], desc:"Copper cathode, LME grade A" },
   { id:"aluminum", name:"Aluminum",          unit:"per tonne",   icon:"⬜", color:"#38bdf8", base:2450,  seed:[2350,2380,2400,2420,2460,2450,2450], desc:"Primary aluminum ingot, LME" },
   { id:"lumber",   name:"Construction Lumber",unit:"per m³",     icon:"🪵", color:"#84cc16", base:420,   seed:[400,408,410,415,425,420,420],   desc:"Structural softwood, graded timber" },
 ];
@@ -5875,11 +6145,11 @@ function PriceCard({ mat, history, aiAnalysis, onAnalyse, analysing }){
           style={{ background:"transparent",color:analysing?"#a78bfa":"#7a849e",border:`1px solid ${analysing?"#a78bfa44":"#2a3045"}`,borderRadius:6,padding:"6px 14px",fontFamily:F,fontSize:11,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:6,transition:"all .15s" }}
           onMouseEnter={e=>{e.currentTarget.style.color="#a78bfa";e.currentTarget.style.borderColor="#a78bfa44";}}
           onMouseLeave={e=>{e.currentTarget.style.color=analysing?"#a78bfa":"#7a849e";e.currentTarget.style.borderColor=analysing?"#a78bfa44":"#2a3045";}}>
-          {analysing?<><div style={{ width:10,height:10,border:"2px solid #a78bfa",borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Analysing…</>:<>🤖 {expanded&&aiAnalysis?"Hide":"AI Buying Insight"}</>}
+          {analysing?<><div style={{ width:10,height:10,border:"2px solid #a78bfa",borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Analysing…</>:<><Ic.Bot size={11} color="#a78bfa" style={{marginRight:4}}/> {expanded&&aiAnalysis?"Hide":"AI Buying Insight"}</>}
         </button>
         {expanded&&aiAnalysis&&(
           <div style={{ marginTop:10,background:"#181c27",border:"1px solid #a78bfa33",borderRadius:8,padding:"12px 14px" }}>
-            <div style={{ color:"#a78bfa",fontFamily:F,fontSize:11,fontWeight:700,marginBottom:6,display:"flex",alignItems:"center",gap:5 }}>🤖 AI Buying Insight — {mat.name}</div>
+            <div style={{ color:"#a78bfa",fontFamily:F,fontSize:11,fontWeight:700,marginBottom:6,display:"flex",alignItems:"center",gap:5 }}><Ic.Bot size={12} color="#a78bfa"/> AI Buying Insight — {mat.name}</div>
             <div style={{ color:"#c4cae0",fontFamily:F,fontSize:12,lineHeight:1.7,whiteSpace:"pre-wrap" }}>{aiAnalysis}</div>
           </div>
         )}
@@ -5937,13 +6207,13 @@ Provide: 1) Market trend assessment, 2) Whether to buy now / wait / stockpile, 3
       {/* Page header */}
       <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:24,flexWrap:"wrap",gap:12 }}>
         <div>
-          <h2 style={{ color:"#e8eaf0",fontSize:22,fontFamily:F,fontWeight:700,margin:0,display:"flex",alignItems:"center",gap:10 }}>📈 Material Price Tracking</h2>
+          <h2 style={{ color:"#e8eaf0",fontSize:22,fontFamily:F,fontWeight:700,margin:0,display:"flex",alignItems:"center",gap:10 }}><Ic.TrendUp size={22} color="#e8eaf0"/> Material Price Tracking</h2>
           <div style={{ color:"#7a849e",fontFamily:F,fontSize:12,marginTop:4 }}>Live construction material prices for the GCC market · Updated {lastRefresh.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"})}</div>
         </div>
         <div style={{ display:"flex",gap:8,alignItems:"center",flexWrap:"wrap" }}>
           {/* Market sentiment pill */}
           <div style={{ background:bullCount>=3?"#22c55e1a":"#ef44441a",border:`1px solid ${bullCount>=3?"#22c55e44":"#ef444444"}`,borderRadius:8,padding:"8px 14px",display:"flex",alignItems:"center",gap:7 }}>
-            <span style={{ fontSize:14 }}>{bullCount>=3?"📈":"📉"}</span>
+            <span style={{ fontSize:14 }}>{bullCount>=3?<Ic.TrendUp size={14} color={C.green}/>:<Ic.TrendDown size={14} color={C.red}/>}</span>
             <span style={{ color:bullCount>=3?"#22c55e":"#ef4444",fontFamily:F,fontWeight:700,fontSize:12 }}>{bullCount>=3?"Market Rising":"Market Declining"}</span>
             <span style={{ color:"#7a849e",fontFamily:F,fontSize:11 }}>{bullCount}/{MATERIALS.length} up today</span>
           </div>
@@ -6014,7 +6284,7 @@ Provide: 1) Market trend assessment, 2) Whether to buy now / wait / stockpile, 3
                     <td style={{ padding:"13px 16px",minWidth:160 }}><SparkLine data={h.slice(-14)} color={m.color} width={140} height={36}/></td>
                     <td style={{ padding:"13px 16px" }}>
                       <button onClick={()=>{ requestAnalysis(m.id); }} disabled={!!analysing[m.id]} style={{ background:"#a78bfa1a",color:"#a78bfa",border:"1px solid #a78bfa33",borderRadius:6,padding:"5px 12px",fontFamily:F,fontSize:11,fontWeight:700,cursor:analysing[m.id]?"not-allowed":"pointer",whiteSpace:"nowrap" }}>
-                        {analysing[m.id]?"…":"🤖 Analyse"}
+                        {analysing[m.id]?"…":<><Ic.Bot size={11} color={C.purple} style={{marginRight:4}}/> Analyse</>}
                       </button>
                       {analyses[m.id]&&(
                         <div style={{ marginTop:8,background:"#181c27",border:"1px solid #a78bfa22",borderRadius:7,padding:"8px 10px",maxWidth:260 }}>
@@ -6292,7 +6562,7 @@ async function generatePdfBlob(metrics, report){
 
       cx2=ML+2;
       doc.setFont("helvetica","bold"); doc.setFontSize(7.5); rgb(BLUE);
-      doc.text(inv.invId||String(inv.id), cx2, y+5.5); cx2+=cols[0];
+      doc.text(fmtInvId(inv,allInvoices||[]), cx2, y+5.5); cx2+=cols[0];
 
       const descTxt = inv.desc||"—";
       doc.setFont("helvetica","normal"); rgb(BDARK);
@@ -6573,7 +6843,7 @@ Address the contractor as "the Company". Flag overdue amounts if any.`;
       {/* Header */}
       <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:28 }}>
         <div>
-          <h2 style={{ color:C.text,fontSize:22,fontFamily:F,fontWeight:800,margin:0,display:"flex",alignItems:"center",gap:10 }}>🧾 Accountant</h2>
+          <h2 style={{ color:C.text,fontSize:22,fontFamily:F,fontWeight:800,margin:0,display:"flex",alignItems:"center",gap:10 }}><Ic.Receipt size={20} color={C.accent} style={{marginRight:8}}/> Accountant</h2>
           <div style={{ color:C.muted,fontFamily:F,fontSize:13,marginTop:4 }}>AI-powered financial reports · auto-exports as PDF</div>
         </div>
         {report&&(
@@ -6615,22 +6885,22 @@ Address the contractor as "the Company". Flag overdue amounts if any.`;
               ? <><div style={{ width:14,height:14,border:"2px solid",borderColor:C.accent,borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Generating Report…</>
               : pdfBuilding
               ? <><div style={{ width:14,height:14,border:"2px solid",borderColor:C.accent,borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Building PDF…</>
-              : <>📊 Generate &amp; Download PDF</>}
+              : <><Ic.BarChart size={14} color="#fff" style={{marginRight:6,verticalAlign:"middle"}}/> Generate &amp; Download PDF</>}
           </button>
         </div>
-        {err&&<div style={{ color:C.red,fontFamily:F,fontSize:12,marginTop:12,padding:"8px 12px",background:C.redDim,borderRadius:6 }}>⚠ {err}</div>}
+        {err&&<div style={{ color:C.red,fontFamily:F,fontSize:12,marginTop:12,padding:"8px 12px",background:C.redDim,borderRadius:6 }}><Ic.Warning size={12} color={C.red} style={{marginRight:5,verticalAlign:"middle"}}/>{err}</div>}
       </div>
 
       {/* Live metrics cards */}
       {metrics&&(
         <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(175px,1fr))",gap:12,marginBottom:24 }}>
           {[
-            { label:"Contract Value",       value:fmtS(metrics.projectValue),    icon:"🏗", color:C.blue,   dim:C.blueDim   },
-            { label:"Total Invoiced",       value:fmtS(metrics.totalInvoiced),   icon:"🧾", color:C.accent, dim:C.accentDim },
-            { label:"Payments Received",    value:fmtS(metrics.totalReceived),   icon:"💰", color:C.green,  dim:C.greenDim  },
+            { label:"Contract Value",       value:fmtS(metrics.projectValue),    icon:<Ic.Projects size={18} color={C.blue}/>, color:C.blue,   dim:C.blueDim   },
+            { label:"Total Invoiced",       value:fmtS(metrics.totalInvoiced),   icon:<Ic.Receipt size={18} color={C.accent}/>, color:C.accent, dim:C.accentDim },
+            { label:"Payments Received",    value:fmtS(metrics.totalReceived),   icon:<Ic.Payments size={18} color={C.green}/>, color:C.green,  dim:C.greenDim  },
             { label:"Outstanding Invoices", value:fmtS(metrics.remainToPayInv),  icon:"⏳", color:metrics.totalOverdue>0?C.red:C.muted, dim:metrics.totalOverdue>0?C.redDim:C.surface },
-            { label:"Still to Collect",     value:fmtS(metrics.remainToReceive), icon:"📥", color:C.purple, dim:C.purpleDim },
-            { label:"Gross Profit Est.",    value:fmtS(metrics.grossProfit),     icon:"📈", color:metrics.grossProfit>=0?C.green:C.red, dim:metrics.grossProfit>=0?C.greenDim:C.redDim },
+            { label:"Still to Collect",     value:fmtS(metrics.remainToReceive), icon:<Ic.Inbox size={18} color={C.purple}/>, color:C.purple, dim:C.purpleDim },
+            { label:"Gross Profit Est.",    value:fmtS(metrics.grossProfit),     icon:<Ic.TrendUp size={18} color={metrics.grossProfit>=0?C.green:C.red}/>, color:metrics.grossProfit>=0?C.green:C.red, dim:metrics.grossProfit>=0?C.greenDim:C.redDim },
           ].map(card=>(
             <div key={card.label} style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"16px 18px" }}>
               <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:8 }}>
@@ -6731,7 +7001,7 @@ Address the contractor as "the Company". Flag overdue amounts if any.`;
                       const stC={paid:C.green,overdue:C.red,pending:C.accent};
                       return(
                         <tr key={inv.id||i} style={{ borderBottom:i<metrics.invoices.length-1?`1px solid ${C.border}22`:"none" }}>
-                          <td style={{ color:C.accent,padding:"9px 14px",fontWeight:700 }}>{inv.invId||inv.id}</td>
+                          <td style={{ color:C.accent,padding:"9px 14px",fontWeight:700 }}>{fmtInvId(inv,allInvoices)}</td>
                           <td style={{ color:C.text,padding:"9px 14px",maxWidth:170,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{inv.desc||"—"}</td>
                           <td style={{ color:C.text,padding:"9px 14px",fontWeight:700 }}>{fmt(inv.amount)}</td>
                           <td style={{ color:C.muted,padding:"9px 14px" }}>{inv.dueFmt||inv.dueDate||"—"}</td>
@@ -6785,7 +7055,7 @@ Address the contractor as "the Company". Flag overdue amounts if any.`;
           {/* AI Narrative */}
           <div style={{ padding:"24px 32px" }}>
             <div style={{ display:"flex",alignItems:"center",gap:9,marginBottom:18 }}>
-              <div style={{ width:28,height:28,background:C.purpleDim,borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14 }}>🤖</div>
+              <div style={{ width:28,height:28,background:C.purpleDim,borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center" }}><Ic.Bot size={15} color={C.purple}/></div>
               <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:13,textTransform:"uppercase",letterSpacing:.5 }}>Accountant's Analysis</div>
               <div style={{ color:C.muted,fontFamily:F,fontSize:10,marginLeft:"auto" }}>AI-generated · {report.generatedAt}</div>
             </div>
@@ -6798,7 +7068,7 @@ Address the contractor as "the Company". Flag overdue amounts if any.`;
               ))}
             </div>
             <div style={{ marginTop:20,padding:"11px 16px",background:C.purpleDim,borderRadius:8,display:"flex",alignItems:"center",gap:9 }}>
-              <span>⚠️</span>
+              <Ic.Warning size={16} color={C.accent}/>
               <span style={{ color:C.muted,fontFamily:F,fontSize:11 }}>AI-generated using BuildFlow data. For formal auditing or regulatory submission, please have this reviewed by a licensed accountant.</span>
             </div>
           </div>
@@ -6808,7 +7078,7 @@ Address the contractor as "the Company". Flag overdue amounts if any.`;
       {/* Empty state */}
       {!report&&!busy&&(
         <div style={{ background:C.card,border:`2px dashed ${C.border}`,borderRadius:14,padding:"60px 40px",textAlign:"center" }}>
-          <div style={{ fontSize:52,marginBottom:16 }}>📊</div>
+          <Ic.BarChart size={52} color={C.muted} style={{marginBottom:16}}/>
           <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18,marginBottom:8 }}>Ready to Generate</div>
           <div style={{ color:C.muted,fontFamily:F,fontSize:13,maxWidth:400,margin:"0 auto",lineHeight:1.65 }}>
             Select a project and click <strong style={{ color:C.accent }}>Generate &amp; Download PDF</strong>.<br/>
@@ -6830,13 +7100,13 @@ function ActivityLogPage({ globalLog=[] }){
 
   const iconFilters = [
     { v:'all',  l:'All'      },
-    { v:'🏗',   l:'Projects' },
-    { v:'🧾',   l:'Invoices' },
-    { v:'💰',   l:'Payments' },
-    { v:'✅',   l:'Tasks'    },
-    { v:'👷',   l:'Team'     },
-    { v:'✏️',   l:'Edits'    },
-    { v:'🗑️',  l:'Deleted'  },
+    { v:'projects', l:'Projects' },
+    { v:'invoices', l:'Invoices' },
+    { v:'payments', l:'Payments' },
+    { v:'tasks',    l:'Tasks'    },
+    { v:'team',     l:'Team'     },
+    { v:'edits',    l:'Edits'    },
+    { v:'deleted',  l:'Deleted'  },
   ];
 
   const filtered = globalLog.filter(e => {
@@ -6892,16 +7162,16 @@ function ActivityLogPage({ globalLog=[] }){
 
             {/* Icon badge */}
             <div style={{ width:36,height:36,borderRadius:9,background:C.surface,border:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,flexShrink:0,marginTop:1 }}>
-              {e.icon||"📋"}
+              <LogIcon ic={e.icon||"●"} size={13} color={C.muted}/>
             </div>
 
             {/* Content */}
             <div style={{ flex:1,minWidth:0 }}>
               <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:13,lineHeight:1.3,marginBottom:3 }}>{e.action}</div>
               <div style={{ display:"flex",gap:14,flexWrap:"wrap" }}>
-                {e.detail&&<span style={{ color:C.muted,fontFamily:F,fontSize:11 }}>🏗 {e.detail}</span>}
-                <span style={{ color:C.muted,fontFamily:F,fontSize:11 }}>👤 {e.user||"Unknown"}</span>
-                <span style={{ color:C.muted,fontFamily:F,fontSize:11 }}>🕐 {e.time}</span>
+                {e.detail&&<span style={{ color:C.muted,fontFamily:F,fontSize:11,display:"inline-flex",alignItems:"center",gap:3 }}><Ic.Projects size={10} color={C.muted}/> {e.detail}</span>}
+                <span style={{ color:C.muted,fontFamily:F,fontSize:11,display:"inline-flex",alignItems:"center",gap:3 }}><Ic.Person size={10} color={C.muted}/> {e.user||"Unknown"}</span>
+                <span style={{ color:C.muted,fontFamily:F,fontSize:11,display:"inline-flex",alignItems:"center",gap:3 }}><Ic.Clock size={10} color={C.muted}/> {e.time}</span>
               </div>
             </div>
 
@@ -6993,7 +7263,7 @@ function AppInner({ session, profile, onLogout }){
   // Wrapped addInvoice that also logs to global log
   const handleAddInvoice=async(inv)=>{
     await addInvoice(inv);
-    await pushGlobal({ id:Date.now(),action:`Invoice ${inv.invId||inv.id} added`,detail:`${inv.project||""} · $${Number(inv.amount||0).toLocaleString()}`,user:profile?.full_name||"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"🧾" });
+    await pushGlobal({ id:Date.now(),action:`Invoice ${fmtInvId(inv)} added`,detail:`${inv.project||""} · $${Number(inv.amount||0).toLocaleString()}`,user:profile?.full_name||"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"🧾" });
   };
   const handleUpdateInvoice=async(id,patch)=>{
     await updateInvoice(id,patch);
@@ -7111,7 +7381,7 @@ function AppInner({ session, profile, onLogout }){
         <div style={{ padding:"14px 18px",borderTop:`1px solid ${C.border}` }}>
           {/* Theme toggle */}
           <button onClick={toggleTheme} style={{ display:"flex",alignItems:"center",gap:8,width:"100%",padding:"8px 10px",borderRadius:8,background:C.accentDim,border:`1px solid ${C.accentMid}`,cursor:"pointer",marginBottom:12,transition:"all .2s" }} title={isDark?"Switch to Light Mode":"Switch to Dark Mode"}>
-            <span style={{ fontSize:16 }}>{isDark?"☀️":"🌙"}</span>
+            <span style={{ fontSize:16 }}>{isDark?<Ic.Sun size={15} color={C.muted}/>:<Ic.Moon size={15} color={C.muted}/>}</span>
             <span style={{ color:C.accent,fontFamily:F,fontSize:12,fontWeight:700 }}>{isDark?"Light Mode":"Dark Mode"}</span>
           </button>
           {/* User */}

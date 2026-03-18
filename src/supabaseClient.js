@@ -140,7 +140,7 @@ const from = (table) => {
         _neq.forEach(f => { url += `&${f}` })
         if (_order) url += `&order=${_order}`
         if (_single) url += '&limit=1'
-        const res = await fetch(url, { headers: headers({ 'Accept': 'application/json' }) })
+        const res = await fetch(url, { headers: await headersAsync({ 'Accept': 'application/json' }) })
         const data = await res.json()
         if (!res.ok) return resolve({ data: null, error: data })
         const result = _single ? (Array.isArray(data) ? data[0]||null : data) : data
