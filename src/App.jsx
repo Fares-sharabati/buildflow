@@ -7335,7 +7335,7 @@ function AppInner({ session, profile, onLogout }){
     if(tab==="reports")    return <ReportPage tasks={tasks} allProjects={allProjects} allInvoices={allInvoices}/>;
     if(tab==="prices")     return <PriceTrackingPage/>;
     if(tab==="accountant") return <AccountantPage allProjects={allProjects} allInvoices={allInvoices} payments={payments}/>;
-    if(tab==="users")     return <UsersPage currentUser={session.user} profile={profile}/>;
+    if(tab==="users"){    if(profile?.role!=="superadmin"&&profile?.role!=="admin") return <div style={{ color:C.muted,fontFamily:F,fontSize:14,padding:"40px 0",textAlign:"center" }}>Access denied.</div>; return <UsersPage currentUser={session.user} profile={profile}/>; }
     if(tab==="activity")  return <ActivityLogPage globalLog={globalLog}/>;
     return <div style={{ color:C.muted,fontFamily:F,fontSize:14,padding:"40px 0",textAlign:"center" }}>Coming soon…</div>;
   };

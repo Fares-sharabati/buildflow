@@ -279,6 +279,10 @@ export const dbProfiles = {
   // Update role for a user — RLS enforces only superadmins can do this
   updateRole: (userId, role) =>
     supabase.from('profiles').update({ role }).eq('id', userId),
+
+  // Fetch all profiles in the same company — used by UsersPage
+  getByCompany: (companyId) =>
+    supabase.from('profiles').select('*').eq('company_id', companyId),
 }
 
 // ── Helper: map DB row → app shape ────────────────────────────────────────────

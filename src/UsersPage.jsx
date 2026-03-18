@@ -1,6 +1,5 @@
 // @ts-nocheck
 import { useState, useEffect } from 'react'
-import { supabase } from './supabaseClient'
 import { dbProfiles } from './db.js'
 
 const F = `'Inter','Segoe UI',sans-serif`
@@ -45,10 +44,7 @@ export default function UsersPage({ currentUser, profile }) {
 
   const loadUsers = async () => {
     setLoading(true)
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('company_id', profile.company_id)
+    const { data, error } = await dbProfiles.getByCompany(profile.company_id)
     if (!error && data) {
       const order = { superadmin:0, admin:1, user:2 }
       data.sort((a,b) => {
