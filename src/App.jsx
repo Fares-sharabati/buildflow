@@ -69,59 +69,7 @@ const Ic = {
   Reports:   ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
   Prices:    ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>,
   Accountant:({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><line x1="16" y1="8" x2="8" y2="8"/><line x1="16" y1="12" x2="8" y2="12"/><line x1="11" y1="16" x2="8" y2="16"/></svg>,
-  // ── Module icons ───────────────────────────────────────────────────────────
-  Blueprint: ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>,
-  Contract:  ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><path d="M8 9h1"/><path d="M12 21v-4"/><path d="M9 21h6"/></svg>,
-  // ── General purpose ────────────────────────────────────────────────────────
-  Building:  ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M9 3v18"/><path d="M3 9h6"/><path d="M3 15h6"/><path d="M12 9h9"/><path d="M12 15h9"/></svg>,
-  Person:    ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>,
-  MapPin:    ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M12 2a7 7 0 0 1 7 7c0 4.9-7 13-7 13S5 13.9 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>,
-  Comment:   ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>,
-  Eye:       ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>,
-  Clock:     ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
-  Upload:    ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>,
-  Download:  ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><polyline points="8 17 12 21 16 17"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"/></svg>,
-  Settings:  ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>,
-  Sun:       ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>,
-  Moon:      ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>,
-  List:      ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>,
-  BarChart:  ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/><line x1="2" y1="20" x2="22" y2="20"/></svg>,
-  TrendUp:   ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>,
-  TrendDown: ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>,
-  Wrench:    ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>,
-  Truck:     ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>,
-  Inbox:     ({size=16,color="currentColor",style={}})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}><polyline points="22 13 16 13 14 16 10 16 8 13 2 13"/><path d="M5.45 5.11L2 13v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-7.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>,
 };
-
-// ─── LogIcon: renders activity log icon strings as SVG components ─────────────
-function LogIcon({ ic, size=14, color }){
-  const c = color||"currentColor";
-  const map = {
-    "inv":  <Ic.Receipt  size={size} color={c}/>,
-    "🧾":   <Ic.Receipt  size={size} color={c}/>,
-    "del":  <Ic.Delete   size={size} color={c}/>,
-    "🗑️":  <Ic.Delete   size={size} color={c}/>,
-    "🗑":   <Ic.Delete   size={size} color={c}/>,
-    "edit": <Ic.Pen      size={size} color={c}/>,
-    "✏️":  <Ic.Pen      size={size} color={c}/>,
-    "✏":   <Ic.Pen      size={size} color={c}/>,
-    "PAY":  <Ic.Payments size={size} color={c}/>,
-    "pay":  <Ic.Payments size={size} color={c}/>,
-    "💰":   <Ic.Payments size={size} color={c}/>,
-    "💳":   <Ic.Payments size={size} color={c}/>,
-    "🏗":   <Ic.Projects size={size} color={c}/>,
-    "log":  <Ic.List     size={size} color={c}/>,
-    "📋":   <Ic.List     size={size} color={c}/>,
-    "👷":   <Ic.Team     size={size} color={c}/>,
-    "📐":   <Ic.Blueprint size={size} color={c}/>,
-    "📜":   <Ic.Contract size={size} color={c}/>,
-    "📷":   <Ic.Photo    size={size} color={c}/>,
-    "📝":   <Ic.Note     size={size} color={c}/>,
-    "📅":   <Ic.Calendar size={size} color={c}/>,
-    "●":    <Ic.List     size={size} color={c}/>,
-  };
-  return map[ic] || <Ic.List size={size} color={c}/>;
-}
 
 // ─── Storage wrapper ───────────────────────────────────────────────────────────
 const storage = {
@@ -233,17 +181,12 @@ function fmtCur(n, cur="AED", dec=2){
 }
 function fmtCurS(n, cur="AED"){ return fmtCur(n, cur, 0); }
 
-// Unified invoice number generator — sequential, clean #NNN format
+// Unified invoice number generator — always sequential across the whole system
 function nextInvId(allInvoices=[]){
   const max = Math.max(0, ...allInvoices.map(i=>{
-    const raw = String(i.invId||i.iid||"");
-    // Only count clean short IDs like #001, INV-001, or plain numbers <= 9999
-    if(/^#(\d{1,4})$/.test(raw))  return parseInt(raw.slice(1));
-    if(/^INV-(\d+)$/i.test(raw))  return parseInt(raw.replace(/[^0-9]/g,""));
-    if(/^\d{1,4}$/.test(raw))     return parseInt(raw);
-    return 0; // skip timestamps / UUIDs
+    return parseInt(String(i.id||i.invId||"").replace(/[^0-9]/g,""))||0;
   }));
-  return "#"+String(max+1).padStart(3,"0");
+  return "INV-"+String(max+1).padStart(3,"0");
 }
 
 const F = `'Inter','Segoe UI',sans-serif`;
@@ -344,14 +287,12 @@ function useFiles(key) {
       if (!alive) return;
       if (!error && data) {
         setFiles(data.map(r => ({
-          id:          r.id,
-          name:        r.name,
-          size:        r.size,
-          url:         r.url,
+          id: r.id,
+          name: r.name,
+          size: r.size,
+          url: r.url,
           storagePath: r.storage_path,
-          uploadedAt:  r.uploaded_at ? new Date(r.uploaded_at).toLocaleDateString() : '',
-          title:       r.title       || '',
-          description: r.description || '',
+          uploadedAt: r.uploaded_at ? new Date(r.uploaded_at).toLocaleDateString() : '',
         })));
       }
       setReady(true);
@@ -368,15 +309,13 @@ function useFiles(key) {
     if (error) { console.error('Upload failed:', error); return; }
     // Save metadata to project_files table
     await dbFiles.add({
-      company_id:  cid,
-      project_id:  projectId,
+      company_id: cid,
+      project_id: projectId,
       type,
-      name:        file.name,
-      size:        file.size,
-      url:         data.publicUrl,
+      name: file.name,
+      size: file.size,
+      url: data.publicUrl,
       storage_path: path,
-      title:       file.title       || '',
-      description: file.description || '',
     });
     bump(v => v + 1);
   };
@@ -478,14 +417,9 @@ function useProjects(){
   useEffect(()=>{ load(); const t=setInterval(load,POLL_MS); return()=>clearInterval(t); },[load]);
   return{
     allProjects:projects||[], extraProjects:projects||[], ready:projects!==null,
-    addProject:    async(p)=>{ await dbProjects.add(p); await load(); },
-    updateProject: async(id,patch)=>{
-      // Write to DB
-      await dbProjects.update(id,patch);
-      // Patch local state immediately — DO NOT reload (causes race condition)
-      setProjects(prev => prev ? prev.map(p => p.id===id ? {...p,...patch} : p) : prev);
-    },
-    deleteProject: async(id)=>{ await dbProjects.delete(id); await load(); },
+    addProject:    async(p)=>{ await dbProjects.add(p); load(); },
+    updateProject: async(id,patch)=>{ await dbProjects.update(id,patch); await load(); },
+    deleteProject: async(id)=>{ await dbProjects.delete(id); load(); },
     refreshProjects: load,
   };
 }
@@ -565,42 +499,6 @@ function Overlay({ children, onClose }){
   );
 }
 
-// ─── DateInput — consistent calendar picker for all date fields ──────────────
-// Wraps native <input type="date"> with a visible calendar button.
-// Props mirror a normal input: value, onChange, style, placeholder, required.
-// onChange fires with a synthetic event so existing handlers work unchanged.
-function DateInput({ value, onChange, style={}, placeholder, required, disabled }){
-  const ref = React.useRef();
-  const open = () => { try{ ref.current?.showPicker(); }catch{ ref.current?.focus(); } };
-  return(
-    <div style={{ position:"relative", display:"flex", alignItems:"center" }}>
-      <input
-        ref={ref}
-        type="date"
-        value={value||""}
-        onChange={onChange}
-        required={required}
-        disabled={disabled}
-        placeholder={placeholder}
-        style={{ ...style, paddingRight:38, colorScheme:"dark", width:"100%" }}
-      />
-      <button
-        type="button"
-        onClick={open}
-        disabled={disabled}
-        tabIndex={-1}
-        style={{ position:"absolute", right:8, background:"transparent", border:"none",
-          cursor:disabled?"default":"pointer", padding:"2px 4px", lineHeight:1,
-          color:C.muted, fontSize:15, display:"flex", alignItems:"center",
-          opacity:disabled?0.4:0.75, transition:"opacity .15s" }}
-        onMouseEnter={e=>{ if(!disabled) e.currentTarget.style.opacity="1"; }}
-        onMouseLeave={e=>{ e.currentTarget.style.opacity=disabled?"0.4":"0.75"; }}
-        aria-label="Open calendar"
-      ><Ic.Calendar size={13} color={C.muted}/></button>
-    </div>
-  );
-}
-
 /** Reusable confirmation dialog */
 function ConfirmDialog({ title,message,children,onConfirm,onCancel,confirmLabel="Confirm",variant="delete" }){
   const color = variant==="delete"?C.red : variant==="edit"?C.blue : C.accent;
@@ -609,7 +507,7 @@ function ConfirmDialog({ title,message,children,onConfirm,onCancel,confirmLabel=
       <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,padding:32,width:420,maxWidth:"95vw" }}>
         <div style={{ display:"flex",alignItems:"center",gap:12,marginBottom:16 }}>
           <div style={{ width:40,height:40,borderRadius:10,background:color+"1a",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0 }}>
-            {variant==="delete"?<Ic.Delete size={13}/>:variant==="edit"?<Ic.Pen size={13}/>:<Ic.Warning size={13}/>}
+            {variant==="delete"?"🗑️":variant==="edit"?"✏️":"⚠️"}
           </div>
           <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}>{title}</div>
         </div>
@@ -619,69 +517,6 @@ function ConfirmDialog({ title,message,children,onConfirm,onCancel,confirmLabel=
           <button onClick={onCancel} style={{ background:"transparent",color:C.muted,border:`1px solid ${C.border}`,padding:"9px 20px",borderRadius:8,fontFamily:F,fontSize:13,cursor:"pointer" }}>Cancel</button>
           <button onClick={onConfirm} style={{ background:color,color:"#fff",border:"none",padding:"9px 20px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer" }}>{confirmLabel}</button>
         </div>
-      </div>
-    </Overlay>
-  );
-}
-
-// ─── Activity Log Detail Modal ────────────────────────────────────────────────
-function ActivityLogModal({ entry, onClose }){
-  if(!entry) return null;
-
-  const iconColors = {
-    '🧾': C.accent, '💰': C.green, '✏️': C.blue, '🗑️': C.red,
-    '🏗': C.purple, '✅': C.green, '👷': C.blue, '📋': C.muted,
-  };
-  const iconBg = iconColors[entry.icon] || C.accent;
-
-  // Full date from createdAt, falling back to short display time
-  const fullDate = entry.createdAt
-    ? new Date(entry.createdAt).toLocaleString('en-US', {
-        weekday:'long', year:'numeric', month:'long',
-        day:'numeric', hour:'numeric', minute:'2-digit', hour12:true
-      })
-    : entry.time || '—';
-
-  const Field = ({ icon, label, value, color }) => value ? (
-    <div style={{ display:"flex",gap:12,alignItems:"flex-start",padding:"11px 14px",background:C.surface,borderRadius:9,border:`1px solid ${C.border}` }}>
-      <div style={{ width:30,textAlign:"center",fontSize:16,flexShrink:0 }}>{icon}</div>
-      <div style={{ flex:1,minWidth:0 }}>
-        <div style={{ color:C.muted,fontFamily:F,fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:2 }}>{label}</div>
-        <div style={{ color:color||C.text,fontFamily:F,fontSize:13,fontWeight:600,wordBreak:"break-word" }}>{value}</div>
-      </div>
-    </div>
-  ) : null;
-
-  return(
-    <Overlay onClose={onClose}>
-      <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,padding:28,width:480,maxWidth:"95vw",boxShadow:"0 24px 60px rgba(0,0,0,.5)" }}>
-
-        {/* Header */}
-        <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:20 }}>
-          <div style={{ display:"flex",alignItems:"center",gap:12 }}>
-            <div style={{ width:44,height:44,borderRadius:12,background:iconBg+"22",border:`1px solid ${iconBg}44`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0 }}>
-              <LogIcon ic={entry.icon||"log"} size={13} color={C.muted}/>
-            </div>
-            <div>
-              <div style={{ color:C.muted,fontFamily:F,fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.06em",marginBottom:3 }}>Activity Detail</div>
-              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:16,lineHeight:1.3,maxWidth:300 }}>{entry.action||"—"}</div>
-            </div>
-          </div>
-          <button onClick={onClose} style={{ background:"transparent",border:"none",color:C.muted,fontSize:20,cursor:"pointer",lineHeight:1,padding:4,flexShrink:0 }}>✕</button>
-        </div>
-
-        <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
-          <Field icon={<Ic.Person size={13} color={C.muted}/>} label="Performed by"    value={entry.user||"Unknown"} />
-          <Field icon={<Ic.Clock size={13} color={C.muted}/>} label="Date & Time"     value={fullDate} />
-          <Field icon={<Ic.Projects size={13} color={C.muted}/>} label="Related Project" value={entry.detail||null} />
-        </div>
-
-        <button onClick={onClose}
-          style={{ marginTop:20,width:"100%",background:"transparent",border:`1px solid ${C.border}`,color:C.muted,padding:"9px 0",borderRadius:8,fontFamily:F,fontSize:13,cursor:"pointer",transition:"all .15s" }}
-          onMouseEnter={e=>{e.currentTarget.style.borderColor=C.accent;e.currentTarget.style.color=C.text;}}
-          onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.color=C.muted;}}>
-          Close
-        </button>
       </div>
     </Overlay>
   );
@@ -733,7 +568,7 @@ function InlineFormShell({ header,accent,saveLabel="Save",onSave,onCancel,err,sa
         <button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:20,cursor:"pointer",lineHeight:1 }}>✕</button>
       </div>
       {children}
-      {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"8px 12px",color:C.red,fontFamily:F,fontSize:12,marginTop:10 }}><Ic.Warning size={12} color={C.red} style={{marginRight:5,verticalAlign:"middle"}}/>{err}</div>}
+      {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"8px 12px",color:C.red,fontFamily:F,fontSize:12,marginTop:10 }}>⚠ {err}</div>}
       <div style={{ display:"flex",gap:10,marginTop:16,justifyContent:"flex-end" }}>
         <button onClick={onCancel} disabled={saving} style={{ background:"transparent",color:C.muted,border:`1px solid ${C.border}`,padding:"8px 18px",borderRadius:8,fontFamily:F,fontSize:13,cursor:saving?"not-allowed":"pointer",opacity:saving?0.5:1 }}>Cancel</button>
         <button onClick={saving?undefined:onSave} disabled={saving} style={{ background:saving?"transparent":accent||C.accent,color:saving?accent||C.accent:"#000",border:saving?`1px solid ${accent||C.accent}44`:"none",padding:"8px 20px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:saving?"not-allowed":"pointer",display:"flex",alignItems:"center",gap:8,minWidth:100,justifyContent:"center" }}>
@@ -775,8 +610,20 @@ function RowBtn({ type, onClick, children }){
 
 /** Wrapper div that spaces a group of RowBtns consistently */
 function RowActions({ children }){
-  return <div style={{ display:"flex", gap:5, alignItems:"center" }}>{children}</div>;
+  return <div style={{ display:"flex", gap:5, alignItems:"center", justifyContent:"center" }}>{children}</div>;
 }
+
+// ── Shared Actions column styles — used in every table ──────────────────────
+const ACT_TH = {
+  color:C.muted, fontWeight:700, fontSize:12, fontFamily:F,
+  width:150, minWidth:150, maxWidth:150,
+  padding:"10px 8px", textAlign:"center",
+  whiteSpace:"nowrap",
+};
+const ACT_TD = {
+  width:150, minWidth:150, maxWidth:150,
+  padding:"8px 8px", verticalAlign:"middle", textAlign:"center",
+};
 
 /**
  * Btn — full-size button for page headers and modals.
@@ -831,7 +678,7 @@ function PageHeader({ icon, title, subtitle, action }){
 }
 
 /** Consistent empty state for tables and lists */
-function EmptyState({ icon=<Ic.Inbox size={36} color={C.muted}/>, title="Nothing here yet", sub, style:xs={} }){
+function EmptyState({ icon="📭", title="Nothing here yet", sub, style:xs={} }){
   return(
     <div style={{ padding:"52px 20px", textAlign:"center", color:C.muted, fontFamily:F, ...xs }}>
       {icon&&<div style={{ fontSize:36, marginBottom:10 }}>{icon}</div>}
@@ -847,62 +694,22 @@ const TH = (extra={}) => ({ color:C.muted, fontWeight:700, padding:"12px 16px", 
 /** Standard table data cell style */
 const TD = (extra={}) => ({ padding:"13px 16px", fontFamily:F, fontSize:13, ...extra });
 
-// ── Actions column — shared between <th> and <td> so header and buttons are identical ──
-// Fixed width + center alignment means "Actions" text and button group share the same axis
-const ACT_COL_W    = 140;
-const ACT_COL_CELL = { width:ACT_COL_W, minWidth:ACT_COL_W, maxWidth:ACT_COL_W, padding:0, verticalAlign:"middle" };
-const ACT_COL_INNER = {
-  display:"flex", alignItems:"center", justifyContent:"center",
-  gap:6, width:"100%", padding:"12px 8px", boxSizing:"border-box",
-};
-const ACT_COL_INNER_TH = {
-  ...ACT_COL_INNER,
-  color:C.muted, fontWeight:700, fontSize:12, fontFamily:F,
-};
-
-/** Human-readable invoice number — always returns clean #NNN.
- *  If invId is already clean (#NNN / INV-NNN / plain ≤4-digit), uses it.
- *  Otherwise falls back to the invoice's 1-based position in allInvoices
- *  (sorted ascending by created_at / id so order is stable).
- *  Pass allInvoices whenever available to guarantee no "INV-???" fallback.
- */
-const fmtInvId = (inv, allInvoices=[]) => {
-  const raw = String(inv?.invId || inv?.iid || inv?.inv_id || "");
-  // Already a clean short ID
-  if(/^#\d+$/.test(raw))        return raw;
-  if(/^INV-\d+$/i.test(raw))    return raw.toUpperCase();
-  if(/^\d{1,4}$/.test(raw))     return "#"+raw.padStart(3,"0");
-
-  // Bad invId (UUID / 13-digit timestamp / empty) — derive from position
-  if(allInvoices.length > 0){
-    // Sort by id (Supabase UUIDs sort chronologically, timestamps do too)
-    const sorted = [...allInvoices].sort((a,b)=>{
-      const ai = String(a.id||a.invId||"");
-      const bi = String(b.id||b.invId||"");
-      return ai < bi ? -1 : ai > bi ? 1 : 0;
-    });
-    const pos = sorted.findIndex(i => i.id === inv?.id || i.invId === inv?.invId);
-    if(pos >= 0) return "#"+String(pos+1).padStart(3,"0");
-  }
-
-  // Last resort: hash invId / id into a stable short number
-  const fallback = String(inv?.invId || inv?.id || "");
-  if(fallback){
-    let h = 0;
-    for(let i=0; i<fallback.length; i++) h = (h*31 + fallback.charCodeAt(i)) & 0x7fffffff;
-    return "#"+String((h % 9000) + 1000); // 4-digit stable hash, never "???"
-  }
-  return "#000";
+/** Human-readable invoice number: prefers inv_id / invId over raw UUID */
+const fmtInvId = (inv) => {
+  const id = inv?.invId || inv?.iid || inv?.inv_id || inv?.id || "";
+  // If it looks like a UUID (8-4-4-4-12 hex), fall back to "INV-???"
+  if(/^[0-9a-f]{8}-[0-9a-f]{4}-/i.test(id)) return "INV-???";
+  return id || "—";
 };
 
 /** Resolve a stored invRef to a human-readable invoice number */
 const resolveInvRef = (invRef, allInvoices=[]) => {
   if(!invRef) return "—";
-  // Already a clean display number (#001, INV-001, short text)
-  if(/^#\d+$/.test(invRef) || /^INV-\d+$/i.test(invRef)) return invRef;
-  // Looks like a UUID or raw ID — try to look up by id or invId
-  const inv = allInvoices.find(i => i.id === invRef || i.invId === invRef || String(i.id) === invRef);
-  return inv ? fmtInvId(inv,allInvoices) : invRef;
+  // If it already looks human-readable (INV-xxx), return it
+  if(!/^[0-9a-f]{8}-/i.test(invRef)) return invRef;
+  // It's a UUID — look up the invoice
+  const inv = allInvoices.find(i => i.id === invRef || i.invId === invRef);
+  return inv ? fmtInvId(inv) : invRef;
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -920,7 +727,7 @@ function ContactModal({ client,onClose }){
           <div style={{ width:52,height:52,borderRadius:"50%",background:C.accentDim,border:`2px solid ${C.accentMid}`,display:"flex",alignItems:"center",justifyContent:"center",color:C.accent,fontFamily:F,fontWeight:800,fontSize:18,flexShrink:0 }}>{client.initials}</div>
           <div><div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:16 }}>{client.name}</div><div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2 }}>{client.company}</div></div>
         </div>
-        {[[<Ic.Phone size={14} color={C.muted}/>, "Phone", client.phone],[<Ic.Email size={14} color={C.muted}/>, "Email", client.email]].map(([icon,lbl,val])=>(
+        {[["📞","Phone",client.phone],["✉️","Email",client.email]].map(([icon,lbl,val])=>(
           <div key={lbl} style={{ display:"flex",alignItems:"center",gap:12,marginBottom:14 }}>
             <div style={{ width:36,height:36,background:C.surface,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,flexShrink:0 }}>{icon}</div>
             <div><div style={{ color:C.muted,fontFamily:F,fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:.8 }}>{lbl}</div><div style={{ color:C.text,fontFamily:F,fontSize:13,fontWeight:600,marginTop:2 }}>{val}</div></div>
@@ -985,7 +792,7 @@ function InvModal({ pending,onConfirm,onCancel }){
       if(result.description) setDesc(result.description);
       setAiNote("OK AI extracted data from your file — please review and correct if needed.");
     } else {
-      setAiNote("Could not extract data automatically. Please fill in the fields manually.");
+      setAiNote("⚠️ Could not extract data automatically. Please fill in the fields manually.");
     }
     setStep("review"); setExtracting(false);
   };
@@ -998,7 +805,7 @@ function InvModal({ pending,onConfirm,onCancel }){
         <div style={{ padding:"22px 26px 0",flexShrink:0 }}>
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16 }}>
             <div>
-              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}><Ic.Receipt size={16} color={C.text} style={{marginRight:7,verticalAlign:"middle"}}/> Add Invoice</div>
+              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}>🧾 Add Invoice</div>
               <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2 }}>{pending.name}</div>
             </div>
             <button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:20,cursor:"pointer" }}>✕</button>
@@ -1023,14 +830,14 @@ function InvModal({ pending,onConfirm,onCancel }){
           {step==="upload"&&(
             <div style={{ paddingBottom:8 }}>
               <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:12,padding:"28px 20px",textAlign:"center",marginBottom:16 }}>
-                <Ic.Receipt size={40} color={C.muted} style={{marginBottom:10}}/>
+                <div style={{ fontSize:40,marginBottom:10 }}>🧾</div>
                 <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:15,marginBottom:6 }}>{pending.name}</div>
                 <div style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{pending.size?(pending.size/1024).toFixed(1)+" KB":""}</div>
                 {pending.dataUrl?.startsWith("data:image")&&<img src={pending.dataUrl} alt="" style={{ maxWidth:"100%",maxHeight:180,objectFit:"contain",borderRadius:8,marginTop:12,border:`1px solid ${C.border}` }}/>}
               </div>
               <div style={{ background:"linear-gradient(135deg,#a78bfa08,#3b82f608)",border:`1px solid ${C.purple}33`,borderRadius:10,padding:"16px 18px" }}>
                 <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:8 }}>
-                  <Ic.Bot size={18} color={C.purple}/>
+                  <span style={{ fontSize:18 }}>🤖</span>
                   <span style={{ color:C.purple,fontFamily:F,fontWeight:700,fontSize:13 }}>AI Invoice Extraction</span>
                 </div>
                 <div style={{ color:C.muted,fontFamily:F,fontSize:12,lineHeight:1.6 }}>Click below to automatically extract supplier name, invoice number, dates, amount, and description from your file.</div>
@@ -1044,11 +851,11 @@ function InvModal({ pending,onConfirm,onCancel }){
               <div style={{ display:"flex",flexDirection:"column",gap:12 }}>
                 <div style={{ display:"flex",gap:12 }}>
                   <div style={{ flex:2 }}><label style={LBL()}>Supplier / Company Name</label><input style={INP()} value={supplier} onChange={e=>setSupplier(e.target.value)} placeholder="e.g. Gulf Steel Co."/></div>
-                  <div style={{ flex:1 }}><label style={LBL()}>Invoice #</label><input style={INP()} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="#001"/></div>
+                  <div style={{ flex:1 }}><label style={LBL()}>Invoice #</label><input style={INP()} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="INV-001"/></div>
                 </div>
                 <div style={{ display:"flex",gap:12 }}>
-                  <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><DateInput style={INP()} value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
-                  <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><DateInput style={INP()} value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
+                  <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
+                  <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
                 </div>
                 <div style={{ display:"flex",gap:12 }}>
                   <div style={{ flex:2 }}><label style={LBL()}>Total Amount</label><input style={INP()} type="number" value={amount} onChange={e=>setAmount(e.target.value)} placeholder="0.00"/></div>
@@ -1073,7 +880,7 @@ function InvModal({ pending,onConfirm,onCancel }){
             ?<>
               <button onClick={onCancel} style={{ background:"transparent",color:C.muted,border:`1px solid ${C.border}`,padding:"11px 18px",borderRadius:8,fontFamily:F,fontSize:13,cursor:"pointer" }}>Cancel</button>
               <button onClick={runExtract} disabled={extracting} style={{ background:C.purple,color:"#fff",border:"none",padding:"11px 28px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:8,opacity:extracting?.7:1 }}>
-                {extracting?<><div style={{ width:14,height:14,border:"2px solid #fff",borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Extracting…</>:<><Ic.Bot size={13} color="#fff" style={{marginRight:4}}/> Extract with AI</>}
+                {extracting?<><div style={{ width:14,height:14,border:"2px solid #fff",borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Extracting…</>:<>🤖 Extract with AI</>}
               </button>
             </>
             :<>
@@ -1238,7 +1045,7 @@ function AddTaskModal({ onConfirm,onCancel,allMembers,allProjects=[] }){
               {allProjects.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}
             </select>
           </div>
-          <div><label style={LBL()}>Due Date *</label><DateInput style={INP()} value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
+          <div><label style={LBL()}>Due Date *</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
         </div>
         <div style={{ display:"flex",gap:10,marginTop:22 }}>
           <button onClick={submit} style={{ flex:1,background:C.accent,color:"#000",border:"none",padding:"12px 0",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer" }}>Assign Task</button>
@@ -1267,7 +1074,7 @@ function AddInvoiceFormModal({ project, onConfirm, onCancel, allInvoices=[] }){
     const du=raw.size<5*1024*1024?await new Promise(r=>{const rd=new FileReader();rd.onload=e=>r(e.target.result);rd.readAsDataURL(raw);}):null;
     setDocFile({name:raw.name,size:raw.size,dataUrl:du,_rawFile:raw});
     if(du){
-      setAiRunning(true); setAiNote("Reading with AI…");
+      setAiRunning(true); setAiNote("🤖 Reading document with AI…");
       const result=await aiExtractInvoice({name:raw.name,size:raw.size,dataUrl:du});
       if(result){
         if(result.supplierName&&!supplier)setSupplier(result.supplierName);
@@ -1304,7 +1111,7 @@ function AddInvoiceFormModal({ project, onConfirm, onCancel, allInvoices=[] }){
         <div style={{ padding:"22px 28px 18px",borderBottom:`1px solid ${C.border}`,flexShrink:0 }}>
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center" }}>
             <div>
-              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}><Ic.Receipt size={16} color={C.text} style={{marginRight:7,verticalAlign:"middle"}}/> Add Invoice</div>
+              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}>🧾 Add Invoice</div>
               <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2 }}>{project.name}</div>
             </div>
             <button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:22,cursor:"pointer" }}>✕</button>
@@ -1312,17 +1119,17 @@ function AddInvoiceFormModal({ project, onConfirm, onCancel, allInvoices=[] }){
         </div>
         {/* Body */}
         <div style={{ flex:1,overflowY:"auto",padding:"22px 28px" }}>
-          {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:8,padding:"9px 14px",color:C.red,fontFamily:F,fontSize:12,marginBottom:16 }}><Ic.Warning size={12} color={C.red} style={{marginRight:5,verticalAlign:"middle"}}/>{err}</div>}
+          {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:8,padding:"9px 14px",color:C.red,fontFamily:F,fontSize:12,marginBottom:16 }}>⚠ {err}</div>}
           <div style={{ display:"flex",flexDirection:"column",gap:15 }}>
             {/* Supplier + Invoice # */}
             <div style={{ display:"flex",gap:14 }}>
               <div style={{ flex:2 }}><label style={LBL()}>Supplier / Company</label><input style={INP()} value={supplier} onChange={e=>setSupplier(e.target.value)} placeholder="e.g. Gulf Steel Co."/></div>
-              <div style={{ flex:1 }}><label style={LBL()}>Invoice #</label><input style={INP()} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="#001"/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Invoice #</label><input style={INP()} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="INV-001"/></div>
             </div>
             {/* Dates */}
             <div style={{ display:"flex",gap:14 }}>
-              <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><DateInput style={INP()} value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
-              <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><DateInput style={INP()} value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
             </div>
             {/* Amount + Currency */}
             <div style={{ display:"flex",gap:14 }}>
@@ -1349,7 +1156,7 @@ function AddInvoiceFormModal({ project, onConfirm, onCancel, allInvoices=[] }){
                     {aiRunning&&<div style={{ color:C.purple,fontFamily:F,fontSize:12,marginBottom:8,display:"flex",alignItems:"center",gap:8 }}><div style={{ width:12,height:12,border:"2px solid",borderColor:C.purple,borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Extracting with AI…</div>}
                     {aiNote&&!aiRunning&&<div style={{ color:aiNote.startsWith("OK")?C.green:C.muted,fontFamily:F,fontSize:11,marginBottom:10,padding:"8px 10px",background:aiNote.startsWith("OK")?C.greenDim:C.surface,borderRadius:6,border:`1px solid ${aiNote.startsWith("OK")?C.green+"33":C.border}` }}>{aiNote}</div>}
                     <div style={{ display:"flex",alignItems:"center",gap:10 }}>
-                      <div style={{ width:42,height:42,background:C.card,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>{docFile.url ? (!docFile.url.includes(".pdf")?<Ic.Image size={20} color={C.muted}/>:<Ic.File size={20} color={C.muted}/>) : docFile.dataUrl?.startsWith("data:image")?<Ic.Image size={20} color={C.muted}/>:<Ic.File size={20} color={C.muted}/>}</div>
+                      <div style={{ width:42,height:42,background:C.card,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0 }}>{docFile.url ? !docFile.url.includes(".pdf") : docFile.dataUrl?.startsWith("data:image")?"🖼️":"📄"}</div>
                       <div style={{ flex:1,minWidth:0 }}>
                         <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:13,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{docFile.name}</div>
                         <div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:2 }}>{docFile.size?(docFile.size/1024).toFixed(1)+" KB":""}</div>
@@ -1365,10 +1172,10 @@ function AddInvoiceFormModal({ project, onConfirm, onCancel, allInvoices=[] }){
                     style={{ border:`2px dashed ${C.border}`,borderRadius:10,padding:"28px 20px",textAlign:"center",cursor:"pointer",transition:"all .2s" }}
                     onMouseEnter={e=>{e.currentTarget.style.borderColor=C.accent+"88";e.currentTarget.style.background=C.accentDim;}}
                     onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}}>
-                    <div style={{ fontSize:0 }}><Ic.Attach size={32} color={C.muted} style={{marginBottom:8}}/></div>
+                    <div style={{ fontSize:32,marginBottom:8 }}>📎</div>
                     <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:13,marginBottom:4 }}>Drop document or click to browse</div>
                     <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>PDF · Images · Screenshots · Word docs · Any format</div>
-                    <div style={{ color:C.purple,fontFamily:F,fontSize:11,marginTop:6,display:"flex",alignItems:"center",justifyContent:"center",gap:4 }}><Ic.Bot size={11} color={C.purple} style={{marginRight:4}}/> AI will auto-extract from your file</div>
+                    <div style={{ color:C.purple,fontFamily:F,fontSize:11,marginTop:6,display:"flex",alignItems:"center",justifyContent:"center",gap:4 }}>🤖 AI will auto-extract invoice data from your file</div>
                   </div>
               }
               <input ref={fileRef} type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.bmp,.tiff,.doc,.docx,.xls,.xlsx,.txt,.csv" style={{ display:"none" }} onChange={e=>{const f=e.target.files[0];if(f)handleDocFile(f);e.target.value="";}}/>
@@ -1386,11 +1193,92 @@ function AddInvoiceFormModal({ project, onConfirm, onCancel, allInvoices=[] }){
 }
 
 // ─── Module Panels ─────────────────────────────────────────────────────────────
+// ─── Invoice Detail Modal ─────────────────────────────────────────────────────
+function InvoiceDetailModal({ inv, allInvoices=[], onClose, onEdit, onDelete, onViewFile }){
+  if(!inv) return null;
+  const st = INV_ST.find(s=>s.v===(inv.status||inv.invoiceStatus||"pending"))||INV_ST[0];
+  const hasFile = inv.dataUrl||inv.url;
+  const Field = ({label,value,color})=>(
+    <div style={{ display:"flex",flexDirection:"column",gap:2 }}>
+      <div style={{ color:C.muted,fontFamily:F,fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.06em" }}>{label}</div>
+      <div style={{ color:color||C.text,fontFamily:F,fontSize:13,fontWeight:600,lineHeight:1.4 }}>{value||"—"}</div>
+    </div>
+  );
+  return(
+    <Overlay onClose={onClose}>
+      <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,
+        width:500,maxWidth:"95vw",maxHeight:"88vh",display:"flex",flexDirection:"column",
+        overflow:"hidden",boxShadow:"0 24px 60px rgba(0,0,0,.5)" }}>
+
+        {/* Header */}
+        <div style={{ padding:"20px 24px 16px",borderBottom:`1px solid ${C.border}`,
+          display:"flex",alignItems:"center",justifyContent:"space-between",flexShrink:0 }}>
+          <div style={{ display:"flex",alignItems:"center",gap:10 }}>
+            <div style={{ width:38,height:38,borderRadius:9,background:C.accentDim,
+              border:`1px solid ${C.accentMid}`,display:"flex",alignItems:"center",justifyContent:"center" }}>
+              <Ic.Receipt size={18} color={C.accent}/>
+            </div>
+            <div>
+              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:16 }}>{fmtInvId(inv,allInvoices)}</div>
+              <div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:1 }}>Invoice Details</div>
+            </div>
+          </div>
+          <button onClick={onClose} style={{ background:"transparent",border:"none",color:C.muted,fontSize:20,cursor:"pointer",padding:4 }}>✕</button>
+        </div>
+
+        {/* Body */}
+        <div style={{ flex:1,overflowY:"auto",padding:"20px 24px",display:"flex",flexDirection:"column",gap:16 }}>
+          {/* Status badge */}
+          <div>
+            <span style={{ background:st.c+"22",color:st.c,border:`1px solid ${st.c}55`,
+              padding:"4px 12px",borderRadius:6,fontFamily:F,fontSize:12,fontWeight:700 }}>{st.l}</span>
+          </div>
+
+          {/* Key fields grid */}
+          <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:14 }}>
+            <Field label="Project" value={inv.project}/>
+            <Field label="Client / Supplier" value={inv.client||inv.supplier}/>
+            <Field label="Amount" value={`${inv.currency||"AED"} ${Number(inv.amount||0).toLocaleString()}`} color={C.accent}/>
+            <Field label="Due Date" value={inv.dueFmt||inv.dueDate||inv.dd} color={(inv.status||inv.invoiceStatus)==="overdue"?C.red:undefined}/>
+            <Field label="Invoice Date" value={inv.invDate}/>
+            <Field label="Description" value={inv.desc||inv.supplier}/>
+          </div>
+
+          {/* File attachment */}
+          {hasFile&&(
+            <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:"12px 14px",display:"flex",alignItems:"center",gap:10 }}>
+              <Ic.Attach size={16} color={C.muted}/>
+              <div style={{ flex:1,minWidth:0,color:C.muted,fontFamily:F,fontSize:12,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>
+                {inv.name||"Attachment"}
+              </div>
+              <button onClick={()=>onViewFile&&onViewFile(inv)}
+                style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}44`,padding:"5px 12px",borderRadius:6,fontFamily:F,fontSize:11,fontWeight:700,cursor:"pointer",display:"flex",alignItems:"center",gap:4,flexShrink:0 }}>
+                <Ic.Eye size={12} color={C.blue}/> View
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Footer actions */}
+        <div style={{ padding:"14px 24px 18px",borderTop:`1px solid ${C.border}`,flexShrink:0,display:"flex",gap:8,justifyContent:"flex-end" }}>
+          <button onClick={onClose}
+            style={{ background:"transparent",border:`1px solid ${C.border}`,color:C.muted,padding:"8px 18px",borderRadius:8,fontFamily:F,fontSize:13,cursor:"pointer" }}>Close</button>
+          {onEdit&&<button onClick={()=>onEdit(inv)}
+            style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}44`,padding:"8px 18px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:5 }}><Ic.Pen size={12} color={C.blue}/> Edit</button>}
+          {onDelete&&<button onClick={()=>onDelete(inv)}
+            style={{ background:C.redDim,color:C.red,border:`1px solid ${C.red}33`,padding:"8px 18px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:5 }}><Ic.Delete size={12} color={C.red}/> Delete</button>}
+        </div>
+      </div>
+    </Overlay>
+  );
+}
+
 function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobalInvoice, onUpdateGlobalInvoice, allInvoices=[] }){
   const cid = useCompany();
   // ─── SINGLE SOURCE OF TRUTH: global store only (no useFiles for invoices) ───
+  const [preview,setPreview]     = useState(null);
   const [selectedInv,setSelectedInv] = useState(null);  // invoice detail modal
-  const [previewFile,setPreviewFile] = useState(null);  // file viewer (separate overlay)
+  const [previewFile,setPreviewFile] = useState(null);  // file viewer at panel level
   const [mode,setMode]           = useState("list"); // "list" | "add" | "edit"
   const [editTarget,setEditTarget] = useState(null); // invoice being edited
   const [confirmDel,setConfirmDel] = useState(null);
@@ -1575,11 +1463,11 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
   const renderFormBody = () => (<>
     <div style={{ display:"flex",gap:12 }}>
       <div style={{ flex:2 }}><label style={LBL()}>Supplier / Company</label><input style={INP()} value={supplier} onChange={e=>setSupplier(e.target.value)} placeholder="e.g. Gulf Steel Co."/></div>
-      <div style={{ flex:1 }}><label style={LBL()}>Invoice #</label><input style={INP()} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="#001"/></div>
+      <div style={{ flex:1 }}><label style={LBL()}>Invoice #</label><input style={INP()} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="INV-001"/></div>
     </div>
     <div style={{ display:"flex",gap:12 }}>
-      <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><DateInput style={INP()} value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
-      <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><DateInput style={INP()} value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
+      <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><input style={{...INP(),colorScheme:"dark"}} type="date" value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
+      <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><input style={{...INP(),colorScheme:"dark"}} type="date" value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
     </div>
     <div style={{ display:"flex",gap:12 }}>
       <div style={{ flex:2 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setFormErr("");}} onWheel={e=>e.target.blur()} placeholder="0.00"/></div>
@@ -1598,11 +1486,12 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
 
   return(
     <div>
-      {/* Invoice detail modal — reuses same component as InvoicingPage */}
+      {preview&&<FilePreviewModal file={preview} onClose={()=>setPreview(null)}/>}
       {previewFile&&<FilePreviewModal file={previewFile} onClose={()=>setPreviewFile(null)}/>}
       {selectedInv&&(
         <InvoiceDetailModal
           inv={selectedInv}
+          allInvoices={allInvoices}
           onClose={()=>setSelectedInv(null)}
           onEdit={inv=>{ setSelectedInv(null); openEdit(inv); }}
           onDelete={inv=>{ setSelectedInv(null); setConfirmDel(inv); }}
@@ -1632,11 +1521,11 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
         <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,overflow:"hidden",marginBottom:14 }}>
           <table style={{ width:"100%",borderCollapse:"collapse",fontFamily:F,fontSize:12 }}>
             <thead><tr style={{ background:C.bg,borderBottom:`1px solid ${C.border}` }}>
-              {["Invoice #","Supplier","Amount","Due Date","Status",""].map(h=><th key={h} style={TH({padding:"9px 12px",fontSize:11})}>{h}</th>)}
+              {["Invoice #","Supplier","Amount","Due Date","Status"].map(h=><th key={h} style={TH({padding:"9px 12px",fontSize:11})}>{h}</th>)}<th style={ACT_TH}>Actions</th>
             </tr></thead>
             <tbody>{rows.map((row,i)=>{ const st=INV_ST.find(s=>s.v===row.st)||INV_ST[0]; return(
               <tr key={row.id}
-                onClick={e=>{ if(e.target.closest('[data-norow]')) return; setSelectedInv(row); }}
+                onClick={e=>{ if(e.target.closest("[data-norow]")) return; setSelectedInv(row); }}
                 style={{ borderBottom:i<rows.length-1?`1px solid ${C.border}22`:"none",transition:"background .12s",cursor:"pointer" }}
                 onMouseEnter={e=>e.currentTarget.style.background=C.bg} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
                 <td style={TD({color:C.accent,fontWeight:700,fontSize:11,whiteSpace:"nowrap",padding:"9px 12px"})}>{fmtInvId(row,allInvoices)}</td>
@@ -1644,8 +1533,9 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
                 <td style={TD({color:C.text,fontWeight:700,whiteSpace:"nowrap",padding:"9px 12px"})}>{row.amount?`$${Number(row.amount).toLocaleString()}`:"—"}</td>
                 <td style={TD({color:row.st==="overdue"?C.red:C.muted,fontSize:11,whiteSpace:"nowrap",padding:"9px 12px"})}>{row.dd||"—"}</td>
                 <td style={TD({padding:"9px 12px"})} data-norow><button onClick={e=>{ e.stopPropagation(); cycle(row); }} style={{ background:st.c+"22",color:st.c,border:`1px solid ${st.c}55`,padding:"3px 9px",borderRadius:5,fontFamily:F,fontSize:11,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap" }}>{st.l}</button></td>
-                <td style={TD({padding:"9px 12px"})} data-norow>
+                <td style={ACT_TD} data-norow>
                   <RowActions>
+                    <RowBtn type="view" onClick={e=>{ e.stopPropagation(); setSelectedInv(row); }}>View</RowBtn>
                     <RowBtn type="edit" onClick={e=>{ e.stopPropagation(); openEdit(row); }}>Edit</RowBtn>
                     <RowBtn type="delete" onClick={e=>{ e.stopPropagation(); setConfirmDel(row); }}>Delete</RowBtn>
                   </RowActions>
@@ -1708,14 +1598,14 @@ function AddPlanFormModal({ project, onConfirm, onCancel }){
         <div style={{ padding:"22px 28px 18px",borderBottom:`1px solid ${C.border}`,flexShrink:0 }}>
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center" }}>
             <div>
-              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}><Ic.Blueprint size={16} color={C.blue} style={{marginRight:7,verticalAlign:"middle"}}/> Add Plan / Document</div>
+              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}>📐 Add Plan / Document</div>
               <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2 }}>{project.name}</div>
             </div>
             <button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:22,cursor:"pointer" }}>✕</button>
           </div>
         </div>
         <div style={{ flex:1,overflowY:"auto",padding:"22px 28px" }}>
-          {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:8,padding:"9px 14px",color:C.red,fontFamily:F,fontSize:12,marginBottom:16 }}><Ic.Warning size={12} color={C.red} style={{marginRight:5,verticalAlign:"middle"}}/>{err}</div>}
+          {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:8,padding:"9px 14px",color:C.red,fontFamily:F,fontSize:12,marginBottom:16 }}>⚠ {err}</div>}
           <div style={{ display:"flex",flexDirection:"column",gap:16 }}>
             {/* File upload first — primary action */}
             <div>
@@ -1725,10 +1615,10 @@ function AddPlanFormModal({ project, onConfirm, onCancel }){
                     <div style={{ display:"flex",alignItems:"center",gap:10 }}>
                       {docFile.url ? !docFile.url.includes(".pdf") : docFile.dataUrl?.startsWith("data:image")
                         ?<img src={docFile.dataUrl} alt="" style={{ width:52,height:52,objectFit:"cover",borderRadius:6,border:`1px solid ${C.border}`,flexShrink:0 }}/>
-                        :<div style={{ width:52,height:52,background:C.card,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}><Ic.File size={24} color={C.muted}/></div>
+                        :<div style={{ width:52,height:52,background:C.card,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,flexShrink:0 }}>📄</div>
                       }
                       <div style={{ flex:1,minWidth:0 }}>
-                        <div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:13 }}><Ic.Check size={12} color={C.green} style={{marginRight:4}}/> File uploaded</div>
+                        <div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:13 }}>✓ File uploaded</div>
                         <div style={{ color:C.text,fontFamily:F,fontSize:12,marginTop:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{docFile.name}</div>
                         <div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:1 }}>{docFile.size?(docFile.size/1024).toFixed(1)+" KB":""}</div>
                       </div>
@@ -1742,7 +1632,7 @@ function AddPlanFormModal({ project, onConfirm, onCancel }){
                     style={{ border:`2px dashed ${C.border}`,borderRadius:12,padding:"36px 20px",textAlign:"center",cursor:"pointer",transition:"all .2s" }}
                     onMouseEnter={e=>{e.currentTarget.style.borderColor=C.blue+"88";e.currentTarget.style.background=C.blueDim;}}
                     onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}}>
-                    <Ic.Folder size={38} color={C.muted} style={{marginBottom:10}}/>
+                    <div style={{ fontSize:38,marginBottom:10 }}>📁</div>
                     <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:14,marginBottom:5 }}>Drop file here or click to browse</div>
                     <div style={{ color:C.muted,fontFamily:F,fontSize:12 }}>PDF · CAD (.dwg .dxf) · Images · Word · Excel · Any format</div>
                   </div>
@@ -1767,7 +1657,7 @@ function AddPlanFormModal({ project, onConfirm, onCancel }){
         </div>
         <div style={{ padding:"18px 28px",borderTop:`1px solid ${C.border}`,flexShrink:0,display:"flex",gap:10,justifyContent:"flex-end" }}>
           <button onClick={onCancel} style={{ background:"transparent",color:C.muted,border:`1px solid ${C.border}`,padding:"11px 20px",borderRadius:8,fontFamily:F,fontSize:13,cursor:"pointer" }}>Cancel</button>
-          <button onClick={submit} style={{ background:C.blue,color:"#fff",border:"none",padding:"11px 32px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer" }}><Ic.Blueprint size={13} color="#fff" style={{marginRight:5}}/> Save Document</button>
+          <button onClick={submit} style={{ background:C.blue,color:"#fff",border:"none",padding:"11px 32px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer" }}>📐 Save Document</button>
         </div>
       </div>
     </Overlay>
@@ -1822,7 +1712,7 @@ function PlansPanel({ project,onActivity }){
       {!showAdd&&files.length>0&&(
         <div style={{ display:"flex",flexDirection:"column",gap:7,marginBottom:14 }}>{files.map(f=>(
           <div key={f.id} style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:7,padding:"10px 14px",display:"flex",alignItems:"center",gap:10 }}>
-            {f.dataUrl?.startsWith("data:image")?<img src={f.dataUrl} alt="" style={{ width:40,height:40,objectFit:"cover",borderRadius:5,border:`1px solid ${C.border}`,flexShrink:0 }}/>:<div style={{ width:40,height:40,background:C.card,borderRadius:5,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0 }}><Ic.File size={20} color={C.muted}/></div>}
+            {f.dataUrl?.startsWith("data:image")?<img src={f.dataUrl} alt="" style={{ width:40,height:40,objectFit:"cover",borderRadius:5,border:`1px solid ${C.border}`,flexShrink:0 }}/>:<div style={{ width:40,height:40,background:C.card,borderRadius:5,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0 }}>{f.icon||"📄"}</div>}
             <div style={{ flex:1,minWidth:0 }}><div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:12,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{f.displayTitle||f.name}</div><div style={{ color:C.muted,fontFamily:F,fontSize:10,marginTop:2 }}>{fmtBytes(f.size)} · {f.uploadedAt}{f.notes&&<span> · {f.notes.slice(0,40)}</span>}</div></div>
             <Badge status={f.badgeStatus}/>
             <RowBtn type="view" onClick={()=>setPreview(f)}>View</RowBtn>
@@ -1831,18 +1721,18 @@ function PlansPanel({ project,onActivity }){
         ))}</div>
       )}
       {showAdd
-        ?<InlineFormShell header="Add Plan / Document" accent={C.blue} saveLabel="Save Document" onSave={submitPlan} onCancel={()=>setShowAdd(false)} err={planErr}>
+        ?<InlineFormShell header="📐 Add Plan / Document" accent={C.blue} saveLabel="📐 Save Document" onSave={submitPlan} onCancel={()=>setShowAdd(false)} err={planErr}>
             {/* File upload */}
             <div>
               <label style={LBL()}>Upload File *</label>
               {planFile
                 ?<div style={{ background:C.surface,border:`1px solid ${C.green}44`,borderRadius:9,padding:"12px 14px",display:"flex",alignItems:"center",gap:10 }}>
-                    {planFile.dataUrl?.startsWith("data:image")?<img src={planFile.dataUrl} alt="" style={{ width:40,height:40,objectFit:"cover",borderRadius:6,flexShrink:0 }}/>:<div style={{ width:40,height:40,background:C.card,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}><Ic.File size={20} color={C.muted}/></div>}
-                    <div style={{ flex:1,minWidth:0 }}><div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:12 }}><Ic.Check size={12} color={C.green} style={{marginRight:4}}/> File ready</div><div style={{ color:C.text,fontFamily:F,fontSize:11,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{planFile.name}</div></div>
+                    {planFile.dataUrl?.startsWith("data:image")?<img src={planFile.dataUrl} alt="" style={{ width:40,height:40,objectFit:"cover",borderRadius:6,flexShrink:0 }}/>:<div style={{ width:40,height:40,background:C.card,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0 }}>📄</div>}
+                    <div style={{ flex:1,minWidth:0 }}><div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:12 }}>✓ File ready</div><div style={{ color:C.text,fontFamily:F,fontSize:11,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{planFile.name}</div></div>
                     <button onClick={()=>setPlanFile(null)} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,borderRadius:5,padding:"3px 8px",fontFamily:F,fontSize:11,cursor:"pointer" }}>Remove</button>
                   </div>
                 :<div onClick={()=>planFileRef.current.click()} onDragOver={e=>{e.preventDefault();e.currentTarget.style.borderColor=C.blue;e.currentTarget.style.background=C.blueDim;}} onDragLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}} onDrop={e=>{e.preventDefault();e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";const f=e.dataTransfer.files[0];if(f)handlePlanFile(f);}} style={{ border:`2px dashed ${C.border}`,borderRadius:9,padding:"22px",textAlign:"center",cursor:"pointer",transition:"all .2s" }} onMouseEnter={e=>{e.currentTarget.style.borderColor=C.blue+"88";e.currentTarget.style.background=C.blueDim;}} onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}}>
-                    <Ic.Folder size={28} color={C.muted} style={{marginBottom:7}}/>
+                    <div style={{ fontSize:28,marginBottom:7 }}>📁</div>
                     <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:12,marginBottom:3 }}>Drop file or click to browse</div>
                     <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>PDF · CAD · Images · Word · Excel · Any format</div>
                   </div>
@@ -1857,7 +1747,7 @@ function PlansPanel({ project,onActivity }){
             </div>
             <div><label style={LBL()}>Notes <span style={{color:C.muted,fontWeight:400}}>(optional)</span></label><textarea style={{ ...INP(),resize:"none" }} rows={2} value={planNotes} onChange={e=>setPlanNotes(e.target.value)} placeholder="Version info, revision notes…"/></div>
           </InlineFormShell>
-        :<button onClick={()=>{ setPlanTitle("");setPlanCat("drawing");setPlanNotes("");setPlanFile(null);setPlanErr("");setShowAdd(true); }} style={{ background:C.blue,color:"#fff",border:"none",padding:"10px 22px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:7 }}><Ic.Blueprint size={14} color="#fff"/> Add Plan / Document</button>
+        :<button onClick={()=>{ setPlanTitle("");setPlanCat("drawing");setPlanNotes("");setPlanFile(null);setPlanErr("");setShowAdd(true); }} style={{ background:C.blue,color:"#fff",border:"none",padding:"10px 22px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:7 }}>📐 + Add Plan / Document</button>
       }
     </div>
   );
@@ -1865,21 +1755,26 @@ function PlansPanel({ project,onActivity }){
 
 function TeamPanel({ project,onOpenTeamPage }){
   const { members,ready,addMember }=useTeam(project.id);
-  const [showAddSystem,setShowAddSystem]=useState(false);
+  const [showAdd,setShowAdd]=useState(false);
+  const [tmName,setTmName]=useState(""); const [tmRole,setTmRole]=useState(ROLES[0]);
+  const [tmPhone,setTmPhone]=useState(""); const [tmStatus,setTmStatus]=useState("on-site");
+  const [tmErr,setTmErr]=useState("");
+  const MCOLORS_LIST=[C.blue,C.purple,C.green,C.accent,"#f43f5e","#06b6d4","#84cc16"];
 
-  const handleAdd=async(m)=>{ await addMember(m); setShowAddSystem(false); };
+  const submitMember=async()=>{
+    if(!tmName.trim()){setTmErr("Name is required");return;}
+    if(!tmPhone.trim()){setTmErr("Phone is required");return;}
+    const color=MCOLORS_LIST[Math.floor(Math.random()*MCOLORS_LIST.length)];
+    const init=tmName.trim().split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();
+    await addMember({ id:`m${Date.now()}`,name:tmName.trim(),role:tmRole,phone:tmPhone.trim(),status:tmStatus,color,init,projId:project.id,projectName:project.name,type:"employee" });
+    setShowAdd(false);
+  };
 
   if(!ready)return <div style={{ color:C.muted,fontFamily:F,fontSize:12,padding:"14px 0",textAlign:"center" }}>Loading…</div>;
   return(
     <div>
-      {showAddSystem&&<AddSystemMemberModal project={project} currentMembers={members} onConfirm={handleAdd} onCancel={()=>setShowAddSystem(false)}/>}
-      {members.length===0&&(
-        <div style={{ border:`2px dashed ${C.border}`,borderRadius:9,padding:"20px",textAlign:"center",color:C.muted,fontFamily:F,fontSize:12,marginBottom:12 }}>
-          <Ic.Team size={28} color={C.muted} style={{marginBottom:6}}/>
-              No team members yet
-        </div>
-      )}
-      {members.length>0&&(
+      {!showAdd&&members.length===0&&<div style={{ color:C.muted,fontFamily:F,fontSize:12,padding:"12px 0",textAlign:"center" }}>No team members yet</div>}
+      {!showAdd&&members.length>0&&(
         <div style={{ display:"flex",flexDirection:"column",gap:8,marginBottom:12 }}>
           {members.slice(0,4).map(m=>(
             <div key={m.id} style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,padding:"10px 14px",display:"flex",alignItems:"center",gap:12 }}>
@@ -1891,10 +1786,9 @@ function TeamPanel({ project,onOpenTeamPage }){
           {members.length>4&&<div style={{ color:C.muted,fontFamily:F,fontSize:11,textAlign:"center",padding:"4px 0" }}>+{members.length-4} more</div>}
         </div>
       )}
-      <div style={{ display:"flex",gap:8,flexWrap:"wrap" }}>
-        <button onClick={()=>setShowAddSystem(true)} style={{ background:C.green,color:"#000",border:"none",padding:"9px 16px",borderRadius:7,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:6 }}><><Ic.Team size={14} color="#000" style={{marginRight:5}}/> Add Member</></button>
-        <button onClick={onOpenTeamPage} style={{ background:"transparent",color:C.text,border:`1px solid ${C.border}`,padding:"9px 16px",borderRadius:7,fontFamily:F,fontWeight:600,fontSize:13,cursor:"pointer" }}>Full Team →</button>
-      </div>
+      <div style={{ display:"flex",gap:8 }}>
+            <button onClick={onOpenTeamPage} style={{ background:"transparent",color:C.text,border:`1px solid ${C.border}`,padding:"9px 16px",borderRadius:7,fontFamily:F,fontWeight:600,fontSize:13,cursor:"pointer" }}>Full Team →</button>
+          </div>
     </div>
   );
 }
@@ -1941,13 +1835,13 @@ function EditMemberModal({ member, allProjects, onConfirm, onCancel }){
         {/* Header */}
         <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:22 }}>
           <div>
-            <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}><Ic.Pen size={15} color={C.accent} style={{marginRight:8,verticalAlign:"middle"}}/> Edit Team Member</div>
+            <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}>✏️ Edit Team Member</div>
             <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>Update information for <strong style={{color:C.accent}}>{member.name}</strong></div>
           </div>
           <button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:20,cursor:"pointer" }}>✕</button>
         </div>
 
-        {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"9px 14px",color:C.red,fontFamily:F,fontSize:12,marginBottom:16 }}><Ic.Warning size={12} color={C.red} style={{marginRight:5,verticalAlign:"middle"}}/>{err}</div>}
+        {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"9px 14px",color:C.red,fontFamily:F,fontSize:12,marginBottom:16 }}>⚠ {err}</div>}
 
         <div style={{ display:"flex",flexDirection:"column",gap:14 }}>
           {/* Name */}
@@ -2021,13 +1915,13 @@ function DeleteConfirmModal({ member, taskCount, onConfirm, onCancel }){
     <Overlay onClose={onCancel}>
       <div style={{ background:C.card,border:`1px solid ${C.red}44`,borderRadius:16,padding:32,width:420 }}>
         {/* Icon */}
-        <div style={{ width:56,height:56,borderRadius:"50%",background:C.redDim,border:`2px solid ${C.red}44`,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 20px" }}><Ic.Delete size={24} color={C.red}/></div>
+        <div style={{ width:56,height:56,borderRadius:"50%",background:C.redDim,border:`2px solid ${C.red}44`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,margin:"0 auto 20px" }}>🗑️</div>
 
         <div style={{ textAlign:"center",marginBottom:20 }}>
           <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18,marginBottom:8 }}>Remove Team Member?</div>
           <div style={{ color:C.muted,fontFamily:F,fontSize:13,lineHeight:1.6 }}>
             You are about to remove <strong style={{color:C.text}}>{member.name}</strong> ({member.role}) from this project.
-            {taskCount>0&&<span style={{display:"block",marginTop:8,color:C.accent}}><Ic.Warning size={13} color={C.accent} style={{marginRight:4,verticalAlign:"middle"}}/>They have <strong>{taskCount} assigned task{taskCount!==1?"s":""}</strong> that will be unassigned.</span>}
+            {taskCount>0&&<span style={{display:"block",marginTop:8,color:C.accent}}>⚠️ They have <strong>{taskCount} assigned task{taskCount!==1?"s":""}</strong> that will be unassigned.</span>}
           </div>
         </div>
 
@@ -2049,119 +1943,10 @@ function DeleteConfirmModal({ member, taskCount, onConfirm, onCancel }){
   );
 }
 
-// ─── Add System Member to Project Modal ───────────────────────────────────────
-function AddSystemMemberModal({ project, currentMembers, onConfirm, onCancel }){
-  const { allProjects } = useProjects();
-  const { members:systemMembers } = useAllMembers(allProjects);
-  const [selected, setSelected] = React.useState(new Set());
-  const [saving, setSaving] = React.useState(false);
-
-  // Filter out members already assigned to this project
-  const currentNames = new Set(currentMembers.map(m => m.name));
-  const available = systemMembers.filter(m => !currentNames.has(m.name));
-
-  const toggle = (id) => setSelected(prev => {
-    const next = new Set(prev);
-    next.has(id) ? next.delete(id) : next.add(id);
-    return next;
-  });
-
-  const handleAdd = async() => {
-    if(selected.size === 0) return;
-    setSaving(true);
-    const toAdd = available.filter(m => selected.has(m.id));
-    for(const m of toAdd){
-      await onConfirm({
-        name:   m.name,
-        role:   m.role  || 'Team Member',
-        phone:  m.phone || '',
-        email:  m.email || '',
-        status: m.status|| 'on-site',
-        color:  m.color || '#3b82f6',
-        init:   m.init  || '?',
-        type:   m.type  || 'employee',
-        projId: project.id,
-      });
-    }
-    setSaving(false);
-    onCancel();
-  };
-
-  return(
-    <Overlay onClose={onCancel}>
-      <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,width:480,maxWidth:'95vw',maxHeight:'85vh',display:'flex',flexDirection:'column',boxShadow:'0 24px 60px rgba(0,0,0,.5)' }}>
-
-        {/* Header */}
-        <div style={{ padding:'22px 24px 18px',borderBottom:`1px solid ${C.border}`,display:'flex',alignItems:'center',justifyContent:'space-between',flexShrink:0 }}>
-          <div>
-            <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}><Ic.Team size={15} color={C.accent} style={{marginRight:8,verticalAlign:"middle"}}/> Add Member to Project</div>
-            <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>Select one or more members to assign to <strong style={{color:C.accent}}>{project.name}</strong></div>
-          </div>
-          <button onClick={onCancel} style={{ background:'transparent',border:'none',color:C.muted,fontSize:20,cursor:'pointer',lineHeight:1,padding:4 }}>✕</button>
-        </div>
-
-        {/* Member list */}
-        <div style={{ flex:1,overflowY:'auto',padding:'14px 24px' }}>
-          {available.length===0&&(
-            <div style={{ textAlign:'center',padding:'40px 0',color:C.muted,fontFamily:F,fontSize:13 }}>
-              <Ic.Check size={32} color={C.green} style={{marginBottom:8}}/>
-              All system members are already on this project
-            </div>
-          )}
-          {available.map(m=>{
-            const isSelected = selected.has(m.id);
-            return(
-              <div key={m.id} onClick={()=>toggle(m.id)}
-                style={{ display:'flex',alignItems:'center',gap:14,padding:'12px 14px',borderRadius:10,marginBottom:8,cursor:'pointer',
-                  background:isSelected?C.greenDim:'transparent',
-                  border:`1px solid ${isSelected?C.green+'55':C.border}`,
-                  transition:'all .15s' }}
-                onMouseEnter={e=>{ if(!isSelected)e.currentTarget.style.background=C.surface; }}
-                onMouseLeave={e=>{ if(!isSelected)e.currentTarget.style.background='transparent'; }}>
-                {/* Avatar */}
-                <div style={{ width:40,height:40,borderRadius:'50%',background:(m.color||C.blue)+'22',border:`2px solid ${(m.color||C.blue)}55`,display:'flex',alignItems:'center',justifyContent:'center',color:m.color||C.blue,fontFamily:F,fontWeight:700,fontSize:14,flexShrink:0 }}>
-                  {m.init}
-                </div>
-                {/* Info */}
-                <div style={{ flex:1,minWidth:0 }}>
-                  <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:14 }}>{m.name}</div>
-                  <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2,display:'flex',gap:10 }}>
-                    <span>{m.role}</span>
-                    {m.email&&<span>{m.email}</span>}
-                  </div>
-                </div>
-                {/* Checkbox */}
-                <div style={{ width:22,height:22,borderRadius:6,border:`2px solid ${isSelected?C.green:C.border}`,background:isSelected?C.green:'transparent',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'all .15s' }}>
-                  {isSelected&&<span style={{ color:'#000',fontSize:13,fontWeight:700 }}>✓</span>}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Footer */}
-        <div style={{ padding:'14px 24px 20px',borderTop:`1px solid ${C.border}`,display:'flex',gap:8,justifyContent:'space-between',alignItems:'center',flexShrink:0 }}>
-          <span style={{ color:C.muted,fontFamily:F,fontSize:12 }}>
-            {selected.size===0?'No members selected':`${selected.size} member${selected.size!==1?'s':''} selected`}
-          </span>
-          <div style={{ display:'flex',gap:8 }}>
-            <button onClick={onCancel} style={{ background:'transparent',border:`1px solid ${C.border}`,color:C.muted,padding:'8px 18px',borderRadius:8,fontFamily:F,fontSize:13,cursor:'pointer' }}>Cancel</button>
-            <button onClick={handleAdd} disabled={selected.size===0||saving}
-              style={{ background:selected.size>0?C.green:'transparent',color:selected.size>0?'#000':C.muted,border:`1px solid ${selected.size>0?C.green:C.border}`,padding:'8px 20px',borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:selected.size>0?'pointer':'default',transition:'all .15s',opacity:saving?0.6:1 }}>
-              {saving?'Adding…':'✓ Add to Project'}
-            </button>
-          </div>
-        </div>
-      </div>
-    </Overlay>
-  );
-}
-
 function TeamPage({ project,onBack,onAddToLog,tasks=[],updateTask }){
   const { members,ready,addMember,removeMember,updateMember }=useTeam(project.id);
   const { allProjects }=useProjects();
-  const [showAdd,setShowAdd]         = useState(false);
-  const [showAddSystem,setShowAddSystem] = useState(false);
+  const [showAdd,setShowAdd]   = useState(false);
   const [editing,setEditing]   = useState(null);
   const [deleting,setDeleting] = useState(null);
   const [confirmEditData,setConfirmEditData] = useState(null); // {member, patch}
@@ -2198,7 +1983,6 @@ function TeamPage({ project,onBack,onAddToLog,tasks=[],updateTask }){
   return(
     <div>
       {showAdd  && <AddMemberModal project={project} onConfirm={handleAdd} onCancel={()=>setShowAdd(false)}/>}
-      {showAddSystem && <AddSystemMemberModal project={project} currentMembers={members} onConfirm={handleAdd} onCancel={()=>setShowAddSystem(false)}/>}
       {editing  && <EditMemberModal member={editing} allProjects={allProjects}
           onConfirm={patch=>{ setConfirmEditData({member:editing,patch}); setEditing(null); }}
           onCancel={()=>setEditing(null)}/>}
@@ -2247,7 +2031,7 @@ function TeamPage({ project,onBack,onAddToLog,tasks=[],updateTask }){
               <h1 style={{ color:C.text,fontFamily:F,fontSize:22,fontWeight:700,margin:0 }}>{project.name}</h1>
               <Badge status={project.status}/>
             </div>
-            <div style={{ color:C.muted,fontFamily:F,fontSize:13,marginLeft:14 }}><Ic.MapPin size={13} color={C.muted} style={{marginRight:4,verticalAlign:"middle"}}/> {project.address}</div>
+            <div style={{ color:C.muted,fontFamily:F,fontSize:13,marginLeft:14 }}>📍 {project.address}</div>
           </div>
 
         </div>
@@ -2265,23 +2049,16 @@ function TeamPage({ project,onBack,onAddToLog,tasks=[],updateTask }){
 
       {/* Members list */}
       <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:14,padding:"20px 24px" }}>
-        <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:18,flexWrap:"wrap",gap:10 }}>
-          <div style={{ display:"flex",alignItems:"center",gap:10 }}>
-            <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:16 }}><Ic.Team size={16} color={C.text} style={{marginRight:6,verticalAlign:"middle"}}/> Project Team</span>
-            <span style={{ background:C.greenDim,color:C.green,padding:"3px 10px",borderRadius:99,fontSize:12,fontWeight:700,fontFamily:F }}>{members.length} members</span>
-          </div>
-          <button onClick={()=>setShowAddSystem(true)}
-            style={{ background:C.green,color:"#000",border:"none",padding:"8px 18px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:7 }}>
-            <><Ic.Team size={13} color="#000" style={{marginRight:5}}/> Add Member to Project</>
-          </button>
+        <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:18 }}>
+          <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:16 }}>👷 Project Team</span>
+          <span style={{ background:C.greenDim,color:C.green,padding:"3px 10px",borderRadius:99,fontSize:12,fontWeight:700,fontFamily:F }}>{members.length} members</span>
         </div>
 
         {!ready&&<div style={{ color:C.muted,fontFamily:F,fontSize:13,padding:"24px 0",textAlign:"center" }}>Loading…</div>}
 
         {ready&&members.length===0&&(
           <div style={{ border:`2px dashed ${C.border}`,borderRadius:10,padding:"40px 20px",textAlign:"center",color:C.muted,fontFamily:F,fontSize:13 }}>
-            <Ic.Team size={36} color={C.muted} style={{marginBottom:10}}/>
-No team members yet — click "Add Member to Project" to assign someone
+            <div style={{ fontSize:36,marginBottom:10 }}>👷</div>No team members yet — they're managed via Supabase
           </div>
         )}
 
@@ -2301,9 +2078,9 @@ No team members yet — click "Add Member to Project" to assign someone
                   <div style={{ flex:1,minWidth:0 }}>
                     <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:15 }}>{m.name}</div>
                     <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3,display:"flex",gap:14,flexWrap:"wrap" }}>
-                      <span><Ic.Wrench size={11} color={C.muted} style={{marginRight:3,verticalAlign:"middle"}}/>{m.role}</span>
-                      {m.phone&&<span><Ic.Phone size={11} color={C.muted} style={{marginRight:3,verticalAlign:"middle"}}/>{m.phone}</span>}
-                      {m.email&&<span><Ic.Email size={11} color={C.muted} style={{marginRight:3,verticalAlign:"middle"}}/>{m.email}</span>}
+                      <span>🔨 {m.role}</span>
+                      {m.phone&&<span>📞 {m.phone}</span>}
+                      {m.email&&<span>✉️ {m.email}</span>}
                       {tc>0&&<span style={{ color:C.blue }}>{tc} task{tc!==1?"s":""}</span>}
                     </div>
                   </div>
@@ -2319,12 +2096,12 @@ No team members yet — click "Add Member to Project" to assign someone
                     <button onClick={()=>setEditing(m)} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}44`,padding:"7px 14px",borderRadius:7,fontFamily:F,fontSize:12,fontWeight:700,cursor:"pointer",display:"flex",alignItems:"center",gap:5,transition:"all .15s" }}
                       onMouseEnter={e=>{e.currentTarget.style.background=C.blue;e.currentTarget.style.color="#fff";}}
                       onMouseLeave={e=>{e.currentTarget.style.background=C.blueDim;e.currentTarget.style.color=C.blue;}}>
-                      <Ic.Pen size={12} color={C.blue} style={{marginRight:4}}/> Edit
+                      ✏️ Edit
                     </button>
                     <button onClick={()=>setDeleting(m)} style={{ background:C.redDim,color:C.red,border:`1px solid ${C.red}44`,padding:"7px 14px",borderRadius:7,fontFamily:F,fontSize:12,fontWeight:700,cursor:"pointer",display:"flex",alignItems:"center",gap:5,transition:"all .15s" }}
                       onMouseEnter={e=>{e.currentTarget.style.background=C.red;e.currentTarget.style.color="#fff";}}
                       onMouseLeave={e=>{e.currentTarget.style.background=C.redDim;e.currentTarget.style.color=C.red;}}>
-                      <Ic.Delete size={12} color={C.red} style={{marginRight:4}}/> Delete
+                      🗑 Delete
                     </button>
                   </div>
                 </div>
@@ -2362,7 +2139,7 @@ function TasksPage({ tasks,addTask,updateTask,removeTask,allProjects=[] }){
     <div>
       {showAdd&&<AddTaskModal onConfirm={t=>{addTask(t);setShowAdd(false);}} onCancel={()=>setShowAdd(false)} allMembers={allMembers} allProjects={allProjects}/>}
 
-      <PageHeader icon={<Ic.Tasks size={22} color={C.green}/>} title="Task Management" subtitle="Assign and track work across your team"
+      <PageHeader icon="✅" title="Task Management" subtitle="Assign and track work across your team"
         action={<Btn variant="primary" onClick={()=>setShowAdd(true)}>+ Assign Task</Btn>}/>
 
       <div style={{ display:"flex",gap:12,marginBottom:20,flexWrap:"wrap" }}>
@@ -2469,7 +2246,7 @@ function UploadOfferModal({ tenderId, onConfirm, onCancel }){
       if(result.notes)     setNotes(result.notes);
       setAiNote("OK AI extracted data — review and edit before saving.");
     } else {
-      setAiNote("Could not auto-extract. Please fill in the details manually.");
+      setAiNote("⚠️ Could not auto-extract. Please fill in the details manually.");
     }
     setStep("review");
   };
@@ -2485,7 +2262,7 @@ function UploadOfferModal({ tenderId, onConfirm, onCancel }){
         <div style={{ padding:"22px 26px 0",flexShrink:0 }}>
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16 }}>
             <div>
-              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}><Ic.Upload size={15} color={C.accent} style={{marginRight:7,verticalAlign:"middle"}}/> Upload Supplier Offer</div>
+              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}>📤 Upload Supplier Offer</div>
               <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2 }}>Upload any document, image or screenshot</div>
             </div>
             <button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:20,cursor:"pointer" }}>✕</button>
@@ -2513,7 +2290,7 @@ function UploadOfferModal({ tenderId, onConfirm, onCancel }){
             <div style={{ paddingBottom:8 }}>
               <div onClick={()=>dropRef.current.click()} onDragOver={e=>{e.preventDefault();}} onDrop={e=>{e.preventDefault();const f=e.dataTransfer.files[0];if(f)handleFile(f);}}
                 style={{ border:`2px dashed ${C.accent}55`,borderRadius:12,padding:"44px 20px",textAlign:"center",cursor:"pointer",background:C.accentDim,transition:"all .2s",marginBottom:16 }}>
-                <Ic.Attach size={40} color={C.muted} style={{marginBottom:10}}/>
+                <div style={{ fontSize:40,marginBottom:10 }}>📎</div>
                 <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:15,marginBottom:6 }}>Drop offer document here</div>
                 <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginBottom:12 }}>PDF · Images · Screenshots · Word docs</div>
                 <div style={{ display:"inline-block",background:C.accent,color:"#000",padding:"9px 22px",borderRadius:7,fontFamily:F,fontWeight:700,fontSize:13 }}>Browse Files</div>
@@ -2522,7 +2299,7 @@ function UploadOfferModal({ tenderId, onConfirm, onCancel }){
               <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:10,padding:"14px 16px" }}>
                 <div style={{ color:C.muted,fontFamily:F,fontSize:11,fontWeight:700,textTransform:"uppercase",letterSpacing:.8,marginBottom:8 }}>Supported formats</div>
                 <div style={{ display:"flex",gap:8,flexWrap:"wrap" }}>
-                  {["PDF","Images","Email screenshots","Message screenshots","Word docs"].map(t=>(
+                  {["📄 PDF","🖼️ Images","📧 Email screenshots","💬 Message screenshots","📝 Word docs"].map(t=>(
                     <span key={t} style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:4,padding:"3px 9px",color:C.muted,fontFamily:F,fontSize:11 }}>{t}</span>
                   ))}
                 </div>
@@ -2533,7 +2310,7 @@ function UploadOfferModal({ tenderId, onConfirm, onCancel }){
           {/* Step: extracting */}
           {step==="extracting"&&(
             <div style={{ paddingBottom:8,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"40px 0" }}>
-              <div style={{ width:60,height:60,borderRadius:"50%",background:C.purpleDim,border:`2px solid ${C.purple}44`,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:16 }}><Ic.Bot size={28} color={C.purple}/></div>
+              <div style={{ width:60,height:60,borderRadius:"50%",background:C.purpleDim,border:`2px solid ${C.purple}44`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,marginBottom:16 }}>🤖</div>
               <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:16,marginBottom:8 }}>Analysing document…</div>
               <div style={{ color:C.muted,fontFamily:F,fontSize:13,marginBottom:20 }}>Extracting supplier, price, delivery & specs</div>
               <div style={{ display:"flex",gap:6 }}>
@@ -2547,7 +2324,7 @@ function UploadOfferModal({ tenderId, onConfirm, onCancel }){
             <div style={{ paddingBottom:8 }}>
               {aiNote&&<div style={{ background:aiNote.startsWith("OK")?C.greenDim:C.accentDim,border:`1px solid ${aiNote.startsWith("OK")?C.green+"44":C.accent+"44"}`,borderRadius:8,padding:"9px 13px",color:aiNote.startsWith("OK")?C.green:C.accent,fontFamily:F,fontSize:12,marginBottom:14 }}>{aiNote}</div>}
               {file&&<div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,padding:"10px 14px",marginBottom:14,display:"flex",alignItems:"center",gap:10 }}>
-                {file.dataUrl?.startsWith("data:image")?<Ic.Image size={18} color={C.muted}/>:<Ic.File size={18} color={C.muted}/>}
+                <span style={{ fontSize:18 }}>{file.dataUrl?.startsWith("data:image")?"🖼️":"📄"}</span>
                 <div style={{ flex:1,minWidth:0 }}>
                   <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:12,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{file.name}</div>
                   <div style={{ color:C.muted,fontFamily:F,fontSize:10,marginTop:1 }}>{file.size?(file.size/1024).toFixed(1)+" KB":""}</div>
@@ -2738,7 +2515,7 @@ function TendersPage({ allProjects=[] }){
                   {tender.offers.length>=2&&(
                     <Btn variant="ghost" disabled={isAnalysing} onClick={()=>runAnalysis(tender)}
                       style={{ color:isAnalysing?C.purple:"#fff", background:isAnalysing?"transparent":C.purple, border:`1px solid ${C.purple}44` }}>
-                      {isAnalysing?<><div style={{ width:13,height:13,border:`2px solid ${C.purple}`,borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Analysing…</>:"AI Analysis"}
+                      {isAnalysing?<><div style={{ width:13,height:13,border:`2px solid ${C.purple}`,borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Analysing…</>:"🤖 AI Analysis"}
                     </Btn>
                   )}
                 </div>
@@ -2746,7 +2523,7 @@ function TendersPage({ allProjects=[] }){
                 {analysis&&(
                   <div style={{ background:"linear-gradient(135deg,#a78bfa08,#3b82f608)",border:`1px solid ${C.purple}33`,borderRadius:12,padding:"20px 22px" }}>
                     <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:16 }}>
-                      <div style={{ width:30,height:30,borderRadius:8,background:C.purpleDim,display:"flex",alignItems:"center",justifyContent:"center" }}><Ic.Bot size={16} color={C.purple}/></div>
+                      <div style={{ width:30,height:30,borderRadius:8,background:C.purpleDim,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16 }}>🤖</div>
                       <span style={{ color:C.purple,fontFamily:F,fontWeight:700,fontSize:15 }}>AI Analysis</span>
                       <span style={{ color:C.muted,fontFamily:F,fontSize:11,marginLeft:"auto" }}>Scored on price, quality & delivery</span>
                     </div>
@@ -2760,7 +2537,7 @@ function TendersPage({ allProjects=[] }){
                       <SLabel>Rankings</SLabel>
                       <div style={{ display:"flex",flexDirection:"column",gap:8 }}>
                         {analysis.ranked.map(r=>{
-                          const medal=r.rank===1?"#1":r.rank===2?"#2":"#3";
+                          const medal=r.rank===1?"🥇":r.rank===2?"🥈":"🥉";
                           const bc=r.rank===1?C.green:r.rank===2?C.accent:C.muted;
                           return(
                             <div key={r.id} style={{ display:"flex",alignItems:"center",gap:12,background:r.rank===1?C.green+"0d":C.surface,border:`1px solid ${r.rank===1?C.green+"44":C.border}`,borderRadius:9,padding:"12px 16px" }}>
@@ -2770,7 +2547,7 @@ function TendersPage({ allProjects=[] }){
                                 <div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:2,display:"flex",gap:12,flexWrap:"wrap" }}>
                                   <span style={{ color:C.accent,fontWeight:700 }}>${r.price.toLocaleString()}</span>
                                   <span>{r.quality}</span>
-                                  <span style={{display:"inline-flex",alignItems:"center",gap:3}}><Ic.Truck size={11} color={C.muted}/> {r.delivery}</span>
+                                  <span>🚚 {r.delivery}</span>
                                 </div>
                               </div>
                               <div style={{ display:"flex",flexDirection:"column",gap:3,alignItems:"flex-end",flexShrink:0 }}>
@@ -2854,13 +2631,13 @@ function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
       <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:18,width:600,maxHeight:"93vh",display:"flex",flexDirection:"column",overflow:"hidden",boxShadow:"0 24px 60px rgba(0,0,0,.5)" }}>
         <div style={{ padding:"22px 28px 18px",borderBottom:`1px solid ${C.border}`,flexShrink:0,display:"flex",justifyContent:"space-between",alignItems:"center" }}>
           <div>
-            <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}><Ic.Payments size={15} color={C.green} style={{marginRight:7,verticalAlign:"middle"}}/> Record Payment</div>
+            <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}>💰 Record Payment</div>
             <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2 }}>Record a payment received from the client</div>
           </div>
           <button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:22,cursor:"pointer" }}>✕</button>
         </div>
         <div style={{ flex:1,overflowY:"auto",padding:"22px 28px" }}>
-        {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"9px 12px",color:C.red,fontFamily:F,fontSize:12,marginBottom:14 }}><Ic.Warning size={12} color={C.red} style={{marginRight:5,verticalAlign:"middle"}}/>{err}</div>}
+        {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"9px 12px",color:C.red,fontFamily:F,fontSize:12,marginBottom:14 }}>⚠ {err}</div>}
         <div style={{ display:"flex",flexDirection:"column",gap:14 }}>
           <div><label style={LBL()}>Project</label>
             <select value={projId} onChange={e=>setProjId(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
@@ -2869,7 +2646,7 @@ function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
           </div>
           <div style={{ display:"flex",gap:12 }}>
             <div style={{ flex:1 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" placeholder="0.00" value={amount} onWheel={e=>e.target.blur()} onChange={e=>{setAmount(e.target.value);setErr("");}}/></div>
-            <div style={{ flex:1 }}><label style={LBL()}>Payment Date *</label><DateInput style={INP()} value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
+            <div style={{ flex:1 }}><label style={LBL()}>Payment Date *</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
           </div>
           <div><label style={LBL()}>Payment Method</label>
             <select value={method} onChange={e=>setMethod(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
@@ -2879,7 +2656,7 @@ function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
           <div><label style={LBL()}>Related Invoice <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
             <select value={invRef} onChange={e=>setInvRef(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
               <option value="">— None —</option>
-              {projInvoices.map(i=><option key={i.id||i.invId} value={fmtInvId(i,allInvoices)}>{fmtInvId(i,allInvoices)} · ${Number(i.amount).toLocaleString()}</option>)}
+              {projInvoices.map(i=><option key={i.id||i.invId} value={fmtInvId(i)}>{fmtInvId(i)} · ${Number(i.amount).toLocaleString()}</option>)}
             </select>
           </div>
           <div><label style={LBL()}>Notes <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
@@ -2891,9 +2668,9 @@ function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
             {receipt
               ?<div style={{ background:C.surface,border:`1px solid ${C.green}44`,borderRadius:10,padding:"14px 16px" }}>
                   <div style={{ display:"flex",alignItems:"center",gap:10 }}>
-                    <div style={{ width:42,height:42,background:C.card,borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>{receipt.url||receipt.dataUrl?.startsWith("data:image")?<Ic.Image size={22} color={C.muted}/>:<Ic.File size={22} color={C.muted}/>}</div>
+                    <div style={{ width:42,height:42,background:C.card,borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0 }}>{receipt.url||receipt.dataUrl?.startsWith("data:image")?"🖼️":"📄"}</div>
                     <div style={{ flex:1,minWidth:0 }}>
-                      <div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:12 }}><Ic.Check size={12} color={C.green} style={{marginRight:4}}/> File attached</div>
+                      <div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:12 }}>✓ File attached</div>
                       <div style={{ color:C.text,fontFamily:F,fontSize:11,marginTop:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{receipt.name}</div>
                     </div>
                     <button onClick={()=>setReceipt(null)} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,borderRadius:6,padding:"4px 8px",fontFamily:F,fontSize:12,cursor:"pointer" }}>Remove</button>
@@ -2907,7 +2684,7 @@ function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
                   style={{ border:`2px dashed ${C.border}`,borderRadius:10,padding:"24px 20px",textAlign:"center",cursor:"pointer",transition:"all .2s" }}
                   onMouseEnter={e=>{e.currentTarget.style.borderColor=C.green+"88";e.currentTarget.style.background=C.greenDim;}}
                   onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}}>
-                  <div style={{ fontSize:0 }}><Ic.Attach size={28} color={C.muted} style={{marginBottom:7}}/></div>
+                  <div style={{ fontSize:28,marginBottom:7 }}>📎</div>
                   <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:13,marginBottom:3 }}>Drop receipt or click to browse</div>
                   <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>PDF · Images · Screenshots · Any format</div>
                 </div>
@@ -2918,7 +2695,7 @@ function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
         </div>
         <div style={{ padding:"18px 28px",borderTop:`1px solid ${C.border}`,flexShrink:0,display:"flex",gap:10,justifyContent:"flex-end" }}>
           <button onClick={onCancel} style={{ background:"transparent",color:C.muted,border:`1px solid ${C.border}`,padding:"11px 20px",borderRadius:8,fontFamily:F,fontSize:13,cursor:"pointer" }}>Cancel</button>
-          <button onClick={submit} style={{ background:C.green,color:"#fff",border:"none",padding:"11px 32px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer" }}><Ic.Payments size={14} color="#fff" style={{marginRight:6}}/> Save Payment</button>
+          <button onClick={submit} style={{ background:C.green,color:"#fff",border:"none",padding:"11px 32px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer" }}>💰 Save Payment</button>
         </div>
       </div>
     </Overlay>
@@ -2945,25 +2722,17 @@ function EditPaymentModal({ payment, allProjects, allInvoices, onConfirm, onCanc
   const handleFile=async(raw)=>{
     if(raw.size>5*1024*1024){ setErr("File too large (max 5MB)"); return; }
     const du=await new Promise(r=>{const rd=new FileReader();rd.onload=e=>r(e.target.result);rd.readAsDataURL(raw);});
-    setReceipt({ name:raw.name, size:raw.size, dataUrl:du, _rawFile:raw });
+    setReceipt({ name:raw.name, size:raw.size, dataUrl:du });
   };
 
-  const cid = useCompany();
-
-  const submit=async()=>{
+  const submit=()=>{
     if(!amount||isNaN(parseFloat(amount))){ setErr("Payment amount is required"); return; }
     if(!date){ setErr("Payment date is required"); return; }
-    // Upload new receipt to Storage if a raw file was selected
-    let receiptData = receipt || null;
-    if(receipt?._rawFile && cid){
-      const uploaded = await uploadFile(receipt._rawFile, 'receipts', cid);
-      if(uploaded) receiptData = { name:receipt.name, size:receipt.size, url:uploaded.url, path:uploaded.path };
-    }
     onConfirm({
       ...payment,
       projId, project:proj?.name||payment.project||"",
       amount:parseFloat(amount), date, dateFmt:fmtDate(date),
-      method, invRef:invRef||null, notes:notes.trim(), receipt:receiptData,
+      method, invRef:invRef||null, notes:notes.trim(), receipt:receipt||null,
     });
   };
 
@@ -2972,13 +2741,13 @@ function EditPaymentModal({ payment, allProjects, allInvoices, onConfirm, onCanc
       <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:18,width:600,maxHeight:"93vh",display:"flex",flexDirection:"column",overflow:"hidden",boxShadow:"0 24px 60px rgba(0,0,0,.5)" }}>
         <div style={{ padding:"22px 28px 18px",borderBottom:`1px solid ${C.border}`,flexShrink:0,display:"flex",justifyContent:"space-between",alignItems:"center" }}>
           <div>
-            <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}><Ic.Pen size={15} color={C.accent} style={{marginRight:7,verticalAlign:"middle"}}/> Edit Payment</div>
+            <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}>✏️ Edit Payment</div>
             <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2 }}>Update payment information</div>
           </div>
           <button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:22,cursor:"pointer" }}>✕</button>
         </div>
         <div style={{ flex:1,overflowY:"auto",padding:"22px 28px" }}>
-          {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"9px 12px",color:C.red,fontFamily:F,fontSize:12,marginBottom:14 }}><Ic.Warning size={12} color={C.red} style={{marginRight:5,verticalAlign:"middle"}}/>{err}</div>}
+          {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"9px 12px",color:C.red,fontFamily:F,fontSize:12,marginBottom:14 }}>⚠ {err}</div>}
           <div style={{ display:"flex",flexDirection:"column",gap:14 }}>
             <div><label style={LBL()}>Project</label>
               <select value={projId} onChange={e=>setProjId(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
@@ -2987,7 +2756,7 @@ function EditPaymentModal({ payment, allProjects, allInvoices, onConfirm, onCanc
             </div>
             <div style={{ display:"flex",gap:12 }}>
               <div style={{ flex:1 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" placeholder="0.00" value={amount} onWheel={e=>e.target.blur()} onChange={e=>{setAmount(e.target.value);setErr("");}}/></div>
-              <div style={{ flex:1 }}><label style={LBL()}>Payment Date *</label><DateInput style={INP()} value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Payment Date *</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
             </div>
             <div><label style={LBL()}>Payment Method</label>
               <select value={method} onChange={e=>setMethod(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
@@ -2997,7 +2766,7 @@ function EditPaymentModal({ payment, allProjects, allInvoices, onConfirm, onCanc
             <div><label style={LBL()}>Related Invoice <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
               <select value={invRef} onChange={e=>setInvRef(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
                 <option value="">— None —</option>
-                {projInvoices.map(i=><option key={i.id||i.invId} value={fmtInvId(i,allInvoices)}>{fmtInvId(i,allInvoices)} · ${Number(i.amount).toLocaleString()}</option>)}
+                {projInvoices.map(i=><option key={i.id||i.invId} value={fmtInvId(i)}>{fmtInvId(i)} · ${Number(i.amount).toLocaleString()}</option>)}
               </select>
             </div>
             <div><label style={LBL()}>Notes <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
@@ -3008,14 +2777,14 @@ function EditPaymentModal({ payment, allProjects, allInvoices, onConfirm, onCanc
               {receipt
                 ?<div style={{ background:C.surface,border:`1px solid ${C.green}44`,borderRadius:10,padding:"14px 16px" }}>
                     <div style={{ display:"flex",alignItems:"center",gap:10 }}>
-                      <div style={{ width:42,height:42,background:C.card,borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>{receipt.url||receipt.dataUrl?.startsWith("data:image")?<Ic.Image size={22} color={C.muted}/>:<Ic.File size={22} color={C.muted}/>}</div>
+                      <div style={{ width:42,height:42,background:C.card,borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0 }}>{receipt.url||receipt.dataUrl?.startsWith("data:image")?"🖼️":"📄"}</div>
                       <div style={{ flex:1,minWidth:0 }}>
-                        <div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:12 }}><Ic.Check size={12} color={C.green} style={{marginRight:4}}/> Attached</div>
+                        <div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:12 }}>✓ Attached</div>
                         <div style={{ color:C.text,fontFamily:F,fontSize:11,marginTop:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{receipt.name}</div>
                       </div>
                       <button onClick={()=>setReceipt(null)} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,borderRadius:6,padding:"4px 8px",fontFamily:F,fontSize:12,cursor:"pointer" }}>Remove</button>
                     </div>
-                    {(receipt.url||receipt.dataUrl?.startsWith("data:image"))&&<img src={receipt.url||receipt.dataUrl} alt="" style={{ maxWidth:"100%",maxHeight:160,objectFit:"contain",borderRadius:8,marginTop:10,border:`1px solid ${C.border}` }}/>}
+                    {receipt.url||receipt.dataUrl?.startsWith("data:image")&&<img src={receipt.url||receipt.dataUrl} alt="" style={{ maxWidth:"100%",maxHeight:160,objectFit:"contain",borderRadius:8,marginTop:10,border:`1px solid ${C.border}` }}/>}
                   </div>
                 :<div onClick={()=>fileRef.current.click()}
                     onDragOver={e=>{e.preventDefault();e.currentTarget.style.borderColor=C.green;e.currentTarget.style.background=C.greenDim;}}
@@ -3024,7 +2793,7 @@ function EditPaymentModal({ payment, allProjects, allInvoices, onConfirm, onCanc
                     style={{ border:`2px dashed ${C.border}`,borderRadius:10,padding:"22px 20px",textAlign:"center",cursor:"pointer",transition:"all .2s" }}
                     onMouseEnter={e=>{e.currentTarget.style.borderColor=C.green+"88";e.currentTarget.style.background=C.greenDim;}}
                     onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}}>
-                    <div style={{ fontSize:0 }}><Ic.Attach size={28} color={C.muted} style={{marginBottom:6}}/></div>
+                    <div style={{ fontSize:28,marginBottom:6 }}>📎</div>
                     <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:12,marginBottom:2 }}>Drop file or click to browse</div>
                     <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>PDF · Images · Screenshots</div>
                   </div>
@@ -3051,113 +2820,75 @@ function PayReceiptBtn({ receipt }){
 // Payments panel inside project detail
 // ─── Contracts Panel ──────────────────────────────────────────────────────────
 function ContractsPanel({ project, onActivity }){
+  const cid = useCompany();
   const { files, ready, add, remove } = useFiles(`contracts:${project.id}`);
-  const [preview,    setPreview]    = useState(null);
+  const [preview, setPreview] = useState(null);
   const [confirmDel, setConfirmDel] = useState(null);
-  const [showAdd,    setShowAdd]    = useState(false);
-  // form state
-  const [ctTitle,  setCtTitle]  = useState('');
-  const [ctDesc,   setCtDesc]   = useState('');
-  const [ctFile,   setCtFile]   = useState(null);
-  const [ctErr,    setCtErr]    = useState('');
-  const [saving,   setSaving]   = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [note, setNote] = useState('');
   const fileRef = useRef();
 
-  const resetForm = () => { setCtTitle(''); setCtDesc(''); setCtFile(null); setCtErr(''); setSaving(false); };
-
-  const handleFileSelect = (raw) => {
+  const handleUpload = async(raw) => {
     if(!raw) return;
-    setCtFile(raw);
-    // Auto-fill title from filename if empty
-    if(!ctTitle) setCtTitle(raw.name.replace(/\.[^.]+$/, '').replace(/[_-]/g, ' '));
-    setCtErr('');
+    setUploading(true);
+    await add({ name:raw.name, size:raw.size, uploadedAt:new Date().toLocaleDateString(), note:note.trim() }, raw);
+    if(onActivity) onActivity('Contract uploaded: '+raw.name, '📜');
+    setNote('');
+    setUploading(false);
   };
-
-  const handleSave = async() => {
-    if(!ctTitle.trim()){ setCtErr('Contract title is required'); return; }
-    if(!ctFile){ setCtErr('Please upload a file'); return; }
-    setSaving(true);
-    await add({
-      name:        ctFile.name,
-      size:        ctFile.size,
-      title:       ctTitle.trim(),
-      description: ctDesc.trim(),
-    }, ctFile);
-    if(onActivity) onActivity('Contract added: ' + ctTitle.trim(), '📜');
-    resetForm();
-    setShowAdd(false);
-  };
-
-  const handleDelete = (f) => {
-    remove(f.id);
-    if(onActivity) onActivity('Contract deleted: ' + (f.title||f.name), '🗑️');
-    setConfirmDel(null);
-  };
-
-  if(!ready) return <div style={{ color:C.muted,fontFamily:F,fontSize:12,padding:'16px 0',textAlign:'center' }}>Loading…</div>;
 
   return(
     <div>
       {preview&&<FilePreviewModal file={preview} onClose={()=>setPreview(null)}/>}
       {confirmDel&&(
-        <ConfirmDialog
-          title="Delete Contract?"
-          message={`Delete "${confirmDel.title||confirmDel.name}"? This cannot be undone.`}
+        <ConfirmDialog title="Delete Contract?" message={`Delete "${confirmDel.name}"? This cannot be undone.`}
           confirmLabel="Yes, Delete" variant="delete"
-          onConfirm={()=>handleDelete(confirmDel)}
-          onCancel={()=>setConfirmDel(null)}>
-          <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:'10px 14px',display:'flex',alignItems:'center',gap:10 }}>
-            <Ic.Contract size={22} color={C.muted}/>
-            <div>
-              <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:13 }}>{confirmDel.title||confirmDel.name}</div>
-              {confirmDel.description&&<div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:2 }}>{confirmDel.description}</div>}
-            </div>
-          </div>
-        </ConfirmDialog>
+          onConfirm={()=>{ remove(confirmDel.id); if(onActivity) onActivity('Contract deleted: '+confirmDel.name,'🗑️'); setConfirmDel(null); }}
+          onCancel={()=>setConfirmDel(null)}/>
       )}
 
+      {/* Upload area */}
+      <div style={{ marginBottom:16 }}>
+        <div style={{ display:'flex',gap:10,marginBottom:8 }}>
+          <input value={note} onChange={e=>setNote(e.target.value)} placeholder="Description or notes (optional)"
+            style={{ ...INP(),flex:1,fontSize:12,padding:'8px 12px' }}/>
+          <button onClick={()=>fileRef.current?.click()} disabled={uploading}
+            style={{ background:C.purple,color:'#fff',border:'none',padding:'8px 18px',borderRadius:8,fontFamily:F,fontWeight:700,fontSize:12,cursor:'pointer',flexShrink:0,display:'flex',alignItems:'center',gap:6,opacity:uploading?0.6:1 }}>
+            {uploading ? <><div style={{ width:12,height:12,border:'2px solid #ffffff44',borderTopColor:'#fff',borderRadius:'50%',animation:'spin .7s linear infinite' }}/>Uploading…</> : <>📜 Upload Contract</>}
+          </button>
+        </div>
+        <input ref={fileRef} type="file" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx" style={{ display:'none' }}
+          onChange={e=>{ const f=e.target.files[0]; if(f) handleUpload(f); e.target.value=''; }}/>
+        <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>PDF, images, or Word documents · Max 10MB</div>
+      </div>
+
       {/* File list */}
-      {!showAdd&&files.length===0&&(
-        <div style={{ border:`2px dashed ${C.border}`,borderRadius:10,padding:'32px 20px',textAlign:'center',color:C.muted,fontFamily:F,fontSize:13,marginBottom:14 }}>
-          <Ic.Contract size={32} color={C.muted} style={{marginBottom:8}}/>
-          <div style={{ fontWeight:600,marginBottom:4 }}>No contracts yet</div>
-          <div style={{ fontSize:12 }}>Upload signed contracts, agreements, and legal documents</div>
+      {!ready&&<div style={{ color:C.muted,fontFamily:F,fontSize:12,textAlign:'center',padding:'20px 0' }}>Loading…</div>}
+      {ready&&files.length===0&&(
+        <div style={{ border:`2px dashed ${C.border}`,borderRadius:10,padding:'32px 20px',textAlign:'center',color:C.muted,fontFamily:F,fontSize:13 }}>
+          <div style={{ fontSize:32,marginBottom:8 }}>📜</div>No contracts uploaded yet
         </div>
       )}
-      {!showAdd&&files.length>0&&(
-        <div style={{ display:'flex',flexDirection:'column',gap:8,marginBottom:14 }}>
+      {ready&&files.length>0&&(
+        <div style={{ display:'flex',flexDirection:'column',gap:8 }}>
           {files.map(f=>{
-            const ext = (f.name||'').split('.').pop().toLowerCase();
-            const isPdf = ext==='pdf';
-            const isImg = ['png','jpg','jpeg','gif','webp'].includes(ext);
-            const fileIcon = isPdf ? <Ic.File size={18} color={C.purple}/> : isImg ? <Ic.Image size={18} color={C.purple}/> : <Ic.Attach size={18} color={C.purple}/>;
+            const isPdf = f.name?.toLowerCase().endsWith('.pdf');
+            const isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(f.name||'');
             return(
-              <div key={f.id} style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:'14px 16px',display:'flex',alignItems:'flex-start',gap:12,transition:'border-color .15s' }}
-                onMouseEnter={e=>e.currentTarget.style.borderColor=C.purple+'66'}
-                onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}>
-                {/* File type icon */}
-                <div style={{ width:40,height:40,borderRadius:8,background:C.purpleDim,border:`1px solid ${C.purple}44`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,flexShrink:0,marginTop:1 }}>
-                  {fileIcon}
+              <div key={f.id} style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:'12px 16px',display:'flex',alignItems:'center',gap:12 }}>
+                <div style={{ width:38,height:38,borderRadius:8,background:C.purpleDim,border:`1px solid ${C.purple}44`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:18,flexShrink:0 }}>
+                  {isPdf?'📄':isImg?'🖼️':'📎'}
                 </div>
-                {/* Contract info */}
                 <div style={{ flex:1,minWidth:0 }}>
-                  <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:13,marginBottom:2 }}>
-                    {f.title||f.name}
-                  </div>
-                  {f.description&&(
-                    <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginBottom:4,lineHeight:1.4 }}>
-                      {f.description}
-                    </div>
-                  )}
-                  <div style={{ color:C.muted,fontFamily:F,fontSize:11,display:'flex',gap:10,flexWrap:'wrap' }}>
-                    <span style={{display:"inline-flex",alignItems:"center",gap:3}}><Ic.Attach size={11} color={C.muted}/> {f.name}</span>
-                    {f.size>0&&<span>{fmtBytes(f.size)}</span>}
-                    {f.uploadedAt&&<span style={{display:"inline-flex",alignItems:"center",gap:3}}><Ic.Calendar size={11} color={C.muted}/> {f.uploadedAt}</span>}
+                  <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:13,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{f.name}</div>
+                  <div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:2,display:'flex',gap:10 }}>
+                    {f.size&&<span>{(f.size/1024).toFixed(0)} KB</span>}
+                    {f.uploadedAt&&<span>{f.uploadedAt}</span>}
+                    {f.note&&<span style={{ color:C.accent }}>"{f.note}"</span>}
                   </div>
                 </div>
-                {/* Actions */}
                 <RowActions>
-                  {f.url&&<RowBtn type="view" onClick={()=>setPreview(f)}>View</RowBtn>}
+                  {(f.url||f.dataUrl)&&<RowBtn type="view" onClick={()=>setPreview(f)}>View</RowBtn>}
                   <RowBtn type="delete" onClick={()=>setConfirmDel(f)}>Delete</RowBtn>
                 </RowActions>
               </div>
@@ -3165,63 +2896,6 @@ function ContractsPanel({ project, onActivity }){
           })}
         </div>
       )}
-
-      {/* Add form */}
-      {showAdd
-        ? <InlineFormShell header="Add Contract" accent={C.purple} saveLabel="Save Contract" onSave={handleSave} onCancel={()=>{ resetForm(); setShowAdd(false); }} err={ctErr} saving={saving}>
-
-            {/* File upload */}
-            <div>
-              <label style={LBL()}>Upload File *</label>
-              {ctFile
-                ? <div style={{ background:C.surface,border:`1px solid ${C.green}44`,borderRadius:9,padding:'12px 14px',display:'flex',alignItems:'center',gap:10 }}>
-                    <div style={{ width:40,height:40,background:C.card,borderRadius:6,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0 }}><Ic.File size={20} color={C.muted}/></div>
-                    <div style={{ flex:1,minWidth:0 }}>
-                      <div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:12 }}><Ic.Check size={12} color={C.green} style={{marginRight:4}}/> File ready</div>
-                      <div style={{ color:C.text,fontFamily:F,fontSize:11,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{ctFile.name}</div>
-                      <div style={{ color:C.muted,fontFamily:F,fontSize:10,marginTop:1 }}>{fmtBytes(ctFile.size)}</div>
-                    </div>
-                    <button onClick={()=>setCtFile(null)} style={{ background:'transparent',color:C.red,border:`1px solid ${C.red}33`,borderRadius:5,padding:'3px 8px',fontFamily:F,fontSize:11,cursor:'pointer' }}>Remove</button>
-                  </div>
-                : <div
-                    onClick={()=>fileRef.current?.click()}
-                    onDragOver={e=>{ e.preventDefault(); e.currentTarget.style.borderColor=C.purple; e.currentTarget.style.background=C.purpleDim; }}
-                    onDragLeave={e=>{ e.currentTarget.style.borderColor=C.border; e.currentTarget.style.background='transparent'; }}
-                    onDrop={e=>{ e.preventDefault(); e.currentTarget.style.borderColor=C.border; e.currentTarget.style.background='transparent'; const f=e.dataTransfer.files[0]; if(f) handleFileSelect(f); }}
-                    style={{ border:`2px dashed ${C.border}`,borderRadius:9,padding:'22px',textAlign:'center',cursor:'pointer',transition:'all .2s' }}
-                    onMouseEnter={e=>{ e.currentTarget.style.borderColor=C.purple+'88'; e.currentTarget.style.background=C.purpleDim; }}
-                    onMouseLeave={e=>{ e.currentTarget.style.borderColor=C.border; e.currentTarget.style.background='transparent'; }}>
-                    <Ic.Folder size={28} color={C.muted} style={{marginBottom:7}}/>
-                    <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:12,marginBottom:3 }}>Drop file or click to browse</div>
-                    <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>PDF · Word · Images · Any format</div>
-                  </div>
-              }
-              <input ref={fileRef} type="file" accept="*" style={{ display:'none' }}
-                onChange={e=>{ const f=e.target.files[0]; if(f) handleFileSelect(f); e.target.value=''; }}/>
-            </div>
-
-            {/* Title */}
-            <div>
-              <label style={LBL()}>Contract Title *</label>
-              <input style={INP()} value={ctTitle} onChange={e=>{ setCtTitle(e.target.value); setCtErr(''); }}
-                placeholder="e.g. Main Construction Agreement, Subcontractor Contract"/>
-            </div>
-
-            {/* Description */}
-            <div>
-              <label style={LBL()}>Description <span style={{ color:C.muted,fontWeight:400 }}>(optional)</span></label>
-              <textarea style={{ ...INP(),resize:'none',lineHeight:1.55 }} rows={3} value={ctDesc}
-                onChange={e=>setCtDesc(e.target.value)}
-                placeholder="Describe the contract scope, parties involved, key terms…"/>
-            </div>
-
-          </InlineFormShell>
-
-        : <button onClick={()=>{ resetForm(); setShowAdd(true); }}
-            style={{ background:C.purple,color:'#fff',border:'none',padding:'10px 22px',borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:'pointer',display:'flex',alignItems:'center',gap:7 }}>
-            <><Ic.Contract size={13} color="#fff" style={{marginRight:5}}/> Add Contract</>
-          </button>
-      }
     </div>
   );
 }
@@ -3335,7 +3009,7 @@ function PaymentsPanel({ project, payments, addPayment, updatePayment, removePay
         ?<InlineFormShell header="Record Payment" accent={C.green} saveLabel="Save Payment" onSave={submitPay} onCancel={()=>setShowAdd(false)} err={payErr} saving={paySaving}>
             <div style={{ display:"flex",gap:12 }}>
               <div style={{ flex:1 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" placeholder="0.00" value={payAmount} onChange={e=>{setPayAmount(e.target.value);setPayErr("");}}/></div>
-              <div style={{ flex:1 }}><label style={LBL()}>Payment Date *</label><DateInput style={INP()} value={payDate} onChange={e=>{setPayDate(e.target.value);setPayErr("");}}/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Payment Date *</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={payDate} onChange={e=>{setPayDate(e.target.value);setPayErr("");}}/></div>
             </div>
             <div><label style={LBL()}>Payment Method</label>
               <select value={payMethod} onChange={e=>setPayMethod(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
@@ -3345,7 +3019,7 @@ function PaymentsPanel({ project, payments, addPayment, updatePayment, removePay
             <div><label style={LBL()}>Related Invoice <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
               <select value={payInvRef} onChange={e=>setPayInvRef(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
                 <option value="">— None —</option>
-                {projInvoices.map(i=><option key={i.id||i.invId} value={fmtInvId(i,allInvoices)}>{fmtInvId(i,allInvoices)} · ${Number(i.amount).toLocaleString()}</option>)}
+                {projInvoices.map(i=><option key={i.id||i.invId} value={fmtInvId(i)}>{fmtInvId(i)} · ${Number(i.amount).toLocaleString()}</option>)}
               </select>
             </div>
             <div><label style={LBL()}>Notes <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label><textarea style={{ ...INP(),resize:"none" }} rows={2} value={payNotes} onChange={e=>setPayNotes(e.target.value)} placeholder="Reference number, comments…"/></div>
@@ -3353,12 +3027,12 @@ function PaymentsPanel({ project, payments, addPayment, updatePayment, removePay
               <label style={LBL()}>Attach Receipt <span style={{fontWeight:400,color:C.muted}}>(optional)</span></label>
               {payReceipt
                 ?<div style={{ background:C.surface,border:`1px solid ${C.green}44`,borderRadius:9,padding:"12px 14px",display:"flex",alignItems:"center",gap:10 }}>
-                    <div style={{ width:34,height:34,background:C.card,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,flexShrink:0 }}>{payReceipt.dataUrl?.startsWith("data:image")?<Ic.Image size={16} color={C.muted}/>:<Ic.File size={16} color={C.muted}/>}</div>
-                    <div style={{ flex:1,minWidth:0 }}><div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:12 }}><Ic.Check size={12} color={C.green} style={{marginRight:4}}/> Attached</div><div style={{ color:C.text,fontFamily:F,fontSize:11,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{payReceipt.name}</div></div>
+                    <div style={{ width:34,height:34,background:C.card,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,flexShrink:0 }}>{payReceipt.dataUrl?.startsWith("data:image")?"🖼️":"📄"}</div>
+                    <div style={{ flex:1,minWidth:0 }}><div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:12 }}>✓ Attached</div><div style={{ color:C.text,fontFamily:F,fontSize:11,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{payReceipt.name}</div></div>
                     <button onClick={()=>setPayReceipt(null)} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,borderRadius:5,padding:"3px 8px",fontFamily:F,fontSize:11,cursor:"pointer" }}>Remove</button>
                   </div>
                 :<div onClick={()=>payFileRef.current.click()} onDragOver={e=>{e.preventDefault();e.currentTarget.style.borderColor=C.green;e.currentTarget.style.background=C.greenDim;}} onDragLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}} onDrop={e=>{e.preventDefault();e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";const f=e.dataTransfer.files[0];if(f)handlePayFile(f);}} style={{ border:`2px dashed ${C.border}`,borderRadius:9,padding:"18px",textAlign:"center",cursor:"pointer",transition:"all .2s" }} onMouseEnter={e=>{e.currentTarget.style.borderColor=C.green+"88";e.currentTarget.style.background=C.greenDim;}} onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}}>
-                    <Ic.Attach size={22} color={C.muted} style={{marginBottom:5}}/>
+                    <div style={{ fontSize:22,marginBottom:5 }}>📎</div>
                     <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:12,marginBottom:2 }}>Drop receipt or click to browse</div>
                     <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>PDF · Images · Screenshots</div>
                   </div>
@@ -3373,87 +3047,12 @@ function PaymentsPanel({ project, payments, addPayment, updatePayment, removePay
 }
 
 // Global payments page
-// ─── Payment Detail Modal ─────────────────────────────────────────────────────
-function PaymentDetailModal({ payment, onClose, onEdit, onDelete, onViewReceipt }){
-  if(!payment) return null;
-  const receipt = payment.receipt;
-  const receiptFile = receipt ? { ...receipt, dataUrl: receipt.url||receipt.dataUrl } : null;
-
-  const fields = [
-    { label:'Amount',  value:`$${Number(payment.amount||0).toLocaleString()}`, color:C.green, bold:true },
-    { label:'Date',    value:payment.dateFmt||payment.date||'—',               color:C.text  },
-    { label:'Project', value:payment.project||'—',                             color:C.text  },
-    { label:'Method',  value:payment.method||'—',                              color:C.muted },
-    { label:'Notes',   value:payment.notes||'—',                               color:C.muted },
-  ];
-
-  return(
-    <Overlay onClose={onClose}>
-      <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,width:440,maxWidth:'95vw',boxShadow:'0 24px 60px rgba(0,0,0,.5)',display:'flex',flexDirection:'column',overflow:'hidden' }}>
-
-        {/* Header */}
-        <div style={{ padding:'22px 24px 18px',borderBottom:`1px solid ${C.border}`,display:'flex',alignItems:'center',justifyContent:'space-between',gap:12 }}>
-          <div style={{ display:'flex',alignItems:'center',gap:12 }}>
-            <div style={{ width:42,height:42,borderRadius:10,background:C.greenDim,border:`1px solid ${C.green}44`,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0 }}><Ic.Payments size={20} color={C.green}/></div>
-            <div>
-              <div style={{ color:C.muted,fontFamily:F,fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',marginBottom:3 }}>Payment</div>
-              <div style={{ color:C.green,fontFamily:F,fontWeight:700,fontSize:18,lineHeight:1.2 }}>${Number(payment.amount||0).toLocaleString()}</div>
-            </div>
-          </div>
-          <button onClick={onClose} style={{ background:'transparent',border:'none',color:C.muted,fontSize:20,cursor:'pointer',lineHeight:1,padding:4 }}>✕</button>
-        </div>
-
-        {/* Fields */}
-        <div style={{ padding:'18px 24px',display:'flex',flexDirection:'column',gap:10 }}>
-          {fields.map(r=>(
-            <div key={r.label} style={{ display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:16,paddingBottom:10,borderBottom:`1px solid ${C.border}22` }}>
-              <span style={{ color:C.muted,fontFamily:F,fontSize:12,fontWeight:600,flexShrink:0,minWidth:80 }}>{r.label}</span>
-              <span style={{ color:r.color||C.text,fontFamily:F,fontSize:13,fontWeight:r.bold?700:400,textAlign:'right' }}>{r.value}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Receipt file — View delegates to parent so FilePreviewModal renders outside this Overlay */}
-        {receiptFile&&(
-          <div style={{ padding:'0 24px 14px' }}>
-            <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:'10px 14px',display:'flex',alignItems:'center',gap:10 }}>
-              <Ic.Receipt size={18} color={C.muted}/>
-              <div style={{ flex:1,minWidth:0 }}>
-                <div style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{receipt.name||'Receipt'}</div>
-                {receipt.size>0&&<div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:1 }}>{(receipt.size/1024).toFixed(0)} KB</div>}
-              </div>
-              <div style={{ display:'flex',gap:6,flexShrink:0 }}>
-                <button onClick={()=>onViewReceipt(receiptFile)} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}44`,padding:'5px 12px',borderRadius:6,fontFamily:F,fontSize:11,fontWeight:700,cursor:'pointer' }}><Ic.Eye size={12} color={C.blue} style={{marginRight:4,verticalAlign:"middle"}}/> View</button>
-                {(receipt.url||receipt.dataUrl)&&<a href={receipt.url||receipt.dataUrl} download={receipt.name||'receipt'} style={{ background:C.accentDim,color:C.accent,border:`1px solid ${C.accentMid}`,padding:'5px 12px',borderRadius:6,fontFamily:F,fontSize:11,fontWeight:700,textDecoration:'none',display:'flex',alignItems:'center' }}>↓ Download</a>}
-              </div>
-            </div>
-          </div>
-        )}
-        {!receiptFile&&(
-          <div style={{ padding:'0 24px 14px' }}>
-            <div style={{ background:C.surface,border:`1px solid ${C.border}33`,borderRadius:9,padding:'10px 14px',color:C.muted,fontFamily:F,fontSize:12,textAlign:'center' }}>No receipt attached</div>
-          </div>
-        )}
-
-        {/* Actions */}
-        <div style={{ padding:'14px 24px 20px',display:'flex',gap:8,justifyContent:'flex-end',borderTop:`1px solid ${C.border}` }}>
-          <button onClick={onClose} style={{ background:'transparent',border:`1px solid ${C.border}`,color:C.muted,padding:'8px 18px',borderRadius:8,fontFamily:F,fontSize:13,cursor:'pointer' }}>Close</button>
-          <button onClick={()=>{ onClose(); onEdit(payment); }} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}44`,padding:'8px 18px',borderRadius:8,fontFamily:F,fontSize:13,fontWeight:700,cursor:'pointer' }}><Ic.Pen size={12} color={C.blue} style={{marginRight:4,verticalAlign:"middle"}}/> Edit</button>
-          <button onClick={()=>{ onClose(); onDelete(payment); }} style={{ background:C.redDim,color:C.red,border:`1px solid ${C.red}44`,padding:'8px 18px',borderRadius:8,fontFamily:F,fontSize:13,fontWeight:700,cursor:'pointer' }}><Ic.Delete size={12} color={C.red} style={{marginRight:4,verticalAlign:"middle"}}/> Delete</button>
-        </div>
-      </div>
-    </Overlay>
-  );
-}
-
 function PaymentsPage({ payments, allProjects, addPayment, allInvoices, removePayment, updatePayment }){
   const [projFilter,setProjFilter]=useState("all");
   const [showAdd,setShowAdd]=useState(false);
   const [editingPayment,setEditingPayment]=useState(null);
   const [confirmEditPay,setConfirmEditPay]=useState(null);
   const [confirmDelete,setConfirmDelete]=useState(null);
-  const [selectedPayment,setSelectedPayment]=useState(null);
-  const [previewReceipt,setPreviewReceipt]=useState(null);
 
   const filtered=useMemo(()=>payments.filter(p=>{
     if(projFilter!=="all"&&String(p.projId)!==projFilter)return false;
@@ -3490,9 +3089,7 @@ function PaymentsPage({ payments, allProjects, addPayment, allInvoices, removePa
           </div>
         </ConfirmDialog>
       )}
-      {previewReceipt&&<FilePreviewModal file={previewReceipt} onClose={()=>setPreviewReceipt(null)}/>}
-      {selectedPayment&&<PaymentDetailModal payment={selectedPayment} onClose={()=>setSelectedPayment(null)} onEdit={p=>setEditingPayment(p)} onDelete={p=>setConfirmDelete(p)} onViewReceipt={f=>{ setSelectedPayment(null); setPreviewReceipt(f); }}/>}
-      <PageHeader icon={<Ic.Payments size={22} color={C.green}/>} title="Payments" subtitle="Track all client payments across projects"
+      <PageHeader icon="💳" title="Payments" subtitle="Track all client payments across projects"
         action={<Btn variant="success" size="md" onClick={()=>setShowAdd(true)}>+ Record Payment</Btn>}/>
       <div style={{ display:"flex",gap:12,marginBottom:24,flexWrap:"wrap" }}>
         <StatCard label="Total Received"  value={"$"+total.toLocaleString()}         sub={`${payments.length} transactions`} color={C.green}/>
@@ -3507,27 +3104,26 @@ function PaymentsPage({ payments, allProjects, addPayment, allInvoices, removePa
       </div>
       <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,overflow:"hidden" }}>
         {filtered.length===0
-          ?<EmptyState icon={<Ic.Payments size={36} color={C.muted}/>} title="No payments recorded yet" sub="Record your first payment above"/>
+          ?<EmptyState icon="💰" title="No payments recorded yet" sub="Record your first payment above"/>
           :<table style={{ width:"100%",borderCollapse:"collapse",fontFamily:F,fontSize:13 }}>
             <thead><tr style={{ borderBottom:`1px solid ${C.border}`,background:C.surface }}>
-              {["Date","Project","Amount","Method","Notes"].map(h=><th key={h} style={TH()}>{h}</th>)}
-              <th style={ACT_COL_CELL}><div style={ACT_COL_INNER_TH}>Actions</div></th>
+              {["Date","Project","Amount","Method","Invoice Ref","Notes","Receipt",""].map(h=><th key={h} style={TH()}>{h}</th>)}
             </tr></thead>
             <tbody>{filtered.map((p,i)=>(
-              <tr key={p.id}
-                onClick={e=>{ if(e.target.closest('[data-norow]')) return; setSelectedPayment(p); }}
-                style={{ borderBottom:i<filtered.length-1?`1px solid ${C.border}22`:"none",transition:"background .12s",cursor:"pointer" }}
+              <tr key={p.id} style={{ borderBottom:i<filtered.length-1?`1px solid ${C.border}22`:"none",transition:"background .12s" }}
                 onMouseEnter={e=>e.currentTarget.style.background=C.surface} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
                 <td style={TD({color:C.muted})}>{p.dateFmt}</td>
                 <td style={TD({color:C.text,fontWeight:600})}>{p.project}</td>
                 <td style={TD({color:C.green,fontWeight:700})}>${p.amount.toLocaleString()}</td>
                 <td style={TD({color:C.muted})}>{p.method}</td>
+                <td style={TD({color:C.accent,fontWeight:700,fontSize:12})}>{resolveInvRef(p.invRef,allInvoices)}</td>
                 <td style={TD({color:C.muted,maxWidth:140,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"})}>{p.notes||"—"}</td>
-                <td style={ACT_COL_CELL} data-norow>
-                  <div style={ACT_COL_INNER}>
-                    <RowBtn type="edit" onClick={e=>{ e.stopPropagation(); setEditingPayment(p); }}>Edit</RowBtn>
-                    <RowBtn type="delete" onClick={e=>{ e.stopPropagation(); setConfirmDelete(p); }}>Delete</RowBtn>
-                  </div>
+                <td style={TD()}>{p.receipt?<PayReceiptBtn receipt={p.receipt}/>:"—"}</td>
+                <td style={TD()}>
+                  <RowActions>
+                    <RowBtn type="edit" onClick={()=>setEditingPayment(p)}>Edit</RowBtn>
+                    <RowBtn type="delete" onClick={()=>setConfirmDelete(p)}>Delete</RowBtn>
+                  </RowActions>
                 </td>
               </tr>
             ))}</tbody>
@@ -3576,8 +3172,8 @@ function ReportPage({ tasks, allProjects, allInvoices }){
         <SLabel>Report Configuration</SLabel>
         <div style={{ display:"flex",gap:16,flexWrap:"wrap",alignItems:"flex-end" }}>
           <div style={{ flex:2,minWidth:200 }}><label style={LBL()}>Project</label><select value={projId||""} onChange={e=>{setProjId(e.target.value);setReport(null);}} style={{ ...INP(),cursor:"pointer" }}>{(allProjects||[]).map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></div>
-          <div style={{ flex:1,minWidth:140 }}><label style={LBL()}>From</label><DateInput style={INP()} value={from} onChange={e=>{setFrom(e.target.value);setReport(null);}}/></div>
-          <div style={{ flex:1,minWidth:140 }}><label style={LBL()}>To</label><DateInput style={INP()} value={to} onChange={e=>{setTo(e.target.value);setReport(null);}}/></div>
+          <div style={{ flex:1,minWidth:140 }}><label style={LBL()}>From</label><input type="date" value={from} onChange={e=>{setFrom(e.target.value);setReport(null);}} style={{ ...INP(),colorScheme:"dark" }}/></div>
+          <div style={{ flex:1,minWidth:140 }}><label style={LBL()}>To</label><input type="date" value={to} onChange={e=>{setTo(e.target.value);setReport(null);}} style={{ ...INP(),colorScheme:"dark" }}/></div>
           <button onClick={generate} disabled={generating} style={{ background:generating?"transparent":C.accent,color:generating?C.accent:"#000",border:generating?`1px solid ${C.accent}44`:"none",padding:"10px 28px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",gap:8,flexShrink:0,height:40 }}>
             {generating?<><div style={{ width:15,height:15,border:"2px solid #f59e0b44",borderTopColor:C.accent,borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Generating…</>:"Generate Report"}
           </button>
@@ -3600,7 +3196,7 @@ function ReportPage({ tasks, allProjects, allInvoices }){
               <div>
                 <div style={{ color:C.muted,fontFamily:F,fontSize:11,fontWeight:700,textTransform:"uppercase",letterSpacing:1,marginBottom:6 }}>Project Report</div>
                 <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:24 }}>{report.project.name}</div>
-                <div style={{ color:C.muted,fontFamily:F,fontSize:13,marginTop:4 }}><Ic.MapPin size={12} color={C.muted} style={{marginRight:4,verticalAlign:"middle"}}/> {report.project.address}</div>
+                <div style={{ color:C.muted,fontFamily:F,fontSize:13,marginTop:4 }}>📍 {report.project.address}</div>
               </div>
               <div style={{ textAlign:"right" }}>
                 <div style={{ color:C.muted,fontFamily:F,fontSize:11,fontWeight:700,textTransform:"uppercase" }}>Reporting Period</div>
@@ -3626,7 +3222,7 @@ function ReportPage({ tasks, allProjects, allInvoices }){
           {/* Invoices */}
           {report.invoices.length>0&&(
             <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"20px 24px" }}>
-              <SLabel><Ic.Receipt size={11} color={C.muted} style={{marginRight:4,verticalAlign:"middle"}}/> Invoices in Period</SLabel>
+              <SLabel>🧾 Invoices in Period</SLabel>
               <table style={{ width:"100%",borderCollapse:"collapse",fontFamily:F,fontSize:13 }}>
                 <thead><tr style={{ borderBottom:`1px solid ${C.border}` }}>{["Invoice","Description","Amount","Due","Status"].map(h=><th key={h} style={{ color:C.muted,fontSize:11,fontWeight:700,padding:"7px 10px",textAlign:"left" }}>{h}</th>)}</tr></thead>
                 <tbody>{report.invoices.map((inv,i)=>(
@@ -3641,7 +3237,7 @@ function ReportPage({ tasks, allProjects, allInvoices }){
               </table>
             </div>
           )}
-          {report.invoices.length===0&&<div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"20px 24px",color:C.muted,fontFamily:F,fontSize:13 }}><Ic.Receipt size={13} color={C.muted} style={{marginRight:4}}/> No invoices in this period.</div>}
+          {report.invoices.length===0&&<div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"20px 24px",color:C.muted,fontFamily:F,fontSize:13 }}>🧾 No invoices in this period.</div>}
 
           {/* Tasks */}
           {report.tasks.length>0&&(
@@ -3652,8 +3248,8 @@ function ReportPage({ tasks, allProjects, allInvoices }){
                   <div key={t.id} style={{ display:"flex",alignItems:"center",gap:12,background:C.surface,borderRadius:8,padding:"10px 14px" }}>
                     <div style={{ width:8,height:8,borderRadius:"50%",background:t.status==="done"?C.green:C.accent,flexShrink:0 }}/>
                     <div style={{ flex:1 }}><span style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:13 }}>{t.title}</span>{t.desc&&<span style={{ color:C.muted,fontFamily:F,fontSize:11,marginLeft:8 }}>{t.desc}</span>}</div>
-                    <span style={{ color:C.muted,fontFamily:F,fontSize:12,display:"inline-flex",alignItems:"center",gap:3 }}><Ic.Person size={11} color={C.muted}/> {t.member}</span>
-                    <span style={{ color:C.muted,fontFamily:F,fontSize:12,display:"inline-flex",alignItems:"center",gap:3 }}><Ic.Calendar size={11} color={C.muted}/> {t.date}</span>
+                    <span style={{ color:C.muted,fontFamily:F,fontSize:12 }}>👤 {t.member}</span>
+                    <span style={{ color:C.muted,fontFamily:F,fontSize:12 }}>📅 {t.date}</span>
                     <Badge status={t.status}/>
                   </div>
                 ))}
@@ -3664,7 +3260,7 @@ function ReportPage({ tasks, allProjects, allInvoices }){
           {/* Notes */}
           {report.notes.length>0&&(
             <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"20px 24px" }}>
-              <SLabel><Ic.Note size={11} color={C.muted} style={{marginRight:4,verticalAlign:"middle"}}/> Notes & Updates</SLabel>
+              <SLabel>📝 Notes & Updates</SLabel>
               <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
                 {report.notes.map(n=>(
                   <div key={n.id} style={{ borderLeft:`3px solid ${C.accent}`,paddingLeft:14,paddingTop:4,paddingBottom:4 }}>
@@ -3679,7 +3275,7 @@ function ReportPage({ tasks, allProjects, allInvoices }){
           {/* Team */}
           {report.members.length>0&&(
             <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"20px 24px" }}>
-              <SLabel><Ic.Team size={11} color={C.muted} style={{marginRight:4,verticalAlign:"middle"}}/> Team</SLabel>
+              <SLabel>👷 Team</SLabel>
               <div style={{ display:"flex",flexWrap:"wrap",gap:10 }}>
                 {report.members.map(m=>(
                   <div key={m.id} style={{ display:"flex",alignItems:"center",gap:10,background:C.surface,borderRadius:8,padding:"10px 14px" }}>
@@ -3695,7 +3291,7 @@ function ReportPage({ tasks, allProjects, allInvoices }){
           {/* Activity Log */}
           {report.logs.length>0&&(
             <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"20px 24px" }}>
-              <SLabel><Ic.Clock size={11} color={C.muted} style={{marginRight:4,verticalAlign:"middle"}}/> Activity Log</SLabel>
+              <SLabel>🕐 Activity Log</SLabel>
               <div style={{ display:"flex",flexDirection:"column",gap:7 }}>
                 {report.logs.map(e=>(
                   <div key={e.id} style={{ display:"flex",alignItems:"center",gap:12,padding:"8px 12px",background:C.surface,borderRadius:7 }}>
@@ -3758,11 +3354,11 @@ function CalendarPage({ allInvoices,tasks,onAddTask,projectEvents=[],payments=[]
             </div>
             <div style={{ background:C.surface,borderRadius:8,padding:"14px 16px" }}>
               {sel.type==="invoice"
-                ?[["Invoice",fmtInvId(sel.detail,allInvoices)],["Project",sel.detail.project||"—"],["Description",sel.detail.desc||"—"],["Amount",`$${Number(sel.detail.amount||0).toLocaleString()}`],["Due",sel.detail.dueFmt||sel.detail.due||"—"],["Status",sel.detail.status||sel.detail.invoiceStatus||"—"]].map(([k,v])=><div key={k} style={{ display:"flex",justifyContent:"space-between",marginBottom:8 }}><span style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{k}</span><span style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600 }}>{v}</span></div>)
+                ?[["Invoice",sel.detail.id||sel.detail.invId],["Project",sel.detail.project||"—"],["Description",sel.detail.desc||"—"],["Amount",`$${Number(sel.detail.amount||0).toLocaleString()}`],["Due",sel.detail.dueFmt||sel.detail.due||"—"],["Status",sel.detail.status||sel.detail.invoiceStatus||"—"]].map(([k,v])=><div key={k} style={{ display:"flex",justifyContent:"space-between",marginBottom:8 }}><span style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{k}</span><span style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600 }}>{v}</span></div>)
                 :sel.type==="payment"
                 ?[["Project",sel.detail.project||"—"],["Amount",`$${Number(sel.detail.amount||0).toLocaleString()}`],["Date",sel.detail.dateFmt||sel.detail.date||"—"],["Method",sel.detail.method||"—"],["Invoice Ref",sel.detail.invRef||"—"],["Notes",sel.detail.notes||"—"]].map(([k,v])=><div key={k} style={{ display:"flex",justifyContent:"space-between",marginBottom:8 }}><span style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{k}</span><span style={{ color:k==="Amount"?C.green:C.text,fontFamily:F,fontSize:12,fontWeight:600,maxWidth:"60%",textAlign:"right" }}>{v}</span></div>)
                 :sel.type==="project"
-                ?[["Project",sel.detail.name],["Client",sel.detail.client?.name||"—"],["Start",sel.detail.startDate||"—"],["Due",sel.detail.dueFmt||"—"],["Status",sel.detail.status||"—"],["Type",sel.detail.projType==="business"?"Business":sel.detail.projType==="customer"?"Customer":"—"]].map(([k,v])=><div key={k} style={{ display:"flex",justifyContent:"space-between",marginBottom:8 }}><span style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{k}</span><span style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,maxWidth:"60%",textAlign:"right" }}>{v}</span></div>)
+                ?[["Project",sel.detail.name],["Client",sel.detail.client?.name||"—"],["Start",sel.detail.startDate||"—"],["Due",sel.detail.dueFmt||"—"],["Status",sel.detail.status||"—"],["Type",sel.detail.projType==="business"?"🏢 Business":sel.detail.projType==="customer"?"👤 Customer":"—"]].map(([k,v])=><div key={k} style={{ display:"flex",justifyContent:"space-between",marginBottom:8 }}><span style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{k}</span><span style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,maxWidth:"60%",textAlign:"right" }}>{v}</span></div>)
                 :[["Task",sel.detail.title],["Member",sel.detail.member],["Project",sel.detail.project],["Date",sel.detail.date],["Status",sel.detail.status||"pending"],["Description",sel.detail.desc||"—"]].map(([k,v])=><div key={k} style={{ display:"flex",justifyContent:"space-between",marginBottom:8 }}><span style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{k}</span><span style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,maxWidth:"60%",textAlign:"right" }}>{v}</span></div>)
               }
             </div>
@@ -3777,7 +3373,7 @@ function CalendarPage({ allInvoices,tasks,onAddTask,projectEvents=[],payments=[]
 
       <div style={{ display:"flex",gap:10,marginBottom:20,flexWrap:"wrap",alignItems:"center" }}>
         <div style={{ display:"flex",background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:4,gap:3 }}>
-          {[["all","All"],["invoices","Invoices"],["team","Tasks"],["projects","Projects"],["payments","Payments"]].map(([v,l])=><button key={v} onClick={()=>setFilter(v)} style={{ background:filter===v?C.accentDim:"transparent",color:filter===v?C.accent:C.muted,border:filter===v?`1px solid ${C.accentMid}`:"1px solid transparent",borderRadius:6,padding:"7px 14px",fontFamily:F,fontSize:12,fontWeight:700,cursor:"pointer" }}>{l}</button>)}
+          {[["all","All"],["invoices","Invoices"],["team","Tasks"],["projects","Projects"],["payments","💰 Payments"]].map(([v,l])=><button key={v} onClick={()=>setFilter(v)} style={{ background:filter===v?C.accentDim:"transparent",color:filter===v?C.accent:C.muted,border:filter===v?`1px solid ${C.accentMid}`:"1px solid transparent",borderRadius:6,padding:"7px 14px",fontFamily:F,fontSize:12,fontWeight:700,cursor:"pointer" }}>{l}</button>)}
         </div>
         <div style={{ display:"flex",background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:4,gap:3 }}>
           {[["month","Month"],["week","Week"],["day","Day"]].map(([v,l])=><button key={v} onClick={()=>setView(v)} style={{ background:view===v?C.blueDim:"transparent",color:view===v?C.blue:C.muted,border:view===v?`1px solid ${C.blue}44`:"1px solid transparent",borderRadius:6,padding:"7px 14px",fontFamily:F,fontSize:12,fontWeight:700,cursor:"pointer" }}>{l}</button>)}
@@ -3829,7 +3425,7 @@ function CalendarPage({ allInvoices,tasks,onAddTask,projectEvents=[],payments=[]
       {view==="day"&&(
         <div>
           <div style={{ display:"flex",alignItems:"center",gap:10,marginBottom:16 }}>
-            <DateInput style={{ ...INP(),width:"auto" }} value={dayDate} onChange={e=>setDayDate(e.target.value)}/>
+            <input type="date" value={dayDate} onChange={e=>setDayDate(e.target.value)} style={{ ...INP(),width:"auto",colorScheme:"dark" }}/>
             {dayDate&&<span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:15 }}>{new Date(dayDate+"T12:00:00").toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric"})}</span>}
           </div>
           <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:14,padding:"20px 24px" }}>
@@ -3857,20 +3453,12 @@ function CalendarPage({ allInvoices,tasks,onAddTask,projectEvents=[],payments=[]
 
 // ─── Project Detail ────────────────────────────────────────────────────────────
 // ─── Module Order hook ────────────────────────────────────────────────────────
-const DEFAULT_MODULE_ORDER = ["invoices","payments","plans","contracts","team"];
+const DEFAULT_MODULE_ORDER = ["invoices","payments","plans","team"];
 
 function useModuleOrder(projectId){
   const key = `moduleorder:${projectId}`;
   const [order,setOrder] = useState(null);
-  useEffect(()=>{ let alive=true; (async()=>{
-    const r=await storage.get(key);
-    if(!alive)return;
-    if(!r){ setOrder(DEFAULT_MODULE_ORDER); return; }
-    // Merge: keep saved order but append any new modules not yet in saved order
-    const saved=JSON.parse(r.value);
-    const merged=[...saved,...DEFAULT_MODULE_ORDER.filter(id=>!saved.includes(id))];
-    setOrder(merged);
-  })(); return()=>{alive=false;}; },[key]);
+  useEffect(()=>{ let alive=true; (async()=>{ const r=await storage.get(key); if(!alive)return; setOrder(r?JSON.parse(r.value):DEFAULT_MODULE_ORDER); })(); return()=>{alive=false;}; },[key]);
   const save = async(next)=>{ setOrder(next); await storage.set(key,JSON.stringify(next)); };
   return { order:order||DEFAULT_MODULE_ORDER, ready:order!==null, setOrder:save };
 }
@@ -3995,7 +3583,7 @@ function PhotoCommentModal({ photo, comments, onAddComment, onEditComment, onDel
         <div style={{ width:300,flexShrink:0,display:"flex",flexDirection:"column",background:C.card,borderLeft:`1px solid ${C.border}` }}>
           {/* Header */}
           <div style={{ padding:"16px 18px",borderBottom:`1px solid ${C.border}`,flexShrink:0 }}>
-            <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:14 }}><Ic.Comment size={14} color={C.text} style={{marginRight:6,verticalAlign:"middle"}}/> Comments</div>
+            <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:14 }}>💬 Comments</div>
             <div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:2 }}>{comments.length} comment{comments.length!==1?"s":""}</div>
           </div>
 
@@ -4003,7 +3591,7 @@ function PhotoCommentModal({ photo, comments, onAddComment, onEditComment, onDel
           <div style={{ flex:1,overflowY:"auto",padding:"12px 14px",display:"flex",flexDirection:"column",gap:10 }}>
             {comments.length===0&&(
               <div style={{ textAlign:"center",padding:"30px 10px",color:C.muted,fontFamily:F,fontSize:12 }}>
-                <Ic.Comment size={28} color={C.muted} style={{marginBottom:8}}/>
+                <div style={{ fontSize:28,marginBottom:8 }}>💬</div>
                 No comments yet — add the first one below
               </div>
             )}
@@ -4042,7 +3630,7 @@ function PhotoCommentModal({ photo, comments, onAddComment, onEditComment, onDel
               onKeyDown={e=>{ if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();submit();} }}
               placeholder="Write a comment… (Enter to send)" rows={3}
               style={{ ...INP(),resize:"none",fontSize:12,lineHeight:1.5,marginBottom:8 }}/>
-            <button onClick={submit} disabled={!text.trim()} style={{ width:"100%",background:text.trim()?C.accent:C.border,color:text.trim()?"#000":C.muted,border:"none",padding:"9px 0",borderRadius:7,fontFamily:F,fontWeight:700,fontSize:12,cursor:text.trim()?"pointer":"default",transition:"all .15s" }}><Ic.Comment size={12} color="#000" style={{marginRight:5}}/> Add Comment</button>
+            <button onClick={submit} disabled={!text.trim()} style={{ width:"100%",background:text.trim()?C.accent:C.border,color:text.trim()?"#000":C.muted,border:"none",padding:"9px 0",borderRadius:7,fontFamily:F,fontWeight:700,fontSize:12,cursor:text.trim()?"pointer":"default",transition:"all .15s" }}>💬 Add Comment</button>
           </div>
         </div>
       </div>
@@ -4064,13 +3652,13 @@ function PhotoCard({ photo, comments, onOpen, onDelete }){
           onMouseEnter={e=>e.currentTarget.style.transform="scale(1.04)"} onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"}/>
         {/* overlay buttons */}
         <div style={{ position:"absolute",top:6,right:6,display:"flex",gap:5,opacity:0,transition:"opacity .18s" }} className="photo-actions">
-          <button onClick={e=>{e.stopPropagation();onOpen(photo);}} style={{ background:"rgba(0,0,0,.65)",color:"#fff",border:"none",borderRadius:5,width:28,height:28,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center" }} title="View & comment"><Ic.Comment size={14} color="#fff"/></button>
+          <button onClick={e=>{e.stopPropagation();onOpen(photo);}} style={{ background:"rgba(0,0,0,.65)",color:"#fff",border:"none",borderRadius:5,width:28,height:28,fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center" }} title="View & comment">💬</button>
           <button onClick={e=>{e.stopPropagation();onDelete(photo.id,'confirm');}} style={{ background:"rgba(200,50,50,.8)",color:"#fff",border:"none",borderRadius:5,width:28,height:28,fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center" }} title="Delete">×</button>
         </div>
         {/* comment count badge */}
         {comments.length>0&&(
           <div style={{ position:"absolute",bottom:6,right:7,background:"rgba(0,0,0,.7)",color:"#fff",borderRadius:99,padding:"2px 7px",fontFamily:F,fontSize:10,fontWeight:700,display:"flex",alignItems:"center",gap:3 }}>
-            <><Ic.Comment size={12} color="#fff" style={{marginRight:3}}/> {comments.length}</>
+            💬 {comments.length}
           </div>
         )}
       </div>
@@ -4096,117 +3684,12 @@ function PhotoCard({ photo, comments, onOpen, onDelete }){
 }
 
 // ─── Project Detail Page ───────────────────────────────────────────────────────
-// ─── Notes Modal ──────────────────────────────────────────────────────────────
-function NotesModal({ notes, noteText, setNoteText, onSave, onClose }){
-  const textRef = React.useRef();
-  React.useEffect(()=>{ textRef.current?.focus(); },[]);
-
-  return(
-    <Overlay onClose={onClose}>
-      <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,
-        width:560,maxWidth:"95vw",maxHeight:"85vh",
-        display:"flex",flexDirection:"column",overflow:"hidden",
-        boxShadow:"0 24px 60px rgba(0,0,0,.5)" }}>
-
-        {/* Header */}
-        <div style={{ padding:"20px 24px 16px",borderBottom:`1px solid ${C.border}`,
-          display:"flex",alignItems:"center",justifyContent:"space-between",flexShrink:0 }}>
-          <div style={{ display:"flex",alignItems:"center",gap:10 }}>
-            <div style={{ width:36,height:36,borderRadius:9,background:C.accentDim,
-              border:`1px solid ${C.accentMid}`,display:"flex",alignItems:"center",justifyContent:"center" }}>
-              <Ic.Note size={18} color={C.accent}/>
-            </div>
-            <div>
-              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:16 }}>Project Notes</div>
-              <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:1 }}>
-                {notes.length} note{notes.length!==1?"s":""}
-              </div>
-            </div>
-          </div>
-          <button onClick={onClose} style={{ background:"transparent",border:"none",
-            color:C.muted,fontSize:20,cursor:"pointer",lineHeight:1,padding:4 }}>✕</button>
-        </div>
-
-        {/* Notes list */}
-        <div style={{ flex:1,overflowY:"auto",padding:"16px 24px",display:"flex",flexDirection:"column",gap:10 }}>
-          {notes.length===0&&(
-            <div style={{ textAlign:"center",padding:"40px 0",color:C.muted,fontFamily:F,fontSize:13 }}>
-              <Ic.Note size={32} color={C.muted} style={{marginBottom:10,opacity:.4}}/>
-              <div>No notes yet — add your first note below</div>
-            </div>
-          )}
-          {notes.map(n=>(
-            <div key={n.id} style={{ background:C.surface,border:`1px solid ${C.border}`,
-              borderRadius:10,padding:"12px 16px",borderLeft:`3px solid ${C.accent}` }}>
-              <div style={{ color:C.text,fontFamily:F,fontSize:13,lineHeight:1.6,marginBottom:6 }}>{n.text}</div>
-              <div style={{ color:C.muted,fontFamily:F,fontSize:11,display:"flex",gap:12 }}>
-                <span><Ic.Person size={10} color={C.muted} style={{marginRight:3,verticalAlign:"middle"}}/>{n.author}</span>
-                <span><Ic.Clock size={10} color={C.muted} style={{marginRight:3,verticalAlign:"middle"}}/>{n.time}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Add note */}
-        <div style={{ padding:"14px 24px 20px",borderTop:`1px solid ${C.border}`,flexShrink:0 }}>
-          <textarea
-            ref={textRef}
-            value={noteText}
-            onChange={e=>setNoteText(e.target.value)}
-            onKeyDown={e=>{ if((e.metaKey||e.ctrlKey)&&e.key==="Enter"){ onSave(); } }}
-            placeholder="Write a note… (Ctrl+Enter to save)"
-            rows={3}
-            style={{ width:"100%",boxSizing:"border-box",resize:"none",
-              background:C.surface,border:`1px solid ${C.border}`,
-              borderRadius:9,padding:"10px 14px",fontSize:13,color:C.text,
-              fontFamily:F,lineHeight:1.55,outline:"none",marginBottom:10 }}
-          />
-          <div style={{ display:"flex",gap:8,justifyContent:"flex-end" }}>
-            <button onClick={onClose}
-              style={{ background:"transparent",border:`1px solid ${C.border}`,
-                color:C.muted,padding:"9px 20px",borderRadius:8,fontFamily:F,fontSize:13,cursor:"pointer" }}>
-              Close
-            </button>
-            <button onClick={onSave} disabled={!noteText.trim()}
-              style={{ background:noteText.trim()?C.accent:"transparent",
-                color:noteText.trim()?"#000":C.muted,
-                border:`1px solid ${noteText.trim()?C.accent:C.border}`,
-                padding:"9px 24px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,
-                cursor:noteText.trim()?"pointer":"default",transition:"all .15s" }}>
-              <Ic.Check size={12} color={noteText.trim()?"#000":C.muted} style={{marginRight:5}}/> Save Note
-            </button>
-          </div>
-        </div>
-      </div>
-    </Overlay>
-  );
-}
-
 function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPayment,updatePayment,removePayment,allProjects=[],allInvoices=[],addInvoice,removeGlobalInvoice,updateGlobalInvoice,onUpdateProject,onLog,profile }){ 
   const [contactOpen,setContactOpen] = useState(false);
   const [editingProject,setEditingProject] = useState(false);
   const [confirmProjectPatch,setConfirmProjectPatch] = useState(null);
   const [noteText,setNoteText]       = useState("");
   const [notes,setNotes]             = useState([]);
-  const [showNotesModal,setShowNotesModal] = useState(false);
-
-  // Load notes from DB on mount and when project changes
-  useEffect(()=>{
-    let alive = true;
-    (async()=>{
-      const { data, error } = await dbNotes.getByProject(project.id);
-      if(!alive || error || !data) return;
-      setNotes(data.map(r=>({
-        id:     r.id,
-        text:   r.text   || "",
-        author: r.author || "User",
-        time:   r.created_at
-          ? new Date(r.created_at).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})
-          : "",
-      })));
-    })();
-    return ()=>{ alive = false; };
-  }, [project.id]);
   const [log,setLog]                 = useState([]);
   const photoRef                     = useRef();
   const dragOver                     = useRef(null);
@@ -4224,25 +3707,7 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
     if(onLog) onLog(entry);
   };
   const mergedLog= useMemo(()=>[...extraLog.filter(e=>!log.find(l=>l.id===e.id)),...log].sort((a,b)=>(b.id||0)-(a.id||0)),[extraLog,log]);
-  const saveNote = async()=>{
-    const text = noteText.trim();
-    if(!text) return;
-    setNoteText("");                              // clear immediately for UX
-    const { data, error } = await dbNotes.add(project.id, text);
-    if(!error){
-      // Re-fetch to get DB id + created_at timestamp
-      const { data:rows } = await dbNotes.getByProject(project.id);
-      if(rows) setNotes(rows.map(r=>({
-        id:     r.id,
-        text:   r.text   || "",
-        author: r.author || "User",
-        time:   r.created_at
-          ? new Date(r.created_at).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})
-          : "",
-      })));
-    }
-    pushLog("Note added","📝");
-  };
+  const saveNote = ()=>{ if(!noteText.trim())return; const n={id:Date.now(),text:noteText.trim(),author:profile?.full_name||"User",time:new Date().toLocaleDateString()}; setNotes(p=>[n,...p]); pushLog("Note added","📝"); setNoteText(""); };
   const [confirmDelPhoto, setConfirmDelPhoto] = useState(null);
   const uploadPhotos = async(files)=>{
     for(const f of Array.from(files)){
@@ -4270,7 +3735,6 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
   // Live counts for module subtitles
   const { files:invFiles }=useFiles(`inv:${project.id}`);
   const { files:planFiles }=useFiles(`plans:${project.id}`);
-  const { files:contractFiles }=useFiles(`contracts:${project.id}`);
   const { members:teamMembers }=useTeam(project.id);
   // invCount: all invoices for this project in the global store + local files not yet in global
   const _allProjInv=allInvoices.filter(i=>i.projId===project.id||i.project===project.name);
@@ -4283,19 +3747,16 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
 
   // Module definitions — rendered in persisted order
   const MODULE_DEFS = {
-    invoices: { icon:<Ic.Receipt   size={22} color={C.accent}/>, title:"Invoices",  color:C.accent, dim:C.accentDim, sub:`${invCount} invoice${invCount!==1?"s":""}`, content:<InvoicesPanel project={project} onActivity={pushLog} onAddGlobalInvoice={addInvoice} onUpdateGlobalInvoice={updateGlobalInvoice} onRemoveGlobalInvoice={removeGlobalInvoice} allInvoices={allInvoices}/> },
-    payments: { icon:<Ic.Payments  size={22} color={C.green}/>,  title:"Payments",  color:C.green,  dim:C.greenDim,  sub:`${payCount} payment${payCount!==1?"s":""}`, content:<PaymentsPanel project={project} payments={projectPayments} addPayment={handleAddPayment} updatePayment={updatePayment} removePayment={removePayment} allProjects={allProjects} allInvoices={allInvoices} onActivity={pushLog}/> },
-    plans:    { icon:<Ic.Blueprint size={22} color={C.blue}/>,   title:"Plans",     color:C.blue,   dim:C.blueDim,   sub:`${planCount} document${planCount!==1?"s":""}`, content:<PlansPanel project={project} onActivity={pushLog}/> },
-    contracts:{ icon:<Ic.Contract  size={22} color={C.purple}/>, title:"Contracts", color:C.purple, dim:C.purpleDim, sub:`${contractFiles.length} contract${contractFiles.length!==1?"s":""}`, content:<ContractsPanel project={project} onActivity={pushLog}/> },
-    team:     { icon:<Ic.Team      size={22} color={C.green}/>,  title:"Team",      color:C.green,  dim:C.greenDim,  sub:`${teamCount} member${teamCount!==1?"s":""}`, content:<TeamPanel  project={project} onOpenTeamPage={onOpenTeam}/> },
+    invoices: { icon:<Ic.Receipt size={22} color={C.accent}/>, title:"Invoices",  color:C.accent, dim:C.accentDim, sub:`${invCount} invoice${invCount!==1?"s":""}`, content:<InvoicesPanel project={project} onActivity={pushLog} onAddGlobalInvoice={addInvoice} onUpdateGlobalInvoice={updateGlobalInvoice} onRemoveGlobalInvoice={removeGlobalInvoice} allInvoices={allInvoices}/> },
+    payments: { icon:"💰", title:"Payments",  color:C.green,  dim:C.greenDim,  sub:`${payCount} payment${payCount!==1?"s":""}`, content:<PaymentsPanel project={project} payments={projectPayments} addPayment={handleAddPayment} updatePayment={updatePayment} removePayment={removePayment} allProjects={allProjects} allInvoices={allInvoices} onActivity={pushLog}/> },
+    plans:    { icon:"📐", title:"Plans",     color:C.blue,   dim:C.blueDim,   sub:`${planCount} document${planCount!==1?"s":""}`, content:<PlansPanel project={project} onActivity={pushLog}/> },
+    contracts:{ icon:"📜", title:"Contracts", color:C.purple, dim:C.purpleDim, sub:"Official documents",                                 content:<ContractsPanel project={project} onActivity={pushLog}/> },
+    team:     { icon:"👷", title:"Team",      color:C.green,  dim:C.greenDim,  sub:`${teamCount} member${teamCount!==1?"s":""}`, content:<TeamPanel  project={project} onOpenTeamPage={onOpenTeam}/> },
   };
 
   return(
     <div>
       {contactOpen&&<ContactModal client={project.client} onClose={()=>setContactOpen(false)}/>}
-      {showNotesModal&&<NotesModal notes={notes} noteText={noteText} setNoteText={setNoteText}
-        onSave={()=>{ saveNote(); }}
-        onClose={()=>setShowNotesModal(false)}/>}
       {editingProject&&<EditProjectModal project={project} onConfirm={patch=>{ setEditingProject(false); setConfirmProjectPatch(patch); }} onCancel={()=>setEditingProject(false)}/>}
       {confirmProjectPatch&&(
         <ConfirmDialog
@@ -4323,15 +3784,15 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
                   <div style={{ width:4,height:28,background:C.accent,borderRadius:2,flexShrink:0 }}/>
                   <h1 style={{ color:C.text,fontFamily:F,fontSize:22,fontWeight:700,margin:0 }}>{project.name}</h1>
                   <Badge status={project.status}/>
-                  {project.projType&&<span style={{ background:project.projType==="business"?C.purpleDim:C.blueDim,color:project.projType==="business"?C.purple:C.blue,padding:"3px 10px",borderRadius:4,fontSize:11,fontWeight:700,fontFamily:F }}>{project.projType==="business"?"Business":"Customer"}</span>}
+                  {project.projType&&<span style={{ background:project.projType==="business"?C.purpleDim:C.blueDim,color:project.projType==="business"?C.purple:C.blue,padding:"3px 10px",borderRadius:4,fontSize:11,fontWeight:700,fontFamily:F }}>{project.projType==="business"?"🏢 Business":"👤 Customer"}</span>}
                 </div>
-                <div style={{ color:C.muted,fontFamily:F,fontSize:13,marginLeft:14 }}><Ic.MapPin size={13} color={C.muted} style={{marginRight:4,verticalAlign:"middle"}}/> {project.address}</div>
+                <div style={{ color:C.muted,fontFamily:F,fontSize:13,marginLeft:14 }}>📍 {project.address}</div>
                 {project.desc&&<div style={{ color:C.muted,fontFamily:F,fontSize:12,marginLeft:14,marginTop:6,fontStyle:"italic",lineHeight:1.55 }}>{project.desc}</div>}
               </div>
               <div style={{ display:"flex",gap:12,alignItems:"center",flexShrink:0,flexWrap:"wrap" }}>
                 <div><div style={{ color:C.muted,fontFamily:F,fontSize:10,fontWeight:700 }}>CONTRACT VALUE</div><div style={{ color:C.accent,fontFamily:F,fontWeight:700,fontSize:20 }}>${project.value.toLocaleString()}</div></div>
-                <Btn variant="primary" size="lg" onClick={()=>setContactOpen(true)}><Ic.Person size={14} color="#000" style={{marginRight:5,verticalAlign:"middle"}}/> Contact</Btn>
-                <Btn variant="secondary" size="lg" onClick={()=>setEditingProject(true)}><Ic.Pen size={13} color={C.muted} style={{marginRight:5,verticalAlign:"middle"}}/> Edit Project</Btn>
+                <Btn variant="primary" size="lg" onClick={()=>setContactOpen(true)}>👤 Contact</Btn>
+                <Btn variant="secondary" size="lg" onClick={()=>setEditingProject(true)}>✏️ Edit Project</Btn>
               </div>
             </div>
             {project.status!=="quoting"&&(
@@ -4378,8 +3839,8 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
                         <span style={{ marginLeft:"auto",background:i===0?C.greenDim:C.accentDim,color:i===0?C.green:C.accent,padding:"2px 7px",borderRadius:4,fontSize:10,fontWeight:700,fontFamily:F }}>{ct.role}</span>
                       </div>
                       <div style={{ display:"flex",gap:10,flexWrap:"wrap" }}>
-                        {ct.phone&&<a href={`tel:${ct.phone}`} style={{ color:C.muted,fontFamily:F,fontSize:11,textDecoration:"none",display:"flex",alignItems:"center",gap:4 }}><Ic.Phone size={11} color={C.muted}/> {ct.phone}</a>}
-                        {ct.email&&<a href={`mailto:${ct.email}`} style={{ color:C.muted,fontFamily:F,fontSize:11,textDecoration:"none",display:"flex",alignItems:"center",gap:4 }}><Ic.Email size={11} color={C.muted}/> {ct.email}</a>}
+                        {ct.phone&&<a href={`tel:${ct.phone}`} style={{ color:C.muted,fontFamily:F,fontSize:11,textDecoration:"none",display:"flex",alignItems:"center",gap:4 }}>📞 {ct.phone}</a>}
+                        {ct.email&&<a href={`mailto:${ct.email}`} style={{ color:C.muted,fontFamily:F,fontSize:11,textDecoration:"none",display:"flex",alignItems:"center",gap:4 }}>✉️ {ct.email}</a>}
                       </div>
                     </div>
                   ))}
@@ -4432,20 +3893,19 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
             )}
             <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16 }}>
               <div style={{ display:"flex",alignItems:"center",gap:10 }}>
-                <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:15 }}><Ic.Photo size={15} color={C.text} style={{marginRight:6,verticalAlign:"middle"}}/> Photos</span>
+                <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:15 }}>📷 Photos</span>
                 <span style={{ background:C.surface,color:C.muted,border:`1px solid ${C.border}`,borderRadius:99,padding:"2px 9px",fontSize:10,fontFamily:F,fontWeight:700 }}>{photos.length}</span>
               </div>
               <div style={{ display:"flex",alignItems:"center",gap:8 }}>
                 <span style={{ color:C.muted,fontFamily:F,fontSize:10 }}>Click a photo to comment</span>
-                <button onClick={()=>photoRef.current.click()} style={{ background:C.accentDim,color:C.accent,border:`1px solid ${C.accentMid}`,padding:"7px 14px",borderRadius:6,fontFamily:F,fontWeight:700,fontSize:12,cursor:"pointer",display:"flex",alignItems:"center",gap:5 }}><Ic.Photo size={13} color={C.accent} style={{marginRight:5}}/> Upload</button>
+                <button onClick={()=>photoRef.current.click()} style={{ background:C.accentDim,color:C.accent,border:`1px solid ${C.accentMid}`,padding:"7px 14px",borderRadius:6,fontFamily:F,fontWeight:700,fontSize:12,cursor:"pointer",display:"flex",alignItems:"center",gap:5 }}>📷 Upload</button>
                 <input ref={photoRef} type="file" accept="image/*" multiple style={{ display:"none" }} onChange={e=>uploadPhotos(e.target.files)}/>
               </div>
             </div>
             {/* CSS for photo action buttons hover */}
             <style>{".photo-card:hover .photo-actions { opacity: 1 !important; }"}</style>
             {photos.length===0
-              ?<div onClick={()=>photoRef.current.click()} style={{ border:`2px dashed ${C.border}`,borderRadius:10,padding:"44px 20px",textAlign:"center",cursor:"pointer",color:C.muted,fontFamily:F,fontSize:13,transition:"all .2s" }} onMouseEnter={e=>{e.currentTarget.style.borderColor=C.accent+"88";e.currentTarget.style.color=C.accent;}} onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.color=C.muted;}}><Ic.Photo size={36} color={C.muted} style={{marginBottom:10}}/>
-No photos yet — click to upload</div>
+              ?<div onClick={()=>photoRef.current.click()} style={{ border:`2px dashed ${C.border}`,borderRadius:10,padding:"44px 20px",textAlign:"center",cursor:"pointer",color:C.muted,fontFamily:F,fontSize:13,transition:"all .2s" }} onMouseEnter={e=>{e.currentTarget.style.borderColor=C.accent+"88";e.currentTarget.style.color=C.accent;}} onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.color=C.muted;}}><div style={{ fontSize:36,marginBottom:10 }}>📷</div>No photos yet — click to upload</div>
               :<div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:14 }}>
                 {photos.map(p=>(
                   <div key={p.id} className="photo-card">
@@ -4469,13 +3929,9 @@ No photos yet — click to upload</div>
 
           {/* Notes panel */}
           <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"16px 16px",display:"flex",flexDirection:"column",gap:10 }}>
-            <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",cursor:"pointer" }}
-              onClick={()=>setShowNotesModal(true)}>
-              <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:13 }}><Ic.Note size={15} color={C.text} style={{marginRight:6,verticalAlign:"middle"}}/> Notes</span>
-              <div style={{ display:"flex",alignItems:"center",gap:6 }}>
-                <span style={{ background:C.accentDim,color:C.accent,padding:"1px 6px",borderRadius:99,fontSize:10,fontWeight:700 }}>{notes.length}</span>
-                <span style={{ color:C.muted,fontSize:11,fontFamily:F }}>Expand ›</span>
-              </div>
+            <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center" }}>
+              <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:13 }}>📝 Notes</span>
+              <span style={{ background:C.accentDim,color:C.accent,padding:"1px 6px",borderRadius:99,fontSize:10,fontWeight:700 }}>{notes.length}</span>
             </div>
             <textarea value={noteText} onChange={e=>setNoteText(e.target.value)} onKeyDown={e=>{if((e.metaKey||e.ctrlKey)&&e.key==="Enter")saveNote();}} placeholder="Write a note…" rows={3} style={{ resize:"none",background:C.surface,border:`1px solid ${C.border}`,borderRadius:7,padding:"8px 10px",fontSize:12,color:C.text,fontFamily:F,lineHeight:1.5,outline:"none",width:"100%",boxSizing:"border-box" }}/>
             <button onClick={saveNote} style={{ background:C.accent,color:"#000",border:"none",padding:"7px 0",borderRadius:6,fontFamily:F,fontWeight:700,fontSize:12,cursor:"pointer" }}>Save</button>
@@ -4496,30 +3952,18 @@ No photos yet — click to upload</div>
               <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:12 }}>Activity</span>
               <span style={{ background:C.accentDim,color:C.accent,borderRadius:99,fontSize:10,fontWeight:700,padding:"1px 7px" }}>{mergedLog.length}</span>
             </div>
-            {(()=>{
-              const [activeLogEntry, setActiveLogEntry] = React.useState(null);
-              return(
-                <>
-                  {activeLogEntry&&<ActivityLogModal entry={activeLogEntry} onClose={()=>setActiveLogEntry(null)}/>}
-                  <div>
-                    {mergedLog.map((e,i)=>(
-                      <div key={e.id} onClick={()=>setActiveLogEntry(e)}
-                        style={{ display:"flex",gap:8,padding:"10px 12px",borderBottom:i<mergedLog.length-1?`1px solid ${C.border}22`:"none",alignItems:"flex-start",cursor:"pointer",transition:"background .12s" }}
-                        onMouseEnter={ev=>ev.currentTarget.style.background=C.surface}
-                        onMouseLeave={ev=>ev.currentTarget.style.background="transparent"}>
-                        <div style={{ width:26,height:26,background:C.surface,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,flexShrink:0,marginTop:1 }}>{e.icon}</div>
-                        <div style={{ flex:1,minWidth:0 }}>
-                          <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:11,lineHeight:1.3 }}>{e.action}</div>
-                          <div style={{ color:C.muted,fontFamily:F,fontSize:10,marginTop:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{e.detail}</div>
-                          <div style={{ color:"#5a6480",fontSize:9,fontFamily:F,marginTop:3 }}>{e.user} · {e.time}</div>
-                        </div>
-                        <div style={{ color:C.muted,fontSize:9,flexShrink:0,alignSelf:"center" }}>›</div>
-                      </div>
-                    ))}
+            <div>
+              {mergedLog.map((e,i)=>(
+                <div key={e.id} style={{ display:"flex",gap:8,padding:"10px 12px",borderBottom:i<mergedLog.length-1?`1px solid ${C.border}22`:"none",alignItems:"flex-start" }}>
+                  <div style={{ width:26,height:26,background:C.surface,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,flexShrink:0,marginTop:1 }}>{e.icon}</div>
+                  <div style={{ flex:1,minWidth:0 }}>
+                    <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:11,lineHeight:1.3 }}>{e.action}</div>
+                    <div style={{ color:C.muted,fontFamily:F,fontSize:10,marginTop:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{e.detail}</div>
+                    <div style={{ color:"#5a6480",fontSize:9,fontFamily:F,marginTop:3 }}>{e.user} · {e.time}</div>
                   </div>
-                </>
-              );
-            })()}
+                </div>
+              ))}
+            </div>
           </div>
 
         </div>
@@ -4581,7 +4025,7 @@ function EditProjectModal({ project, onConfirm, onCancel }){
         <div style={{ padding:"24px 28px 0",flexShrink:0 }}>
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20 }}>
             <div>
-              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}><Ic.Pen size={15} color={C.accent} style={{marginRight:7,verticalAlign:"middle"}}/> Edit Project</div>
+              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}>✏️ Edit Project</div>
               <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2 }}>Update information for <strong style={{color:C.accent}}>{project.name}</strong></div>
             </div>
             <button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:20,cursor:"pointer",lineHeight:1 }}>✕</button>
@@ -4631,22 +4075,22 @@ function EditProjectModal({ project, onConfirm, onCancel }){
               <div>
                 <label style={{ ...LBL(),marginBottom:12 }}>Project Timeline</label>
                 <div style={{ display:"flex",gap:14 }}>
-                  <div style={{ flex:1 }}><label style={LBL()}>Starting Date</label><DateInput style={INP()} value={startISO} onChange={e=>setStartISO(e.target.value)}/></div>
-                  <div style={{ flex:1 }}><label style={LBL()}>Expected Finish Date</label><DateInput style={INP()} value={endISO} onChange={e=>setEndISO(e.target.value)}/></div>
+                  <div style={{ flex:1 }}><label style={LBL()}>Starting Date</label><input type="date" value={startISO} onChange={e=>setStartISO(e.target.value)} style={{ ...INP(),colorScheme:"dark" }}/></div>
+                  <div style={{ flex:1 }}><label style={LBL()}>Expected Finish Date</label><input type="date" value={endISO} onChange={e=>setEndISO(e.target.value)} style={{ ...INP(),colorScheme:"dark" }}/></div>
                 </div>
                 {startISO&&endISO&&(()=>{
                   const diff=Math.round((new Date(endISO)-new Date(startISO))/(1000*60*60*24));
                   const weeks=Math.round(diff/7);
                   return diff>0&&<div style={{ marginTop:10,background:C.green+"0d",border:`1px solid ${C.green}33`,borderRadius:7,padding:"8px 12px",color:C.green,fontFamily:F,fontSize:12 }}>Duration: <strong>{diff} days</strong> ({weeks} weeks)</div>;
                 })()}
-                {startISO&&endISO&&new Date(endISO)<=new Date(startISO)&&<div style={{ marginTop:10,background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"8px 12px",color:C.red,fontFamily:F,fontSize:12 }}>End date must be after start date</div>}
+                {startISO&&endISO&&new Date(endISO)<=new Date(startISO)&&<div style={{ marginTop:10,background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"8px 12px",color:C.red,fontFamily:F,fontSize:12 }}>⚠️ End date must be after start date</div>}
               </div>
               <div>
                 <label style={{ ...LBL(),marginBottom:12 }}>Project Type</label>
                 <div style={{ display:"flex",gap:12 }}>
-                  {[["business","Business","For a company or organization"],["customer","Customer","For an individual client"]].map(([v,ic,l,sub])=>(
+                  {[["business","🏢","Business","For a company or organization"],["customer","👤","Customer","For an individual client"]].map(([v,ic,l,sub])=>(
                     <div key={v} onClick={()=>setProjType(v)} style={{ flex:1,border:`2px solid ${projType===v?v==="business"?C.purple:C.blue:C.border}`,borderRadius:12,padding:"16px 18px",cursor:"pointer",background:projType===v?v==="business"?C.purpleDim:C.blueDim:"transparent",transition:"all .15s" }}>
-                      <div style={{ marginBottom:8 }}>{v==="business"?<Ic.Building size={24} color={C.text}/>:<Ic.Person size={24} color={C.text}/>}</div>
+                      <div style={{ fontSize:24,marginBottom:8 }}>{ic}</div>
                       <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:14 }}>{l}</div>
                       <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>{sub}</div>
                       <div style={{ width:16,height:16,borderRadius:"50%",border:`2px solid ${projType===v?v==="business"?C.purple:C.blue:C.border}`,background:projType===v?v==="business"?C.purple:C.blue:"transparent",marginTop:10,display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,color:"#000",fontWeight:700 }}>{projType===v&&"✓"}</div>
@@ -4723,7 +4167,6 @@ function NewProjectModal({ onConfirm, onCancel }){
   const [endISO,setEndISO]=useState("");
   const [projType,setProjType]=useState("business");
   const [projStatus,setProjStatus]=useState("active");
-  const [value,setValue]=useState("");
   const [contacts,setContacts]=useState([emptyContact()]);
   const [step,setStep]=useState(1); // 1=info, 2=timeline&type, 3=contacts
   const [err,setErr]=useState("");
@@ -4754,7 +4197,7 @@ function NewProjectModal({ onConfirm, onCancel }){
       startDateISO:startISO, due:endISO,
       startDate:fmtD(startISO), dueFmt:fmtD(endISO),
       projType, status:projStatus, progress:0,
-      value:parseFloat(value)||0, location:address.trim().split(",")[0]||"",
+      value:0, location:address.trim().split(",")[0]||"",
       client:{ name:primaryClient.name, company:primaryClient.company||"", phone:primaryClient.phone||"", email:primaryClient.email||"", initials },
       contacts:validContacts,
     };
@@ -4770,7 +4213,7 @@ function NewProjectModal({ onConfirm, onCancel }){
         <div style={{ padding:"24px 28px 0",flexShrink:0 }}>
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20 }}>
             <div>
-              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}><Ic.Projects size={16} color={C.text} style={{marginRight:7,verticalAlign:"middle"}}/> New Project</div>
+              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}>🏗 New Project</div>
               <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2 }}>Fill in the details to create your project</div>
             </div>
             <button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:20,cursor:"pointer",lineHeight:1 }}>✕</button>
@@ -4811,10 +4254,6 @@ function NewProjectModal({ onConfirm, onCancel }){
                 <label style={LBL()}>Project Description <span style={{ color:C.muted,fontWeight:400 }}>(optional)</span></label>
                 <textarea style={{ ...INP(),resize:"none",lineHeight:1.55 }} rows={3} placeholder="Brief overview of scope, objectives, or special requirements…" value={desc} onChange={e=>setDesc(e.target.value)}/>
               </div>
-              <div>
-                <label style={LBL()}>Contract Value <span style={{ color:C.muted,fontWeight:400 }}>(optional)</span></label>
-                <input style={INP()} type="number" value={value} onChange={e=>setValue(e.target.value)} placeholder="0.00" onWheel={e=>e.target.blur()}/>
-              </div>
             </div>
           )}
 
@@ -4826,27 +4265,27 @@ function NewProjectModal({ onConfirm, onCancel }){
                 <div style={{ display:"flex",gap:14 }}>
                   <div style={{ flex:1 }}>
                     <label style={LBL()}>Starting Date</label>
-                    <DateInput style={INP()} value={startISO} onChange={e=>setStartISO(e.target.value)}/>
+                    <input type="date" value={startISO} onChange={e=>setStartISO(e.target.value)} style={{ ...INP(),colorScheme:"dark" }}/>
                   </div>
                   <div style={{ flex:1 }}>
                     <label style={LBL()}>Expected Finish Date</label>
-                    <DateInput style={INP()} value={endISO} onChange={e=>setEndISO(e.target.value)}/>
+                    <input type="date" value={endISO} onChange={e=>setEndISO(e.target.value)} style={{ ...INP(),colorScheme:"dark" }}/>
                   </div>
                 </div>
                 {startISO&&endISO&&(()=>{
                   const diff=Math.round((new Date(endISO)-new Date(startISO))/(1000*60*60*24));
                   const weeks=Math.round(diff/7);
-                  return diff>0&&<div style={{ marginTop:10,background:C.green+"0d",border:`1px solid ${C.green}33`,borderRadius:7,padding:"8px 12px",color:C.green,fontFamily:F,fontSize:12 }}><Ic.Calendar size={13} color={C.green} style={{marginRight:4,verticalAlign:"middle"}}/> Project duration: <strong>{diff} days</strong> ({weeks} weeks)</div>;
+                  return diff>0&&<div style={{ marginTop:10,background:C.green+"0d",border:`1px solid ${C.green}33`,borderRadius:7,padding:"8px 12px",color:C.green,fontFamily:F,fontSize:12 }}>📅 Project duration: <strong>{diff} days</strong> ({weeks} weeks)</div>;
                 })()}
-                {startISO&&endISO&&new Date(endISO)<=new Date(startISO)&&<div style={{ marginTop:10,background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"8px 12px",color:C.red,fontFamily:F,fontSize:12 }}>End date must be after start date</div>}
+                {startISO&&endISO&&new Date(endISO)<=new Date(startISO)&&<div style={{ marginTop:10,background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"8px 12px",color:C.red,fontFamily:F,fontSize:12 }}>⚠️ End date must be after start date</div>}
               </div>
 
               <div>
                 <label style={{ ...LBL(),marginBottom:12 }}>Project Type</label>
                 <div style={{ display:"flex",gap:12 }}>
-                  {[["business","Business","For a company or organization"],["customer","Customer","For an individual client"]].map(([v,ic,l,sub])=>(
+                  {[["business","🏢","Business","For a company or organization"],["customer","👤","Customer","For an individual client"]].map(([v,ic,l,sub])=>(
                     <div key={v} onClick={()=>setProjType(v)} style={{ flex:1,border:`2px solid ${projType===v?v==="business"?C.purple:C.blue:C.border}`,borderRadius:12,padding:"16px 18px",cursor:"pointer",background:projType===v?v==="business"?C.purpleDim:C.blueDim:"transparent",transition:"all .15s" }}>
-                      <div style={{ marginBottom:8 }}>{v==="business"?<Ic.Building size={24} color={C.text}/>:<Ic.Person size={24} color={C.text}/>}</div>
+                      <div style={{ fontSize:24,marginBottom:8 }}>{ic}</div>
                       <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:14 }}>{l}</div>
                       <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>{sub}</div>
                       <div style={{ width:16,height:16,borderRadius:"50%",border:`2px solid ${projType===v?v==="business"?C.purple:C.blue:C.border}`,background:projType===v?v==="business"?C.purple:C.blue:"transparent",marginTop:10,display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,color:"#000",fontWeight:700 }}>{projType===v&&"✓"}</div>
@@ -4913,7 +4352,7 @@ function NewProjectModal({ onConfirm, onCancel }){
           <div style={{ display:"flex",gap:10 }}>
             {step<3
               ?<button onClick={goNext} style={{ background:C.accent,color:"#000",border:"none",padding:"11px 28px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer" }}>Continue →</button>
-              :<button onClick={handleCreate} style={{ background:C.green,color:"#fff",border:"none",padding:"11px 28px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",gap:7 }}><Ic.Projects size={14} color="#fff" style={{marginRight:6,verticalAlign:"middle"}}/> Create Project</button>
+              :<button onClick={handleCreate} style={{ background:C.green,color:"#fff",border:"none",padding:"11px 28px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",gap:7 }}>🏗 Create Project</button>
             }
           </div>
         </div>
@@ -4957,7 +4396,7 @@ function ProjectsList({ onSelect, allProjects, onAddProject, onUpdateProject, on
           onCancel={()=>setConfirmDelete(null)}>
           <div style={{ background:C.surface,border:`1px solid ${C.red}33`,borderRadius:9,padding:"12px 16px" }}>
             <div style={{ display:"flex",alignItems:"center",gap:10 }}>
-              <div style={{ width:36,height:36,background:C.redDim,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}><Ic.Projects size={18} color={C.red}/></div>
+              <div style={{ width:36,height:36,background:C.redDim,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0 }}>🏗</div>
               <div>
                 <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:14 }}>{confirmDelete.name}</div>
                 <div style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{confirmDelete.client?.name} · {confirmDelete.location||""}</div>
@@ -4972,7 +4411,7 @@ function ProjectsList({ onSelect, allProjects, onAddProject, onUpdateProject, on
           <h2 style={{ color:C.text,fontSize:20,fontFamily:F,fontWeight:700,margin:0 }}>Projects</h2>
           <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>{allProjects.length} projects total</div>
         </div>
-        <button onClick={()=>setShowNew(true)} style={{ background:C.accent,color:"#000",border:"none",padding:"10px 20px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:7 }}><Ic.Plus size={13} color="#000" style={{marginRight:5,verticalAlign:"middle"}}/> New Project</button>
+        <button onClick={()=>setShowNew(true)} style={{ background:C.accent,color:"#000",border:"none",padding:"10px 20px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",gap:7 }}>🏗 + New Project</button>
       </div>
       <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
         {allProjects.map(p=>(
@@ -4985,7 +4424,7 @@ function ProjectsList({ onSelect, allProjects, onAddProject, onUpdateProject, on
                 <div style={{ flex:1,minWidth:0 }}>
                   <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:3,flexWrap:"wrap" }}>
                     <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:16 }}>{p.name}</div>
-                    {p.projType&&<span style={{ background:p.projType==="business"?C.purpleDim:C.blueDim,color:p.projType==="business"?C.purple:C.blue,padding:"2px 8px",borderRadius:4,fontSize:10,fontWeight:700,fontFamily:F }}>{p.projType==="business"?"Business":"Customer"}</span>}
+                    {p.projType&&<span style={{ background:p.projType==="business"?C.purpleDim:C.blueDim,color:p.projType==="business"?C.purple:C.blue,padding:"2px 8px",borderRadius:4,fontSize:10,fontWeight:700,fontFamily:F }}>{p.projType==="business"?"🏢 Business":"👤 Customer"}</span>}
                   </div>
                   <div style={{ color:C.muted,fontFamily:F,fontSize:12 }}>{p.client.name} · {p.location||p.address} · Due: {p.dueFmt}</div>
                   {p.desc&&<div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:3,fontStyle:"italic" }}>{p.desc.slice(0,80)}{p.desc.length>80?"…":""}</div>}
@@ -5000,7 +4439,7 @@ function ProjectsList({ onSelect, allProjects, onAddProject, onUpdateProject, on
                     style={{ background:"transparent",color:C.muted,border:`1px solid ${C.border}`,borderRadius:6,width:28,height:28,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,cursor:"pointer",flexShrink:0,transition:"all .15s",lineHeight:1 }}
                     onMouseEnter={e=>{e.currentTarget.style.color=C.accent;e.currentTarget.style.borderColor=C.accent+"66";e.currentTarget.style.background=C.accentDim;}}
                     onMouseLeave={e=>{e.currentTarget.style.color=C.muted;e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}}>
-                    <Ic.Pen size={13} color={C.muted}/>
+                    ✏️
                   </button>
                   <button
                     onClick={e=>{e.stopPropagation();setConfirmDelete(p);}}
@@ -5008,7 +4447,7 @@ function ProjectsList({ onSelect, allProjects, onAddProject, onUpdateProject, on
                     style={{ background:"transparent",color:C.muted,border:`1px solid ${C.border}`,borderRadius:6,width:28,height:28,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,cursor:"pointer",flexShrink:0,transition:"all .15s",lineHeight:1 }}
                     onMouseEnter={e=>{e.currentTarget.style.color=C.red;e.currentTarget.style.borderColor=C.red+"66";e.currentTarget.style.background=C.redDim;}}
                     onMouseLeave={e=>{e.currentTarget.style.color=C.muted;e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}}>
-                    <Ic.Delete size={13} color={C.red}/>
+                    🗑️
                   </button>
                   <span style={{ color:C.muted,fontSize:18,lineHeight:1 }}>›</span>
                 </div>
@@ -5040,12 +4479,12 @@ function ProjectsList({ onSelect, allProjects, onAddProject, onUpdateProject, on
 // ─── Dashboard ─────────────────────────────────────────────────────────────────
 // ─── Dashboard widget types ───────────────────────────────────────────────────
 const WIDGET_TYPES = [
-  { id:"projects",   label:"Project Progress",    icon:"projects" },
-  { id:"invoices",   label:"Recent Invoices",     icon:"invoices" },
-  { id:"payments",   label:"Recent Payments",     icon:"payments" },
-  { id:"tasks",      label:"Upcoming Tasks",      icon:"tasks" },
-  { id:"activity",   label:"Activity Log",        icon:"activity" },
-  { id:"calendar",   label:"Upcoming Events",     icon:"calendar" },
+  { id:"projects",   label:"Project Progress",    icon:"🏗" },
+  { id:"invoices",   label:"Recent Invoices",     icon:"🧾" },
+  { id:"payments",   label:"Recent Payments",     icon:"💰" },
+  { id:"tasks",      label:"Upcoming Tasks",      icon:"✅" },
+  { id:"activity",   label:"Activity Log",        icon:"📋" },
+  { id:"calendar",   label:"Upcoming Events",     icon:"📅" },
 ];
 
 function DashWidget({ widgetId, type, allProjects, allInvoices, payments, tasks, globalLog, onSelect, onChangeType }){
@@ -5053,8 +4492,8 @@ function DashWidget({ widgetId, type, allProjects, allInvoices, payments, tasks,
   const wt=WIDGET_TYPES.find(w=>w.id===type)||WIDGET_TYPES[0];
 
   // Normalise activity log icons — some entries use codes instead of emoji
-  const iconMap = { "inv":"inv","del":"del","edit":"edit","PAY":"PAY","pay":"pay","log":"log" };
-  const normIcon = (ic) => ic||"log";
+  const iconMap = { "inv":"🧾","del":"🗑️","edit":"✏️","PAY":"💰","pay":"💰","🏗":"🏗","log":"📋" };
+  const normIcon = (ic) => (ic && ic.length <= 4 && iconMap[ic]) ? iconMap[ic] : (ic||"📋");
 
   const renderContent=()=>{
     if(type==="projects") return(
@@ -5080,7 +4519,7 @@ function DashWidget({ widgetId, type, allProjects, allInvoices, payments, tasks,
                 <span style={{textTransform:"capitalize"}}>{p.status}</span>
                 <span>·</span>
                 <span>Due: {p.dueFmt||"—"}</span>
-                {ov&&<span style={{color:C.red,fontWeight:700}}><Ic.Warning size={11} color={C.red} style={{marginRight:3,verticalAlign:"middle"}}/>Overdue</span>}
+                {ov&&<span style={{color:C.red,fontWeight:700}}>⚠ Overdue</span>}
               </div>
             </div>
           );
@@ -5111,7 +4550,7 @@ function DashWidget({ widgetId, type, allProjects, allInvoices, payments, tasks,
                 onMouseEnter={e=>e.currentTarget.style.background=C.surface}
                 onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
                 <div style={{ minWidth:0,flex:1 }}>
-                  <div style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{fmtInvId(inv,allInvoices)}</div>
+                  <div style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{inv.invId||inv.id}</div>
                   <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>{inv.project||inv.client||"—"}</div>
                 </div>
                 <div style={{ textAlign:"right",flexShrink:0,marginLeft:8 }}>
@@ -5167,42 +4606,34 @@ function DashWidget({ widgetId, type, allProjects, allInvoices, payments, tasks,
         )}
       </div>
     );
-    if(type==="activity") return(()=>{
-      const [activeLogEntry, setActiveLogEntry] = React.useState(null);
-      return(
-        <div>
-          {activeLogEntry&&<ActivityLogModal entry={activeLogEntry} onClose={()=>setActiveLogEntry(null)}/>}
-          {globalLog.length===0&&<div style={{ color:C.muted,fontFamily:F,fontSize:12,textAlign:"center",padding:"12px 0" }}>No activity yet</div>}
-          {globalLog.slice(0,7).map(e=>(
-            <div key={e.id} onClick={()=>setActiveLogEntry(e)}
-              style={{ display:"flex",gap:10,alignItems:"flex-start",marginBottom:9,paddingBottom:9,borderBottom:`1px solid ${C.border}22`,cursor:"pointer",borderRadius:6,padding:"6px 8px",transition:"background .12s" }}
-              onMouseEnter={ev=>ev.currentTarget.style.background=C.surface}
-              onMouseLeave={ev=>ev.currentTarget.style.background="transparent"}>
-              <div style={{ width:28,height:28,borderRadius:7,background:C.surface,border:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,flexShrink:0 }}>{normIcon(e.icon)}</div>
-              <div style={{ flex:1,minWidth:0 }}>
-                <div style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{e.action}</div>
-                <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>{e.user||"User"} · {e.time||e.detail}</div>
-              </div>
-              <div style={{ color:C.muted,fontSize:11,flexShrink:0,alignSelf:"center" }}>›</div>
+    if(type==="activity") return(
+      <div>
+        {globalLog.length===0&&<div style={{ color:C.muted,fontFamily:F,fontSize:12,textAlign:"center",padding:"12px 0" }}>No activity yet</div>}
+        {globalLog.slice(0,7).map(e=>(
+          <div key={e.id} style={{ display:"flex",gap:10,alignItems:"flex-start",marginBottom:9,paddingBottom:9,borderBottom:`1px solid ${C.border}22` }}>
+            <div style={{ width:28,height:28,borderRadius:7,background:C.surface,border:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,flexShrink:0 }}>{normIcon(e.icon)}</div>
+            <div style={{ flex:1,minWidth:0 }}>
+              <div style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{e.action}</div>
+              <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>{e.user||"User"} · {e.time||e.detail}</div>
             </div>
-          ))}
-        </div>
-      );
-    })();
+          </div>
+        ))}
+      </div>
+    );
     if(type==="calendar") return(()=>{
       const now=new Date(); now.setHours(0,0,0,0);
       // Combine upcoming invoices + tasks + project milestones into one timeline
       const events=[];
       allInvoices.filter(i=>i.due&&(i.status||i.invoiceStatus)!=="paid").forEach(inv=>{
         const d=new Date(inv.due+"T00:00:00"); if(isNaN(d))return;
-        events.push({ id:inv.id,date:d,icon:"inv",label:`Invoice ${fmtInvId(inv)}`,sub:inv.project+` · $${Number(inv.amount||0).toLocaleString()}`,color:C.accent });
+        events.push({ id:inv.id,date:d,icon:"🧾",label:`Invoice ${inv.id||inv.invId}`,sub:inv.project+` · $${Number(inv.amount||0).toLocaleString()}`,color:C.accent });
       });
       tasks.filter(t=>t.date&&t.status!=="done").forEach(t=>{
         const d=new Date(t.date+"T00:00:00"); if(isNaN(d))return;
-        events.push({ id:"t"+t.id,date:d,icon:"tasks",label:t.title,sub:t.member+" · "+t.project,color:C.blue });
+        events.push({ id:"t"+t.id,date:d,icon:"✅",label:t.title,sub:t.member+" · "+t.project,color:C.blue });
       });
       allProjects.forEach(p=>{
-        if(p.due){ const d=new Date(p.due+"T00:00:00"); if(!isNaN(d)&&d>=now) events.push({ id:"pd"+p.id,date:d,icon:"projects",label:p.name+" due",sub:p.client?.name||"",color:C.purple }); }
+        if(p.due){ const d=new Date(p.due+"T00:00:00"); if(!isNaN(d)&&d>=now) events.push({ id:"pd"+p.id,date:d,icon:"🏗",label:p.name+" due",sub:p.client?.name||"",color:C.purple }); }
       });
       events.sort((a,b)=>a.date-b.date);
       const upcoming=events.slice(0,6);
@@ -5243,7 +4674,7 @@ function DashWidget({ widgetId, type, allProjects, allInvoices, payments, tasks,
           <span style={{ fontSize:16 }}>{wt.icon}</span>
           <span style={{ color:C.text,fontFamily:F,fontSize:13,fontWeight:700,textTransform:"uppercase",letterSpacing:.5 }}>{wt.label}</span>
         </div>
-        <button onClick={()=>setShowPicker(p=>!p)} title="Change widget" style={{ background:"transparent",border:`1px solid ${C.border}`,borderRadius:6,padding:"3px 9px",color:C.muted,fontFamily:F,fontSize:11,cursor:"pointer" }}><Ic.Settings size={12} color={C.muted} style={{marginRight:4}}/> Customize</button>
+        <button onClick={()=>setShowPicker(p=>!p)} title="Change widget" style={{ background:"transparent",border:`1px solid ${C.border}`,borderRadius:6,padding:"3px 9px",color:C.muted,fontFamily:F,fontSize:11,cursor:"pointer" }}>⚙ Customize</button>
       </div>
       {showPicker&&(
         <div style={{ position:"absolute",top:54,right:18,zIndex:200,background:C.card,border:`1px solid ${C.border}`,borderRadius:10,padding:"10px",boxShadow:"0 8px 32px rgba(0,0,0,.35)",minWidth:200 }}>
@@ -5293,13 +4724,13 @@ function Dashboard({ onSelect, allProjects=[], allInvoices=[], payments=[], task
     <div>
       <div style={{ marginBottom:28 }}>
         <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginBottom:4 }}>{dayName}</div>
-        <h2 style={{ color:C.text,fontFamily:F,fontSize:24,fontWeight:700,margin:0 }}>{gr}</h2>
+        <h2 style={{ color:C.text,fontFamily:F,fontSize:24,fontWeight:700,margin:0 }}>{gr} 👷</h2>
       </div>
 
       {/* Overdue alert banner */}
       {overdueInvCount>0&&(
         <div onClick={()=>onSelect&&onSelect("invoicing")} style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:10,padding:"12px 18px",marginBottom:20,display:"flex",alignItems:"center",gap:10,cursor:"pointer" }}>
-          <Ic.Warning size={18} color={C.accent}/>
+          <span style={{ fontSize:18 }}>⚠️</span>
           <div style={{ flex:1 }}>
             <div style={{ color:C.red,fontFamily:F,fontWeight:700,fontSize:13 }}>{overdueInvCount} overdue invoice{overdueInvCount!==1?"s":""}</div>
             <div style={{ color:C.muted,fontFamily:F,fontSize:12 }}>Click to view and follow up</div>
@@ -5359,7 +4790,6 @@ function useGlobalInvoices(){
 }
 
 function EditInvoiceModal({ invoice, allProjects, onConfirm, onCancel }){
-  const cid = useCompany();
   const [project,setProject]   = useState(invoice.project||"");
   const [client,setClient]     = useState(invoice.client||"");
   const [desc,setDesc]         = useState(invoice.desc||"");
@@ -5367,47 +4797,24 @@ function EditInvoiceModal({ invoice, allProjects, onConfirm, onCancel }){
   const [due,setDue]           = useState(invoice.due||"");
   const [status,setStatus]     = useState(invoice.status||invoice.invoiceStatus||"pending");
   const [err,setErr]           = useState("");
-  // File state — pre-fill from existing invoice attachment
-  const [docFile,setDocFile]   = useState(
-    invoice.dataUrl||invoice.name
-      ? { name:invoice.name||"invoice", size:invoice.size||0, dataUrl:invoice.dataUrl||null }
-      : null
-  );
-  const fileRef = useRef();
 
-  const handleFile=async(raw)=>{
-    if(raw.size>5*1024*1024){ setErr("File too large (max 5 MB)"); return; }
-    const du=await new Promise(r=>{const rd=new FileReader();rd.onload=e=>r(e.target.result);rd.readAsDataURL(raw);});
-    setDocFile({ name:raw.name, size:raw.size, dataUrl:du, _rawFile:raw });
-    setErr("");
-  };
-
-  const submit=async()=>{
+  const submit=()=>{
     if(!amount||isNaN(parseFloat(amount))){ setErr("Amount is required"); return; }
     const fmt=due?new Date(due+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):"—";
-    // Upload new file to Storage if selected, otherwise keep existing dataUrl
-    let fileUrl  = docFile?.dataUrl||null;
-    let fileName = docFile?.name||null;
-    let fileSize = docFile?.size||0;
-    if(docFile?._rawFile && cid){
-      const uploaded = await uploadFile(docFile._rawFile, 'invoices', cid);
-      if(uploaded){ fileUrl = uploaded.url; fileName = docFile.name; fileSize = docFile.size; }
-    }
-    onConfirm({ project, client, desc, amount:parseFloat(amount), due, dueFmt:fmt,
-      status, invoiceStatus:status, dataUrl:fileUrl, name:fileName, size:fileSize });
+    onConfirm({ project, client, desc, amount:parseFloat(amount), due, dueFmt:fmt, status, invoiceStatus:status });
   };
 
   return(
     <Overlay onClose={onCancel}>
-      <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,padding:28,width:500,maxHeight:"92vh",overflowY:"auto" }}>
+      <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,padding:28,width:480 }}>
         <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20 }}>
           <div>
-            <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}><Ic.Pen size={15} color={C.accent} style={{marginRight:7,verticalAlign:"middle"}}/> Edit Invoice</div>
-            <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2 }}>{fmtInvId(invoice)}</div>
+            <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}>✏️ Edit Invoice</div>
+            <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2 }}>{invoice.id||invoice.invId}</div>
           </div>
           <button onClick={onCancel} style={{ background:"none",border:"none",color:C.muted,fontSize:20,cursor:"pointer" }}>✕</button>
         </div>
-        {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"9px 12px",color:C.red,fontFamily:F,fontSize:12,marginBottom:14 }}><Ic.Warning size={12} color={C.red} style={{marginRight:5,verticalAlign:"middle"}}/>{err}</div>}
+        {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"9px 12px",color:C.red,fontFamily:F,fontSize:12,marginBottom:14 }}>⚠ {err}</div>}
         <div style={{ display:"flex",flexDirection:"column",gap:13 }}>
           <div><label style={LBL()}>Project</label>
             <select value={project} onChange={e=>setProject(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
@@ -5419,42 +4826,12 @@ function EditInvoiceModal({ invoice, allProjects, onConfirm, onCancel }){
           <div><label style={LBL()}>Description</label><textarea style={{ ...INP(),resize:"none" }} rows={2} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="Invoice description"/></div>
           <div style={{ display:"flex",gap:12 }}>
             <div style={{ flex:1 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setErr("");}} onWheel={e=>e.target.blur()} placeholder="0.00"/></div>
-            <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><DateInput style={INP()} value={due} onChange={e=>setDue(e.target.value)}/></div>
+            <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={due} onChange={e=>setDue(e.target.value)}/></div>
           </div>
           <div><label style={LBL()}>Status</label>
             <div style={{ display:"flex",gap:8 }}>
               {INV_ST.map(s=><button key={s.v} onClick={()=>setStatus(s.v)} style={{ flex:1,padding:"9px 0",borderRadius:7,cursor:"pointer",fontFamily:F,fontSize:12,fontWeight:700,border:status===s.v?`2px solid ${s.c}`:`1px solid ${C.border}`,background:status===s.v?s.c+"22":"transparent",color:status===s.v?s.c:C.muted,transition:"all .15s" }}>{s.l}</button>)}
             </div>
-          </div>
-          {/* File attachment */}
-          <div>
-            <label style={LBL()}>Invoice File <span style={{ fontWeight:400,color:C.muted }}>(optional — replaces existing)</span></label>
-            {docFile
-              ?<div style={{ background:C.surface,border:`1px solid ${C.accent}44`,borderRadius:9,padding:"12px 14px",display:"flex",alignItems:"center",gap:10 }}>
-                  <div style={{ width:38,height:38,background:C.card,borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0 }}>
-                    {docFile.dataUrl?.startsWith("data:image")||docFile.name?.match(/\.(png|jpg|jpeg|webp|gif)$/i)?<Ic.Image size={18} color={C.muted}/>:<Ic.File size={18} color={C.muted}/>}
-                  </div>
-                  <div style={{ flex:1,minWidth:0 }}>
-                    <div style={{ color:C.accent,fontFamily:F,fontWeight:700,fontSize:12 }}><Ic.Check size={12} color={C.green} style={{marginRight:4}}/> Attached</div>
-                    <div style={{ color:C.text,fontFamily:F,fontSize:11,marginTop:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{docFile.name}</div>
-                    {docFile.size>0&&<div style={{ color:C.muted,fontFamily:F,fontSize:10,marginTop:1 }}>{fmtBytes(docFile.size)}</div>}
-                  </div>
-                  <button onClick={()=>setDocFile(null)} style={{ background:"transparent",color:C.red,border:`1px solid ${C.red}33`,borderRadius:6,padding:"4px 8px",fontFamily:F,fontSize:12,cursor:"pointer" }}>Remove</button>
-                </div>
-              :<div onClick={()=>fileRef.current.click()}
-                  onDragOver={e=>{e.preventDefault();e.currentTarget.style.borderColor=C.accent;e.currentTarget.style.background=C.accentDim;}}
-                  onDragLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}}
-                  onDrop={e=>{e.preventDefault();e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";const f=e.dataTransfer.files[0];if(f)handleFile(f);}}
-                  style={{ border:`2px dashed ${C.border}`,borderRadius:9,padding:"18px 16px",textAlign:"center",cursor:"pointer",transition:"all .2s" }}
-                  onMouseEnter={e=>{e.currentTarget.style.borderColor=C.accent+"88";e.currentTarget.style.background=C.accentDim;}}
-                  onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background="transparent";}}>
-                  <div style={{ fontSize:0 }}><Ic.Attach size={24} color={C.muted} style={{marginBottom:5}}/></div>
-                  <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:12,marginBottom:2 }}>Drop file or click to browse</div>
-                  <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>PDF · Images · Word · Any format</div>
-                </div>
-            }
-            <input ref={fileRef} type="file" accept="*" style={{ display:"none" }}
-              onChange={e=>{const f=e.target.files[0];if(f)handleFile(f);e.target.value="";}}/> 
           </div>
         </div>
         <div style={{ display:"flex",gap:10,marginTop:22 }}>
@@ -5492,7 +4869,7 @@ function AddGlobalInvoiceModal({ allProjects, allInvoices=[], onConfirm, onCance
     if(raw.size>5*1024*1024){ setErr("File too large (max 5 MB)"); return; }
     const du=await new Promise(r=>{const rd=new FileReader();rd.onload=e=>r(e.target.result);rd.readAsDataURL(raw);});
     const f={name:raw.name,size:raw.size,dataUrl:du};
-    setDocFile(f); setAiRunning(true); setAiNote("Reading with AI…"); setErr("");
+    setDocFile(f); setAiRunning(true); setAiNote("🤖 Reading with AI…"); setErr("");
     const res=await aiExtractInvoice(f);
     if(res){
       if(res.supplierName&&!supplier) setSupplier(res.supplierName);
@@ -5502,8 +4879,8 @@ function AddGlobalInvoiceModal({ allProjects, allInvoices=[], onConfirm, onCance
       if(res.amount&&!amount)         setAmount(String(res.amount));
       if(res.currency)                setCurrency(res.currency);
       if(res.description&&!desc)      setDesc(res.description);
-      setAiNote("Fields extracted — review and edit below");
-    } else { setAiNote("Could not extract — fill in manually"); }
+      setAiNote("✅ AI extracted — review and edit below");
+    } else { setAiNote("⚠️ Could not extract — fill in manually"); }
     setAiRunning(false);
   };
 
@@ -5526,7 +4903,7 @@ function AddGlobalInvoiceModal({ allProjects, allInvoices=[], onConfirm, onCance
         <div style={{ padding:"22px 28px 18px",borderBottom:`1px solid ${C.border}`,flexShrink:0 }}>
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center" }}>
             <div>
-              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}><Ic.Receipt size={16} color={C.text} style={{marginRight:7,verticalAlign:"middle"}}/> New Invoice</div>
+              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18 }}>🧾 New Invoice</div>
               <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:2 }}>
                 Auto number: <span style={{ color:C.accent,fontWeight:700 }}>{invNum}</span>
               </div>
@@ -5548,26 +4925,26 @@ function AddGlobalInvoiceModal({ allProjects, allInvoices=[], onConfirm, onCance
                 </div>
               : docFile
               ? <div style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:8 }}>
-                  <Ic.File size={16} color={C.muted}/>
+                  <span style={{ fontSize:16 }}>📄</span>
                   <span style={{ color:C.green,fontFamily:F,fontSize:12,fontWeight:600 }}>{docFile.name}</span>
                   <button onClick={e=>{e.stopPropagation();setDocFile(null);setAiNote("");}} style={{ background:"transparent",border:"none",color:C.muted,cursor:"pointer",fontSize:14 }}>✕</button>
                 </div>
               : <div>
                   <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:13,marginBottom:2 }}>
-                    Upload Invoice PDF or Image <span style={{ color:C.muted,fontWeight:400 }}>(optional)</span>
+                    📎 Upload Invoice PDF or Image <span style={{ color:C.muted,fontWeight:400 }}>(optional)</span>
                   </div>
-                  <div style={{ color:C.purple,fontFamily:F,fontSize:11,display:"flex",alignItems:"center",gap:4 }}><Ic.Bot size={11} color={C.purple}/> AI will auto-fill fields from your file</div>
+                  <div style={{ color:C.purple,fontFamily:F,fontSize:11 }}>🤖 AI will auto-fill fields from your file</div>
                 </div>
             }
           </div>
-          {aiNote&&<div style={{ background:aiNote.startsWith("OK")?C.greenDim:aiNote.endsWith("…")?C.purpleDim:C.accentDim,border:`1px solid ${aiNote.startsWith("OK")?C.green+"44":aiNote.endsWith("…")?C.purple+"44":C.accent+"44"}`,borderRadius:7,padding:"8px 12px",color:aiNote.startsWith("OK")?C.green:aiNote.endsWith("…")?C.purple:C.accent,fontFamily:F,fontSize:12,marginBottom:12 }}>{aiNote}</div>}
-          {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"9px 12px",color:C.red,fontFamily:F,fontSize:12,marginBottom:12 }}><Ic.Warning size={12} color={C.red} style={{marginRight:5,verticalAlign:"middle"}}/>{err}</div>}
+          {aiNote&&<div style={{ background:aiNote.startsWith("OK")?C.greenDim:aiNote.startsWith("🤖")?C.purpleDim:C.accentDim,border:`1px solid ${aiNote.startsWith("OK")?C.green+"44":aiNote.startsWith("🤖")?C.purple+"44":C.accent+"44"}`,borderRadius:7,padding:"8px 12px",color:aiNote.startsWith("OK")?C.green:aiNote.startsWith("🤖")?C.purple:C.accent,fontFamily:F,fontSize:12,marginBottom:12 }}>{aiNote}</div>}
+          {err&&<div style={{ background:C.redDim,border:`1px solid ${C.red}44`,borderRadius:7,padding:"9px 12px",color:C.red,fontFamily:F,fontSize:12,marginBottom:12 }}>⚠ {err}</div>}
 
           <div style={{ display:"flex",flexDirection:"column",gap:13 }}>
             {/* Invoice # + Date */}
             <div style={{ display:"flex",gap:12 }}>
-              <div style={{ flex:1 }}><label style={LBL()}>Invoice # *</label><input style={INP()} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="#001"/></div>
-              <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><DateInput style={INP()} value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Invoice # *</label><input style={INP()} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="INV-001"/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
             </div>
             {/* Project */}
             <div><label style={LBL()}>Project *</label>
@@ -5591,7 +4968,7 @@ function AddGlobalInvoiceModal({ allProjects, allInvoices=[], onConfirm, onCance
                   {CURRENCIES.map(c=><option key={c}>{c}</option>)}
                 </select>
               </div>
-              <div style={{ flex:1.5 }}><label style={LBL()}>Due Date</label><DateInput style={INP()} value={due} onChange={e=>setDue(e.target.value)}/></div>
+              <div style={{ flex:1.5 }}><label style={LBL()}>Due Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={due} onChange={e=>setDue(e.target.value)}/></div>
             </div>
             {/* Status */}
             <div><label style={LBL()}>Status</label>
@@ -5611,77 +4988,6 @@ function AddGlobalInvoiceModal({ allProjects, allInvoices=[], onConfirm, onCance
   );
 }
 
-// ─── Invoice Detail Modal ─────────────────────────────────────────────────────
-function InvoiceDetailModal({ inv, onClose, onEdit, onDelete, onViewFile }){
-  if(!inv) return null;
-  const st = INV_ST.find(s=>s.v===(inv.status||inv.invoiceStatus))||INV_ST[0];
-  const rows = [
-    { label:'Invoice #',    value: fmtInvId(inv,allInvoices),                              color: C.accent },
-    { label:'Project',      value: inv.project||'—',                           color: C.text   },
-    { label:'Client',       value: inv.client||inv.supplier||'—',              color: C.text   },
-    { label:'Amount',       value: `${inv.currency||'AED'} ${Number(inv.amount||0).toLocaleString()}`, color: C.text, bold:true },
-    { label:'Due Date',     value: inv.dueFmt||inv.dueDate||'—',               color: (inv.status||inv.invoiceStatus)==='overdue'?C.red:C.muted },
-    { label:'Invoice Date', value: inv.invDate||'—',                           color: C.muted  },
-    { label:'Notes',         value: inv.desc||'—',                              color: C.muted  },
-  ].filter(r=>r.value&&r.value!=='—'||r.label==='Description');
-
-  return(
-    <Overlay onClose={onClose}>
-      <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,width:480,maxWidth:'95vw',boxShadow:'0 24px 60px rgba(0,0,0,.5)',display:'flex',flexDirection:'column',overflow:'hidden' }}>
-
-        {/* Header */}
-        <div style={{ padding:'22px 24px 18px',borderBottom:`1px solid ${C.border}`,display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:12 }}>
-          <div style={{ display:'flex',alignItems:'center',gap:12 }}>
-            <div style={{ width:42,height:42,borderRadius:10,background:C.accentDim,border:`1px solid ${C.accentMid}`,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0 }}><Ic.Receipt size={20} color={C.accent}/></div>
-            <div>
-              <div style={{ color:C.muted,fontFamily:F,fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',marginBottom:3 }}>Invoice</div>
-              <div style={{ color:C.accent,fontFamily:F,fontWeight:700,fontSize:18,lineHeight:1.2 }}>{fmtInvId(inv,allInvoices)}</div>
-            </div>
-          </div>
-          <div style={{ display:'flex',alignItems:'center',gap:8,flexShrink:0 }}>
-            <span style={{ background:st.c+'22',color:st.c,border:`1px solid ${st.c}55`,padding:'4px 12px',borderRadius:6,fontFamily:F,fontSize:12,fontWeight:700 }}>{st.l}</span>
-            <button onClick={onClose} style={{ background:'transparent',border:'none',color:C.muted,fontSize:20,cursor:'pointer',lineHeight:1,padding:4 }}>✕</button>
-          </div>
-        </div>
-
-        {/* Fields */}
-        <div style={{ padding:'18px 24px',display:'flex',flexDirection:'column',gap:10 }}>
-          {rows.map(r=>(
-            <div key={r.label} style={{ display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:16,paddingBottom:10,borderBottom:`1px solid ${C.border}22` }}>
-              <span style={{ color:C.muted,fontFamily:F,fontSize:12,fontWeight:600,flexShrink:0,minWidth:100 }}>{r.label}</span>
-              <span style={{ color:r.color||C.text,fontFamily:F,fontSize:13,fontWeight:r.bold?700:400,textAlign:'right',wordBreak:'break-word' }}>{r.value}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* File attachment — view inline using existing FilePreviewModal */}
-        {inv.dataUrl&&(
-          <div style={{ padding:'0 24px 14px' }}>
-            <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:'10px 14px',display:'flex',alignItems:'center',gap:10 }}>
-              <Ic.Attach size={18} color={C.muted}/>
-              <div style={{ flex:1,minWidth:0 }}>
-                <div style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{inv.name||'Invoice File'}</div>
-                {inv.size>0&&<div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:1 }}>{(inv.size/1024).toFixed(0)} KB</div>}
-              </div>
-              <div style={{ display:'flex',gap:6,flexShrink:0 }}>
-                <button onClick={()=>onViewFile(inv)} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}44`,padding:'5px 12px',borderRadius:6,fontFamily:F,fontSize:11,fontWeight:700,cursor:'pointer' }}><Ic.Eye size={12} color={C.blue} style={{marginRight:4,verticalAlign:"middle"}}/> View</button>
-                <a href={inv.dataUrl} download={inv.name||'invoice'} style={{ background:C.accentDim,color:C.accent,border:`1px solid ${C.accentMid}`,padding:'5px 12px',borderRadius:6,fontFamily:F,fontSize:11,fontWeight:700,textDecoration:'none',display:'flex',alignItems:'center' }}>↓ Download</a>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Actions */}
-        <div style={{ padding:'14px 24px 20px',display:'flex',gap:8,justifyContent:'flex-end',borderTop:`1px solid ${C.border}` }}>
-          <button onClick={onClose} style={{ background:'transparent',border:`1px solid ${C.border}`,color:C.muted,padding:'8px 18px',borderRadius:8,fontFamily:F,fontSize:13,cursor:'pointer' }}>Close</button>
-          <button onClick={()=>{ onClose(); onEdit(inv); }} style={{ background:C.blueDim,color:C.blue,border:`1px solid ${C.blue}44`,padding:'8px 18px',borderRadius:8,fontFamily:F,fontSize:13,fontWeight:700,cursor:'pointer' }}><Ic.Pen size={12} color={C.blue} style={{marginRight:4,verticalAlign:"middle"}}/> Edit</button>
-          <button onClick={()=>{ onClose(); onDelete(inv); }} style={{ background:C.redDim,color:C.red,border:`1px solid ${C.red}44`,padding:'8px 18px',borderRadius:8,fontFamily:F,fontSize:13,fontWeight:700,cursor:'pointer' }}><Ic.Delete size={12} color={C.red} style={{marginRight:4,verticalAlign:"middle"}}/> Delete</button>
-        </div>
-      </div>
-    </Overlay>
-  );
-}
-
 function InvoicingPage({ allProjects=[], allInvoices=[], addInvoice, updateInvoice, removeInvoice }){
   const ready=allInvoices!==undefined;
   const [projFilter,setProjFilter]=useState("all");
@@ -5692,7 +4998,6 @@ function InvoicingPage({ allProjects=[], allInvoices=[], addInvoice, updateInvoi
   const [confirmDelete,setConfirmDelete]=useState(null);
   const [confirmEdit,setConfirmEdit]=useState(null); // {invoice, patch}
   const [previewInv,setPreviewInv]=useState(null);
-  const [selectedInv,setSelectedInv]=useState(null);
 
   const filtered=useMemo(()=>allInvoices.filter(inv=>{
     if(projFilter!=="all"&&inv.project!==projFilter)return false;
@@ -5718,7 +5023,6 @@ function InvoicingPage({ allProjects=[], allInvoices=[], addInvoice, updateInvoi
   return(
     <div>
       {previewInv&&<FilePreviewModal file={previewInv} onClose={()=>setPreviewInv(null)}/>}
-      {selectedInv&&<InvoiceDetailModal inv={selectedInv} onClose={()=>setSelectedInv(null)} onEdit={inv=>setEditing(inv)} onDelete={inv=>setConfirmDelete(inv)} onViewFile={inv=>{ setSelectedInv(null); setPreviewInv(inv); }}/>}
       {showAdd&&<AddGlobalInvoiceModal allProjects={allProjects} allInvoices={allInvoices} onConfirm={async inv=>{await addInvoice(inv);setShowAdd(false);}} onCancel={()=>setShowAdd(false)}/>}
       {editing&&<EditInvoiceModal invoice={editing} allProjects={allProjects}
         onConfirm={patch=>setConfirmEdit({invoice:editing,patch})}
@@ -5731,7 +5035,7 @@ function InvoicingPage({ allProjects=[], allInvoices=[], addInvoice, updateInvoi
           onConfirm={async()=>{ await updateInvoice(confirmEdit.invoice.id,confirmEdit.patch); setConfirmEdit(null); setEditing(null); }}
           onCancel={()=>setConfirmEdit(null)}>
           <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:"10px 14px",display:"flex",justifyContent:"space-between" }}>
-            <span style={{ color:C.accent,fontFamily:F,fontWeight:700 }}>{fmtInvId(confirmEdit.invoice,allInvoices)}</span>
+            <span style={{ color:C.accent,fontFamily:F,fontWeight:700 }}>{confirmEdit.invoice.id||confirmEdit.invoice.invId}</span>
             <span style={{ color:C.text,fontFamily:F,fontWeight:700 }}>${Number(confirmEdit.patch.amount||confirmEdit.invoice.amount||0).toLocaleString()}</span>
           </div>
         </ConfirmDialog>
@@ -5739,19 +5043,19 @@ function InvoicingPage({ allProjects=[], allInvoices=[], addInvoice, updateInvoi
       {confirmDelete&&(
         <ConfirmDialog
           title="Delete Invoice?"
-          message={`Are you sure you want to delete invoice "${fmtInvId(confirmDelete,allInvoices)}"? This action cannot be undone.`}
+          message={`Are you sure you want to delete invoice "${confirmDelete.id||confirmDelete.invId}"? This action cannot be undone.`}
           confirmLabel="Yes, Delete" variant="delete"
           onConfirm={async()=>{ await removeInvoice(confirmDelete.id); setConfirmDelete(null); }}
           onCancel={()=>setConfirmDelete(null)}>
           <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:"10px 14px",display:"flex",justifyContent:"space-between",alignItems:"center" }}>
-            <span style={{ color:C.accent,fontFamily:F,fontWeight:700 }}>{fmtInvId(confirmDelete,allInvoices)}</span>
+            <span style={{ color:C.accent,fontFamily:F,fontWeight:700 }}>{confirmDelete.id||confirmDelete.invId}</span>
             <span style={{ color:C.text,fontFamily:F,fontWeight:700 }}>${Number(confirmDelete.amount||0).toLocaleString()}</span>
           </div>
         </ConfirmDialog>
       )}
 
       {/* Header */}
-      <PageHeader icon={<Ic.Receipt size={22} color={C.accent}/>} title="Invoices" subtitle="All invoices across every project"
+      <PageHeader icon="🧾" title="Invoices" subtitle="All invoices across every project"
         action={<Btn variant="primary" onClick={()=>setShowAdd(true)}>+ New Invoice</Btn>}/>
 
       {/* Stats */}
@@ -5779,33 +5083,30 @@ function InvoicingPage({ allProjects=[], allInvoices=[], addInvoice, updateInvoi
       {/* Table */}
       <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,overflow:"hidden" }}>
         {filtered.length===0
-          ?<EmptyState icon={<Ic.Receipt size={36} color={C.muted}/>} title="No invoices match your filters" sub="Try clearing your filters"/>
+          ?<EmptyState icon="🧾" title="No invoices match your filters" sub="Try clearing your filters"/>
           :<table style={{ width:"100%",borderCollapse:"collapse",fontFamily:F,fontSize:13 }}>
             <thead><tr style={{ borderBottom:`1px solid ${C.border}`,background:C.surface }}>
-              {["Invoice #","Project","Client","Amount","Due Date","Status"].map(h=><th key={h} style={TH()}>{h}</th>)}
-              <th style={ACT_COL_CELL}><div style={ACT_COL_INNER_TH}>Actions</div></th>
+              {["Invoice #","Project","Client","Amount","Due Date","Status"].map(h=><th key={h} style={TH()}>{h}</th>)}<th style={ACT_TH}>Actions</th>
             </tr></thead>
             <tbody>{filtered.map((inv,i)=>{
               const st=INV_ST.find(s=>s.v===(inv.status||inv.invoiceStatus))||INV_ST[0];
               return(
-                <tr key={inv.id}
-                  onClick={e=>{ if(e.target.closest('[data-norow]')) return; setSelectedInv(inv); }}
-                  style={{ borderBottom:i<filtered.length-1?`1px solid ${C.border}22`:"none",transition:"background .15s",cursor:"pointer" }}
+                <tr key={inv.id} style={{ borderBottom:i<filtered.length-1?`1px solid ${C.border}22`:"none",transition:"background .15s" }}
                   onMouseEnter={e=>e.currentTarget.style.background=C.surface} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                  <td style={TD({color:C.accent,fontWeight:700})}>{fmtInvId(inv,allInvoices)}</td>
+                  <td style={TD({color:C.accent,fontWeight:700})}>{fmtInvId(inv)}</td>
                   <td style={TD({color:C.text,fontWeight:600})}>{inv.project||"—"}</td>
                   <td style={TD({color:C.muted})}>{inv.client||"—"}</td>
                   <td style={TD({color:C.text,fontWeight:700})}>${Number(inv.amount||0).toLocaleString()}</td>
                   <td style={TD({color:(inv.status||inv.invoiceStatus)==="overdue"?C.red:C.muted})}>{inv.dueFmt||inv.dueDate||"—"}</td>
-                  <td style={TD()} data-norow>
-                    <button onClick={e=>{ e.stopPropagation(); cycleStatus(inv); }} title="Click to cycle status" style={{ background:st.c+"22",color:st.c,border:`1px solid ${st.c}55`,padding:"4px 10px",borderRadius:5,fontFamily:F,fontSize:12,fontWeight:700,cursor:"pointer" }}>{st.l}</button>
+                  <td style={TD()}>
+                    <button onClick={()=>cycleStatus(inv)} title="Click to cycle status" style={{ background:st.c+"22",color:st.c,border:`1px solid ${st.c}55`,padding:"4px 10px",borderRadius:5,fontFamily:F,fontSize:12,fontWeight:700,cursor:"pointer" }}>{st.l}</button>
                   </td>
-                  <td style={ACT_COL_CELL} data-norow>
-                    <div style={ACT_COL_INNER}>
-                      {inv.dataUrl&&<RowBtn type="view" onClick={e=>{ e.stopPropagation(); setPreviewInv(inv); }}>View</RowBtn>}
-                      <RowBtn type="edit" onClick={e=>{ e.stopPropagation(); setEditing(inv); }}>Edit</RowBtn>
-                      <RowBtn type="delete" onClick={e=>{ e.stopPropagation(); setConfirmDelete(inv); }}>Delete</RowBtn>
-                    </div>
+                  <td style={ACT_TD}>
+                    <RowActions>
+                      {inv.dataUrl&&<RowBtn type="view" onClick={()=>setPreviewInv(inv)}>View</RowBtn>}
+                      <RowBtn type="edit" onClick={()=>setEditing(inv)}>Edit</RowBtn>
+                      <RowBtn type="delete" onClick={()=>setConfirmDelete(inv)}>Delete</RowBtn>
+                    </RowActions>
                   </td>
                 </tr>
               );
@@ -5841,8 +5142,13 @@ function TeamGlobal({ allProjects=[], onLog }){
 
   const handleEditUser = async(patch)=>{
     const { id } = editingUser;
-    // Update non-sensitive profile fields via db.js (keeps DB ops out of App.jsx)
-    await dbProfiles.updateProfile(id, patch);
+    // Update job_title, phone, status, color in profiles
+    await dbProfiles.updateProfile(id, {
+      job_title: patch.job_title,
+      phone:     patch.phone,
+      status:    patch.status,
+      color:     patch.color,
+    }).eq('id', id);
     if(onLog) onLog({ id:Date.now(), action:`${editingUser.name} updated`, detail:'Team', user:'Admin', time:new Date().toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}), icon:'✏️' });
     setVersion(v=>v+1); setEditingUser(null); setConfirmEdit(null);
   };
@@ -5871,7 +5177,7 @@ function TeamGlobal({ allProjects=[], onLog }){
         <Overlay onClose={()=>setEditingUser(null)}>
           <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,padding:28,width:460 }} onClick={e=>e.stopPropagation()}>
             <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20 }}>
-              <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}><Ic.Pen size={14} color={C.accent} style={{marginRight:7,verticalAlign:"middle"}}/> Edit Team Member</span>
+              <span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:17 }}>✏️ Edit Team Member</span>
               <button onClick={()=>setEditingUser(null)} style={{ background:'none',border:'none',color:C.muted,fontSize:20,cursor:'pointer' }}>✕</button>
             </div>
             <EditUserForm user={editingUser} onSave={patch=>setConfirmEdit({patch})} onCancel={()=>setEditingUser(null)} COLORS={COLORS}/>
@@ -5888,7 +5194,7 @@ function TeamGlobal({ allProjects=[], onLog }){
       {/* Header */}
       <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24,flexWrap:'wrap',gap:12 }}>
         <div>
-          <h2 style={{ color:C.text,fontSize:20,fontFamily:F,fontWeight:700,margin:0 }}><Ic.Team size={20} color={C.text} style={{marginRight:8,verticalAlign:"middle"}}/> Team</h2>
+          <h2 style={{ color:C.text,fontSize:20,fontFamily:F,fontWeight:700,margin:0 }}>👥 Team</h2>
           <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>{users.length} members · managed via User Management</div>
         </div>
       </div>
@@ -5916,7 +5222,7 @@ function TeamGlobal({ allProjects=[], onLog }){
       {/* Member cards */}
       {filtered.length===0&&(
         <div style={{ background:C.card,border:`2px dashed ${C.border}`,borderRadius:12,padding:'48px 20px',textAlign:'center',color:C.muted,fontFamily:F,fontSize:13 }}>
-          <Ic.Team size={36} color={C.muted} style={{marginBottom:10}}/>
+          <div style={{ fontSize:36,marginBottom:10 }}>👥</div>
           {users.length===0 ? 'No team members yet — add users via Supabase then set their details here' : 'No members match your filter'}
         </div>
       )}
@@ -5940,9 +5246,9 @@ function TeamGlobal({ allProjects=[], onLog }){
                     <Badge status={u.status||'on-site'}/>
                   </div>
                   <div style={{ color:C.muted,fontFamily:F,fontSize:12,display:'flex',gap:14,flexWrap:'wrap' }}>
-                    {u.role&&<span style={{display:"inline-flex",alignItems:"center",gap:3}}><Ic.Wrench size={11} color={C.muted}/> {u.role}</span>}
-                    {u.phone&&<span style={{display:"inline-flex",alignItems:"center",gap:3}}><Ic.Phone size={11} color={C.muted}/> {u.phone}</span>}
-                    <span style={{display:"inline-flex",alignItems:"center",gap:3}}><Ic.Email size={11} color={C.muted}/> {u.email}</span>
+                    {u.role&&<span>🔨 {u.role}</span>}
+                    {u.phone&&<span>📞 {u.phone}</span>}
+                    <span>✉️ {u.email}</span>
                   </div>
                 </div>
                 {/* Task summary */}
@@ -5964,7 +5270,7 @@ function TeamGlobal({ allProjects=[], onLog }){
                 <div style={{ padding:'10px 20px 14px',borderTop:`1px solid ${C.border}22`,background:C.surface }}>
                   {userProjects.length>0&&(
                     <div style={{ display:'flex',gap:6,flexWrap:'wrap',marginBottom:activeTasks.length>0?8:0 }}>
-                      <Ic.Projects size={11} color={C.muted} style={{marginRight:4,alignSelf:"center"}}/>
+                      <span style={{ color:C.muted,fontFamily:F,fontSize:11,marginRight:4,alignSelf:'center' }}>🏗</span>
                       {userProjects.map(p=>(
                         <span key={p} style={{ background:C.accentDim,color:C.accent,border:`1px solid ${C.accentMid}`,borderRadius:99,padding:'2px 10px',fontFamily:F,fontSize:11,fontWeight:600 }}>{p}</span>
                       ))}
@@ -6033,10 +5339,10 @@ function EditUserForm({ user, onSave, onCancel, COLORS }){
 
 // ─── Price Tracking Page ───────────────────────────────────────────────────────
 const MATERIALS = [
-  { id:"steel",    name:"Structural Steel",  unit:"per tonne",   icon:"steel", color:"#94a3b8", base:780,   seed:[770,775,768,780,792,785,780],  desc:"Hot-rolled structural sections (I-beams, channels)" },
-  { id:"concrete", name:"Ready-Mix Concrete",unit:"per m³",      icon:"concrete", color:"#a78bfa", base:95,    seed:[90,92,91,93,96,94,95],         desc:"C30 standard grade, delivered to site" },
+  { id:"steel",    name:"Structural Steel",  unit:"per tonne",   icon:"🔩", color:"#94a3b8", base:780,   seed:[770,775,768,780,792,785,780],  desc:"Hot-rolled structural sections (I-beams, channels)" },
+  { id:"concrete", name:"Ready-Mix Concrete",unit:"per m³",      icon:"🏗", color:"#a78bfa", base:95,    seed:[90,92,91,93,96,94,95],         desc:"C30 standard grade, delivered to site" },
   { id:"cement",   name:"Portland Cement",   unit:"per 50 kg bag",icon:"🪨",color:"#f59e0b", base:28,    seed:[27,27.5,28,27.8,28.5,28,28],   desc:"OPC Grade 42.5, bulk & bagged" },
-  { id:"copper",   name:"Copper",            unit:"per tonne",   icon:"copper", color:"#f97316", base:9400,  seed:[9100,9250,9200,9400,9500,9450,9400], desc:"Copper cathode, LME grade A" },
+  { id:"copper",   name:"Copper",            unit:"per tonne",   icon:"🔶", color:"#f97316", base:9400,  seed:[9100,9250,9200,9400,9500,9450,9400], desc:"Copper cathode, LME grade A" },
   { id:"aluminum", name:"Aluminum",          unit:"per tonne",   icon:"⬜", color:"#38bdf8", base:2450,  seed:[2350,2380,2400,2420,2460,2450,2450], desc:"Primary aluminum ingot, LME" },
   { id:"lumber",   name:"Construction Lumber",unit:"per m³",     icon:"🪵", color:"#84cc16", base:420,   seed:[400,408,410,415,425,420,420],   desc:"Structural softwood, graded timber" },
 ];
@@ -6145,11 +5451,11 @@ function PriceCard({ mat, history, aiAnalysis, onAnalyse, analysing }){
           style={{ background:"transparent",color:analysing?"#a78bfa":"#7a849e",border:`1px solid ${analysing?"#a78bfa44":"#2a3045"}`,borderRadius:6,padding:"6px 14px",fontFamily:F,fontSize:11,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:6,transition:"all .15s" }}
           onMouseEnter={e=>{e.currentTarget.style.color="#a78bfa";e.currentTarget.style.borderColor="#a78bfa44";}}
           onMouseLeave={e=>{e.currentTarget.style.color=analysing?"#a78bfa":"#7a849e";e.currentTarget.style.borderColor=analysing?"#a78bfa44":"#2a3045";}}>
-          {analysing?<><div style={{ width:10,height:10,border:"2px solid #a78bfa",borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Analysing…</>:<><Ic.Bot size={11} color="#a78bfa" style={{marginRight:4}}/> {expanded&&aiAnalysis?"Hide":"AI Buying Insight"}</>}
+          {analysing?<><div style={{ width:10,height:10,border:"2px solid #a78bfa",borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Analysing…</>:<>🤖 {expanded&&aiAnalysis?"Hide":"AI Buying Insight"}</>}
         </button>
         {expanded&&aiAnalysis&&(
           <div style={{ marginTop:10,background:"#181c27",border:"1px solid #a78bfa33",borderRadius:8,padding:"12px 14px" }}>
-            <div style={{ color:"#a78bfa",fontFamily:F,fontSize:11,fontWeight:700,marginBottom:6,display:"flex",alignItems:"center",gap:5 }}><Ic.Bot size={12} color="#a78bfa"/> AI Buying Insight — {mat.name}</div>
+            <div style={{ color:"#a78bfa",fontFamily:F,fontSize:11,fontWeight:700,marginBottom:6,display:"flex",alignItems:"center",gap:5 }}>🤖 AI Buying Insight — {mat.name}</div>
             <div style={{ color:"#c4cae0",fontFamily:F,fontSize:12,lineHeight:1.7,whiteSpace:"pre-wrap" }}>{aiAnalysis}</div>
           </div>
         )}
@@ -6207,13 +5513,13 @@ Provide: 1) Market trend assessment, 2) Whether to buy now / wait / stockpile, 3
       {/* Page header */}
       <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:24,flexWrap:"wrap",gap:12 }}>
         <div>
-          <h2 style={{ color:"#e8eaf0",fontSize:22,fontFamily:F,fontWeight:700,margin:0,display:"flex",alignItems:"center",gap:10 }}><Ic.TrendUp size={22} color="#e8eaf0"/> Material Price Tracking</h2>
+          <h2 style={{ color:"#e8eaf0",fontSize:22,fontFamily:F,fontWeight:700,margin:0,display:"flex",alignItems:"center",gap:10 }}>📈 Material Price Tracking</h2>
           <div style={{ color:"#7a849e",fontFamily:F,fontSize:12,marginTop:4 }}>Live construction material prices for the GCC market · Updated {lastRefresh.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"})}</div>
         </div>
         <div style={{ display:"flex",gap:8,alignItems:"center",flexWrap:"wrap" }}>
           {/* Market sentiment pill */}
           <div style={{ background:bullCount>=3?"#22c55e1a":"#ef44441a",border:`1px solid ${bullCount>=3?"#22c55e44":"#ef444444"}`,borderRadius:8,padding:"8px 14px",display:"flex",alignItems:"center",gap:7 }}>
-            <span style={{ fontSize:14 }}>{bullCount>=3?<Ic.TrendUp size={14} color={C.green}/>:<Ic.TrendDown size={14} color={C.red}/>}</span>
+            <span style={{ fontSize:14 }}>{bullCount>=3?"📈":"📉"}</span>
             <span style={{ color:bullCount>=3?"#22c55e":"#ef4444",fontFamily:F,fontWeight:700,fontSize:12 }}>{bullCount>=3?"Market Rising":"Market Declining"}</span>
             <span style={{ color:"#7a849e",fontFamily:F,fontSize:11 }}>{bullCount}/{MATERIALS.length} up today</span>
           </div>
@@ -6284,7 +5590,7 @@ Provide: 1) Market trend assessment, 2) Whether to buy now / wait / stockpile, 3
                     <td style={{ padding:"13px 16px",minWidth:160 }}><SparkLine data={h.slice(-14)} color={m.color} width={140} height={36}/></td>
                     <td style={{ padding:"13px 16px" }}>
                       <button onClick={()=>{ requestAnalysis(m.id); }} disabled={!!analysing[m.id]} style={{ background:"#a78bfa1a",color:"#a78bfa",border:"1px solid #a78bfa33",borderRadius:6,padding:"5px 12px",fontFamily:F,fontSize:11,fontWeight:700,cursor:analysing[m.id]?"not-allowed":"pointer",whiteSpace:"nowrap" }}>
-                        {analysing[m.id]?"…":<><Ic.Bot size={11} color={C.purple} style={{marginRight:4}}/> Analyse</>}
+                        {analysing[m.id]?"…":"🤖 Analyse"}
                       </button>
                       {analyses[m.id]&&(
                         <div style={{ marginTop:8,background:"#181c27",border:"1px solid #a78bfa22",borderRadius:7,padding:"8px 10px",maxWidth:260 }}>
@@ -6562,7 +5868,7 @@ async function generatePdfBlob(metrics, report){
 
       cx2=ML+2;
       doc.setFont("helvetica","bold"); doc.setFontSize(7.5); rgb(BLUE);
-      doc.text(fmtInvId(inv,allInvoices||[]), cx2, y+5.5); cx2+=cols[0];
+      doc.text(inv.invId||String(inv.id), cx2, y+5.5); cx2+=cols[0];
 
       const descTxt = inv.desc||"—";
       doc.setFont("helvetica","normal"); rgb(BDARK);
@@ -6843,7 +6149,7 @@ Address the contractor as "the Company". Flag overdue amounts if any.`;
       {/* Header */}
       <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:28 }}>
         <div>
-          <h2 style={{ color:C.text,fontSize:22,fontFamily:F,fontWeight:800,margin:0,display:"flex",alignItems:"center",gap:10 }}><Ic.Receipt size={20} color={C.accent} style={{marginRight:8}}/> Accountant</h2>
+          <h2 style={{ color:C.text,fontSize:22,fontFamily:F,fontWeight:800,margin:0,display:"flex",alignItems:"center",gap:10 }}>🧾 Accountant</h2>
           <div style={{ color:C.muted,fontFamily:F,fontSize:13,marginTop:4 }}>AI-powered financial reports · auto-exports as PDF</div>
         </div>
         {report&&(
@@ -6885,22 +6191,22 @@ Address the contractor as "the Company". Flag overdue amounts if any.`;
               ? <><div style={{ width:14,height:14,border:"2px solid",borderColor:C.accent,borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Generating Report…</>
               : pdfBuilding
               ? <><div style={{ width:14,height:14,border:"2px solid",borderColor:C.accent,borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Building PDF…</>
-              : <><Ic.BarChart size={14} color="#fff" style={{marginRight:6,verticalAlign:"middle"}}/> Generate &amp; Download PDF</>}
+              : <>📊 Generate &amp; Download PDF</>}
           </button>
         </div>
-        {err&&<div style={{ color:C.red,fontFamily:F,fontSize:12,marginTop:12,padding:"8px 12px",background:C.redDim,borderRadius:6 }}><Ic.Warning size={12} color={C.red} style={{marginRight:5,verticalAlign:"middle"}}/>{err}</div>}
+        {err&&<div style={{ color:C.red,fontFamily:F,fontSize:12,marginTop:12,padding:"8px 12px",background:C.redDim,borderRadius:6 }}>⚠ {err}</div>}
       </div>
 
       {/* Live metrics cards */}
       {metrics&&(
         <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(175px,1fr))",gap:12,marginBottom:24 }}>
           {[
-            { label:"Contract Value",       value:fmtS(metrics.projectValue),    icon:<Ic.Projects size={18} color={C.blue}/>, color:C.blue,   dim:C.blueDim   },
-            { label:"Total Invoiced",       value:fmtS(metrics.totalInvoiced),   icon:<Ic.Receipt size={18} color={C.accent}/>, color:C.accent, dim:C.accentDim },
-            { label:"Payments Received",    value:fmtS(metrics.totalReceived),   icon:<Ic.Payments size={18} color={C.green}/>, color:C.green,  dim:C.greenDim  },
+            { label:"Contract Value",       value:fmtS(metrics.projectValue),    icon:"🏗", color:C.blue,   dim:C.blueDim   },
+            { label:"Total Invoiced",       value:fmtS(metrics.totalInvoiced),   icon:"🧾", color:C.accent, dim:C.accentDim },
+            { label:"Payments Received",    value:fmtS(metrics.totalReceived),   icon:"💰", color:C.green,  dim:C.greenDim  },
             { label:"Outstanding Invoices", value:fmtS(metrics.remainToPayInv),  icon:"⏳", color:metrics.totalOverdue>0?C.red:C.muted, dim:metrics.totalOverdue>0?C.redDim:C.surface },
-            { label:"Still to Collect",     value:fmtS(metrics.remainToReceive), icon:<Ic.Inbox size={18} color={C.purple}/>, color:C.purple, dim:C.purpleDim },
-            { label:"Gross Profit Est.",    value:fmtS(metrics.grossProfit),     icon:<Ic.TrendUp size={18} color={metrics.grossProfit>=0?C.green:C.red}/>, color:metrics.grossProfit>=0?C.green:C.red, dim:metrics.grossProfit>=0?C.greenDim:C.redDim },
+            { label:"Still to Collect",     value:fmtS(metrics.remainToReceive), icon:"📥", color:C.purple, dim:C.purpleDim },
+            { label:"Gross Profit Est.",    value:fmtS(metrics.grossProfit),     icon:"📈", color:metrics.grossProfit>=0?C.green:C.red, dim:metrics.grossProfit>=0?C.greenDim:C.redDim },
           ].map(card=>(
             <div key={card.label} style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"16px 18px" }}>
               <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:8 }}>
@@ -7001,7 +6307,7 @@ Address the contractor as "the Company". Flag overdue amounts if any.`;
                       const stC={paid:C.green,overdue:C.red,pending:C.accent};
                       return(
                         <tr key={inv.id||i} style={{ borderBottom:i<metrics.invoices.length-1?`1px solid ${C.border}22`:"none" }}>
-                          <td style={{ color:C.accent,padding:"9px 14px",fontWeight:700 }}>{fmtInvId(inv,allInvoices)}</td>
+                          <td style={{ color:C.accent,padding:"9px 14px",fontWeight:700 }}>{inv.invId||inv.id}</td>
                           <td style={{ color:C.text,padding:"9px 14px",maxWidth:170,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{inv.desc||"—"}</td>
                           <td style={{ color:C.text,padding:"9px 14px",fontWeight:700 }}>{fmt(inv.amount)}</td>
                           <td style={{ color:C.muted,padding:"9px 14px" }}>{inv.dueFmt||inv.dueDate||"—"}</td>
@@ -7055,7 +6361,7 @@ Address the contractor as "the Company". Flag overdue amounts if any.`;
           {/* AI Narrative */}
           <div style={{ padding:"24px 32px" }}>
             <div style={{ display:"flex",alignItems:"center",gap:9,marginBottom:18 }}>
-              <div style={{ width:28,height:28,background:C.purpleDim,borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center" }}><Ic.Bot size={15} color={C.purple}/></div>
+              <div style={{ width:28,height:28,background:C.purpleDim,borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14 }}>🤖</div>
               <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:13,textTransform:"uppercase",letterSpacing:.5 }}>Accountant's Analysis</div>
               <div style={{ color:C.muted,fontFamily:F,fontSize:10,marginLeft:"auto" }}>AI-generated · {report.generatedAt}</div>
             </div>
@@ -7068,7 +6374,7 @@ Address the contractor as "the Company". Flag overdue amounts if any.`;
               ))}
             </div>
             <div style={{ marginTop:20,padding:"11px 16px",background:C.purpleDim,borderRadius:8,display:"flex",alignItems:"center",gap:9 }}>
-              <Ic.Warning size={16} color={C.accent}/>
+              <span>⚠️</span>
               <span style={{ color:C.muted,fontFamily:F,fontSize:11 }}>AI-generated using BuildFlow data. For formal auditing or regulatory submission, please have this reviewed by a licensed accountant.</span>
             </div>
           </div>
@@ -7078,7 +6384,7 @@ Address the contractor as "the Company". Flag overdue amounts if any.`;
       {/* Empty state */}
       {!report&&!busy&&(
         <div style={{ background:C.card,border:`2px dashed ${C.border}`,borderRadius:14,padding:"60px 40px",textAlign:"center" }}>
-          <Ic.BarChart size={52} color={C.muted} style={{marginBottom:16}}/>
+          <div style={{ fontSize:52,marginBottom:16 }}>📊</div>
           <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:18,marginBottom:8 }}>Ready to Generate</div>
           <div style={{ color:C.muted,fontFamily:F,fontSize:13,maxWidth:400,margin:"0 auto",lineHeight:1.65 }}>
             Select a project and click <strong style={{ color:C.accent }}>Generate &amp; Download PDF</strong>.<br/>
@@ -7092,97 +6398,6 @@ Address the contractor as "the Company". Flag overdue amounts if any.`;
 
 
 
-// ─── Activity Log Page ────────────────────────────────────────────────────────
-function ActivityLogPage({ globalLog=[] }){
-  const [activeEntry, setActiveEntry] = useState(null);
-  const [search, setSearch]           = useState('');
-  const [filterIcon, setFilterIcon]   = useState('all');
-
-  const iconFilters = [
-    { v:'all',  l:'All'      },
-    { v:'projects', l:'Projects' },
-    { v:'invoices', l:'Invoices' },
-    { v:'payments', l:'Payments' },
-    { v:'tasks',    l:'Tasks'    },
-    { v:'team',     l:'Team'     },
-    { v:'edits',    l:'Edits'    },
-    { v:'deleted',  l:'Deleted'  },
-  ];
-
-  const filtered = globalLog.filter(e => {
-    const matchSearch = !search ||
-      e.action.toLowerCase().includes(search.toLowerCase()) ||
-      (e.detail||'').toLowerCase().includes(search.toLowerCase()) ||
-      (e.user||'').toLowerCase().includes(search.toLowerCase());
-    const matchIcon = filterIcon === 'all' || e.icon === filterIcon;
-    return matchSearch && matchIcon;
-  });
-
-  return(
-    <div>
-      {activeEntry && <ActivityLogModal entry={activeEntry} onClose={()=>setActiveEntry(null)}/>}
-
-      {/* Page header */}
-      <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:22,flexWrap:"wrap",gap:12 }}>
-        <div>
-          <h2 style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:20,margin:0 }}>Activity Log</h2>
-          <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>{globalLog.length} total events</div>
-        </div>
-      </div>
-
-      {/* Search + filter bar */}
-      <div style={{ display:"flex",gap:10,marginBottom:18,flexWrap:"wrap" }}>
-        <input
-          value={search} onChange={e=>setSearch(e.target.value)}
-          placeholder="Search activity…"
-          style={{ flex:1,minWidth:180,background:C.card,border:`1px solid ${C.border}`,borderRadius:8,padding:"8px 13px",color:C.text,fontFamily:F,fontSize:13,outline:"none" }}
-        />
-        <div style={{ display:"flex",gap:6,flexWrap:"wrap" }}>
-          {iconFilters.map(f=>(
-            <button key={f.v} onClick={()=>setFilterIcon(f.v)}
-              style={{ padding:"7px 12px",borderRadius:7,border:`1px solid ${filterIcon===f.v?C.accent:C.border}`,background:filterIcon===f.v?C.accentDim:"transparent",color:filterIcon===f.v?C.accent:C.muted,fontFamily:F,fontSize:12,fontWeight:filterIcon===f.v?700:500,cursor:"pointer",transition:"all .15s" }}>
-              {f.v!=='all'&&<span style={{marginRight:4}}>{f.v}</span>}{f.l}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Log list */}
-      <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,overflow:"hidden" }}>
-        {filtered.length===0&&(
-          <div style={{ padding:"40px 0",textAlign:"center",color:C.muted,fontFamily:F,fontSize:13 }}>
-            No activity found
-          </div>
-        )}
-        {filtered.map((e,i)=>(
-          <div key={e.id} onClick={()=>setActiveEntry(e)}
-            style={{ display:"flex",gap:12,padding:"13px 18px",borderBottom:i<filtered.length-1?`1px solid ${C.border}22`:"none",alignItems:"flex-start",cursor:"pointer",transition:"background .12s" }}
-            onMouseEnter={ev=>ev.currentTarget.style.background=C.surface}
-            onMouseLeave={ev=>ev.currentTarget.style.background="transparent"}>
-
-            {/* Icon badge */}
-            <div style={{ width:36,height:36,borderRadius:9,background:C.surface,border:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,flexShrink:0,marginTop:1 }}>
-              <LogIcon ic={e.icon||"●"} size={13} color={C.muted}/>
-            </div>
-
-            {/* Content */}
-            <div style={{ flex:1,minWidth:0 }}>
-              <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:13,lineHeight:1.3,marginBottom:3 }}>{e.action}</div>
-              <div style={{ display:"flex",gap:14,flexWrap:"wrap" }}>
-                {e.detail&&<span style={{ color:C.muted,fontFamily:F,fontSize:11,display:"inline-flex",alignItems:"center",gap:3 }}><Ic.Projects size={10} color={C.muted}/> {e.detail}</span>}
-                <span style={{ color:C.muted,fontFamily:F,fontSize:11,display:"inline-flex",alignItems:"center",gap:3 }}><Ic.Person size={10} color={C.muted}/> {e.user||"Unknown"}</span>
-                <span style={{ color:C.muted,fontFamily:F,fontSize:11,display:"inline-flex",alignItems:"center",gap:3 }}><Ic.Clock size={10} color={C.muted}/> {e.time}</span>
-              </div>
-            </div>
-
-            <div style={{ color:C.muted,fontSize:14,flexShrink:0,alignSelf:"center" }}>›</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 const NAV=[
   { id:"dashboard",  label:"Dashboard",       IcComp: ({c})=><Ic.Dashboard size={15} color={c}/> },
   { id:"projects",   label:"Projects",        IcComp: ({c})=><Ic.Projects  size={15} color={c}/> },
@@ -7195,7 +6410,6 @@ const NAV=[
   { id:"reports",    label:"Reports",         IcComp: ({c})=><Ic.Reports   size={15} color={c}/> },
   { id:"prices",     label:"Price Tracking",  IcComp: ({c})=><Ic.Prices    size={15} color={c}/> },
   { id:"accountant", label:"Accountant",      IcComp: ({c})=><Ic.Accountant size={15} color={c}/> },
-  { id:"activity",   label:"Activity Log",    IcComp: ({c})=><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> },
 ];
 
 export default function App({ session, profile, onLogout }){
@@ -7225,9 +6439,11 @@ function AppInner({ session, profile, onLogout }){
   const [tab,setTab]=useState("projects");
   const [project,setProject]=useState(null);
   const [subView,setSubView]=useState("list");
+  const allProjectsRef = React.useRef([]);
   const [teamLog,setTeamLog]=useState([]);
   const { tasks,addTask,updateTask,removeTask }=useTasks();
   const { allProjects, addProject, updateProject, deleteProject, refreshProjects }=useProjects();
+  React.useEffect(()=>{ allProjectsRef.current = allProjects; }, [allProjects]);
   const { log:globalLog, push:pushGlobal }=useGlobalLog();
   const { payments,addPayment,removePayment,updatePayment }=usePayments();
   // ── Lifted global invoices so ALL sections share one source of truth ──
@@ -7263,7 +6479,7 @@ function AppInner({ session, profile, onLogout }){
   // Wrapped addInvoice that also logs to global log
   const handleAddInvoice=async(inv)=>{
     await addInvoice(inv);
-    await pushGlobal({ id:Date.now(),action:`Invoice ${fmtInvId(inv)} added`,detail:`${inv.project||""} · $${Number(inv.amount||0).toLocaleString()}`,user:profile?.full_name||"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"🧾" });
+    await pushGlobal({ id:Date.now(),action:`Invoice ${inv.invId||inv.id} added`,detail:`${inv.project||""} · $${Number(inv.amount||0).toLocaleString()}`,user:profile?.full_name||"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"🧾" });
   };
   const handleUpdateInvoice=async(id,patch)=>{
     await updateInvoice(id,patch);
@@ -7317,9 +6533,9 @@ function AppInner({ session, profile, onLogout }){
       if(subView==="team"&&project)   return <TeamPage project={project} onBack={teamBack} onAddToLog={handleTeamLog} tasks={tasks} updateTask={updateTask}/>;
       if(subView==="detail"&&project) return <ProjectPage project={project} onBack={detailBack} onOpenTeam={goToTeam} extraLog={[...teamLog,...globalLog.filter(e=>e.detail===project.name)]} payments={payments} addPayment={handleAddPayment} updatePayment={handleUpdatePayment} removePayment={handleRemovePayment} allProjects={allProjects} allInvoices={allInvoices} addInvoice={handleAddInvoice} removeGlobalInvoice={handleRemoveInvoice} updateGlobalInvoice={handleUpdateInvoice} onUpdateProject={async(id,patch)=>{
                     await handleUpdateProject(id,patch);
-                    // Functional update: React guarantees prev is always current state
-                    // No closures, no refs, no reload — this cannot be stale
-                    setProject(prev => prev && prev.id===id ? {...prev,...patch} : prev);
+                    // Use ref — always has latest allProjects, no stale closure
+                    const fresh = allProjectsRef.current.find(p=>p.id===id);
+                    if(fresh) setProject(fresh);
                   }} onLog={pushGlobal} profile={profile}/>;
       return <ProjectsList onSelect={goToDetail} allProjects={allProjects} onAddProject={handleAddProject} onUpdateProject={handleUpdateProject} onDeleteProject={handleDeleteProject}/>;
     }
@@ -7335,8 +6551,7 @@ function AppInner({ session, profile, onLogout }){
     if(tab==="reports")    return <ReportPage tasks={tasks} allProjects={allProjects} allInvoices={allInvoices}/>;
     if(tab==="prices")     return <PriceTrackingPage/>;
     if(tab==="accountant") return <AccountantPage allProjects={allProjects} allInvoices={allInvoices} payments={payments}/>;
-    if(tab==="users"){    if(profile?.role!=="superadmin"&&profile?.role!=="admin") return <div style={{ color:C.muted,fontFamily:F,fontSize:14,padding:"40px 0",textAlign:"center" }}>Access denied.</div>; return <UsersPage currentUser={session.user} profile={profile}/>; }
-    if(tab==="activity")  return <ActivityLogPage globalLog={globalLog}/>;
+    if(tab==="users") return <UsersPage currentUser={session.user} profile={profile}/>;
     return <div style={{ color:C.muted,fontFamily:F,fontSize:14,padding:"40px 0",textAlign:"center" }}>Coming soon…</div>;
   };
 
@@ -7381,7 +6596,7 @@ function AppInner({ session, profile, onLogout }){
         <div style={{ padding:"14px 18px",borderTop:`1px solid ${C.border}` }}>
           {/* Theme toggle */}
           <button onClick={toggleTheme} style={{ display:"flex",alignItems:"center",gap:8,width:"100%",padding:"8px 10px",borderRadius:8,background:C.accentDim,border:`1px solid ${C.accentMid}`,cursor:"pointer",marginBottom:12,transition:"all .2s" }} title={isDark?"Switch to Light Mode":"Switch to Dark Mode"}>
-            <span style={{ fontSize:16 }}>{isDark?<Ic.Sun size={15} color={C.muted}/>:<Ic.Moon size={15} color={C.muted}/>}</span>
+            <span style={{ fontSize:16 }}>{isDark?"☀️":"🌙"}</span>
             <span style={{ color:C.accent,fontFamily:F,fontSize:12,fontWeight:700 }}>{isDark?"Light Mode":"Dark Mode"}</span>
           </button>
           {/* User */}
