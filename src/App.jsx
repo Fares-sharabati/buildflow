@@ -162,6 +162,13 @@ function ThemeProvider({ children }){
 }
 
 // ─── Global Currency System ───────────────────────────────────────────────────
+const INVOICE_CATEGORIES = [
+  "Subcontractor payments",
+  "Materials & equipment",
+  "Labor – direct",
+  "Overhead & PM fees",
+];
+
 const CURRENCIES = ["AED","USD","SAR","EUR","GBP","QAR","KWD","BHD","OMR"];
 const CUR_SYMBOLS = { AED:"AED",USD:"$",SAR:"SAR",EUR:"€",GBP:"£",QAR:"QAR",KWD:"KWD",BHD:"BHD",OMR:"OMR" };
 const CurrencyCtx = React.createContext({ currency:"AED", setCurrency:()=>{} });
@@ -1141,7 +1148,12 @@ function AddInvoiceFormModal({ project, onConfirm, onCancel, allInvoices=[] }){
               </div>
             </div>
             {/* Description */}
-            <div><label style={LBL()}>Description</label><textarea style={{ ...INP(),resize:"none" }} rows={2} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="Scope or summary of this invoice"/></div>
+            <div><label style={LBL()}>Category</label>
+              <select value={desc} onChange={e=>setDesc(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
+                <option value="">— Select category —</option>
+                {INVOICE_CATEGORIES.map(c=><option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
             {/* Status */}
             <div><label style={LBL()}>Status</label>
               <div style={{ display:"flex",gap:8 }}>
@@ -1473,7 +1485,12 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
       <div style={{ flex:2 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setFormErr("");}} onWheel={e=>e.target.blur()} placeholder="0.00"/></div>
       <div style={{ flex:1 }}><label style={LBL()}>Currency</label><select value={currency} onChange={e=>setCurrency(e.target.value)} style={{...INP(),cursor:"pointer"}}>{["AED","USD","SAR","EUR","GBP","QAR","KWD"].map(c=><option key={c}>{c}</option>)}</select></div>
     </div>
-    <div><label style={LBL()}>Description / Notes</label><textarea style={{...INP(),resize:"none"}} rows={2} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="Scope or summary"/></div>
+    <div><label style={LBL()}>Category</label>
+      <select value={desc} onChange={e=>setDesc(e.target.value)} style={{...INP(),cursor:"pointer"}}>
+        <option value="">— Select category —</option>
+        {INVOICE_CATEGORIES.map(c=><option key={c} value={c}>{c}</option>)}
+      </select>
+    </div>
     <div><label style={LBL()}>Status</label>
       <div style={{ display:"flex",gap:7 }}>{INV_ST.map(s=><button key={s.v} onClick={()=>setStatus(s.v)} style={{ flex:1,padding:"8px 0",borderRadius:7,cursor:"pointer",fontFamily:F,fontSize:12,fontWeight:700,border:status===s.v?`2px solid ${s.c}`:`1px solid ${C.border}`,background:status===s.v?s.c+"22":"transparent",color:status===s.v?s.c:C.muted }}>{s.l}</button>)}</div>
     </div>
@@ -4823,7 +4840,12 @@ function EditInvoiceModal({ invoice, allProjects, onConfirm, onCancel }){
             </select>
           </div>
           <div><label style={LBL()}>Client / Company</label><input style={INP()} value={client} onChange={e=>setClient(e.target.value)} placeholder="Client name"/></div>
-          <div><label style={LBL()}>Description</label><textarea style={{ ...INP(),resize:"none" }} rows={2} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="Invoice description"/></div>
+          <div><label style={LBL()}>Category</label>
+              <select value={desc} onChange={e=>setDesc(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
+                <option value="">— Select category —</option>
+                {INVOICE_CATEGORIES.map(c=><option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
           <div style={{ display:"flex",gap:12 }}>
             <div style={{ flex:1 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setErr("");}} onWheel={e=>e.target.blur()} placeholder="0.00"/></div>
             <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={due} onChange={e=>setDue(e.target.value)}/></div>
@@ -4959,7 +4981,12 @@ function AddGlobalInvoiceModal({ allProjects, allInvoices=[], onConfirm, onCance
               <div style={{ flex:1 }}><label style={LBL()}>Client</label><input style={INP()} value={client} onChange={e=>setClient(e.target.value)} placeholder="Auto-filled from project"/></div>
             </div>
             {/* Description */}
-            <div><label style={LBL()}>Description</label><textarea style={{ ...INP(),resize:"none" }} rows={2} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="What is this invoice for?"/></div>
+            <div><label style={LBL()}>Category</label>
+              <select value={desc} onChange={e=>setDesc(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
+                <option value="">— Select category —</option>
+                {INVOICE_CATEGORIES.map(c=><option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
             {/* Amount + Currency + Due */}
             <div style={{ display:"flex",gap:12 }}>
               <div style={{ flex:2 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setErr("");}} onWheel={e=>e.target.blur()} placeholder="0.00"/></div>
