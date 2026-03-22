@@ -2677,6 +2677,7 @@ function TendersPage({ allProjects=[] }){
     <div>
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
       {previewFile&&<FilePreviewModal file={previewFile} onClose={()=>setPreviewFile(null)}/>}
+
       {confirmDelTender&&(
         <ConfirmDialog title="Delete Tender?"
           message={`Delete "${confirmDelTender.name}" and all its offers? This cannot be undone.`}
@@ -4018,6 +4019,8 @@ function PhotoCard({ photo, comments, onOpen, onDelete }){
 function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPayment,updatePayment,removePayment,allProjects=[],allInvoices=[],addInvoice,removeGlobalInvoice,updateGlobalInvoice,onUpdateProject,onLog,profile }){ 
   const [contactOpen,setContactOpen] = useState(false);
   const [previewFile,setPreviewFile]  = useState(null);  // hoisted above DraggableModCard to escape transform stacking context
+  const [logDetail,setLogDetail]       = useState(null);  // activity log detail popup
+  const [noteDetail,setNoteDetail]     = useState(null);  // note detail popup
   const [editingProject,setEditingProject] = useState(false);
   const [confirmProjectPatch,setConfirmProjectPatch] = useState(null);
   const [noteText,setNoteText]       = useState("");
@@ -4090,6 +4093,70 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
     <div>
       {contactOpen&&<ContactModal client={project.client} onClose={()=>setContactOpen(false)}/>}
       {previewFile&&<FilePreviewModal file={previewFile} onClose={()=>setPreviewFile(null)}/>}
+      {logDetail&&(
+        <Overlay onClose={()=>setLogDetail(null)}>
+          <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,width:420,maxWidth:"95vw",boxShadow:C.sh3||"0 20px 40px rgba(0,0,0,.15)",overflow:"hidden" }}>
+            <div style={{ display:"flex",alignItems:"center",gap:12,padding:"18px 22px",borderBottom:`1px solid ${C.border}`,background:C.surf2||C.surface }}>
+              <div style={{ width:34,height:34,background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
+                {getActivityIcon(logDetail.icon)}
+              </div>
+              <div style={{ flex:1,minWidth:0 }}>
+                <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:14,lineHeight:1.3 }}>{logDetail.action}</div>
+                <div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:2 }}>Activity detail</div>
+              </div>
+              <button onClick={()=>setLogDetail(null)} style={{ background:"transparent",border:`1px solid ${C.border}`,borderRadius:6,color:C.muted,width:28,height:28,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}><Ic.X size={12} color={C.muted}/></button>
+            </div>
+            <div style={{ padding:"18px 22px",display:"flex",flexDirection:"column",gap:12 }}>
+              {[
+                ["Summary",  logDetail.action],
+                ["Project",  logDetail.detail||project.name],
+                ["By",       logDetail.user||"—"],
+                ["When",     logDetail.time||"—"],
+              ].filter(([,v])=>v).map(([label,value])=>(
+                <div key={label} style={{ display:"flex",gap:12,alignItems:"flex-start" }}>
+                  <div style={{ width:72,color:C.muted,fontFamily:F,fontSize:11,fontWeight:600,textTransform:"uppercase",letterSpacing:".6px",flexShrink:0,paddingTop:1 }}>{label}</div>
+                  <div style={{ color:C.text,fontFamily:F,fontSize:13,flex:1,lineHeight:1.5 }}>{value}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{ padding:"12px 22px",borderTop:`1px solid ${C.border}`,display:"flex",justifyContent:"flex-end" }}>
+              <Btn onClick={()=>setLogDetail(null)} variant="ghost">Close</Btn>
+            </div>
+          </div>
+        </Overlay>
+      )}
+      {noteDetail&&(
+        <Overlay onClose={()=>setNoteDetail(null)}>
+          <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:16,width:440,maxWidth:"95vw",boxShadow:C.sh3||"0 20px 40px rgba(0,0,0,.15)",overflow:"hidden" }}>
+            <div style={{ display:"flex",alignItems:"center",gap:12,padding:"18px 22px",borderBottom:`1px solid ${C.border}`,background:C.surf2||C.surface }}>
+              <div style={{ width:34,height:34,background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
+                <Ic.Pen size={14} color={C.accent}/>
+              </div>
+              <div style={{ flex:1,minWidth:0 }}>
+                <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:14 }}>Note</div>
+                <div style={{ color:C.muted,fontFamily:F,fontSize:11,marginTop:2 }}>{noteDetail.project}</div>
+              </div>
+              <button onClick={()=>setNoteDetail(null)} style={{ background:"transparent",border:`1px solid ${C.border}`,borderRadius:6,color:C.muted,width:28,height:28,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}><Ic.X size={12} color={C.muted}/></button>
+            </div>
+            <div style={{ padding:"20px 22px",display:"flex",flexDirection:"column",gap:14 }}>
+              <div style={{ background:C.surface,borderLeft:`3px solid ${C.accent}`,borderRadius:"0 8px 8px 0",padding:"12px 16px" }}>
+                <div style={{ color:C.text,fontFamily:F,fontSize:13,lineHeight:1.7 }}>{noteDetail.text}</div>
+              </div>
+              <div style={{ display:"flex",flexDirection:"column",gap:8 }}>
+                {[["Project", noteDetail.project],["By", noteDetail.author||"—"],["Date", noteDetail.time||"—"]].map(([label,value])=>(
+                  <div key={label} style={{ display:"flex",gap:12,alignItems:"center" }}>
+                    <div style={{ width:60,color:C.muted,fontFamily:F,fontSize:11,fontWeight:600,textTransform:"uppercase",letterSpacing:".6px",flexShrink:0 }}>{label}</div>
+                    <div style={{ color:C.text,fontFamily:F,fontSize:13 }}>{value}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div style={{ padding:"12px 22px",borderTop:`1px solid ${C.border}`,display:"flex",justifyContent:"flex-end" }}>
+              <Btn onClick={()=>setNoteDetail(null)} variant="ghost">Close</Btn>
+            </div>
+          </div>
+        </Overlay>
+      )}
       {editingProject&&<EditProjectModal project={project} onConfirm={patch=>{ setEditingProject(false); setConfirmProjectPatch(patch); }} onCancel={()=>setEditingProject(false)}/>}
       {confirmProjectPatch&&(
         <ConfirmDialog
@@ -4280,7 +4347,7 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
             <div style={{ display:"flex",flexDirection:"column",gap:8,maxHeight:280,overflowY:"auto" }}>
               {notes.length===0&&<div style={{ color:C.muted,fontFamily:F,fontSize:11,textAlign:"center",padding:"8px 0" }}>No notes yet</div>}
               {notes.map(n=>(
-                <div key={n.id} style={{ background:C.surface,borderRadius:7,padding:"8px 10px",borderLeft:`3px solid ${C.accent}` }}>
+                <div key={n.id} onClick={()=>setNoteDetail({...n, project:project.name})} style={{ background:C.surface,borderRadius:7,padding:"8px 10px",borderLeft:`3px solid ${C.accent}`,cursor:"pointer",transition:"background .12s" }} onMouseEnter={e=>e.currentTarget.style.background=C.surf2||C.bg} onMouseLeave={e=>e.currentTarget.style.background=C.surface}>
                   <div style={{ color:C.text,fontSize:11,fontFamily:F,lineHeight:1.5,marginBottom:3 }}>{n.text}</div>
                   <div style={{ color:C.muted,fontSize:10,fontFamily:F }}>{n.author} · {n.time}</div>
                 </div>
@@ -4296,8 +4363,8 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
             </div>
             <div>
               {mergedLog.map((e,i)=>(
-                <div key={e.id} style={{ display:"flex",gap:8,padding:"10px 12px",borderBottom:i<mergedLog.length-1?`1px solid ${C.border}22`:"none",alignItems:"flex-start" }}>
-                  <div style={{ width:26,height:26,background:C.surface,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,flexShrink:0,marginTop:1 }}>{e.icon}</div>
+                <div key={e.id} onClick={()=>setLogDetail(e)} style={{ display:"flex",gap:8,padding:"10px 12px",borderBottom:i<mergedLog.length-1?`1px solid ${C.border}22`:"none",alignItems:"flex-start",cursor:"pointer",transition:"background .12s",borderRadius:4 }} onMouseEnter={e2=>e2.currentTarget.style.background=C.surf2||C.surface} onMouseLeave={e2=>e2.currentTarget.style.background="transparent"}>
+                  <div style={{ width:26,height:26,background:C.surface,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginTop:1 }}>{getActivityIcon(e.icon)}</div>
                   <div style={{ flex:1,minWidth:0 }}>
                     <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:11,lineHeight:1.3 }}>{e.action}</div>
                     <div style={{ color:C.muted,fontFamily:F,fontSize:10,marginTop:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{e.detail}</div>
@@ -4819,6 +4886,22 @@ function ProjectsList({ onSelect, allProjects, onAddProject, onUpdateProject, on
 
 // ─── Dashboard ─────────────────────────────────────────────────────────────────
 // ─── Dashboard widget types ───────────────────────────────────────────────────
+// ─── Shared activity icon mapper — used by ProjectPage and DashWidget ──────────
+function getActivityIcon(ic){
+  const code = (ic||"").toLowerCase().replace(/[^a-z]/g,"").slice(0,4);
+  if(code==="inv")  return <Ic.Invoices size={13} color={C.accent}/>;
+  if(code==="pay")  return <Ic.Payments size={13} color={C.green}/>;
+  if(code==="del")  return <Ic.Delete   size={13} color={C.red}/>;
+  if(code==="edit") return <Ic.Pen      size={13} color={C.blue}/>;
+  if(code==="team") return <Ic.Team     size={13} color={C.blue}/>;
+  if(code==="plan") return <Ic.Reports  size={13} color={C.blue}/>;
+  if(code==="proj") return <Ic.Projects size={13} color={C.accent}/>;
+  if(code==="cont") return <Ic.Tenders  size={13} color={C.purple}/>;
+  if(code==="note") return <Ic.Pen      size={13} color={C.muted}/>;
+  if(code==="phot") return <Ic.Attach   size={13} color={C.blue}/>;
+  return <Ic.Reports size={13} color={C.muted}/>;
+}
+
 const WIDGET_TYPES = [
   { id:"projects",   label:"Project Progress",    Icon: ({c})=><Ic.Projects  size={14} color={c}/> },
   { id:"invoices",   label:"Recent Invoices",     Icon: ({c})=><Ic.Invoices  size={14} color={c}/> },
@@ -4832,19 +4915,7 @@ function DashWidget({ widgetId, type, allProjects, allInvoices, payments, tasks,
   const [showPicker,setShowPicker]=useState(false);
   const wt=WIDGET_TYPES.find(w=>w.id===type)||WIDGET_TYPES[0];
 
-  // Map activity log icon codes to Ic.* SVG components — no emojis
-  const getActivityIcon = (ic) => {
-    const code = (ic||"").toLowerCase().replace(/[^a-z]/g,"").slice(0,4);
-    if(code==="inv")  return <Ic.Invoices size={13} color={C.accent}/>;
-    if(code==="pay")  return <Ic.Payments size={13} color={C.green}/>;
-    if(code==="del")  return <Ic.Delete   size={13} color={C.red}/>;
-    if(code==="edit") return <Ic.Pen      size={13} color={C.blue}/>;
-    if(code==="team") return <Ic.Team     size={13} color={C.blue}/>;
-    if(code==="plan") return <Ic.Reports  size={13} color={C.blue}/>;
-    if(code==="proj") return <Ic.Projects size={13} color={C.accent}/>;
-    if(code==="cont") return <Ic.Tenders  size={13} color={C.purple}/>;
-    return <Ic.Reports size={13} color={C.muted}/>;
-  };
+  // getActivityIcon is now a module-level shared function
 
   const renderContent=()=>{
     if(type==="projects") return(
