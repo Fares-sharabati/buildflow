@@ -214,6 +214,25 @@ function ThemeProvider({ children }){
 
 // ─── Global Currency System ───────────────────────────────────────────────────
 const CURRENCIES = ["AED","USD","SAR","EUR","GBP","QAR","KWD","BHD","OMR"];
+
+// ── Invoice categories — the only 4 allowed across the entire app ─────────────
+const INVOICE_CATS = [
+  "Subcontractor payments",
+  "Materials & equipment",
+  "Labor – direct",
+  "Overhead & PM fees",
+];
+
+/** Map any legacy/free-text invoice desc to the nearest of the 4 categories.
+ *  Used READ-ONLY at render time — never mutates stored data. */
+function normalizeCat(desc) {
+  const s = (desc || "").toLowerCase();
+  if (/labor|labour|direct|worker|wage/.test(s))                         return "Labor – direct";
+  if (/material|equipment|steel|concrete|masonry|mep|supply|lumber/.test(s)) return "Materials & equipment";
+  if (/management|overhead|pm |pm$|fee|admin|consult/.test(s))           return "Overhead & PM fees";
+  // Default: subcontractor (covers site prep, foundation, structural, excavation, etc.)
+  return "Subcontractor payments";
+}
 const CUR_SYMBOLS = { AED:"AED",USD:"$",SAR:"SAR",EUR:"€",GBP:"£",QAR:"QAR",KWD:"KWD",BHD:"BHD",OMR:"OMR" };
 const CurrencyCtx = React.createContext({ currency:"AED", setCurrency:()=>{} });
 function useCurrencyCtx(){ return React.useContext(CurrencyCtx); }
@@ -1547,7 +1566,7 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
   const [dueDate,setDueDate]     = useState("");
   const [amount,setAmount]       = useState("");
   const [currency,setCurrency]   = useState("AED");
-  const [desc,setDesc]           = useState("");
+  const [desc,setDesc]           = useState(INVOICE_CATS[0]);
   const [status,setStatus]       = useState("pending");
   const [docFile,setDocFile]     = useState(null);
   const [aiRunning,setAiRunning] = useState(false);
@@ -1729,7 +1748,11 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
       <div style={{ flex:2 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setFormErr("");}} onWheel={e=>e.target.blur()} placeholder="0.00"/></div>
       <div style={{ flex:1 }}><label style={LBL()}>Currency</label><select value={currency} onChange={e=>setCurrency(e.target.value)} style={{...INP(),cursor:"pointer"}}>{["AED","USD","SAR","EUR","GBP","QAR","KWD"].map(c=><option key={c}>{c}</option>)}</select></div>
     </div>
-    <div><label style={LBL()}>Description / Notes</label><textarea style={{...INP(),resize:"none"}} rows={2} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="Scope or summary"/></div>
+    <div><label style={LBL()}>Category</label>
+      <select style={INP()} value={desc} onChange={e=>setDesc(e.target.value)}>
+        {INVOICE_CATS.map(c=><option key={c} value={c}>{c}</option>)}
+      </select>
+    </div>
     <div><label style={LBL()}>Status</label>
       <div style={{ display:"flex",gap:7 }}>{INV_ST.map(s=><button key={s.v} onClick={()=>setStatus(s.v)} style={{ flex:1,padding:"8px 0",borderRadius:7,cursor:"pointer",fontFamily:F,fontSize:12,fontWeight:700,border:status===s.v?`2px solid ${s.c}`:`1px solid ${C.border}`,background:status===s.v?s.c+"22":"transparent",color:status===s.v?s.c:C.muted }}>{s.l}</button>)}</div>
     </div>
@@ -5143,7 +5166,8 @@ function AddGlobalInvoiceModal({ allProjects, allInvoices=[], onConfirm, onCance
   const [project,setProject]    = useState(allProjects[0]?.name||"");
   const [client,setClient]      = useState("");
   const [supplier,setSupplier]  = useState("");
-  const [desc,setDesc]          = useState("");
+  const [desc,setDesc]          = useState(INVOICE_CATS[0]);  // category
+  const [notes,setNotes]         = useState("");                 // free-text notes
   const [amount,setAmount]      = useState("");
   const [currency,setCurrency]  = useState(gCur);
   const [invNum,setInvNum]      = useState(()=>nextInvId(allInvoices));
@@ -5173,7 +5197,7 @@ function AddGlobalInvoiceModal({ allProjects, allInvoices=[], onConfirm, onCance
       if(res.dueDate&&!due)           setDue(res.dueDate);
       if(res.amount&&!amount)         setAmount(String(res.amount));
       if(res.currency)                setCurrency(res.currency);
-      if(res.description&&!desc)      setDesc(res.description);
+      if(res.description&&!notes)      setNotes(res.description);  // AI text → notes
       setAiNote("OK: AI extracted — review and edit below");
     } else { setAiNote("Could not extract — fill in manually"); }
     setAiRunning(false);
@@ -5186,7 +5210,7 @@ function AddGlobalInvoiceModal({ allProjects, allInvoices=[], onConfirm, onCance
     const id=invNum||nextInvId(allInvoices);
     const proj=allProjects.find(p=>p.name===project);
     onConfirm({ id, invId:id, project, client:client||supplier||"", supplier:supplier||client||"",
-      desc, amount:parseFloat(amount), due, dueFmt:fmt, status, invoiceStatus:status,
+      desc, notes, amount:parseFloat(amount), due, dueFmt:fmt, status, invoiceStatus:status,
       currency, invDate:invDate||"—", projId:proj?.id||null,
       dataUrl:docFile?.dataUrl||null, name:docFile?.name||`${id}.pdf` });
   };
@@ -5253,8 +5277,14 @@ function AddGlobalInvoiceModal({ allProjects, allInvoices=[], onConfirm, onCance
               <div style={{ flex:1 }}><label style={LBL()}>Supplier / Company</label><input style={INP()} value={supplier} onChange={e=>setSupplier(e.target.value)} placeholder="e.g. Gulf Steel Co."/></div>
               <div style={{ flex:1 }}><label style={LBL()}>Client</label><input style={INP()} value={client} onChange={e=>setClient(e.target.value)} placeholder="Auto-filled from project"/></div>
             </div>
-            {/* Description */}
-            <div><label style={LBL()}>Description</label><textarea style={{ ...INP(),resize:"none" }} rows={2} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="What is this invoice for?"/></div>
+            {/* Category */}
+            <div><label style={LBL()}>Category</label>
+              <select style={INP()} value={desc} onChange={e=>setDesc(e.target.value)}>
+                {INVOICE_CATS.map(c=><option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
+            {/* Notes (optional) */}
+            <div><label style={LBL()}>Notes <span style={{color:C.muted,fontWeight:400}}>(optional)</span></label><textarea style={{ ...INP(),resize:"none" }} rows={2} value={notes} onChange={e=>setNotes(e.target.value)} placeholder="Supplier name, scope, reference…"/></div>
             {/* Amount + Currency + Due */}
             <div style={{ display:"flex",gap:12 }}>
               <div style={{ flex:2 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setErr("");}} onWheel={e=>e.target.blur()} placeholder="0.00"/></div>
@@ -5914,6 +5944,21 @@ Provide: 1) Market trend assessment, 2) Whether to buy now / wait / stockpile, 3
 }
 
 // ─── Root App ──────────────────────────────────────────────────────────────────
+// ─── Chart.js loader (lazy, singleton) — same pattern as jsPDF ─────────────────
+let _chartJSPromise = null;
+function loadChartJS(){
+  if(_chartJSPromise) return _chartJSPromise;
+  _chartJSPromise = new Promise((resolve, reject)=>{
+    if(window.Chart){ resolve(window.Chart); return; }
+    const s = document.createElement("script");
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js";
+    s.onload  = ()=> resolve(window.Chart);
+    s.onerror = ()=> reject(new Error("Chart.js failed to load"));
+    document.head.appendChild(s);
+  });
+  return _chartJSPromise;
+}
+
 // ─── jsPDF loader (lazy, singleton) ────────────────────────────────────────────
 let _jsPDFPromise = null;
 function loadJsPDF(){
@@ -6294,63 +6339,235 @@ async function generatePdfBlob(metrics, report){
   return doc.output("blob");
 }
 
-// ─── Accountant Page ───────────────────────────────────────────────────────────
+
+// ─── Accountant Page ──────────────────────────────────────────────────────────
 function AccountantPage({ allProjects=[], allInvoices=[], payments=[] }){
   const { currency:gCur, setCurrency:setGCur } = useCurrencyCtx();
-  const [projId,setProjId]    = useState(null);
-  useEffect(()=>{ if(!projId && allProjects?.length) setProjId(allProjects[0].id); },[allProjects]);
+  const [projId,setProjId]    = useState(()=>allProjects[0]?.id||null);
+  const [subPage,setSubPage]  = useState("cashflow"); // cashflow|costs|invoices|payments
+  const [quarter,setQuarter]  = useState("all");       // all|q1|q2|q3|q4
+  const [costFilter,setCostFilter] = useState("all"); // all|over|warn
+  const [invStatus,setInvStatus]   = useState("all");
+  const [invCat,setInvCat]         = useState("all");
   const [report,setReport]    = useState(null);
   const [generating,setGen]   = useState(false);
   const [pdfBuilding,setPdfB] = useState(false);
   const [err,setErr]          = useState("");
   const [currency,setCurrencyLocal] = useState(gCur);
 
-  React.useEffect(()=>{
-    const proj = allProjects.find(p=>p.id===projId);
-    setCurrencyLocal(proj?.currency||gCur);
-  },[projId, gCur]);
+  // Chart canvas refs
+  const cumulChartRef = useRef(null);
+  const costChartRef  = useRef(null);
+  const burnChartRef  = useRef(null);
+  const cumulInst     = useRef(null);
+  const costInst      = useRef(null);
+  const burnInst      = useRef(null);
+
+  const project = useMemo(()=>allProjects.find(p=>p.id===projId)||allProjects[0]||null,[projId,allProjects]);
+
+  useEffect(()=>{
+    const p = allProjects.find(x=>x.id===projId);
+    setCurrencyLocal(p?.currency||gCur);
+  },[projId,gCur,allProjects]);
 
   const handleCurrencyChange = (c)=>{ setCurrencyLocal(c); setGCur(c); };
 
-  const project = allProjects.find(p=>p.id===projId)||allProjects[0]||null;
+  // ── Filter invoices + payments to selected project ──────────────────────────
+  const projInvoices = useMemo(()=>{
+    if(!project) return [];
+    return allInvoices.filter(i=>
+      (i.projId && i.projId===project.id) ||
+      (i.project && i.project===project.name)
+    );
+  },[project, allInvoices]);
 
-  // ── Live financial metrics ──────────────────────────────────────────────
+  const projPayments = useMemo(()=>{
+    if(!project) return [];
+    return payments.filter(p=>
+      (p.projId && p.projId===project.id) ||
+      (p.project && p.project===project.name)
+    );
+  },[project, payments]);
+
+  // ── Helpers for cash flow date parsing ──────────────────────────────────────
+  const toYM = (dateStr)=>{
+    if(!dateStr) return null;
+    // Try ISO date first: 2026-03-15 → "2026-03"
+    const iso = String(dateStr).match(/^(\d{4}-\d{2})/);
+    if(iso) return iso[1];
+    // Try US formatted: "Mar 15, 2026" → "2026-03"
+    try{
+      const d = new Date(dateStr+"T12:00:00");
+      if(!isNaN(d)) return d.toISOString().slice(0,7);
+    }catch{}
+    return null;
+  };
+
+  // ── Rolling 12-month window ──────────────────────────────────────────────────
+  const MONTHS = useMemo(()=>{
+    const months=[];
+    const now=new Date();
+    for(let i=11;i>=0;i--){
+      const d=new Date(now.getFullYear(),now.getMonth()-i,1);
+      months.push(d.toISOString().slice(0,7));
+    }
+    return months;
+  },[]);
+  const MONTH_LBLS = useMemo(()=>MONTHS.map(m=>{
+    const [y,mo]=m.split('-');
+    return new Date(parseInt(y),parseInt(mo)-1,1).toLocaleString('en-US',{month:'short'});
+  }),[MONTHS]);
+
+  const Q_RANGE = {all:[0,11],q1:[0,2],q2:[3,5],q3:[6,8],q4:[9,11]};
+
+  // ── Category status helpers ──────────────────────────────────────────────────
+  const isActual    = i => (i.status||i.invoiceStatus)==="paid";
+  const isCommitted = i => {
+    const s = i.status||i.invoiceStatus||"";
+    return s==="pending"||s==="approved"||s==="on-hold";
+  };
+  const isExcluded  = i => (i.status||i.invoiceStatus)==="disputed";
+
+  // ── Core financial metrics (single useMemo for all KPIs) ────────────────────
   const metrics = useMemo(()=>{
     if(!project) return null;
-    // Match by both ID and name for robustness across data sources
-    const projInvoices = allInvoices.filter(i=>
-      String(i.projId)===String(project.id) || i.project===project.name
-    );
-    const projPayments = payments.filter(p=>
-      String(p.projId)===String(project.id) || p.project===project.name
-    );
-
-    const totalInvoiced   = projInvoices.reduce((s,i)=>s+Number(i.amount||0),0);
-    const totalPaid       = projInvoices.filter(i=>(i.status||i.invoiceStatus)==="paid").reduce((s,i)=>s+Number(i.amount||0),0);
-    const totalOverdue    = projInvoices.filter(i=>(i.status||i.invoiceStatus)==="overdue").reduce((s,i)=>s+Number(i.amount||0),0);
-    const totalPending    = projInvoices.filter(i=>(i.status||i.invoiceStatus)==="pending").reduce((s,i)=>s+Number(i.amount||0),0);
-    const totalReceived   = projPayments.reduce((s,p)=>s+Number(p.amount||0),0);
-    const projectValue    = Number(project.value||0);
-    // Remaining to collect from client = contract value minus what's been paid
-    const remainToReceive = projectValue - totalReceived;
-    // Remaining to pay on invoices = total invoiced minus what's already paid
-    const remainToPayInv  = totalInvoiced - totalPaid;
-    // Gross profit = contract value minus total cost (invoices)
-    const grossProfit     = projectValue - totalInvoiced;
-    // Net cash position = cash received minus cash paid out on invoices
-    const netBalance      = totalReceived - totalPaid;
-
+    const totalInvoiced  = projInvoices.reduce((s,i)=>s+Number(i.amount||0),0);
+    const totalPaid      = projInvoices.filter(isActual).reduce((s,i)=>s+Number(i.amount||0),0);
+    const totalOverdue   = projInvoices.filter(i=>(i.status||i.invoiceStatus)==="overdue").reduce((s,i)=>s+Number(i.amount||0),0);
+    const totalPending   = projInvoices.filter(i=>(i.status||i.invoiceStatus)==="pending").reduce((s,i)=>s+Number(i.amount||0),0);
+    const totalReceived  = projPayments.reduce((s,p)=>s+Number(p.amount||0),0);
+    const projectValue   = Number(project.value||0);
+    const remainToReceive= Math.max(0, projectValue - totalReceived);
+    const remainToPayInv = Math.max(0, totalInvoiced - totalPaid);
+    const grossProfit    = projectValue - totalInvoiced;
+    const netBalance     = totalReceived - totalPaid;
     return{
       project, projectValue, totalInvoiced, totalPaid, totalOverdue, totalPending,
       totalReceived, remainToReceive, remainToPayInv, grossProfit, netBalance,
       invoiceCount:projInvoices.length, paymentCount:projPayments.length,
-      invoices:projInvoices, payments:projPayments,
-      invoicePaidPct: totalInvoiced>0 ? Math.round(totalPaid/totalInvoiced*100) : 0,
-      receivedPct:    projectValue>0  ? Math.round(totalReceived/projectValue*100) : 0,
+      invoicePaidPct: totalInvoiced>0?Math.round(totalPaid/totalInvoiced*100):0,
+      receivedPct:    projectValue>0 ?Math.round(totalReceived/projectValue*100):0,
     };
-  },[project, allInvoices, payments]);
+  },[project, projInvoices, projPayments]);
 
-  // ── Generate AI narrative then auto-download PDF ────────────────────────
+  // ── Cash flow monthly aggregation ────────────────────────────────────────────
+  const cfData = useMemo(()=>{
+    return MONTHS.map(m=>{
+      const inflow  = projPayments.filter(p=>toYM(p.date||p.dateFmt)===m).reduce((s,p)=>s+Number(p.amount||0),0);
+      const outflow = projInvoices.filter(i=>isActual(i)&&toYM(i.dueDate||i.dueFmt||i.due)===m).reduce((s,i)=>s+Number(i.amount||0),0);
+      return{month:m, inflow, outflow, net:inflow-outflow};
+    });
+  },[MONTHS, projPayments, projInvoices]);
+
+  // ── Cost breakdown by category ───────────────────────────────────────────────
+  const costData = useMemo(()=>{
+    const projectValue = Number(project?.value||0);
+    const budgetPerCat = projectValue>0 ? projectValue/INVOICE_CATS.length : 0;
+    return INVOICE_CATS.map(cat=>{
+      const rel       = projInvoices.filter(i=>normalizeCat(i.desc)===cat&&!isExcluded(i));
+      const invoiced  = rel.filter(isActual).reduce((s,i)=>s+Number(i.amount||0),0);
+      const committed = rel.filter(isCommitted).reduce((s,i)=>s+Number(i.amount||0),0);
+      const exposure  = invoiced+committed;
+      const usedPct   = budgetPerCat>0?Math.round(exposure/budgetPerCat*100):0;
+      const status    = exposure>budgetPerCat?'over':usedPct>80?'warn':'ok';
+      return{cat, budget:budgetPerCat, invoiced, committed, exposure,
+             remaining:budgetPerCat-exposure, usedPct, status};
+    });
+  },[project, projInvoices]);
+
+  // ── Charts via useEffect ──────────────────────────────────────────────────────
+  useEffect(()=>{
+    if(subPage!=="cashflow"||!cfData.length) return;
+    loadChartJS().then(Chart=>{
+      const [lo,hi] = Q_RANGE[quarter]||Q_RANGE.all;
+      const vis = cfData.slice(lo,hi+1);
+      let cum=0;
+      const cumVals = cfData.map(m=>{cum+=m.net;return cum;});
+      if(cumulInst.current){ cumulInst.current.destroy(); cumulInst.current=null; }
+      const ctx = cumulChartRef.current;
+      if(!ctx) return;
+      cumulInst.current = new Chart(ctx,{
+        data:{
+          labels: MONTH_LBLS.slice(lo,hi+1),
+          datasets:[
+            {type:'bar',  label:'Inflows',    data:vis.map(m=>m.inflow),   backgroundColor:C.blueDim,  borderRadius:3, barPercentage:.55, order:2},
+            {type:'bar',  label:'Outflows',   data:vis.map(m=>-m.outflow), backgroundColor:C.redDim,   borderRadius:3, barPercentage:.55, order:2},
+            {type:'line', label:'Cumulative', data:cumVals.slice(lo,hi+1), borderColor:C.green, backgroundColor:'transparent',
+             borderWidth:2.5, pointBackgroundColor:C.green, pointRadius:4, tension:.35, order:1},
+          ]
+        },
+        options:{responsive:true, maintainAspectRatio:false,
+          plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmtCurS(Math.abs(c.raw),currency)}`}}},
+          scales:{
+            x:{grid:{display:false}, ticks:{font:{size:11,family:'DM Sans'},color:C.muted}},
+            y:{grid:{color:C.border+'44'}, ticks:{font:{size:11},color:C.muted, callback:v=>{const n=Math.abs(v);return(v<0?'-':'')+(n>=1000?Math.round(n/1000)+'k':n);}}}
+          }
+        }
+      });
+    }).catch(()=>{});
+    return ()=>{ if(cumulInst.current){cumulInst.current.destroy();cumulInst.current=null;} };
+  },[subPage,cfData,quarter,currency,C]);
+
+  useEffect(()=>{
+    if(subPage!=="costs"||!costData.length) return;
+    loadChartJS().then(Chart=>{
+      const shown = costFilter==='all'?costData:costData.filter(c=>c.status===costFilter);
+      // Cost bar chart
+      if(costInst.current){costInst.current.destroy();costInst.current=null;}
+      const bCtx = costChartRef.current;
+      if(bCtx){
+        costInst.current = new Chart(bCtx,{
+          type:'bar',
+          data:{
+            labels:shown.map(c=>c.cat.length>18?c.cat.slice(0,17)+'…':c.cat),
+            datasets:[
+              {label:'Budget',    data:shown.map(c=>c.budget),    backgroundColor:C.blueDim,  borderRadius:3, barPercentage:.65},
+              {label:'Invoiced',  data:shown.map(c=>c.invoiced),  backgroundColor:C.accent,   borderRadius:3, barPercentage:.65},
+              {label:'Committed', data:shown.map(c=>c.committed), backgroundColor:C.amber||C.amberDim, borderRadius:3, barPercentage:.65},
+            ]
+          },
+          options:{responsive:true, maintainAspectRatio:false,
+            plugins:{legend:{display:false}, tooltip:{callbacks:{label:b=>` ${b.dataset.label}: ${fmtCurS(b.raw,currency)}`}}},
+            scales:{
+              x:{grid:{display:false}, ticks:{font:{size:11},color:C.muted, autoSkip:false, maxRotation:30}},
+              y:{grid:{color:C.border+'44'}, ticks:{font:{size:11},color:C.muted, callback:v=>{const n=Math.abs(v);return n>=1000?Math.round(n/1000)+'k':n;}}}
+            }
+          }
+        });
+      }
+      // Burn chart
+      if(burnInst.current){burnInst.current.destroy();burnInst.current=null;}
+      const burnCtx = burnChartRef.current;
+      if(burnCtx&&project?.value){
+        const totBud = Number(project.value||0);
+        const mInvoiced = MONTHS.map(m=>projInvoices.filter(i=>isActual(i)&&toYM(i.dueDate||i.dueFmt||i.due)<=m).reduce((s,i)=>s+Number(i.amount||0),0));
+        const mBudgetLinear = MONTHS.map((_,i)=>Math.round(totBud*(i+1)/12));
+        burnInst.current = new Chart(burnCtx,{
+          type:'line',
+          data:{
+            labels:MONTH_LBLS,
+            datasets:[
+              {label:'Planned',data:mBudgetLinear,borderColor:C.border,backgroundColor:'transparent',borderWidth:2,borderDash:[5,4],pointRadius:2},
+              {label:'Actual', data:mInvoiced,    borderColor:C.accent,backgroundColor:'transparent',borderWidth:2.5,pointRadius:4},
+            ]
+          },
+          options:{responsive:true, maintainAspectRatio:false,
+            plugins:{legend:{display:false},tooltip:{callbacks:{label:b=>` ${b.dataset.label}: ${fmtCurS(b.raw,currency)}`}}},
+            scales:{
+              x:{grid:{display:false},ticks:{font:{size:10},color:C.muted}},
+              y:{grid:{color:C.border+'44'},ticks:{font:{size:10},color:C.muted,callback:v=>{const n=Math.abs(v);return n>=1000?Math.round(n/1000)+'k':n;}}}
+            }
+          }
+        });
+      }
+    }).catch(()=>{});
+    return ()=>{
+      if(costInst.current){costInst.current.destroy();costInst.current=null;}
+      if(burnInst.current){burnInst.current.destroy();burnInst.current=null;}
+    };
+  },[subPage,costData,costFilter,currency,C]);
+
+  // ── AI report generation (unchanged logic) ───────────────────────────────────
   const generate = async()=>{
     if(!project||!metrics){ setErr("Please select a project first."); return; }
     setGen(true); setErr(""); setReport(null);
@@ -6362,7 +6579,7 @@ Analyze the following financial data and write a professional Accountant's Repor
 PROJECT: ${project.name}
 Client: ${project.client?.company||project.client?.name||"N/A"}
 Contract Value: ${fmtCurS(metrics.projectValue, currency)}
-Status: ${project.status}
+Status: ${project.status} | Phase: ${project.phase||"N/A"}
 
 INVOICES: Total ${fmtCurS(metrics.totalInvoiced, currency)} (${metrics.invoiceCount} invoices)
   Paid: ${fmtCurS(metrics.totalPaid, currency)} | Overdue: ${fmtCurS(metrics.totalOverdue, currency)} | Pending: ${fmtCurS(metrics.totalPending, currency)}
@@ -6395,30 +6612,20 @@ Address the contractor as "the Company". Flag overdue amounts if any.`;
       const now = new Date().toLocaleString("en-US",{month:"long",day:"numeric",year:"numeric",hour:"numeric",minute:"2-digit"});
       const rpt = { narrative, paragraphs, generatedAt:now };
       setReport(rpt);
-
-      // ── Auto-generate and download the PDF immediately ──────────────────
       setPdfB(true);
       try{
         const blob = await generatePdfBlob({...metrics, currency}, rpt);
         const url  = URL.createObjectURL(blob);
         const a    = document.createElement("a");
-        a.href     = url;
-        a.download = `BuildFlow_Report_${project.name.replace(/\s+/g,"_")}_${new Date().toISOString().slice(0,10)}.pdf`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        setTimeout(()=>URL.revokeObjectURL(url), 5000);
-      }catch(pe){
-        setErr("Report generated but PDF export failed. Use the Download button to retry.");
-      }
+        a.href=url; a.download=`BuildFlow_Report_${project.name.replace(/\s+/g,"_")}_${new Date().toISOString().slice(0,10)}.pdf`;
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        setTimeout(()=>URL.revokeObjectURL(url),5000);
+      }catch(pe){ setErr("Report generated but PDF export failed. Use Download button to retry."); }
       setPdfB(false);
-    }catch(e){
-      setErr("AI generation failed: "+e.message);
-    }
+    }catch(e){ setErr("AI generation failed: "+e.message); }
     setGen(false);
   };
 
-  // ── Manual re-download ──────────────────────────────────────────────────
   const downloadPdf = async()=>{
     if(!report||!metrics||pdfBuilding) return;
     setPdfB(true); setErr("");
@@ -6426,15 +6633,10 @@ Address the contractor as "the Company". Flag overdue amounts if any.`;
       const blob = await generatePdfBlob({...metrics, currency}, report);
       const url  = URL.createObjectURL(blob);
       const a    = document.createElement("a");
-      a.href     = url;
-      a.download = `BuildFlow_Report_${project.name.replace(/\s+/g,"_")}_${new Date().toISOString().slice(0,10)}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(()=>URL.revokeObjectURL(url), 5000);
-    }catch(e){
-      setErr("PDF export failed: "+e.message);
-    }
+      a.href=url; a.download=`BuildFlow_Report_${project.name.replace(/\s+/g,"_")}_${new Date().toISOString().slice(0,10)}.pdf`;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(()=>URL.revokeObjectURL(url),5000);
+    }catch(e){ setErr("PDF export failed: "+e.message); }
     setPdfB(false);
   };
 
@@ -6442,246 +6644,541 @@ Address the contractor as "the Company". Flag overdue amounts if any.`;
   const fmtS = n=>fmtCurS(n, currency);
   const busy  = generating||pdfBuilding;
 
+  // ── Quarter filter helper ─────────────────────────────────────────────────────
+  const [lo,hi] = Q_RANGE[quarter]||Q_RANGE.all;
+  const visCF   = cfData.slice(lo,hi+1);
+  const cfIn    = visCF.reduce((s,m)=>s+m.inflow,0);
+  const cfOut   = visCF.reduce((s,m)=>s+m.outflow,0);
+  const cfNet   = cfIn-cfOut;
+  let cum=0;
+  const cumVals = cfData.map(m=>{cum+=m.net;return cum;});
+  const cfClose = cumVals[11]||0;
+
+  const NAV_ITEMS = [
+    {id:"cashflow",   label:"Cash Flow",      icon:<Ic.Payments  size={13} color="currentColor"/>},
+    {id:"costs",      label:"Cost Breakdown",  icon:<Ic.Reports   size={13} color="currentColor"/>},
+    {id:"invoices",   label:"Invoices",        icon:<Ic.Invoices  size={13} color="currentColor"/>},
+    {id:"payments",   label:"Payments",        icon:<Ic.Payments  size={13} color="currentColor"/>},
+  ];
+
+  const subNavStyle = (id)=>({
+    display:"flex", alignItems:"center", gap:7,
+    padding:"7px 14px", borderRadius:7, cursor:"pointer",
+    fontFamily:F, fontSize:12, fontWeight:subPage===id?600:400,
+    background:subPage===id?C.accentDim:"transparent",
+    color:subPage===id?C.accent:C.muted,
+    border:"none", transition:"all .13s",
+  });
+
+  // ── Filtered invoice rows for sub-page ───────────────────────────────────────
+  const filteredInv = useMemo(()=>{
+    return projInvoices.filter(i=>{
+      const st = i.status||i.invoiceStatus||"";
+      const cat= normalizeCat(i.desc);
+      return (invStatus==="all"||st===invStatus) && (invCat==="all"||cat===invCat);
+    });
+  },[projInvoices, invStatus, invCat]);
+
+  // ── Status pill ───────────────────────────────────────────────────────────────
+  const StatusPill = ({status})=>{
+    const s = (status||"").toLowerCase();
+    const cfg = {
+      paid:    {bg:C.greenDim,  color:C.green},
+      received:{bg:C.greenDim,  color:C.green},
+      overdue: {bg:C.redDim,    color:C.red},
+      pending: {bg:C.amberDim,  color:C.amber||C.accent},
+      approved:{bg:C.blueDim,   color:C.blue},
+      disputed:{bg:C.redDim,    color:C.red},
+      partial: {bg:C.amberDim,  color:C.amber||C.accent},
+    }[s]||{bg:C.surface, color:C.muted};
+    return <span style={{...cfg,padding:"2px 9px",borderRadius:20,fontSize:11,fontWeight:600,fontFamily:F,display:"inline-flex",alignItems:"center",gap:4}}>
+      <span style={{width:5,height:5,borderRadius:"50%",background:cfg.color,display:"inline-block"}}/>
+      {s.charAt(0).toUpperCase()+s.slice(1)}
+    </span>;
+  };
+
   return(
-    <div style={{ maxWidth:900,margin:"0 auto" }}>
-      {/* Header */}
+    <div>
       <PageHeader
-        icon={<Ic.Accountant size={20} color={C.blue}/>}
-        title="Accountant"
-        subtitle="AI-powered financial reports · auto-exports as PDF"
-        action={report&&(
-          <div style={{ display:"flex",gap:8 }}>
-            <Btn onClick={downloadPdf} disabled={busy}>
-              {pdfBuilding
-                ? <><div style={{ width:13,height:13,border:"2px solid",borderColor:"#fff",borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Building PDF…</>
-                : <>Download PDF</>}
-            </Btn>
-            <Btn variant="secondary" onClick={generate} disabled={busy}>Regenerate</Btn>
+        icon={<Ic.Accountant size={20} color={C.accent}/>}
+        title="Finance"
+        subtitle="Live financial view — synced from Invoices, Payments & Projects"
+        action={
+          <div style={{display:"flex",gap:8,alignItems:"center",flexWrap:"wrap"}}>
+            {report&&<>
+              <Btn onClick={downloadPdf} disabled={busy} variant="ghost">
+                {pdfBuilding?<><div style={{width:12,height:12,border:`2px solid ${C.accent}`,borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite"}}/>Building…</>:<>↓ Download PDF</>}
+              </Btn>
+              <Btn onClick={generate} disabled={busy} variant="ghost">↺ Regenerate</Btn>
+            </>}
           </div>
-        )}
+        }
       />
 
-      {/* Project selector + Currency + Generate */}
-      <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:14,padding:"22px 26px",marginBottom:24 }}>
-        <div style={{ display:"flex",gap:16,alignItems:"flex-end",flexWrap:"wrap" }}>
-          <div style={{ flex:1,minWidth:200 }}>
-            <label style={{ display:"block",color:C.muted,fontFamily:F,fontSize:11,fontWeight:700,textTransform:"uppercase",letterSpacing:.7,marginBottom:7 }}>Select Project</label>
-            <select value={projId||""} onChange={e=>{ setProjId(e.target.value); setReport(null); setErr(""); }}
-              style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,padding:"11px 14px",color:C.text,fontFamily:F,fontSize:14,fontWeight:600,cursor:"pointer",width:"100%" }}>
-              {allProjects.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}
-            </select>
-          </div>
-          <div style={{ minWidth:120 }}>
-            <label style={{ display:"block",color:C.muted,fontFamily:F,fontSize:11,fontWeight:700,textTransform:"uppercase",letterSpacing:.7,marginBottom:7 }}>Currency</label>
-            <select value={currency} onChange={e=>handleCurrencyChange(e.target.value)}
-              style={{ background:C.surface,border:`1px solid ${C.accent}55`,borderRadius:8,padding:"11px 14px",color:C.accent,fontFamily:F,fontSize:14,fontWeight:700,cursor:"pointer",width:"100%" }}>
-              {CURRENCIES.map(c=><option key={c}>{c}</option>)}
-            </select>
-          </div>
-          <button onClick={generate} disabled={busy||!project}
-            style={{ background:busy?"transparent":C.accent,color:busy?C.accent:"#000",border:busy?`1px solid ${C.accent}44`:"none",padding:"12px 28px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:busy?"default":"pointer",display:"flex",alignItems:"center",gap:9,flexShrink:0,minWidth:240 }}>
-            {generating
-              ? <><div style={{ width:14,height:14,border:"2px solid",borderColor:C.accent,borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Generating Report…</>
-              : pdfBuilding
-              ? <><div style={{ width:14,height:14,border:"2px solid",borderColor:C.accent,borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Building PDF…</>
-              : <>Generate &amp; Download PDF</>}
-          </button>
+      {/* Project + currency selector */}
+      <div style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"18px 22px",marginBottom:18,display:"flex",gap:14,alignItems:"flex-end",flexWrap:"wrap"}}>
+        <div style={{flex:1,minWidth:180}}>
+          <label style={LBL()}>Project</label>
+          <select value={projId||""} onChange={e=>{setProjId(e.target.value);setReport(null);setErr("");}}
+            style={{...INP(),fontWeight:600}}>
+            {allProjects.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}
+          </select>
         </div>
-        {err&&<div style={{ color:C.red,fontFamily:F,fontSize:12,marginTop:12,padding:"8px 12px",background:C.redDim,borderRadius:6 }}>{err}</div>}
+        <div style={{minWidth:110}}>
+          <label style={LBL()}>Currency</label>
+          <select value={currency} onChange={e=>handleCurrencyChange(e.target.value)}
+            style={{...INP(),color:C.accent,fontWeight:700,border:`1px solid ${C.accent}55`}}>
+            {CURRENCIES.map(c=><option key={c}>{c}</option>)}
+          </select>
+        </div>
+        <Btn onClick={generate} disabled={busy||!project} variant="primary">
+          {generating?<><div style={{width:12,height:12,border:"2px solid",borderColor:"#fff",borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite"}}/>Generating…</>
+          :pdfBuilding?<><div style={{width:12,height:12,border:"2px solid",borderColor:"#fff",borderTopColor:"transparent",borderRadius:"50%",animation:"spin .7s linear infinite"}}/>Building PDF…</>
+          :<>Generate Report &amp; PDF</>}
+        </Btn>
+        {err&&<div style={{width:"100%",color:C.red,fontFamily:F,fontSize:12,padding:"8px 12px",background:C.redDim,borderRadius:6,display:"flex",alignItems:"center",gap:6}}>
+          <Ic.Warning size={13} color={C.red}/>{err}
+        </div>}
       </div>
 
-      {/* Live metrics cards */}
-      {metrics&&(
-        <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(175px,1fr))",gap:12,marginBottom:24 }}>
-          {[
-            { label:"Contract Value",       value:fmtS(metrics.projectValue),    icon:"proj", color:C.blue,   dim:C.blueDim   },
-            { label:"Total Invoiced",       value:fmtS(metrics.totalInvoiced),   icon:"inv", color:C.accent, dim:C.accentDim },
-            { label:"Payments Received",    value:fmtS(metrics.totalReceived),   icon:"pay", color:C.green,  dim:C.greenDim  },
-            { label:"Outstanding Invoices", value:fmtS(metrics.remainToPayInv),  icon:"time", color:metrics.totalOverdue>0?C.red:C.muted, dim:metrics.totalOverdue>0?C.redDim:C.surface },
-            { label:"Still to Collect",     value:fmtS(metrics.remainToReceive), icon:"in",   color:C.purple, dim:C.purpleDim },
-            { label:"Gross Profit Est.",    value:fmtS(metrics.grossProfit),     icon:"trend",color:metrics.grossProfit>=0?C.green:C.red, dim:metrics.grossProfit>=0?C.greenDim:C.redDim },
-          ].map(card=>(
-            <div key={card.label} style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"16px 18px" }}>
-              <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:8 }}>
-                <div style={{ width:30,height:30,background:card.dim,borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center",fontSize:15 }}>{card.icon}</div>
-                <div style={{ color:C.muted,fontFamily:F,fontSize:11,fontWeight:700,textTransform:"uppercase",letterSpacing:.5 }}>{card.label}</div>
+      {/* Sub-navigation */}
+      <div style={{display:"flex",gap:4,marginBottom:20,background:C.card,border:`1px solid ${C.border}`,borderRadius:10,padding:4,width:"fit-content"}}>
+        {NAV_ITEMS.map(n=>(
+          <button key={n.id} onClick={()=>setSubPage(n.id)} style={subNavStyle(n.id)}>
+            {n.icon}{n.label}
+          </button>
+        ))}
+      </div>
+
+      {/* ── CASH FLOW ─────────────────────────────────────────────────────────── */}
+      {subPage==="cashflow"&&(
+        <div>
+          {/* Quarter filter */}
+          <div style={{display:"flex",gap:4,marginBottom:18,background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,padding:3,width:"fit-content"}}>
+            {["all","q1","q2","q3","q4"].map(q=>(
+              <button key={q} onClick={()=>setQuarter(q)}
+                style={{padding:"4px 13px",borderRadius:6,fontSize:11,fontWeight:500,cursor:"pointer",fontFamily:F,
+                  background:quarter===q?C.navy||C.text:"transparent",
+                  color:quarter===q?"#fff":C.muted,border:"none",transition:"all .13s"}}>
+                {q.toUpperCase()}
+              </button>
+            ))}
+          </div>
+
+          {/* KPI cards */}
+          <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:12,marginBottom:18}}>
+            {[
+              {label:"Total Inflows",      value:fmtS(cfIn),   sub:"from payments",       color:C.blue,  accent:C.blueDim},
+              {label:"Total Outflows",     value:fmtS(cfOut),  sub:"from paid invoices",  color:C.red,   accent:C.redDim},
+              {label:"Net Cash Flow",      value:fmtS(cfNet),  sub:cfNet>=0?"▲ Positive":"▼ Negative", color:cfNet>=0?C.green:C.red, accent:cfNet>=0?C.greenDim:C.redDim},
+              {label:"Closing Position",   value:fmtS(cfClose),sub:cfClose>=0?"▲ In credit":"▼ In deficit", color:cfClose>=0?C.green:C.red, accent:cfClose>=0?C.greenDim:C.redDim},
+            ].map(k=>(
+              <div key={k.label} style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"14px 16px",borderTop:`3px solid ${k.color}`}}>
+                <div style={{color:C.muted,fontFamily:F,fontSize:10,fontWeight:600,textTransform:"uppercase",letterSpacing:".8px",marginBottom:6}}>{k.label}</div>
+                <div style={{color:k.color,fontFamily:FM||F,fontSize:19,fontWeight:700,lineHeight:1.2}}>{k.value}</div>
+                <div style={{color:k.color,fontFamily:F,fontSize:11,marginTop:4}}>{k.sub}</div>
               </div>
-              <div style={{ color:card.color,fontFamily:F,fontSize:17,fontWeight:800 }}>{card.value}</div>
+            ))}
+          </div>
+
+          {/* Chart */}
+          <div style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:12,marginBottom:16}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"14px 18px",borderBottom:`1px solid ${C.border}`}}>
+              <div style={{color:C.text,fontFamily:F,fontWeight:600,fontSize:13}}>Cumulative cash position</div>
+              <div style={{color:C.muted,fontFamily:F,fontSize:11}}>Derived from invoices &amp; payments — no manual input</div>
             </div>
-          ))}
+            <div style={{padding:18}}>
+              <div style={{position:"relative",width:"100%",height:240}}>
+                <canvas ref={cumulChartRef}/>
+              </div>
+              <div style={{display:"flex",gap:16,flexWrap:"wrap",fontSize:12,color:C.muted,padding:"8px 2px 0",fontFamily:F}}>
+                <span style={{display:"flex",alignItems:"center",gap:5}}><span style={{width:10,height:10,borderRadius:2,background:C.blueDim,display:"inline-block"}}/> Inflows (payments)</span>
+                <span style={{display:"flex",alignItems:"center",gap:5}}><span style={{width:10,height:10,borderRadius:2,background:C.redDim,display:"inline-block"}}/> Outflows (paid invoices)</span>
+                <span style={{display:"flex",alignItems:"center",gap:5}}><span style={{width:10,height:10,borderRadius:"50%",background:C.green,display:"inline-block"}}/> Cumulative</span>
+              </div>
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",borderTop:`1px solid ${C.border}`}}>
+              {[
+                {lbl:"Peak positive", val:fmtS(Math.max(0,...cumVals)), color:C.green},
+                {lbl:"Peak negative", val:fmtS(Math.abs(Math.min(0,...cumVals))), color:C.red},
+                {lbl:"Year-end balance", val:fmtS(cfClose), color:cfClose>=0?C.green:C.red},
+              ].map((s,i)=>(
+                <div key={s.lbl} style={{padding:"12px 16px",textAlign:"center",borderRight:i<2?`1px solid ${C.border}`:"none"}}>
+                  <div style={{color:C.muted,fontFamily:F,fontSize:10,fontWeight:600,textTransform:"uppercase",letterSpacing:".7px",marginBottom:3}}>{s.lbl}</div>
+                  <div style={{color:s.color,fontFamily:FM||F,fontSize:15,fontWeight:600}}>{s.val}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Monthly detail table */}
+          <div style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:12,overflow:"hidden"}}>
+            <div style={{padding:"13px 18px",borderBottom:`1px solid ${C.border}`,color:C.text,fontFamily:F,fontWeight:600,fontSize:13}}>
+              Monthly detail
+            </div>
+            <div style={{overflowX:"auto"}}>
+              <table style={{...TABLE_STYLE,fontSize:12}}>
+                <thead><tr>
+                  <th style={TH({textAlign:"left",minWidth:160})}>Item</th>
+                  {MONTHS.slice(lo,hi+1).map((m,i)=><th key={m} style={TH()}>{MONTH_LBLS[lo+i]}</th>)}
+                  <th style={TH({background:C.surf2||C.surface,color:C.text,fontWeight:700})}>Total</th>
+                </tr></thead>
+                <tbody>
+                  <tr style={{background:C.text}}><td colSpan={visCF.length+2} style={{padding:"7px 14px",color:"#fff",fontFamily:F,fontSize:11,fontWeight:600,textTransform:"uppercase",letterSpacing:".9px"}}>Inflows — from payment records</td></tr>
+                  <tr>
+                    <td style={TD({paddingLeft:24})}>Payments received</td>
+                    {visCF.map((m,i)=><td key={i} style={TD({fontFamily:FM||F,textAlign:"right",color:m.inflow?C.green:C.muted})}>{m.inflow?fmtS(m.inflow):"—"}</td>)}
+                    <td style={TD({fontFamily:FM||F,textAlign:"right",fontWeight:600,color:C.green})}>{fmtS(cfIn)}</td>
+                  </tr>
+                  <tr style={{background:C.surf2||C.surface,fontWeight:600}}>
+                    <td style={TD()}>Total inflows</td>
+                    {visCF.map((m,i)=><td key={i} style={TD({fontFamily:FM||F,textAlign:"right",fontWeight:600})}>{fmtS(m.inflow)}</td>)}
+                    <td style={TD({fontFamily:FM||F,textAlign:"right",fontWeight:700})}>{fmtS(cfIn)}</td>
+                  </tr>
+                  <tr style={{background:C.text}}><td colSpan={visCF.length+2} style={{padding:"7px 14px",color:"#fff",fontFamily:F,fontSize:11,fontWeight:600,textTransform:"uppercase",letterSpacing:".9px"}}>Outflows — from paid invoices (by due date)</td></tr>
+                  {INVOICE_CATS.map(cat=>{
+                    const mTots = MONTHS.slice(lo,hi+1).map(m=>
+                      projInvoices.filter(i=>isActual(i)&&normalizeCat(i.desc)===cat&&toYM(i.dueDate||i.dueFmt||i.due)===m).reduce((s,i)=>s+Number(i.amount||0),0)
+                    );
+                    const rowTotal = mTots.reduce((s,v)=>s+v,0);
+                    if(mTots.every(v=>v===0)) return null;
+                    return(<tr key={cat}>
+                      <td style={TD({paddingLeft:24})}>{cat}</td>
+                      {mTots.map((v,i)=><td key={i} style={TD({fontFamily:FM||F,textAlign:"right",color:v?C.text:C.muted})}>{v?fmtS(v):"—"}</td>)}
+                      <td style={TD({fontFamily:FM||F,textAlign:"right",fontWeight:600})}>{fmtS(rowTotal)}</td>
+                    </tr>);
+                  })}
+                  {visCF.every(m=>m.outflow===0)&&<tr><td colSpan={visCF.length+2} style={TD({color:C.muted,paddingLeft:24})}>No paid invoices in this period</td></tr>}
+                  <tr style={{background:C.surf2||C.surface,fontWeight:600}}>
+                    <td style={TD()}>Total outflows</td>
+                    {visCF.map((m,i)=><td key={i} style={TD({fontFamily:FM||F,textAlign:"right",fontWeight:600})}>{fmtS(m.outflow)}</td>)}
+                    <td style={TD({fontFamily:FM||F,textAlign:"right",fontWeight:700})}>{fmtS(cfOut)}</td>
+                  </tr>
+                  <tr style={{background:C.accentDim||C.blueDim}}>
+                    <td style={TD({fontWeight:600})}>Net cash flow</td>
+                    {visCF.map((m,i)=><td key={i} style={TD({fontFamily:FM||F,textAlign:"right",fontWeight:600,color:m.net>=0?C.green:C.red})}>{fmtS(m.net)}</td>)}
+                    <td style={TD({fontFamily:FM||F,textAlign:"right",fontWeight:700,color:cfNet>=0?C.green:C.red})}>{fmtS(cfNet)}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       )}
 
-      {/* In-app report preview */}
-      {report&&metrics&&(
-        <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:14,overflow:"hidden" }}>
-          {/* Report header band */}
-          <div style={{ background:`linear-gradient(135deg,#1e3a5f 0%,#2563eb 100%)`,padding:"28px 32px" }}>
-            <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:16 }}>
+      {/* ── COST BREAKDOWN ─────────────────────────────────────────────────────── */}
+      {subPage==="costs"&&(
+        <div>
+          {/* KPI row */}
+          <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:12,marginBottom:18}}>
+            {(()=>{
+              const totBud = costData.reduce((s,c)=>s+c.budget,0);
+              const totInv = costData.reduce((s,c)=>s+c.invoiced,0);
+              const totCom = costData.reduce((s,c)=>s+c.committed,0);
+              const totRem = totBud-(totInv+totCom);
+              return[
+                {label:"Total Budget",      value:fmtS(totBud), sub:"project contract",     color:C.blue},
+                {label:"Invoiced (actual)", value:fmtS(totInv), sub:projInvoices.filter(isActual).length+" paid invoices", color:C.red},
+                {label:"Committed",         value:fmtS(totCom), sub:"pending & approved",  color:C.amber||C.accent},
+                {label:"Budget Remaining",  value:fmtS(Math.abs(totRem)), sub:totRem>=0?"still available":"budget exceeded", color:totRem>=0?C.green:C.red},
+              ].map(k=>(
+                <div key={k.label} style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"14px 16px",borderTop:`3px solid ${k.color}`}}>
+                  <div style={{color:C.muted,fontFamily:F,fontSize:10,fontWeight:600,textTransform:"uppercase",letterSpacing:".8px",marginBottom:6}}>{k.label}</div>
+                  <div style={{color:k.color,fontFamily:FM||F,fontSize:19,fontWeight:700}}>{k.value}</div>
+                  <div style={{color:k.color,fontFamily:F,fontSize:11,marginTop:4}}>{k.sub}</div>
+                </div>
+              ));
+            })()}
+          </div>
+
+          {/* Over-budget alert */}
+          {costData.filter(c=>c.status==="over").length>0&&(
+            <div style={{background:C.redDim,border:`1px solid ${C.red}44`,borderLeft:`4px solid ${C.red}`,borderRadius:8,padding:"12px 14px",marginBottom:16,display:"flex",gap:10}}>
+              <Ic.Warning size={16} color={C.red}/>
               <div>
-                <div style={{ color:"rgba(180,210,255,0.9)",fontFamily:F,fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:1.2,marginBottom:6 }}>Confidential Financial Report</div>
-                <div style={{ color:"#fff",fontFamily:F,fontSize:22,fontWeight:800,marginBottom:4 }}>{metrics.project.name}</div>
-                <div style={{ color:"rgba(180,210,255,0.85)",fontFamily:F,fontSize:12 }}>
-                  Client: <span style={{ color:"#fff",fontWeight:600 }}>{metrics.project.client?.company||metrics.project.client?.name||"N/A"}</span>
-                  &nbsp;·&nbsp;{metrics.project.location||""}
-                  &nbsp;·&nbsp;<span style={{ background:"rgba(255,255,255,0.15)",padding:"1px 8px",borderRadius:10,fontWeight:700 }}>{(metrics.project.status||"").toUpperCase()}</span>
+                <div style={{color:C.red,fontFamily:F,fontWeight:600,fontSize:13}}>
+                  {costData.filter(c=>c.status==="over").length} categor{costData.filter(c=>c.status==="over").length>1?"ies":"y"} exceeding budget
                 </div>
-              </div>
-              <div style={{ textAlign:"right" }}>
-                <div style={{ color:"rgba(200,220,255,0.7)",fontFamily:F,fontSize:10,marginBottom:2 }}>Generated</div>
-                <div style={{ color:"#fff",fontFamily:F,fontSize:11,fontWeight:600 }}>{report.generatedAt}</div>
-                <div style={{ color:"rgba(200,220,255,0.7)",fontFamily:F,fontSize:10,marginTop:4 }}>BuildFlow AI</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Financial summary tables */}
-          <div style={{ padding:"24px 32px",borderBottom:`1px solid ${C.border}` }}>
-            <div style={{ color:C.muted,fontFamily:F,fontWeight:700,fontSize:10,textTransform:"uppercase",letterSpacing:.7,marginBottom:14 }}>Financial Summary</div>
-            <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:16 }}>
-              {[
-                { title:"Revenue & Collections", color:C.blue, colorDim:C.blueDim, rows:[
-                  ["Contract Value",       fmt(metrics.projectValue),    C.text  ],
-                  ["Payments Received",    fmt(metrics.totalReceived),   C.green ],
-                  ["Remaining to Collect", fmt(metrics.remainToReceive), metrics.remainToReceive>0?C.accent:C.green ],
-                  ["% Collected",          metrics.receivedPct+"%",      C.blue  ],
-                ]},
-                { title:"Invoices & Costs", color:C.accent, colorDim:C.accentDim, rows:[
-                  ["Total Invoiced", fmt(metrics.totalInvoiced), C.text  ],
-                  ["Paid",          fmt(metrics.totalPaid),      C.green ],
-                  ["Overdue",       fmt(metrics.totalOverdue),   metrics.totalOverdue>0?C.red:C.muted ],
-                  ["Pending",       fmt(metrics.totalPending),   C.accent],
-                ]},
-              ].map(tbl=>(
-                <div key={tbl.title} style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:10,overflow:"hidden" }}>
-                  <div style={{ background:tbl.colorDim,borderBottom:`1px solid ${C.border}`,padding:"9px 16px",color:tbl.color,fontFamily:F,fontWeight:700,fontSize:11,textTransform:"uppercase",letterSpacing:.5 }}>{tbl.title}</div>
-                  <table style={TABLE_STYLE}>
-                    <tbody>
-                      {tbl.rows.map(([label,value,color],i)=>(
-                        <tr key={i} style={{ borderBottom:i<tbl.rows.length-1?`1px solid ${C.border}22`:"none" }}>
-                          <td style={{ padding:"9px 16px",color:C.muted }}>{label}</td>
-                          <td style={{ padding:"9px 16px",color,fontWeight:700,textAlign:"right" }}>{value}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                <div style={{color:C.red,fontFamily:F,fontSize:12,marginTop:2}}>
+                  {costData.filter(c=>c.status==="over").map(c=>`${c.cat}: ${fmtS(c.budget)} budget → ${fmtS(c.exposure)} exposure`).join(" · ")}
                 </div>
-              ))}
-            </div>
-            <div style={{ marginTop:14,background:C.surface,border:`1px solid ${C.border}`,borderRadius:10,padding:"14px 20px",display:"flex",justifyContent:"space-around",flexWrap:"wrap",gap:12 }}>
-              {[
-                { label:"Net Cash Position",      value:fmt(metrics.netBalance),      color:metrics.netBalance>=0?C.green:C.red, sub:"Received − Paid Invoices" },
-                { label:"Invoice Collection Rate",value:metrics.invoicePaidPct+"%",   color:C.blue,  sub:"of invoiced amount paid" },
-                { label:"Contract Collected",     value:metrics.receivedPct+"%",      color:C.green, sub:"of contract value received" },
-              ].map(b=>(
-                <div key={b.label} style={{ textAlign:"center" }}>
-                  <div style={{ color:C.muted,fontFamily:F,fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:.5,marginBottom:4 }}>{b.label}</div>
-                  <div style={{ color:b.color,fontFamily:F,fontSize:20,fontWeight:800 }}>{b.value}</div>
-                  <div style={{ color:C.muted,fontFamily:F,fontSize:10,marginTop:2 }}>{b.sub}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Invoice table */}
-          {metrics.invoices.length>0&&(
-            <div style={{ padding:"20px 32px",borderBottom:`1px solid ${C.border}` }}>
-              <div style={{ color:C.muted,fontFamily:F,fontWeight:700,fontSize:10,textTransform:"uppercase",letterSpacing:.7,marginBottom:12 }}>Invoice Breakdown</div>
-              <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:10,overflow:"hidden" }}>
-                <table style={TABLE_STYLE}>
-                  <thead><tr>
-                    {["Invoice #","Description","Amount","Due Date","Status"].map(h=>(
-                      <th key={h} style={TH()}>{h}</th>
-                    ))}
-                  </tr></thead>
-                  <tbody>
-                    {metrics.invoices.map((inv,i)=>{
-                      const st=inv.status||inv.invoiceStatus||"pending";
-                      const stC={paid:C.green,overdue:C.red,pending:C.accent};
-                      return(
-                        <tr key={inv.id||i} style={{ borderBottom:i<metrics.invoices.length-1?`1px solid ${C.border}22`:"none" }}>
-                          <td style={{ color:C.accent,fontWeight:700 }}>{inv.invId||inv.id}</td>
-                          <td style={{ color:C.text,maxWidth:170,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{inv.desc||"—"}</td>
-                          <td style={{ color:C.text,fontWeight:700 }}>{fmt(inv.amount)}</td>
-                          <td style={{ color:C.muted }}>{inv.dueFmt||inv.dueDate||"—"}</td>
-                          <td style={{ padding:"9px 14px" }}><span style={{ background:(stC[st]||C.muted)+"22",color:stC[st]||C.muted,border:`1px solid ${(stC[st]||C.muted)}44`,padding:"2px 9px",borderRadius:4,fontWeight:700,fontSize:10,textTransform:"capitalize" }}>{st}</span></td>
-                        </tr>
-                      );
-                    })}
-                    <tr style={{ background:C.bg,borderTop:`1px solid ${C.border}` }}>
-                      <td colSpan={2} style={{ color:C.muted,fontWeight:700,fontSize:10,textTransform:"uppercase" }}>Total Invoiced</td>
-                      <td style={{ color:C.accent,fontWeight:800,fontSize:13 }}>{fmt(metrics.totalInvoiced)}</td>
-                      <td colSpan={2}/>
-                    </tr>
-                  </tbody>
-                </table>
               </div>
             </div>
           )}
 
-          {/* Payments table */}
-          {metrics.payments.length>0&&(
-            <div style={{ padding:"20px 32px",borderBottom:`1px solid ${C.border}` }}>
-              <div style={{ color:C.muted,fontFamily:F,fontWeight:700,fontSize:10,textTransform:"uppercase",letterSpacing:.7,marginBottom:12 }}>Payment History</div>
-              <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:10,overflow:"hidden" }}>
-                <table style={TABLE_STYLE}>
-                  <thead><tr>
-                    {["Date","Method","Amount","Invoice Ref","Notes"].map(h=>(
-                      <th key={h} style={TH()}>{h}</th>
-                    ))}
-                  </tr></thead>
-                  <tbody>
-                    {metrics.payments.map((p,i)=>(
-                      <tr key={p.id||i} style={{ borderBottom:i<metrics.payments.length-1?`1px solid ${C.border}22`:"none" }}>
-                        <td style={{ color:C.muted }}>{p.dateFmt||p.date||"—"}</td>
-                        <td style={{ color:C.text }}>{p.method||"—"}</td>
-                        <td style={{ color:C.green,fontWeight:700 }}>{fmt(p.amount)}</td>
-                        <td style={{ color:C.accent,fontSize:11 }}>{resolveInvRef(p.invRef,allInvoices)}</td>
-                        <td style={{ color:C.muted,maxWidth:130,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{p.notes||"—"}</td>
+          {/* Charts */}
+          <div style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:12,marginBottom:16}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"14px 18px",borderBottom:`1px solid ${C.border}`}}>
+              <div style={{color:C.text,fontFamily:F,fontWeight:600,fontSize:13}}>Budget vs invoiced vs committed</div>
+              <select value={costFilter} onChange={e=>setCostFilter(e.target.value)}
+                style={{...INP(),width:"auto",fontSize:12,padding:"5px 10px"}}>
+                <option value="all">All categories</option>
+                <option value="over">Over budget</option>
+                <option value="warn">At risk</option>
+              </select>
+            </div>
+            <div style={{padding:18}}>
+              <div style={{position:"relative",width:"100%",height:250}}>
+                <canvas ref={costChartRef}/>
+              </div>
+              <div style={{display:"flex",gap:16,flexWrap:"wrap",fontSize:12,color:C.muted,padding:"8px 2px 0",fontFamily:F}}>
+                <span style={{display:"flex",alignItems:"center",gap:5}}><span style={{width:10,height:10,borderRadius:2,background:C.blueDim,display:"inline-block"}}/> Budget</span>
+                <span style={{display:"flex",alignItems:"center",gap:5}}><span style={{width:10,height:10,borderRadius:2,background:C.accent,display:"inline-block"}}/> Invoiced (paid)</span>
+                <span style={{display:"flex",alignItems:"center",gap:5}}><span style={{width:10,height:10,borderRadius:2,background:C.amber||C.amberDim,display:"inline-block"}}/> Committed (pending)</span>
+              </div>
+            </div>
+          </div>
+
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16,marginBottom:16}}>
+            {/* Spend rates */}
+            <div style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:12}}>
+              <div style={{padding:"13px 18px",borderBottom:`1px solid ${C.border}`,color:C.text,fontFamily:F,fontWeight:600,fontSize:13}}>
+                Spend rate <span style={{color:C.muted,fontWeight:400,fontSize:11,marginLeft:4}}>exposure / budget</span>
+              </div>
+              {(costFilter==='all'?costData:costData.filter(c=>c.status===costFilter)).map(c=>{
+                const p=Math.min(100,c.usedPct);
+                const clr=c.status==="over"?C.red:c.status==="warn"?C.amber||C.accent:C.green;
+                return(
+                  <div key={c.cat} style={{padding:"11px 16px",borderBottom:`1px solid ${C.border}33`}}>
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:5}}>
+                      <span style={{fontFamily:F,fontSize:12,color:C.text}}>{c.cat}</span>
+                      <span style={{fontFamily:FM||F,fontSize:12,color:clr,fontWeight:600}}>{c.usedPct}%</span>
+                    </div>
+                    <div style={{height:5,background:C.border,borderRadius:3,overflow:"hidden"}}>
+                      <div style={{height:"100%",borderRadius:3,background:clr,width:`${p}%`,transition:"width .4s"}}/>
+                    </div>
+                    <div style={{display:"flex",gap:12,fontSize:11,color:C.muted,fontFamily:F,marginTop:4}}>
+                      <span>Budget {fmtS(c.budget)}</span>
+                      <span>{c.invoiced?`Invoiced ${fmtS(c.invoiced)}`:"—"}</span>
+                      <span>{c.committed?`Committed ${fmtS(c.committed)}`:"—"}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            {/* Burn chart */}
+            <div style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:12}}>
+              <div style={{padding:"13px 18px",borderBottom:`1px solid ${C.border}`,color:C.text,fontFamily:F,fontWeight:600,fontSize:13}}>
+                Monthly burn <span style={{color:C.muted,fontWeight:400,fontSize:11,marginLeft:4}}>cumulative invoiced vs planned</span>
+              </div>
+              <div style={{padding:"14px 16px"}}>
+                <div style={{position:"relative",width:"100%",height:185}}>
+                  <canvas ref={burnChartRef}/>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Detail table */}
+          <div style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:12,overflow:"hidden"}}>
+            <div style={{padding:"13px 18px",borderBottom:`1px solid ${C.border}`,color:C.text,fontFamily:F,fontWeight:600,fontSize:13}}>
+              Detailed breakdown
+            </div>
+            <div style={{overflowX:"auto"}}>
+              <table style={{...TABLE_STYLE,fontSize:12}}>
+                <thead><tr>
+                  {["Category","Budget","Invoiced","Committed","Exposure","Variance","% Used","Status"].map((h,i)=>(
+                    <th key={h} style={i===0?TH({textAlign:"left"}):TH()}>{h}</th>
+                  ))}
+                </tr></thead>
+                <tbody>
+                  {(costFilter==='all'?costData:costData.filter(c=>c.status===costFilter)).map(c=>{
+                    const v=c.exposure-c.budget;
+                    return(
+                      <tr key={c.cat}>
+                        <td style={TD({color:C.text})}>{c.cat}</td>
+                        <td style={TD({fontFamily:FM||F,textAlign:"right"})}>{fmtS(c.budget)}</td>
+                        <td style={TD({fontFamily:FM||F,textAlign:"right",color:c.invoiced?C.text:C.muted})}>{c.invoiced?fmtS(c.invoiced):"—"}</td>
+                        <td style={TD({fontFamily:FM||F,textAlign:"right",color:c.committed?C.text:C.muted})}>{c.committed?fmtS(c.committed):"—"}</td>
+                        <td style={TD({fontFamily:FM||F,textAlign:"right",fontWeight:600})}>{fmtS(c.exposure)}</td>
+                        <td style={TD({fontFamily:FM||F,textAlign:"right",fontWeight:600,color:v>0?C.red:v<0?C.green:C.muted})}>{v>0?"+":""}{fmtS(v)}</td>
+                        <td style={TD({fontFamily:FM||F,textAlign:"right"})}>{c.usedPct}%</td>
+                        <td style={TD({textAlign:"right"})}><StatusPill status={c.status==="over"?"overdue":c.status==="warn"?"pending":"paid"}/></td>
                       </tr>
-                    ))}
-                    <tr style={{ background:C.bg,borderTop:`1px solid ${C.border}` }}>
-                      <td colSpan={2} style={{ color:C.muted,fontWeight:700,fontSize:10,textTransform:"uppercase" }}>Total Received</td>
-                      <td style={{ color:C.green,fontWeight:800,fontSize:13 }}>{fmt(metrics.totalReceived)}</td>
-                      <td colSpan={2}/>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── INVOICES SUB-PAGE ──────────────────────────────────────────────────── */}
+      {subPage==="invoices"&&(
+        <div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:12,marginBottom:18}}>
+            {(()=>{
+              const tot  = projInvoices.reduce((s,i)=>s+Number(i.amount||0),0);
+              const pend = projInvoices.filter(i=>(i.status||i.invoiceStatus)==="pending");
+              const appr = projInvoices.filter(i=>(i.status||i.invoiceStatus)==="approved");
+              const paid = projInvoices.filter(i=>isActual(i));
+              return[
+                {label:"Total Invoiced", value:fmtS(tot),  sub:`${projInvoices.length} invoices`, color:C.red},
+                {label:"Pending",        value:fmtS(pend.reduce((s,i)=>s+Number(i.amount||0),0)), sub:`${pend.length} invoices`, color:C.amber||C.accent},
+                {label:"Approved",       value:fmtS(appr.reduce((s,i)=>s+Number(i.amount||0),0)), sub:`${appr.length} invoices`, color:C.blue},
+                {label:"Paid",           value:fmtS(paid.reduce((s,i)=>s+Number(i.amount||0),0)), sub:`${paid.length} invoices`, color:C.green},
+              ].map(k=>(
+                <div key={k.label} style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"14px 16px",borderTop:`3px solid ${k.color}`}}>
+                  <div style={{color:C.muted,fontFamily:F,fontSize:10,fontWeight:600,textTransform:"uppercase",letterSpacing:".8px",marginBottom:6}}>{k.label}</div>
+                  <div style={{color:k.color,fontFamily:FM||F,fontSize:19,fontWeight:700}}>{k.value}</div>
+                  <div style={{color:C.muted,fontFamily:F,fontSize:11,marginTop:4}}>{k.sub}</div>
+                </div>
+              ));
+            })()}
+          </div>
+          <div style={{display:"flex",gap:8,marginBottom:14,flexWrap:"wrap"}}>
+            <select value={invStatus} onChange={e=>setInvStatus(e.target.value)} style={{...INP(),width:"auto",fontSize:12,padding:"5px 10px"}}>
+              {["all","pending","approved","paid","overdue","disputed"].map(s=><option key={s} value={s}>{s==="all"?"All statuses":s.charAt(0).toUpperCase()+s.slice(1)}</option>)}
+            </select>
+            <select value={invCat} onChange={e=>setInvCat(e.target.value)} style={{...INP(),width:"auto",fontSize:12,padding:"5px 10px"}}>
+              <option value="all">All categories</option>
+              {INVOICE_CATS.map(c=><option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
+          <div style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:12,overflow:"hidden"}}>
+            <div style={{padding:"13px 18px",borderBottom:`1px solid ${C.border}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+              <span style={{color:C.text,fontFamily:F,fontWeight:600,fontSize:13}}>{filteredInv.length} invoice{filteredInv.length!==1?"s":""}</span>
+              <span style={{color:C.muted,fontFamily:F,fontSize:11}}>Read-only — edit invoices in the Invoices tab</span>
+            </div>
+            <div style={{overflowX:"auto"}}>
+              <table style={TABLE_STYLE}>
+                <thead><tr>
+                  {["Invoice #","Supplier / Project","Category","Due Date","Amount","Status"].map((h,i)=>(
+                    <th key={h} style={i===0?TH({textAlign:"left"}):TH()}>{h}</th>
+                  ))}
+                </tr></thead>
+                <tbody>
+                  {filteredInv.length===0&&<tr><td colSpan={6} style={TD({color:C.muted,textAlign:"center",padding:"24px"})}><EmptyState title="No invoices match filters" sub="Try adjusting the status or category filter"/></td></tr>}
+                  {filteredInv.map((inv,i)=>(
+                    <tr key={inv.id||i} style={{borderBottom:i<filteredInv.length-1?`1px solid ${C.border}22`:"none"}}>
+                      <td style={TD({color:C.accent,fontWeight:700})}>{inv.invId||inv.id}</td>
+                      <td style={TD({color:C.text,maxWidth:180,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"})}>{inv.supplier||inv.project||"—"}</td>
+                      <td style={TD()}><span style={{background:C.blueDim,color:C.blue,padding:"2px 8px",borderRadius:4,fontSize:10,fontWeight:600,fontFamily:F}}>{normalizeCat(inv.desc)}</span></td>
+                      <td style={TD({fontFamily:FM||F,textAlign:"right",color:C.muted})}>{inv.dueFmt||inv.dueDate||"—"}</td>
+                      <td style={TD({fontFamily:FM||F,textAlign:"right",fontWeight:600})}>{fmtS(inv.amount)}</td>
+                      <td style={TD({textAlign:"right"})}><StatusPill status={inv.status||inv.invoiceStatus}/></td>
                     </tr>
-                  </tbody>
-                </table>
+                  ))}
+                  {filteredInv.length>0&&<tr style={{background:C.surf2||C.surface}}>
+                    <td colSpan={4} style={TD({fontWeight:600,fontSize:11,color:C.muted,textTransform:"uppercase"})}>Total ({filteredInv.length})</td>
+                    <td style={TD({fontFamily:FM||F,textAlign:"right",fontWeight:700,color:C.accent})}>{fmtS(filteredInv.reduce((s,i)=>s+Number(i.amount||0),0))}</td>
+                    <td style={TD()}/>
+                  </tr>}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── PAYMENTS SUB-PAGE ──────────────────────────────────────────────────── */}
+      {subPage==="payments"&&(
+        <div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:12,marginBottom:18}}>
+            {(()=>{
+              const tot  = projPayments.reduce((s,p)=>s+Number(p.amount||0),0);
+              const part = projPayments.filter(p=>p.method==="Partial"||p.status==="partial");
+              const pv   = Number(project?.value||0);
+              return[
+                {label:"Total Received",    value:fmtS(tot),             sub:`${projPayments.length} payments`, color:C.green},
+                {label:"Partial Payments",  value:fmtS(part.reduce((s,p)=>s+Number(p.amount||0),0)), sub:`${part.length} payments`, color:C.amber||C.accent},
+                {label:"Still to Receive",  value:fmtS(Math.max(0,pv-tot)), sub:"contract value − received", color:C.purple},
+              ].map(k=>(
+                <div key={k.label} style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"14px 16px",borderTop:`3px solid ${k.color}`}}>
+                  <div style={{color:C.muted,fontFamily:F,fontSize:10,fontWeight:600,textTransform:"uppercase",letterSpacing:".8px",marginBottom:6}}>{k.label}</div>
+                  <div style={{color:k.color,fontFamily:FM||F,fontSize:19,fontWeight:700}}>{k.value}</div>
+                  <div style={{color:C.muted,fontFamily:F,fontSize:11,marginTop:4}}>{k.sub}</div>
+                </div>
+              ));
+            })()}
+          </div>
+          <div style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:12,overflow:"hidden"}}>
+            <div style={{padding:"13px 18px",borderBottom:`1px solid ${C.border}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+              <span style={{color:C.text,fontFamily:F,fontWeight:600,fontSize:13}}>All payments received</span>
+              <span style={{color:C.muted,fontFamily:F,fontSize:11}}>Read-only — edit payments in the Payments tab</span>
+            </div>
+            <div style={{overflowX:"auto"}}>
+              <table style={TABLE_STYLE}>
+                <thead><tr>
+                  {["Date","Amount","Method","Invoice Ref","Notes"].map((h,i)=>(
+                    <th key={h} style={i===0?TH({textAlign:"left"}):TH()}>{h}</th>
+                  ))}
+                </tr></thead>
+                <tbody>
+                  {projPayments.length===0&&<tr><td colSpan={5} style={TD({color:C.muted,textAlign:"center",padding:"24px"})}><EmptyState title="No payments recorded" sub="Record payments in the Payments tab"/></td></tr>}
+                  {projPayments.map((p,i)=>(
+                    <tr key={p.id||i} style={{borderBottom:i<projPayments.length-1?`1px solid ${C.border}22`:"none"}}>
+                      <td style={TD({color:C.muted})}>{p.dateFmt||p.date||"—"}</td>
+                      <td style={TD({fontFamily:FM||F,textAlign:"right",fontWeight:600,color:C.green})}>{fmtS(p.amount)}</td>
+                      <td style={TD({textAlign:"right",color:C.text})}>{p.method||"—"}</td>
+                      <td style={TD({textAlign:"right",color:C.accent,fontSize:11,fontFamily:FM||F})}>{p.invRef||"—"}</td>
+                      <td style={TD({textAlign:"right",color:C.muted,maxWidth:130,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"})}>{p.notes||"—"}</td>
+                    </tr>
+                  ))}
+                  {projPayments.length>0&&<tr style={{background:C.surf2||C.surface}}>
+                    <td colSpan={1} style={TD({fontWeight:600,fontSize:11,color:C.muted,textTransform:"uppercase"})}>Total ({projPayments.length})</td>
+                    <td style={TD({fontFamily:FM||F,textAlign:"right",fontWeight:700,color:C.green})}>{fmtS(projPayments.reduce((s,p)=>s+Number(p.amount||0),0))}</td>
+                    <td colSpan={3} style={TD()}/>
+                  </tr>}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── AI REPORT (shown after generation, any sub-page) ─────────────────── */}
+      {report&&metrics&&(
+        <div style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:14,overflow:"hidden",marginTop:20}}>
+          <div style={{background:`linear-gradient(135deg,#1e3a5f 0%,#2563eb 100%)`,padding:"24px 28px"}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:12}}>
+              <div>
+                <div style={{color:"rgba(180,210,255,0.9)",fontFamily:F,fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:1.2,marginBottom:5}}>Confidential Financial Report</div>
+                <div style={{color:"#fff",fontFamily:F,fontSize:20,fontWeight:800,marginBottom:3}}>{metrics.project.name}</div>
+                <div style={{color:"rgba(180,210,255,0.85)",fontFamily:F,fontSize:12}}>
+                  Client: <span style={{color:"#fff",fontWeight:600}}>{metrics.project.client?.company||metrics.project.client?.name||"N/A"}</span>
+                  &nbsp;·&nbsp;<span style={{background:"rgba(255,255,255,0.15)",padding:"1px 8px",borderRadius:10,fontWeight:700}}>{(metrics.project.status||"").toUpperCase()}</span>
+                </div>
+              </div>
+              <div style={{textAlign:"right"}}>
+                <div style={{color:"rgba(200,220,255,0.7)",fontFamily:F,fontSize:10,marginBottom:2}}>Generated</div>
+                <div style={{color:"#fff",fontFamily:F,fontSize:11,fontWeight:600}}>{report.generatedAt}</div>
+                <div style={{color:"rgba(200,220,255,0.7)",fontFamily:F,fontSize:10,marginTop:3}}>BuildFlow AI</div>
               </div>
             </div>
-          )}
-
-          {/* AI Narrative */}
-          <div style={{ padding:"24px 32px" }}>
-            <div style={{ display:"flex",alignItems:"center",gap:9,marginBottom:18 }}>
-              <div style={{ width:28,height:28,background:C.purpleDim,borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14 }}></div>
-              <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:13,textTransform:"uppercase",letterSpacing:.5 }}>Accountant's Analysis</div>
-              <div style={{ color:C.muted,fontFamily:F,fontSize:10,marginLeft:"auto" }}>AI-generated · {report.generatedAt}</div>
+          </div>
+          <div style={{padding:"22px 28px"}}>
+            <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:16}}>
+              <div style={{width:26,height:26,background:C.purpleDim,borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                <Ic.Reports size={13} color={C.purple}/>
+              </div>
+              <div style={{color:C.text,fontFamily:F,fontWeight:700,fontSize:13,textTransform:"uppercase",letterSpacing:.5}}>Accountant's Analysis</div>
+              <div style={{color:C.muted,fontFamily:F,fontSize:10,marginLeft:"auto"}}>{report.generatedAt}</div>
             </div>
-            <div style={{ display:"flex",flexDirection:"column",gap:12 }}>
+            <div style={{display:"flex",flexDirection:"column",gap:11}}>
               {report.paragraphs.map((para,i)=>(
-                <p key={i} style={{ color:C.text,fontFamily:F,fontSize:13,lineHeight:1.75,margin:0,
-                  ...(i===0?{ background:C.surface,borderLeft:`3px solid ${C.accent}`,borderRadius:"0 6px 6px 0",padding:"12px 16px" }:{ padding:"0 2px" }) }}>
+                <p key={i} style={{color:C.text,fontFamily:F,fontSize:13,lineHeight:1.75,margin:0,
+                  ...(i===0?{background:C.surface,borderLeft:`3px solid ${C.accent}`,borderRadius:"0 6px 6px 0",padding:"11px 14px"}:{padding:"0 2px"})}}>
                   {para}
                 </p>
               ))}
             </div>
-            <div style={{ marginTop:20,padding:"11px 16px",background:C.purpleDim,borderRadius:8,display:"flex",alignItems:"center",gap:9 }}>
-              <span></span>
-              <span style={{ color:C.muted,fontFamily:F,fontSize:11 }}>AI-generated using BuildFlow data. For formal auditing or regulatory submission, please have this reviewed by a licensed accountant.</span>
+            <div style={{marginTop:18,padding:"10px 14px",background:C.purpleDim,borderRadius:8,display:"flex",alignItems:"center",gap:8}}>
+              <Ic.Warning size={13} color={C.purple}/>
+              <span style={{color:C.muted,fontFamily:F,fontSize:11}}>AI-generated using BuildFlow data. For formal auditing or regulatory submission, please have this reviewed by a licensed accountant.</span>
             </div>
           </div>
         </div>
       )}
 
-      {/* Empty state */}
-      {!report&&!busy&&(
-        <div style={{ background:C.card,border:`2px dashed ${C.border}`,borderRadius:14,padding:"60px 40px",textAlign:"center" }}>
-          <div style={{ fontSize:52,marginBottom:16 }}></div>
-          <div style={{ color:C.text,fontFamily:F,fontWeight:600,fontSize:16,marginBottom:8 }}>Ready to Generate</div>
-          <div style={{ color:C.muted,fontFamily:F,fontSize:13,maxWidth:400,margin:"0 auto",lineHeight:1.65 }}>
-            Select a project and click <strong style={{ color:C.accent }}>Generate &amp; Download PDF</strong>.<br/>
-            BuildFlow will analyse all financial data, generate an AI accountant's report, and automatically download a professional PDF.
+      {/* ── EMPTY STATE ──────────────────────────────────────────────────────────── */}
+      {!project&&(
+        <div style={{background:C.card,border:`2px dashed ${C.border}`,borderRadius:14,padding:"52px 36px",textAlign:"center"}}>
+          <div style={{marginBottom:14,opacity:.4}}><Ic.Accountant size={48} color={C.muted}/></div>
+          <div style={{color:C.text,fontFamily:F,fontWeight:700,fontSize:17,marginBottom:8}}>No projects yet</div>
+          <div style={{color:C.muted,fontFamily:F,fontSize:13,maxWidth:380,margin:"0 auto",lineHeight:1.65}}>
+            Create a project first, then return here to generate your financial report.
           </div>
         </div>
       )}
