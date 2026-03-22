@@ -7135,7 +7135,7 @@ Address the contractor as "the Company". Flag overdue amounts if any.`;
             <div style={{overflowX:"auto"}}>
               <table style={TABLE_STYLE}>
                 <thead><tr>
-                  {["Date","Amount","Method","Invoice Ref","Notes"].map((h,i)=>(
+                  {["Date","Amount","Ccy","Method","Invoice Ref","Notes"].map((h,i)=>(
                     <th key={h} style={i===0?TH({textAlign:"left"}):TH()}>{h}</th>
                   ))}
                 </tr></thead>
@@ -7145,6 +7145,7 @@ Address the contractor as "the Company". Flag overdue amounts if any.`;
                     <tr key={p.id||i} style={{borderBottom:i<projPayments.length-1?`1px solid ${C.border}22`:"none"}}>
                       <td style={TD({color:C.muted})}>{p.dateFmt||p.date||"—"}</td>
                       <td style={TD({fontFamily:FM||F,textAlign:"right",fontWeight:600,color:C.green})}>{fmtS(p.amount)}</td>
+                      <td style={TD({textAlign:"right",color:C.muted,fontSize:11,fontWeight:600})}>{p.currency||"AED"}</td>
                       <td style={TD({textAlign:"right",color:C.text})}>{p.method||"—"}</td>
                       <td style={TD({textAlign:"right",color:C.accent,fontSize:11,fontFamily:FM||F})}>{p.invRef||"—"}</td>
                       <td style={TD({textAlign:"right",color:C.muted,maxWidth:130,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"})}>{p.notes||"—"}</td>
@@ -7153,7 +7154,7 @@ Address the contractor as "the Company". Flag overdue amounts if any.`;
                   {projPayments.length>0&&<tr style={{background:C.surf2||C.surface}}>
                     <td colSpan={1} style={TD({fontWeight:600,fontSize:11,color:C.muted,textTransform:"uppercase"})}>Total ({projPayments.length})</td>
                     <td style={TD({fontFamily:FM||F,textAlign:"right",fontWeight:700,color:C.green})}>{fmtS(projPayments.reduce((s,p)=>s+Number(p.amount||0),0))}</td>
-                    <td colSpan={3} style={TD()}/>
+                    <td colSpan={4} style={TD()}/>
                   </tr>}
                 </tbody>
               </table>
