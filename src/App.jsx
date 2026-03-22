@@ -4025,6 +4025,24 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
   const [confirmProjectPatch,setConfirmProjectPatch] = useState(null);
   const [noteText,setNoteText]       = useState("");
   const [notes,setNotes]             = useState([]);
+  const [notesReady,setNotesReady]   = useState(false);
+
+  // Load notes from localStorage on mount (keyed by project.id)
+  React.useEffect(()=>{
+    let alive = true;
+    (async()=>{
+      const r = await storage.get(`notes:${project.id}`);
+      if(alive) setNotes(r ? JSON.parse(r.value) : []);
+      if(alive) setNotesReady(true);
+    })();
+    return ()=>{ alive=false; };
+  },[project.id]);
+
+  // Save notes to localStorage whenever the array changes (skip until loaded)
+  React.useEffect(()=>{
+    if(!notesReady) return;
+    storage.set(`notes:${project.id}`, JSON.stringify(notes));
+  },[notes, notesReady, project.id]);
   const [log,setLog]                 = useState([]);
   const photoRef                     = useRef();
   const dragOver                     = useRef(null);
