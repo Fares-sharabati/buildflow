@@ -2849,10 +2849,16 @@ function TendersPage({ allProjects=[] }){
 const PAYMENT_METHODS = ["Bank Transfer","Cash","Cheque","Card","Online Transfer","Other"];
 
 function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
+  const { currency:gCur } = useCurrencyCtx();
   const [projId,setProjId]  = useState(allProjects[0]?.id||null);
   const [amount,setAmount]  = useState("");
   const [date,setDate]      = useState("");
   const [method,setMethod]  = useState(PAYMENT_METHODS[0]);
+  const [currency,setCurrency] = useState(()=>{
+    // Default to the project's most recent payment currency, then global currency
+    const p0 = allProjects[0];
+    return p0?.currency || gCur;
+  });
   const [invRef,setInvRef]  = useState("");
   const [notes,setNotes]    = useState("");
   const [receipt,setReceipt]= useState(null);
@@ -2861,6 +2867,11 @@ function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
 
   const proj = allProjects.find(p=>p.id===projId);
   const projInvoices = allInvoices.filter(i=>i.projId===projId||i.project===proj?.name);
+
+  // When project changes, update currency to match project's currency (if set)
+  React.useEffect(()=>{
+    if(proj?.currency) setCurrency(proj.currency);
+  },[projId]);
 
   const cid = useCompany();
 
@@ -2884,6 +2895,7 @@ function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
       id:`pay-${Date.now()}`,
       projId, project:proj?.name||"",
       amount:parseFloat(amount),
+      currency,
       date, dateFmt:fmtDate(date),
       method, invRef:invRef||null,
       notes:notes.trim(),
@@ -2912,6 +2924,12 @@ function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
           </div>
           <div style={{ display:"flex",gap:12 }}>
             <div style={{ flex:1 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" placeholder="0.00" value={amount} onWheel={e=>e.target.blur()} onChange={e=>{setAmount(e.target.value);setErr("");}}/></div>
+            <div style={{ width:110 }}>
+              <label style={LBL()}>Currency</label>
+              <select value={currency} onChange={e=>setCurrency(e.target.value)} style={{...INP(),cursor:"pointer",color:C.accent,fontWeight:700,border:`1px solid ${C.accent}55`}}>
+                {CURRENCIES.map(c=><option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
             <div style={{ flex:1 }}><label style={LBL()}>Payment Date *</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
           </div>
           <div><label style={LBL()}>Payment Method</label>
@@ -2972,8 +2990,10 @@ function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
 // ─── EditPaymentModal ─────────────────────────────────────────────────────────
 function EditPaymentModal({ payment, allProjects, allInvoices, onConfirm, onCancel }){
   const fmtDate=d=>d?new Date(d+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):"—";
+  const { currency:gCur } = useCurrencyCtx();
   const [projId,setProjId]  = useState(payment.projId||allProjects[0]?.id||null);
   const [amount,setAmount]  = useState(String(payment.amount||""));
+  const [currency,setCurrency] = useState(payment.currency||gCur);
   const [date,setDate]      = useState(payment.date||"");
   const [method,setMethod]  = useState(payment.method||PAYMENT_METHODS[0]);
   const [invRef,setInvRef]  = useState(payment.invRef||"");
@@ -2997,7 +3017,7 @@ function EditPaymentModal({ payment, allProjects, allInvoices, onConfirm, onCanc
     onConfirm({
       ...payment,
       projId, project:proj?.name||payment.project||"",
-      amount:parseFloat(amount), date, dateFmt:fmtDate(date),
+      amount:parseFloat(amount), currency, date, dateFmt:fmtDate(date),
       method, invRef:invRef||null, notes:notes.trim(), receipt:receipt||null,
     });
   };
@@ -3022,6 +3042,12 @@ function EditPaymentModal({ payment, allProjects, allInvoices, onConfirm, onCanc
             </div>
             <div style={{ display:"flex",gap:12 }}>
               <div style={{ flex:1 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" placeholder="0.00" value={amount} onWheel={e=>e.target.blur()} onChange={e=>{setAmount(e.target.value);setErr("");}}/></div>
+              <div style={{ width:110 }}>
+                <label style={LBL()}>Currency</label>
+                <select value={currency} onChange={e=>setCurrency(e.target.value)} style={{...INP(),cursor:"pointer",color:C.accent,fontWeight:700,border:`1px solid ${C.accent}55`}}>
+                  {CURRENCIES.map(c=><option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
               <div style={{ flex:1 }}><label style={LBL()}>Payment Date *</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
             </div>
             <div><label style={LBL()}>Payment Method</label>
@@ -3183,7 +3209,8 @@ function PaymentsPanel({ project, payments, addPayment, updatePayment, removePay
   const projPayments=payments.filter(p=>p.projId===project.id||p.project===project.name);
   const total=projPayments.reduce((s,p)=>s+p.amount,0);
   // inline form state
-  const [payAmount,setPayAmount]=useState(""); const [payDate,setPayDate]=useState("");
+  const { currency:gCur } = useCurrencyCtx();
+  const [payAmount,setPayAmount]=useState(""); const [payCurrency,setPayCurrency]=useState(project?.currency||gCur); const [payDate,setPayDate]=useState("");
   const [payMethod,setPayMethod]=useState(PAYMENT_METHODS[0]); const [payInvRef,setPayInvRef]=useState("");
   const [payNotes,setPayNotes]=useState(""); const [payReceipt,setPayReceipt]=useState(null);
   const [payErr,setPayErr]=useState("");
@@ -3211,10 +3238,11 @@ function PaymentsPanel({ project, payments, addPayment, updatePayment, removePay
         const uploaded = await uploadFile(payReceipt._rawFile, 'receipts', cid);
         if(uploaded) receiptData = { name:payReceipt.name, size:payReceipt.size, url:uploaded.url, path:uploaded.path };
       }
-      const payObj={ id:`pay-${Date.now()}`,projId:project.id,project:project.name,amount:parseFloat(payAmount),date:payDate,dateFmt:fmtD(payDate),method:payMethod,invRef:payInvRef||null,notes:payNotes.trim(),receipt:receiptData||null,recordedAt:new Date().toLocaleDateString() };
+      const payObj={ id:`pay-${Date.now()}`,projId:project.id,project:project.name,amount:parseFloat(payAmount),currency:payCurrency,date:payDate,dateFmt:fmtD(payDate),method:payMethod,invRef:payInvRef||null,notes:payNotes.trim(),receipt:receiptData||null,recordedAt:new Date().toLocaleDateString() };
       if(addPayment) await addPayment(payObj);
       setPayAmount(""); setPayDate(""); setPayMethod(PAYMENT_METHODS[0]);
       setPayInvRef(""); setPayNotes(""); setPayReceipt(null); setPayErr("");
+      setPayCurrency(project?.currency||gCur);
       setShowAdd(false);
       try{ if(onActivity) onActivity(`Payment $${parseFloat(payAmount).toLocaleString()} recorded`,"💰"); } catch(_){}
     } catch(e){
@@ -3284,6 +3312,12 @@ function PaymentsPanel({ project, payments, addPayment, updatePayment, removePay
         ?<InlineFormShell header="Record Payment" accent={C.green} saveLabel="Save Payment" onSave={submitPay} onCancel={()=>setShowAdd(false)} err={payErr} saving={paySaving}>
             <div style={{ display:"flex",gap:12 }}>
               <div style={{ flex:1 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" placeholder="0.00" value={payAmount} onChange={e=>{setPayAmount(e.target.value);setPayErr("");}}/></div>
+              <div style={{ width:110 }}>
+                <label style={LBL()}>Currency</label>
+                <select value={payCurrency} onChange={e=>setPayCurrency(e.target.value)} style={{...INP(),cursor:"pointer",color:C.accent,fontWeight:700,border:`1px solid ${C.accent}55`}}>
+                  {CURRENCIES.map(c=><option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
               <div style={{ flex:1 }}><label style={LBL()}>Payment Date *</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={payDate} onChange={e=>{setPayDate(e.target.value);setPayErr("");}}/></div>
             </div>
             <div><label style={LBL()}>Payment Method</label>

@@ -112,6 +112,7 @@ export const dbPayments = {
     project_id:   p.projId   || null,
     project_name: p.project  || '',
     amount:       Number(p.amount) || 0,
+    currency:     p.currency || 'AED',
     method:       p.method   || '',
     date:         p.date     || '',
     invoice_ref:  p.invRef   || p.invoice || '',
@@ -128,7 +129,8 @@ export const dbPayments = {
     if (patch.date !== undefined)     mapped.date         = patch.date
     if (patch.invoice !== undefined)  mapped.invoice_ref  = patch.invoice
     if (patch.notes !== undefined)    mapped.notes        = patch.notes
-    if (patch.receipt !== undefined)  mapped.receipt_data = patch.receipt
+    if (patch.receipt  !== undefined) mapped.receipt_data = patch.receipt
+    if (patch.currency !== undefined) mapped.currency     = patch.currency
     return supabase.from('payments').update(mapped).eq('id', id).eq('company_id', cid())
   },
 
@@ -311,17 +313,18 @@ export const mapInvoice = (row) => ({
 })
 
 export const mapPayment = (row) => ({
-  id:      row.id,
-  project: row.project_name || '',
-  projId:  row.project_id   || null,
-  amount:  row.amount       || 0,
-  method:  row.method       || '',
-  date:    row.date         || '',
-  dateFmt: row.date ? new Date(row.date + 'T12:00:00').toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '—',
-  invRef:  row.invoice_ref  || '',
-  invoice: row.invoice_ref  || '',
-  notes:   row.notes        || '',
-  receipt: row.receipt_data || null,
+  id:       row.id,
+  project:  row.project_name || '',
+  projId:   row.project_id   || null,
+  amount:   row.amount       || 0,
+  currency: row.currency     || 'AED',
+  method:   row.method       || '',
+  date:     row.date         || '',
+  dateFmt:  row.date ? new Date(row.date + 'T12:00:00').toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '—',
+  invRef:   row.invoice_ref  || '',
+  invoice:  row.invoice_ref  || '',
+  notes:    row.notes        || '',
+  receipt:  row.receipt_data || null,
 })
 
 export const mapTask = (row) => ({
