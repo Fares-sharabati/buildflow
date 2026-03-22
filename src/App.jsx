@@ -705,7 +705,8 @@ function RowBtn({ type, onClick, children }){
 
 /** Wrapper div that spaces a group of RowBtns consistently */
 function RowActions({ children, align="left" }){
-  return <div style={{ display:"flex", gap:4, alignItems:"center", justifyContent:align==="right"?"flex-end":"flex-start" }}>{children}</div>;
+  const justify = align==="right"?"flex-end":align==="center"?"center":"flex-start";
+  return <div style={{ display:"flex", gap:4, alignItems:"center", justifyContent:justify }}>{children}</div>;
 }
 
 /**
@@ -814,8 +815,8 @@ const ROW_HOVER = {
   onMouseLeave: e => e.currentTarget.style.background = "transparent",
 };
 // ─── Actions column: fixed width, right-aligned ───────────────────────────────
-const TH_ACT = () => TH({ width:140, minWidth:140, textAlign:"right", paddingRight:14 });
-const TD_ACT = () => TD({ width:140, minWidth:140, textAlign:"right", paddingRight:10, verticalAlign:"middle" });
+const TH_ACT = () => TH({ width:140, minWidth:140, textAlign:"center", paddingRight:0 });
+const TD_ACT = () => TD({ width:140, minWidth:140, textAlign:"center", padding:"8px 10px", verticalAlign:"middle" });
 
 // ── Action column constants — used in every table ─────────────────────────────
 const ACT_W  = 140; // fixed pixel width keeps all action columns aligned
@@ -1255,8 +1256,8 @@ function FilePreviewModal({ file,onClose }){
 
         {/* ── Header bar ── */}
         <div style={{ display:"flex",alignItems:"center",gap:12,padding:"14px 20px",borderBottom:`1px solid ${C.border}`,flexShrink:0 }}>
-          <div style={{ width:36,height:36,background:isPdf?C.redDim:isImg?C.blueDim:C.accentDim,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0 }}>
-            {isPdf?"PDF":isImg?"IMG":"FILE"}
+          <div style={{ width:36,height:36,background:isPdf?C.redDim:isImg?C.blueDim:C.accentDim,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
+            {isPdf?<Ic.Invoices size={18} color={C.red}/>:isImg?<Ic.Attach size={18} color={C.blue}/>:<Ic.Attach size={18} color={C.accent}/>}
           </div>
           <div style={{ flex:1,minWidth:0 }}>
             <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:14,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{name}</div>
@@ -1264,11 +1265,11 @@ function FilePreviewModal({ file,onClose }){
           </div>
           {dataUrl&&(
             <a href={dataUrl} download={name}
-              style={{ background:C.accentDim,color:C.accent,border:`1px solid ${C.accentMid}`,padding:"7px 15px",borderRadius:7,fontFamily:F,fontWeight:700,fontSize:12,textDecoration:"none",flexShrink:0,display:"flex",alignItems:"center",gap:5 }}>
-              ↓ Download
+              style={{ background:C.accent,color:"#fff",border:"none",padding:"7px 14px",borderRadius:7,fontFamily:F,fontWeight:600,fontSize:12,textDecoration:"none",flexShrink:0,display:"flex",alignItems:"center",gap:5,boxShadow:C.sh1||"0 1px 3px rgba(0,0,0,.1)" }}>
+              <Ic.Attach size={12} color="#fff"/> Download
             </a>
           )}
-          <button onClick={onClose} style={{ background:"none",border:"none",color:C.muted,fontSize:22,cursor:"pointer",flexShrink:0,lineHeight:1,padding:4 }}></button>
+          <button onClick={onClose} style={{ background:"transparent",border:`1px solid ${C.border}`,color:C.muted,width:28,height:28,borderRadius:6,cursor:"pointer",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center" }}><Ic.X size={12} color={C.muted}/></button>
         </div>
 
         {/* ── Preview body ── */}
@@ -1292,8 +1293,8 @@ function FilePreviewModal({ file,onClose }){
               </div>
               {dataUrl&&(
                 <a href={dataUrl} download={name}
-                  style={{ background:C.accent,color:"#000",padding:"12px 32px",borderRadius:9,fontFamily:F,fontWeight:700,fontSize:14,textDecoration:"none",display:"inline-flex",alignItems:"center",gap:7 }}>
-                  ↓ Download to Open
+                  style={{ background:C.accent,color:"#fff",padding:"10px 28px",borderRadius:8,fontFamily:F,fontWeight:600,fontSize:13,textDecoration:"none",display:"inline-flex",alignItems:"center",gap:7,boxShadow:C.sh1||"0 1px 3px rgba(0,0,0,.1)" }}>
+                  <Ic.Attach size={14} color="#fff"/> Download to Open
                 </a>
               )}
             </div>
@@ -1531,10 +1532,9 @@ function AddInvoiceFormModal({ project, onConfirm, onCancel, allInvoices=[] }){
 }
 
 // ─── Module Panels ─────────────────────────────────────────────────────────────
-function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobalInvoice, onUpdateGlobalInvoice, allInvoices=[] }){
+function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobalInvoice, onUpdateGlobalInvoice, allInvoices=[], onPreviewFile }){
   const cid = useCompany();
   // ─── SINGLE SOURCE OF TRUTH: global store only (no useFiles for invoices) ───
-  const [preview,setPreview]     = useState(null);
   const [mode,setMode]           = useState("list"); // "list" | "add" | "edit"
   const [editTarget,setEditTarget] = useState(null); // invoice being edited
   const [confirmDel,setConfirmDel] = useState(null);
@@ -1742,8 +1742,6 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
 
   return(
     <div>
-      {preview&&<FilePreviewModal file={preview} onClose={()=>setPreview(null)}/>}
-
       {confirmDel&&(
         <ConfirmDialog title="Delete Invoice?"
           message={`Delete invoice "${confirmDel.iid}"? This cannot be undone.`}
@@ -1777,8 +1775,8 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
                 <td style={TD({color:row.st==="overdue"?C.red:C.muted,fontSize:11,whiteSpace:"nowrap"})}>{row.dd||"—"}</td>
                 <td style={TD({padding:"10px 12px"})}><button onClick={()=>cycle(row)} style={{ background:st.c+"22",color:st.c,border:`1px solid ${st.c}55`,padding:"3px 9px",borderRadius:5,fontFamily:F,fontSize:11,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap" }}>{st.l}</button></td>
                 <td style={TD_ACT()}>
-                  <RowActions align="right">
-                    {(row.url||row.dataUrl)&&<RowBtn type="view" onClick={()=>setPreview(row)}>View</RowBtn>}
+                  <RowActions align="center">
+                    {(row.url||row.dataUrl)&&<RowBtn type="view" onClick={()=>onPreviewFile&&onPreviewFile(row)}>View</RowBtn>}
                     <RowBtn type="edit" onClick={()=>openEdit(row)}>Edit</RowBtn>
                     <RowBtn type="delete" onClick={()=>setConfirmDel(row)}>Delete</RowBtn>
                   </RowActions>
@@ -3059,7 +3057,14 @@ function PayReceiptBtn({ receipt }){
   const [show,setShow]=useState(false);
   return(<>
     {show&&<FilePreviewModal file={receipt?{...receipt,dataUrl:receipt.url||receipt.dataUrl}:null} onClose={()=>setShow(false)}/>}
-    <button onClick={()=>setShow(true)} style={{ background:"transparent",color:C.blue,border:`1px solid ${C.blue}33`,padding:"2px 8px",borderRadius:4,fontFamily:F,fontSize:11,cursor:"pointer" }}>View</button>
+    <button onClick={()=>setShow(true)}
+      style={{ background:C.surf2||C.surface, color:C.text2||C.text,
+        border:`1px solid ${C.border}`, padding:"5px 10px",
+        borderRadius:6, fontFamily:F, fontSize:12, fontWeight:500,
+        cursor:"pointer", display:"inline-flex", alignItems:"center",
+        gap:4, whiteSpace:"nowrap", transition:"opacity .15s" }}>
+      View
+    </button>
   </>);
 }
 // Payments panel inside project detail
@@ -3146,7 +3151,7 @@ function ContractsPanel({ project, onActivity }){
 }
 
 
-function PaymentsPanel({ project, payments, addPayment, updatePayment, removePayment, allProjects, allInvoices, onActivity }){
+function PaymentsPanel({ project, payments, addPayment, updatePayment, removePayment, allProjects, allInvoices, onActivity, onPreviewFile }){
   const cid = useCompany();
   const [showAdd,setShowAdd]=useState(false);
   const [editingPayment,setEditingPayment]=useState(null);
@@ -3236,8 +3241,8 @@ function PaymentsPanel({ project, payments, addPayment, updatePayment, removePay
                 <td style={TD({color:C.accent,fontWeight:600,fontSize:11})}>{resolveInvRef(p.invRef,allInvoices)}</td>
                 <td style={TD({color:C.muted,maxWidth:120,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"})}>{p.notes||"—"}</td>
                 <td style={TD_ACT()}>
-                  <RowActions align="right">
-                    {p.receipt&&<PayReceiptBtn receipt={p.receipt}/>}
+                  <RowActions align="center">
+                    {p.receipt&&<RowBtn type="view" onClick={()=>onPreviewFile&&onPreviewFile({...p.receipt,dataUrl:p.receipt.url||p.receipt.dataUrl})}>View</RowBtn>}
                     <RowBtn type="edit" onClick={()=>setEditingPayment(p)}>Edit</RowBtn>
                     <RowBtn type="delete" onClick={()=>setConfirmDeletePay(p)}>Delete</RowBtn>
                   </RowActions>
@@ -3714,6 +3719,24 @@ function useModuleOrder(projectId){
   return { order:order||DEFAULT_MODULE_ORDER, ready:order!==null, setOrder:save };
 }
 
+// ─── Nav order persistence ───────────────────────────────────────────────────
+const DEFAULT_NAV_ORDER = ["dashboard","projects","invoicing","payments","team","calendar","tasks","tenders","reports","prices","accountant"];
+
+function useNavOrder(){
+  const [order, setOrder] = useState(null);
+  useEffect(()=>{
+    try{
+      const saved = localStorage.getItem("bf:nav-order");
+      setOrder(saved ? JSON.parse(saved) : DEFAULT_NAV_ORDER);
+    }catch{ setOrder(DEFAULT_NAV_ORDER); }
+  },[]);
+  const save = (next) => {
+    setOrder(next);
+    try{ localStorage.setItem("bf:nav-order", JSON.stringify(next)); }catch{}
+  };
+  return { order: order||DEFAULT_NAV_ORDER, setOrder: save };
+}
+
 // ─── Draggable Module Card ─────────────────────────────────────────────────────
 function DraggableModCard({ id, icon, title, sub, color, dim, children, onDragStart, onDragOver, onDrop, isDragOver }){
   const [open,setOpen] = useState(false);
@@ -3937,6 +3960,7 @@ function PhotoCard({ photo, comments, onOpen, onDelete }){
 // ─── Project Detail Page ───────────────────────────────────────────────────────
 function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPayment,updatePayment,removePayment,allProjects=[],allInvoices=[],addInvoice,removeGlobalInvoice,updateGlobalInvoice,onUpdateProject,onLog,profile }){ 
   const [contactOpen,setContactOpen] = useState(false);
+  const [previewFile,setPreviewFile]  = useState(null);  // hoisted above DraggableModCard to escape transform stacking context
   const [editingProject,setEditingProject] = useState(false);
   const [confirmProjectPatch,setConfirmProjectPatch] = useState(null);
   const [noteText,setNoteText]       = useState("");
@@ -3998,16 +4022,17 @@ function ProjectPage({ project,onBack,onOpenTeam,extraLog=[],payments=[],addPaym
 
   // Module definitions — rendered in persisted order
   const MODULE_DEFS = {
-    invoices: { icon:<Ic.Receipt size={22} color={C.accent}/>, title:"Invoices",  color:C.accent, dim:C.accentDim, sub:`${invCount} invoice${invCount!==1?"s":""}`, content:<InvoicesPanel project={project} onActivity={pushLog} onAddGlobalInvoice={addInvoice} onUpdateGlobalInvoice={updateGlobalInvoice} onRemoveGlobalInvoice={removeGlobalInvoice} allInvoices={allInvoices}/> },
-    payments: { icon:"pay", title:"Payments",  color:C.green,  dim:C.greenDim,  sub:`${payCount} payment${payCount!==1?"s":""}`, content:<PaymentsPanel project={project} payments={projectPayments} addPayment={handleAddPayment} updatePayment={updatePayment} removePayment={removePayment} allProjects={allProjects} allInvoices={allInvoices} onActivity={pushLog}/> },
-    plans:    { icon:"plan", title:"Plans",     color:C.blue,   dim:C.blueDim,   sub:`${planCount} document${planCount!==1?"s":""}`, content:<PlansPanel project={project} onActivity={pushLog}/> },
-    contracts:{ icon:"contract", title:"Contracts", color:C.purple, dim:C.purpleDim, sub:"Official documents",                                 content:<ContractsPanel project={project} onActivity={pushLog}/> },
-    team:     { icon:"team", title:"Team",      color:C.green,  dim:C.greenDim,  sub:`${teamCount} member${teamCount!==1?"s":""}`, content:<TeamPanel  project={project} onOpenTeamPage={onOpenTeam}/> },
+    invoices: { icon:<Ic.Invoices  size={22} color={C.accent}/>, title:"Invoices",  color:C.accent, dim:C.accentDim, sub:`${invCount} invoice${invCount!==1?"s":""}`,    content:<InvoicesPanel project={project} onActivity={pushLog} onAddGlobalInvoice={addInvoice} onUpdateGlobalInvoice={updateGlobalInvoice} onRemoveGlobalInvoice={removeGlobalInvoice} allInvoices={allInvoices} onPreviewFile={setPreviewFile}/> },
+    payments: { icon:<Ic.Payments  size={22} color={C.green}/>,  title:"Payments",  color:C.green,  dim:C.greenDim,  sub:`${payCount} payment${payCount!==1?"s":""}`,    content:<PaymentsPanel project={project} payments={projectPayments} addPayment={handleAddPayment} updatePayment={updatePayment} removePayment={removePayment} allProjects={allProjects} allInvoices={allInvoices} onActivity={pushLog} onPreviewFile={setPreviewFile}/> },
+    plans:    { icon:<Ic.Reports   size={22} color={C.blue}/>,   title:"Plans",     color:C.blue,   dim:C.blueDim,   sub:`${planCount} document${planCount!==1?"s":""}`,  content:<PlansPanel project={project} onActivity={pushLog}/> },
+    contracts:{ icon:<Ic.Tenders   size={22} color={C.purple}/>, title:"Contracts", color:C.purple, dim:C.purpleDim, sub:"Official documents",                             content:<ContractsPanel project={project} onActivity={pushLog}/> },
+    team:     { icon:<Ic.Team      size={22} color={C.green}/>,  title:"Team",      color:C.green,  dim:C.greenDim,  sub:`${teamCount} member${teamCount!==1?"s":""}`,    content:<TeamPanel  project={project} onOpenTeamPage={onOpenTeam}/> },
   };
 
   return(
     <div>
       {contactOpen&&<ContactModal client={project.client} onClose={()=>setContactOpen(false)}/>}
+      {previewFile&&<FilePreviewModal file={previewFile} onClose={()=>setPreviewFile(null)}/>}
       {editingProject&&<EditProjectModal project={project} onConfirm={patch=>{ setEditingProject(false); setConfirmProjectPatch(patch); }} onCancel={()=>setEditingProject(false)}/>}
       {confirmProjectPatch&&(
         <ConfirmDialog
@@ -4738,21 +4763,31 @@ function ProjectsList({ onSelect, allProjects, onAddProject, onUpdateProject, on
 // ─── Dashboard ─────────────────────────────────────────────────────────────────
 // ─── Dashboard widget types ───────────────────────────────────────────────────
 const WIDGET_TYPES = [
-  { id:"projects",   label:"Project Progress",    icon:"proj" },
-  { id:"invoices",   label:"Recent Invoices",     icon:"inv" },
-  { id:"payments",   label:"Recent Payments",     icon:"pay" },
-  { id:"tasks",      label:"Upcoming Tasks",      icon:"task" },
-  { id:"activity",   label:"Activity Log",        icon:"log" },
-  { id:"calendar",   label:"Upcoming Events",     icon:"cal" },
+  { id:"projects",   label:"Project Progress",    Icon: ({c})=><Ic.Projects  size={14} color={c}/> },
+  { id:"invoices",   label:"Recent Invoices",     Icon: ({c})=><Ic.Invoices  size={14} color={c}/> },
+  { id:"payments",   label:"Recent Payments",     Icon: ({c})=><Ic.Payments  size={14} color={c}/> },
+  { id:"tasks",      label:"Upcoming Tasks",      Icon: ({c})=><Ic.Tasks     size={14} color={c}/> },
+  { id:"activity",   label:"Activity Log",        Icon: ({c})=><Ic.Reports   size={14} color={c}/> },
+  { id:"calendar",   label:"Upcoming Events",     Icon: ({c})=><Ic.Calendar  size={14} color={c}/> },
 ];
 
 function DashWidget({ widgetId, type, allProjects, allInvoices, payments, tasks, globalLog, onSelect, onChangeType }){
   const [showPicker,setShowPicker]=useState(false);
   const wt=WIDGET_TYPES.find(w=>w.id===type)||WIDGET_TYPES[0];
 
-  // Normalise activity log icons — some entries use codes instead of emoji
-  const iconMap = { "inv":"🧾","del":"🗑️","edit":"✏️","PAY":"💰","pay":"💰","🏗":"🏗","log":"📋" };
-  const normIcon = (ic) => (ic && ic.length <= 4 && iconMap[ic]) ? iconMap[ic] : (ic||"");
+  // Map activity log icon codes to Ic.* SVG components — no emojis
+  const getActivityIcon = (ic) => {
+    const code = (ic||"").toLowerCase().replace(/[^a-z]/g,"").slice(0,4);
+    if(code==="inv")  return <Ic.Invoices size={13} color={C.accent}/>;
+    if(code==="pay")  return <Ic.Payments size={13} color={C.green}/>;
+    if(code==="del")  return <Ic.Delete   size={13} color={C.red}/>;
+    if(code==="edit") return <Ic.Pen      size={13} color={C.blue}/>;
+    if(code==="team") return <Ic.Team     size={13} color={C.blue}/>;
+    if(code==="plan") return <Ic.Reports  size={13} color={C.blue}/>;
+    if(code==="proj") return <Ic.Projects size={13} color={C.accent}/>;
+    if(code==="cont") return <Ic.Tenders  size={13} color={C.purple}/>;
+    return <Ic.Reports size={13} color={C.muted}/>;
+  };
 
   const renderContent=()=>{
     if(type==="projects") return(
@@ -4870,7 +4905,7 @@ function DashWidget({ widgetId, type, allProjects, allInvoices, payments, tasks,
         {globalLog.length===0&&<div style={{ color:C.muted,fontFamily:F,fontSize:12,textAlign:"center",padding:"12px 0" }}>No activity yet</div>}
         {globalLog.slice(0,7).map(e=>(
           <div key={e.id} style={{ display:"flex",gap:10,alignItems:"flex-start",marginBottom:9,paddingBottom:9,borderBottom:`1px solid ${C.border}22` }}>
-            <div style={{ width:28,height:28,borderRadius:7,background:C.surface,border:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,flexShrink:0 }}>{normIcon(e.icon)}</div>
+            <div style={{ width:28,height:28,borderRadius:7,background:C.surface,border:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,flexShrink:0 }}>{getActivityIcon(e.icon)}</div>
             <div style={{ flex:1,minWidth:0 }}>
               <div style={{ color:C.text,fontFamily:F,fontSize:12,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>{e.action}</div>
               <div style={{ color:C.muted,fontFamily:F,fontSize:11 }}>{e.user||"User"} · {e.time||e.detail}</div>
@@ -4930,7 +4965,7 @@ function DashWidget({ widgetId, type, allProjects, allInvoices, payments, tasks,
     <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"18px 22px",position:"relative" }}>
       <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14 }}>
         <div style={{ display:"flex",alignItems:"center",gap:7 }}>
-          <span style={{ fontSize:16 }}>{wt.icon}</span>
+          <span style={{ display:"inline-flex",alignItems:"center" }}>{wt.Icon&&<wt.Icon c={C.accent}/>}</span>
           <span style={{ color:C.text,fontFamily:F,fontSize:13,fontWeight:700,textTransform:"uppercase",letterSpacing:.5 }}>{wt.label}</span>
         </div>
         <button onClick={()=>setShowPicker(p=>!p)} title="Change widget" style={{ background:"transparent",border:`1px solid ${C.border}`,borderRadius:6,padding:"3px 9px",color:C.muted,fontFamily:F,fontSize:11,cursor:"pointer" }}>Customize</button>
@@ -4941,7 +4976,7 @@ function DashWidget({ widgetId, type, allProjects, allInvoices, payments, tasks,
           {WIDGET_TYPES.map(w=>(
             <button key={w.id} onClick={()=>{ onChangeType(w.id); setShowPicker(false); }}
               style={{ display:"flex",alignItems:"center",gap:8,width:"100%",padding:"8px 10px",borderRadius:7,background:type===w.id?C.accentDim:"transparent",border:"none",color:type===w.id?C.accent:C.text,fontFamily:F,fontSize:12,fontWeight:type===w.id?700:500,cursor:"pointer",textAlign:"left",marginBottom:2 }}>
-              <span>{w.icon}</span>{w.label}
+              {w.Icon&&<w.Icon c={C.muted}/>}<span style={{marginLeft:4}}>{w.label}</span>
             </button>
           ))}
         </div>
@@ -6695,6 +6730,9 @@ function AppInner({ session, profile, onLogout }){
   const { theme, isDark, toggleTheme } = useTheme();
   ThemeRef.current = theme;
   const [tab,setTab]=useState("projects");
+  const { order:navOrder, setOrder:setNavOrder } = useNavOrder();
+  const navDragItem = React.useRef(null);
+  const navDragOver = React.useRef(null);
   const [project,setProject]=useState(null);
   const [subView,setSubView]=useState("list");
   const allProjectsRef = React.useRef([]);
@@ -6845,44 +6883,90 @@ function AppInner({ session, profile, onLogout }){
         <nav style={{ flex:1,padding:"8px 0",overflowY:"auto" }}>
           {/* Section label helper */}
           {(()=>{
-            const allNav=[
+            // Default group membership — used for section labels only, not for restricting drag
+            const GROUP = {
+              dashboard:"Workspace",projects:"Workspace",team:"Workspace",calendar:"Workspace",tasks:"Workspace",
+              invoicing:"Finance",payments:"Finance",accountant:"Finance",
+              tenders:"Tools",reports:"Tools",prices:"Tools",users:"Tools",
+            };
+            const adminExtra = (profile&&(profile.role==="superadmin"||profile.role==="admin"))
+              ? [{id:"users",label:"User Management",IcComp:({c})=><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/><circle cx="19" cy="9" r="2.5"/><path d="M22 14h-1.5"/></svg>}] : [];
+            const allNav = [
               ...NAV.filter(n=>!profile||!profile.permissions||profile.permissions[n.id]!==false),
-              ...(profile&&(profile.role==="superadmin"||profile.role==="admin")?[{id:"users",label:"User Management",IcComp:({c})=><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/><circle cx="19" cy="9" r="2.5"/><path d="M22 14h-1.5"/></svg>}]:[])
+              ...adminExtra
             ];
-            const sections=[
-              { label:"Workspace", ids:["dashboard","projects","team","calendar","tasks"] },
-              { label:"Finance",   ids:["invoicing","payments","accountant"] },
-              { label:"Tools",     ids:["tenders","reports","prices","users"] },
-            ];
-            return sections.map(sec=>{
-              const items=allNav.filter(n=>sec.ids.includes(n.id));
-              if(!items.length) return null;
+            // Apply persisted order, append any new tabs not yet in saved order
+            const ordered = [
+              ...navOrder.filter(id=>allNav.some(n=>n.id===id)),
+              ...allNav.filter(n=>!navOrder.includes(n.id))
+            ].map(id=>allNav.find(n=>n.id===id)).filter(Boolean);
+
+            // Drag handlers — all logic preserved
+            const handleNavDragStart = (id) => { navDragItem.current = id; };
+            const handleNavDragOver  = (id) => { navDragOver.current = id; };
+            const handleNavDrop      = (id) => {
+              if(!navDragItem.current || navDragItem.current===id) return;
+              const cur = navOrder.filter(i=>allNav.some(n=>n.id===i));
+              const from = cur.indexOf(navDragItem.current);
+              const to   = cur.indexOf(id);
+              if(from<0||to<0){ navDragItem.current=null; return; }
+              const next=[...cur];
+              next.splice(to, 0, next.splice(from,1)[0]);
+              setNavOrder(next);
+              navDragItem.current = null;
+            };
+
+            return ordered.map((n, idx)=>{
+              const active    = tab===n.id;
+              const thisGroup = GROUP[n.id]||"Tools";
+              const prevGroup = idx>0 ? (GROUP[ordered[idx-1].id]||"Tools") : null;
+              const showLabel = thisGroup !== prevGroup; // show section label when group changes
               return(
-                <div key={sec.label}>
-                  <div style={{ padding:"12px 16px 4px",color:C.muted,fontFamily:F,
-                    fontSize:10,fontWeight:600,textTransform:"uppercase",letterSpacing:".8px" }}>
-                    {sec.label}
+                <div key={n.id}
+                  draggable
+                  onDragStart={e=>{ e.stopPropagation(); handleNavDragStart(n.id); }}
+                  onDragOver={e=>{ e.preventDefault(); handleNavDragOver(n.id); }}
+                  onDrop={e=>{ e.preventDefault(); handleNavDrop(n.id); }}>
+                  {/* Section label — appears only when group changes */}
+                  {showLabel&&(
+                    <div style={{ padding:"12px 16px 4px",color:C.muted,fontFamily:F,
+                      fontSize:10,fontWeight:600,textTransform:"uppercase",letterSpacing:".8px" }}>
+                      {thisGroup}
+                    </div>
+                  )}
+                  {/* Nav button — drag handle appears only on hover */}
+                  <div
+                    onMouseEnter={e=>{
+                      const handle=e.currentTarget.querySelector(".nav-drag-handle");
+                      if(handle) handle.style.opacity="0.5";
+                    }}
+                    onMouseLeave={e=>{
+                      const handle=e.currentTarget.querySelector(".nav-drag-handle");
+                      if(handle) handle.style.opacity="0";
+                    }}>
+                    <button onClick={()=>switchTab(n.id)}
+                      style={{ display:"flex",alignItems:"center",gap:9,width:"100%",
+                        padding:"7px 16px",borderRadius:0,marginBottom:0,
+                        cursor:"pointer",textAlign:"left",
+                        fontFamily:F,fontSize:13,fontWeight:active?600:400,
+                        background:active?(C.accentDim||C.blueDim):"transparent",
+                        color:active?C.accent:(C.text3||C.muted),
+                        borderTop:"none",borderRight:"none",borderBottom:"none",
+                        borderLeft:active?`3px solid ${C.accent}`:"3px solid transparent",
+                        paddingLeft:active?"13px":"16px",
+                        transition:"all .13s" }}>
+                      {/* Drag handle — hidden by default, revealed on row hover */}
+                      <span
+                        className="nav-drag-handle"
+                        title="Drag to reorder"
+                        style={{ display:"flex",flexDirection:"column",gap:2,flexShrink:0,
+                          opacity:0,marginRight:1,pointerEvents:"none",transition:"opacity .15s" }}>
+                        {[0,1,2].map(i=><span key={i} style={{ width:10,height:1.5,background:C.muted,borderRadius:1,display:"block" }}/>)}
+                      </span>
+                      {n.IcComp && <n.IcComp c={active?C.accent:(C.muted||"#94a3b8")}/>}
+                      <span>{n.label}</span>
+                    </button>
                   </div>
-                  {items.map(n=>{
-                    const active=tab===n.id;
-                    return(
-                      <button key={n.id} onClick={()=>switchTab(n.id)}
-                        style={{ display:"flex",alignItems:"center",gap:9,width:"100%",
-                          padding:"7px 16px",
-                          borderRadius:0,marginBottom:0,
-                          cursor:"pointer",textAlign:"left",
-                          fontFamily:F,fontSize:13,fontWeight:active?600:400,
-                          background:active?(C.accentDim||C.blueDim):"transparent",
-                          color:active?C.accent:(C.text3||C.muted),
-                          borderTop:"none",borderRight:"none",borderBottom:"none",
-                          borderLeft:active?`3px solid ${C.accent}`:"3px solid transparent",
-                          paddingLeft:active?"13px":"16px",
-                          transition:"all .13s" }}>
-                        {n.IcComp && <n.IcComp c={active?C.accent:(C.muted||"#94a3b8")}/>}
-                        <span>{n.label}</span>
-                      </button>
-                    );
-                  })}
                 </div>
               );
             });
