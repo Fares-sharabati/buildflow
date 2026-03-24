@@ -325,8 +325,26 @@ const daysRemaining = (project) => {
 
 /** Project progress: use stored progress or derive from status */
 const calcProgress = (project) => {
-  if (project?.progress != null && project.progress >= 0) return Number(project.progress) || 0;
-  const map = { quoting:0, active:45, 'on-hold':30, completed:100 };
+  // Completed or explicit override > 0 always wins
+  if (project?.status === 'completed') return 100;
+  if (project?.progress > 0) return Math.min(100, Number(project.progress));
+  // Date-based calculation when both dates are present
+  const start = project?.startDateISO || project?.startDate;
+  const due   = project?.due;
+  if (start && due) {
+    try {
+      const s   = new Date(start + (start.length === 10 ? 'T12:00:00' : ''));
+      const d   = new Date(due   + (due.length   === 10 ? 'T12:00:00' : ''));
+      const now = new Date();
+      const total = d - s;
+      if (total > 0) {
+        const elapsed = now - s;
+        return Math.min(99, Math.max(0, Math.round(elapsed / total * 100)));
+      }
+    } catch {}
+  }
+  // Fallback: status-based estimate
+  const map = { quoting:0, active:10, 'on-hold':10 };
   return map[project?.status] ?? 0;
 };
 
@@ -1212,8 +1230,8 @@ function InvModal({ pending,onConfirm,onCancel }){
                   <div style={{ flex:1 }}><label style={LBL()}>Invoice #</label><input style={INP()} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="INV-001"/></div>
                 </div>
                 <div style={{ display:"flex",gap:12 }}>
-                  <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
-                  <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
+                  <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><input style={{ ...INP() }}  type="date" value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
+                  <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><input style={{ ...INP() }}  type="date" value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
                 </div>
                 <div style={{ display:"flex",gap:12 }}>
                   <div style={{ flex:2 }}><label style={LBL()}>Total Amount</label><input style={INP()} type="number" value={amount} onChange={e=>setAmount(e.target.value)} placeholder="0.00"/></div>
@@ -1403,7 +1421,7 @@ function AddTaskModal({ onConfirm,onCancel,allMembers,allProjects=[] }){
               {allProjects.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}
             </select>
           </div>
-          <div><label style={LBL()}>Due Date *</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
+          <div><label style={LBL()}>Due Date *</label><input style={{ ...INP() }}  type="date" value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
         </div>
         <div style={{ display:"flex",gap:10,marginTop:22 }}>
           <Btn onClick={submit}>Assign Task</Btn>
@@ -1486,8 +1504,8 @@ function AddInvoiceFormModal({ project, onConfirm, onCancel, allInvoices=[] }){
             </div>
             {/* Dates */}
             <div style={{ display:"flex",gap:14 }}>
-              <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
-              <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><input style={{ ...INP() }}  type="date" value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><input style={{ ...INP() }}  type="date" value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
             </div>
             {/* Amount + Currency */}
             <div style={{ display:"flex",gap:14 }}>
@@ -1741,8 +1759,8 @@ function InvoicesPanel({ project, onActivity, onAddGlobalInvoice, onRemoveGlobal
       <div style={{ flex:1 }}><label style={LBL()}>Invoice #</label><input style={INP()} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="INV-001"/></div>
     </div>
     <div style={{ display:"flex",gap:12 }}>
-      <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><input style={{...INP(),colorScheme:"dark"}} type="date" value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
-      <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><input style={{...INP(),colorScheme:"dark"}} type="date" value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
+      <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><input style={{...INP() }}  type="date" value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
+      <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><input style={{...INP() }}  type="date" value={dueDate} onChange={e=>setDueDate(e.target.value)}/></div>
     </div>
     <div style={{ display:"flex",gap:12 }}>
       <div style={{ flex:2 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setFormErr("");}} onWheel={e=>e.target.blur()} placeholder="0.00"/></div>
@@ -2931,7 +2949,7 @@ function AddPaymentModal({ allProjects, allInvoices, onConfirm, onCancel }){
                 {CURRENCIES.map(c=><option key={c} value={c}>{c}</option>)}
               </select>
             </div>
-            <div style={{ flex:1 }}><label style={LBL()}>Payment Date *</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
+            <div style={{ flex:1 }}><label style={LBL()}>Payment Date *</label><input style={{ ...INP() }}  type="date" value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
           </div>
           <div><label style={LBL()}>Payment Method</label>
             <select value={method} onChange={e=>setMethod(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
@@ -3049,7 +3067,7 @@ function EditPaymentModal({ payment, allProjects, allInvoices, onConfirm, onCanc
                   {CURRENCIES.map(c=><option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
-              <div style={{ flex:1 }}><label style={LBL()}>Payment Date *</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Payment Date *</label><input style={{ ...INP() }}  type="date" value={date} onChange={e=>{setDate(e.target.value);setErr("");}}/></div>
             </div>
             <div><label style={LBL()}>Payment Method</label>
               <select value={method} onChange={e=>setMethod(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
@@ -3319,7 +3337,7 @@ function PaymentsPanel({ project, payments, addPayment, updatePayment, removePay
                   {CURRENCIES.map(c=><option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
-              <div style={{ flex:1 }}><label style={LBL()}>Payment Date *</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={payDate} onChange={e=>{setPayDate(e.target.value);setPayErr("");}}/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Payment Date *</label><input style={{ ...INP() }}  type="date" value={payDate} onChange={e=>{setPayDate(e.target.value);setPayErr("");}}/></div>
             </div>
             <div><label style={LBL()}>Payment Method</label>
               <select value={payMethod} onChange={e=>setPayMethod(e.target.value)} style={{ ...INP(),cursor:"pointer" }}>
@@ -3484,8 +3502,8 @@ function ReportPage({ tasks, allProjects, allInvoices }){
         <SLabel>Report Configuration</SLabel>
         <div style={{ display:"flex",gap:16,flexWrap:"wrap",alignItems:"flex-end" }}>
           <div style={{ flex:2,minWidth:200 }}><label style={LBL()}>Project</label><select value={projId||""} onChange={e=>{setProjId(e.target.value);setReport(null);}} style={{ ...INP(),cursor:"pointer" }}>{(allProjects||[]).map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></div>
-          <div style={{ flex:1,minWidth:140 }}><label style={LBL()}>From</label><input type="date" value={from} onChange={e=>{setFrom(e.target.value);setReport(null);}} style={{ ...INP(),colorScheme:"dark" }}/></div>
-          <div style={{ flex:1,minWidth:140 }}><label style={LBL()}>To</label><input type="date" value={to} onChange={e=>{setTo(e.target.value);setReport(null);}} style={{ ...INP(),colorScheme:"dark" }}/></div>
+          <div style={{ flex:1,minWidth:140 }}><label style={LBL()}>From</label><input type="date" value={from} onChange={e=>{setFrom(e.target.value);setReport(null);}} style={INP()}/></div>
+          <div style={{ flex:1,minWidth:140 }}><label style={LBL()}>To</label><input type="date" value={to} onChange={e=>{setTo(e.target.value);setReport(null);}} style={INP()}/></div>
           <button onClick={generate} disabled={generating} style={{ background:generating?"transparent":C.accent,color:generating?C.accent:"#000",border:generating?`1px solid ${C.accent}44`:"none",padding:"10px 28px",borderRadius:8,fontFamily:F,fontWeight:700,fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",gap:8,flexShrink:0,height:40 }}>
             {generating?<><div style={{ width:15,height:15,border:"2px solid #f59e0b44",borderTopColor:C.accent,borderRadius:"50%",animation:"spin .7s linear infinite" }}/>Generating…</>:"Generate Report"}
           </button>
@@ -3739,7 +3757,7 @@ function CalendarPage({ allInvoices,tasks,onAddTask,projectEvents=[],payments=[]
       {view==="day"&&(
         <div>
           <div style={{ display:"flex",alignItems:"center",gap:10,marginBottom:16 }}>
-            <input type="date" value={dayDate} onChange={e=>setDayDate(e.target.value)} style={{ ...INP(),width:"auto",colorScheme:"dark" }}/>
+            <input type="date" value={dayDate} onChange={e=>setDayDate(e.target.value)} style={{ ...INP(),width:"auto",}}/>
             {dayDate&&<span style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:15 }}>{new Date(dayDate+"T12:00:00").toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric"})}</span>}
           </div>
           <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:14,padding:"20px 24px" }}>
@@ -4502,8 +4520,8 @@ function EditProjectModal({ project, onConfirm, onCancel }){
               <div>
                 <label style={{ ...LBL(),marginBottom:12 }}>Project Timeline</label>
                 <div style={{ display:"flex",gap:14 }}>
-                  <div style={{ flex:1 }}><label style={LBL()}>Starting Date</label><input type="date" value={startISO} onChange={e=>setStartISO(e.target.value)} style={{ ...INP(),colorScheme:"dark" }}/></div>
-                  <div style={{ flex:1 }}><label style={LBL()}>Expected Finish Date</label><input type="date" value={endISO} onChange={e=>setEndISO(e.target.value)} style={{ ...INP(),colorScheme:"dark" }}/></div>
+                  <div style={{ flex:1 }}><label style={LBL()}>Starting Date</label><input type="date" value={startISO} onChange={e=>setStartISO(e.target.value)} style={INP()}/></div>
+                  <div style={{ flex:1 }}><label style={LBL()}>Expected Finish Date</label><input type="date" value={endISO} onChange={e=>setEndISO(e.target.value)} style={INP()}/></div>
                 </div>
                 {startISO&&endISO&&(()=>{
                   const diff=Math.round((new Date(endISO)-new Date(startISO))/(1000*60*60*24));
@@ -4515,9 +4533,9 @@ function EditProjectModal({ project, onConfirm, onCancel }){
               <div>
                 <label style={{ ...LBL(),marginBottom:12 }}>Project Type</label>
                 <div style={{ display:"flex",gap:12 }}>
-                  {[["business","biz","Business","For a company or organization"],["customer","cust","Customer","For an individual client"]].map(([v,ic,l,sub])=>(
+                  {[["business","Business","For a company or organization"],["customer","Customer","For an individual client"]].map(([v,l,sub])=>(
                     <div key={v} onClick={()=>setProjType(v)} style={{ flex:1,border:`2px solid ${projType===v?v==="business"?C.purple:C.blue:C.border}`,borderRadius:12,padding:"16px 18px",cursor:"pointer",background:projType===v?v==="business"?C.purpleDim:C.blueDim:"transparent",transition:"all .15s" }}>
-                      <div style={{ fontSize:24,marginBottom:8 }}>{ic}</div>
+                      <div style={{ marginBottom:8,display:"flex",alignItems:"center",justifyContent:"center",width:36,height:36,borderRadius:8,background:projType===v?v==="business"?C.purpleDim:C.blueDim:C.surface }}>{v==="business"?<Ic.Projects size={18} color={projType===v?C.purple:C.muted}/>:<Ic.Team size={18} color={projType===v?C.blue:C.muted}/>}</div>
                       <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:14 }}>{l}</div>
                       <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>{sub}</div>
                       <div style={{ width:16,height:16,borderRadius:"50%",border:`2px solid ${projType===v?v==="business"?C.purple:C.blue:C.border}`,background:projType===v?v==="business"?C.purple:C.blue:"transparent",marginTop:10,display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,color:"#000",fontWeight:700 }}>{projType===v&&"✓"}</div>
@@ -4590,6 +4608,7 @@ function NewProjectModal({ onConfirm, onCancel }){
   const [name,setName]=useState("");
   const [address,setAddress]=useState("");
   const [desc,setDesc]=useState("");
+  const [value,setValue]=useState("");
   const [startISO,setStartISO]=useState("");
   const [endISO,setEndISO]=useState("");
   const [projType,setProjType]=useState("business");
@@ -4623,8 +4642,8 @@ function NewProjectModal({ onConfirm, onCancel }){
       id:newId, name:name.trim(), address:address.trim(), desc:desc.trim(),
       startDateISO:startISO, due:endISO,
       startDate:fmtD(startISO), dueFmt:fmtD(endISO),
-      projType, status:projStatus, progress:0,
-      value:0, location:address.trim().split(",")[0]||"",
+      value:parseFloat(value)||0, projType, status:projStatus, progress:0,
+      location:address.trim().split(",")[0]||"",
       client:{ name:primaryClient.name, company:primaryClient.company||"", phone:primaryClient.phone||"", email:primaryClient.email||"", initials },
       contacts:validContacts,
     };
@@ -4681,6 +4700,10 @@ function NewProjectModal({ onConfirm, onCancel }){
                 <label style={LBL()}>Project Description <span style={{ color:C.muted,fontWeight:400 }}>(optional)</span></label>
                 <textarea style={{ ...INP(),resize:"none",lineHeight:1.55 }} rows={3} placeholder="Brief overview of scope, objectives, or special requirements…" value={desc} onChange={e=>setDesc(e.target.value)}/>
               </div>
+              <div>
+                <label style={LBL()}>Contract Value <span style={{ color:C.muted,fontWeight:400 }}>(optional)</span></label>
+                <input style={INP()} type="number" placeholder="0.00" min="0" step="0.01" value={value} onChange={e=>setValue(e.target.value)}/>
+              </div>
             </div>
           )}
 
@@ -4692,11 +4715,11 @@ function NewProjectModal({ onConfirm, onCancel }){
                 <div style={{ display:"flex",gap:14 }}>
                   <div style={{ flex:1 }}>
                     <label style={LBL()}>Starting Date</label>
-                    <input type="date" value={startISO} onChange={e=>setStartISO(e.target.value)} style={{ ...INP(),colorScheme:"dark" }}/>
+                    <input type="date" value={startISO} onChange={e=>setStartISO(e.target.value)} style={INP()}/>
                   </div>
                   <div style={{ flex:1 }}>
                     <label style={LBL()}>Expected Finish Date</label>
-                    <input type="date" value={endISO} onChange={e=>setEndISO(e.target.value)} style={{ ...INP(),colorScheme:"dark" }}/>
+                    <input type="date" value={endISO} onChange={e=>setEndISO(e.target.value)} style={INP()}/>
                   </div>
                 </div>
                 {startISO&&endISO&&(()=>{
@@ -4710,9 +4733,9 @@ function NewProjectModal({ onConfirm, onCancel }){
               <div>
                 <label style={{ ...LBL(),marginBottom:12 }}>Project Type</label>
                 <div style={{ display:"flex",gap:12 }}>
-                  {[["business","biz","Business","For a company or organization"],["customer","cust","Customer","For an individual client"]].map(([v,ic,l,sub])=>(
+                  {[["business","Business","For a company or organization"],["customer","Customer","For an individual client"]].map(([v,l,sub])=>(
                     <div key={v} onClick={()=>setProjType(v)} style={{ flex:1,border:`2px solid ${projType===v?v==="business"?C.purple:C.blue:C.border}`,borderRadius:12,padding:"16px 18px",cursor:"pointer",background:projType===v?v==="business"?C.purpleDim:C.blueDim:"transparent",transition:"all .15s" }}>
-                      <div style={{ fontSize:24,marginBottom:8 }}>{ic}</div>
+                      <div style={{ marginBottom:8,display:"flex",alignItems:"center",justifyContent:"center",width:36,height:36,borderRadius:8,background:projType===v?v==="business"?C.purpleDim:C.blueDim:C.surface }}>{v==="business"?<Ic.Projects size={18} color={projType===v?C.purple:C.muted}/>:<Ic.Team size={18} color={projType===v?C.blue:C.muted}/>}</div>
                       <div style={{ color:C.text,fontFamily:F,fontWeight:700,fontSize:14 }}>{l}</div>
                       <div style={{ color:C.muted,fontFamily:F,fontSize:12,marginTop:3 }}>{sub}</div>
                       <div style={{ width:16,height:16,borderRadius:"50%",border:`2px solid ${projType===v?v==="business"?C.purple:C.blue:C.border}`,background:projType===v?v==="business"?C.purple:C.blue:"transparent",marginTop:10,display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,color:"#000",fontWeight:700 }}>{projType===v&&"✓"}</div>
@@ -5267,7 +5290,7 @@ function EditInvoiceModal({ invoice, allProjects, onConfirm, onCancel }){
           <div><label style={LBL()}>Description</label><textarea style={{ ...INP(),resize:"none" }} rows={2} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="Invoice description"/></div>
           <div style={{ display:"flex",gap:12 }}>
             <div style={{ flex:1 }}><label style={LBL()}>Amount *</label><input style={INP()} type="number" value={amount} onChange={e=>{setAmount(e.target.value);setErr("");}} onWheel={e=>e.target.blur()} placeholder="0.00"/></div>
-            <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={due} onChange={e=>setDue(e.target.value)}/></div>
+            <div style={{ flex:1 }}><label style={LBL()}>Due Date</label><input style={{ ...INP() }}  type="date" value={due} onChange={e=>setDue(e.target.value)}/></div>
           </div>
           <div><label style={LBL()}>Status</label>
             <div style={{ display:"flex",gap:8 }}>
@@ -5386,7 +5409,7 @@ function AddGlobalInvoiceModal({ allProjects, allInvoices=[], onConfirm, onCance
             {/* Invoice # + Date */}
             <div style={{ display:"flex",gap:12 }}>
               <div style={{ flex:1 }}><label style={LBL()}>Invoice # *</label><input style={INP()} value={invNum} onChange={e=>setInvNum(e.target.value)} placeholder="INV-001"/></div>
-              <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
+              <div style={{ flex:1 }}><label style={LBL()}>Invoice Date</label><input style={{ ...INP() }}  type="date" value={invDate} onChange={e=>setInvDate(e.target.value)}/></div>
             </div>
             {/* Project */}
             <div><label style={LBL()}>Project *</label>
@@ -5416,7 +5439,7 @@ function AddGlobalInvoiceModal({ allProjects, allInvoices=[], onConfirm, onCance
                   {CURRENCIES.map(c=><option key={c}>{c}</option>)}
                 </select>
               </div>
-              <div style={{ flex:1.5 }}><label style={LBL()}>Due Date</label><input style={{ ...INP(),colorScheme:"dark" }} type="date" value={due} onChange={e=>setDue(e.target.value)}/></div>
+              <div style={{ flex:1.5 }}><label style={LBL()}>Due Date</label><input style={{ ...INP() }}  type="date" value={due} onChange={e=>setDue(e.target.value)}/></div>
             </div>
             {/* Status */}
             <div><label style={LBL()}>Status</label>
@@ -7381,16 +7404,16 @@ function AppInner({ session, profile, onLogout }){
 
   // Wrapped addPayment that also logs to global log
   const handleAddPayment=async(p)=>{
-    addPayment(p);
+    await addPayment(p);
     await pushGlobal({ id:Date.now(),action:`Payment $${Number(p.amount).toLocaleString()} recorded`,detail:p.project,user:profile?.full_name||"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"pay" });
   };
   const handleUpdatePayment=async(id,patch)=>{
-    updatePayment(id,patch);
+    await updatePayment(id,patch);
     await pushGlobal({ id:Date.now(),action:`Payment $${Number(patch.amount||0).toLocaleString()} updated`,detail:patch.project||"",user:profile?.full_name||"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"✏️" });
   };
   const handleRemovePayment=async(id)=>{
     const p=payments.find(x=>x.id===id);
-    removePayment(id);
+    await removePayment(id);
     if(p) await pushGlobal({ id:Date.now(),action:`Payment $${Number(p.amount||0).toLocaleString()} deleted`,detail:p.project||"",user:profile?.full_name||"User",time:new Date().toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}),icon:"🗑️" });
   };
   // Wrapped addInvoice that also logs to global log

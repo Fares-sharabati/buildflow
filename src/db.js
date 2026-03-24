@@ -23,6 +23,7 @@ export const dbProjects = {
     company_id:  cid(),
     name:        p.name        || '',
     address:     p.address     || '',
+    description: p.desc        || '',
     client:      p.client      || {},
     value:       Number(p.value) || 0,
     status:      p.status      || 'quoting',
